@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="solution")
@@ -66,7 +67,10 @@ public class Solution {
 
 	/**
 	 * @return the uniqueMatches
+	 * 
+	 * TODO: Make this an actual database column
 	 */
+	@Transient
 	public int getUniqueMatches() {
 		return uniqueMatches;
 	}

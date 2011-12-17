@@ -25,10 +25,10 @@ public class PlaintextDao implements Dao {
 		
 		Session session = sessionFactory.openSession();
 	    session.beginTransaction();
-		Plaintext plaintext = (Plaintext) session.createQuery( "from Plaintext where ciphertext_id = ? and solution_id = ?" )
-					.setInteger(0, plaintextId.getCiphertextId())
-					.setInteger(1, plaintextId.getSolution().getId())
-					.uniqueResult();
+	    Plaintext plaintext = (Plaintext) session.createQuery( "from Plaintext p where p.plaintextId.ciphertextId = ? and p.plaintextId.solution = ?" )
+	    		.setInteger(0, plaintextId.getCiphertextId())
+	    		.setEntity(1, plaintextId.getSolution())
+	    		.uniqueResult();
 	    session.getTransaction().commit();
 	    session.close();
 	    

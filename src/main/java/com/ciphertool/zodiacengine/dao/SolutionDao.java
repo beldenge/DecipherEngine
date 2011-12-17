@@ -20,6 +20,16 @@ public class SolutionDao implements Dao {
 		return true;
 	}
 	
+	public Solution findById(Integer id) {
+		Session session = sessionFactory.openSession();
+	    session.beginTransaction();
+		Solution solution = (Solution) session.createQuery( "from Solution where id = ?" ).setInteger(0, id).uniqueResult();
+	    session.getTransaction().commit();
+	    session.close();
+	    
+		return solution;
+	}
+	
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
