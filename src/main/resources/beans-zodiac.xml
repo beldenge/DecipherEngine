@@ -19,7 +19,9 @@
 	</bean>
  	
  	<bean class="com.ciphertool.zodiacengine.CipherSolutionEngine" id="cipherSolutionEngine">
-    	<property name="solutionIterations" value="${solution.generator.iterations}"/>
+    	<property name="numIterations" value="${solution.generator.iterations}"/>
+    	<property name="maxThreads" value="${max.threads}"/>
+    	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
     </bean>
  	
     <bean class="com.ciphertool.sentencebuilder.util.SentenceHelper" id="sentenceHelper">

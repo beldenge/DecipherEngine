@@ -1,6 +1,7 @@
 package com.ciphertool.zodiacengine.dao;
 
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanFactory;
@@ -14,11 +15,12 @@ import com.ciphertool.zodiacengine.entities.Solution;
 public class PlaintextDaoTest {
 
 	private static Logger log = Logger.getLogger(PlaintextDaoTest.class);
+	private static ApplicationContext context;
 	private static BeanFactory factory;
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		ApplicationContext context = new ClassPathXmlApplicationContext("beans-test.xml");
+		context = new ClassPathXmlApplicationContext("beans-test.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
@@ -31,5 +33,14 @@ public class PlaintextDaoTest {
 		PlaintextId plaintextId = new PlaintextId(solution, 5);
 		Plaintext plaintext = plaintextDao.findByPlaintextId(plaintextId);
 		log.info(plaintext);
+	}
+	
+	/**
+	 * Without setting these to null, the humongous wordMap will not be garbage collected and subsequent unit tests may encounter an out of memory exception
+	 */
+	@AfterClass
+	public static void cleanUp() {
+		context = null;
+		factory = null;
 	}
 }
