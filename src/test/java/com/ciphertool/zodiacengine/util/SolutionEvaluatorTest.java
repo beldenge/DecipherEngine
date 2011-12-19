@@ -18,7 +18,7 @@ public class SolutionEvaluatorTest {
 	
 	@BeforeClass
 	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-test.xml");
+		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}

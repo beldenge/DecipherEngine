@@ -20,7 +20,7 @@ public class PlaintextDaoTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		context = new ClassPathXmlApplicationContext("beans-test.xml");
+		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		factory = context;
 		log.info("Spring context created successfully!");
 	}
