@@ -103,7 +103,7 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		solution.setConfidence(total);
 		solution.setUniqueMatches(totalUnique);
 		
-		log.info("Solution " + solution.getId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		
 		return total;
 	}

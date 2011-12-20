@@ -42,6 +42,8 @@ public class CipherSolutionEngine {
 		List<Thread> threads = new ArrayList<Thread>();
 		List<CipherDto> cipherDtos = new ArrayList<CipherDto>();
 		
+		log.info("Beginning solution generation.  Generating " + numIterations + " solutions using " + maxThreads +" threads.");
+		
 		for (int i = 1; i <= maxThreads; i++) {
 			threadIterations = (numIterations / maxThreads);
 			if (i == 1)
