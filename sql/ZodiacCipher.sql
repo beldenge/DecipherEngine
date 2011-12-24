@@ -413,27 +413,6 @@ INSERT INTO ciphertext(cipher_id, id, "value") VALUES
 ('1', 339, 'leftdoti'),
 ('1', 340, 'plus');
 
--- Table: plaintext
-
--- DROP TABLE plaintext;
-
-CREATE TABLE plaintext
-(
-  ciphertext_id integer NOT NULL,
-  value character varying NOT NULL,
-  solution_id integer NOT NULL,
-  locked boolean DEFAULT false,
-  CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id , ciphertext_id ),
-  CONSTRAINT fk_solution_id FOREIGN KEY (solution_id)
-      REFERENCES solution (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE plaintext
-  OWNER TO postgres;
-  
 -- Table: solution
 
 -- DROP TABLE solution;
@@ -453,5 +432,26 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE solution
+  OWNER TO postgres;
+
+-- Table: plaintext
+
+-- DROP TABLE plaintext;
+
+CREATE TABLE plaintext
+(
+  ciphertext_id integer NOT NULL,
+  value character varying NOT NULL,
+  solution_id integer NOT NULL,
+  locked boolean DEFAULT false,
+  CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id , ciphertext_id ),
+  CONSTRAINT fk_solution_id FOREIGN KEY (solution_id)
+      REFERENCES solution (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE plaintext
   OWNER TO postgres;
 
