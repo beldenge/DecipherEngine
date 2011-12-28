@@ -40,25 +40,29 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		Plaintext otherPlaintext = null;
 		int total = 0;
 		int totalUnique = 0;
+		int maxMatches = 0;
+		int matches = 0;
 		boolean uniqueMatch = false;
+		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
 		 */
 		for (List<Ciphertext> ciphertextIndices : ciphertextKey.values()) {
-			int maxMatches = 0;
+			maxMatches = 0;
 			uniqueMatch = false;
 			
 			/*
 			 * Now iterate for each occurrence of the current Ciphertext character
 			 */
 			for (Ciphertext ciphertextIndice : ciphertextIndices) {
-				int matches = 0;
+				matches = 0;
 				
 				/*
 				 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
 				 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
 				 */
-				plaintext = solution.getPlaintextCharacters().get(ciphertextIndice.getCiphertextId().getId()-1);
+				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId()-1);
 				
 				/*
 				 * Iterate through the same list of Ciphertext characters, checking if the corresponding Plaintext character has any matches
@@ -69,14 +73,16 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 					 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
 					 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
 					 */
-					otherPlaintext = solution.getPlaintextCharacters().get(otherCiphertext.getCiphertextId().getId()-1);
+					otherPlaintext = plaintextCharacters.get(otherCiphertext.getCiphertextId().getId()-1);
 					
 					/*
 					 * Check if there are any Plaintext characters which are the same for this Ciphertext character.  
 					 * If so, then it is more likely that we have found the correct Plaintext character.
 					 * Remember to ignore case here since proper nouns can have capital letters in the database
+					 * 
+					 * Also, we don't add to the matches if this is the same PlaintextId.
 					 */
-					if (!plaintext.equals(otherPlaintext) && plaintext.getValue().equalsIgnoreCase(otherPlaintext.getValue())) {
+					if ((plaintext.getPlaintextId().getCiphertextId() != otherPlaintext.getPlaintextId().getCiphertextId()) && plaintext.getValue().equalsIgnoreCase(otherPlaintext.getValue())) {
 						matches ++;
 						uniqueMatch=true;
 					}

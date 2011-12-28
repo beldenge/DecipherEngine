@@ -65,25 +65,33 @@ public class Plaintext {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof Plaintext)) {
 			return false;
+		}
+		
 		Plaintext other = (Plaintext) obj;
-		if (locked != other.locked)
+		
+		/*
+		 * We are not checking for null plaintextId because it should never happen and we want an exception to be thrown if so.
+		 */
+		if (!plaintextId.equals(other.plaintextId)) {
 			return false;
-		if (plaintextId == null) {
-			if (other.plaintextId != null)
-				return false;
-		} else if (!plaintextId.equals(other.plaintextId))
+		}
+		
+		if (locked != other.locked) {
 			return false;
-		if (value == null) {
-			if (other.value != null)
-				return false;
-		} else if (!value.equals(other.value))
+		}
+		
+		/*
+		 * We are not checking for null value because it should never happen and we want an exception to be thrown if so.
+		 */ 
+		if (!value.equals(other.value)) {
 			return false;
+		}
+		
 		return true;
 	}
 

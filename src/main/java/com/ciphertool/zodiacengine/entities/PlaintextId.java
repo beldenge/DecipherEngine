@@ -62,17 +62,25 @@ public class PlaintextId implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof PlaintextId)) {
 			return false;
+		}
+		
 		PlaintextId other = (PlaintextId) obj;
-		if (ciphertextId != other.ciphertextId)
+		if (ciphertextId != other.ciphertextId) {
 			return false;
-		if (solution.getId() != other.getSolution().getId())
+		}
+		
+		/*
+		 * We are not checking for null solution because it should never happen and we want an exception to be thrown if so.
+		 */ 
+		if (solution.getId() != other.getSolution().getId()) {
 			return false;
+		}
+		
 		return true;
 	}
 
