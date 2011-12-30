@@ -28,13 +28,11 @@ public class SolutionEvaluatorTest {
 		ZodiacSolutionGenerator solutionGenerator = (ZodiacSolutionGenerator) factory.getBean("solutionGenerator");
 		long start = System.currentTimeMillis();
 		Solution solution = solutionGenerator.generateSolution();
-		long end = System.currentTimeMillis();
-		log.info("Took " + (end-start) + "ms to generate solution.");
+		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate solution.");
 		SolutionEvaluator solutionEvaluator = (SolutionEvaluator) factory.getBean("solutionEvaluator");
 		start = System.currentTimeMillis();
 		solutionEvaluator.determineConfidenceLevel(solution);
-		end = System.currentTimeMillis();
-		log.info("Took " + (end-start) + "ms to determine confidence level.");
+		log.info("Took " + (System.currentTimeMillis() - start) + "ms to determine confidence level.");
 	}
 	
 	/**

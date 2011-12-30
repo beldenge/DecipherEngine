@@ -32,8 +32,6 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
-    <bean class="com.ciphertool.sentencebuilder.common.ZodiacWordFilter" id="wordFilter" />
-    
     <bean class="com.ciphertool.zodiacengine.dao.CiphertextDao" id="ciphertextDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
