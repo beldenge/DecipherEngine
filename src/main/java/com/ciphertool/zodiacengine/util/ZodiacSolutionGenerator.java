@@ -3,10 +3,8 @@ package com.ciphertool.zodiacengine.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -33,7 +31,6 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 * 
 	 * Generates a solution by calling the helper method getSentences() and 
 	 * passing the result to convertSentencesToPlaintext(List<Sentence>)
-	 * @throws JAXBException 
 	 */
 	@Override
 	public Solution generateSolution() {	
@@ -43,9 +40,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		// TODO: may want to remove this setCipher since it should be lazy loaded somehow
 		solution.setCipher(cipher);
 		
-		List<Sentence> sentences = getSentences();
-		
-		convertSentencesToPlaintext(solution, sentences);
+		convertSentencesToPlaintext(solution, getSentences());
 		
 		log.debug(solution);
 		
@@ -81,8 +76,34 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 			id ++;
 		}
 	}
+	
+	/*
+	 * TODO: this method just tests if it is any faster to call the getChars on each word 
+	 * individually rather than on the entire sentence list
+	 * 
+	 * From preliminary tests, it seems like this is about twice as fast as the old version 
+	 * when running single threaded, but when running multithreaded, it's about twice as slow...
+	 */
+	public void convertSentencesToPlaintextPerformance(Solution solution, List<Sentence> sentenceList) {
+		char [] chars;
+		Plaintext pt;
+		int id = 1;
+		String rawText="";
+		for (Sentence sentence : sentenceList) {
+			for (Word w: sentence.getWords()) {
+				rawText = w.getWordId().getWord();
+				chars = new char [rawText.length()];
+				rawText.getChars(0, rawText.length(), chars, 0);
+				for (char c : chars) {
+					pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c));
+					solution.addPlaintext(pt);
+					id ++;
+				}
+			}
+		}
+	}
 
-	@Autowired
+	@Required
 	public void setSentenceHelper(SentenceHelper sentenceHelper) {
 		this.sentenceHelper = sentenceHelper;
 	}

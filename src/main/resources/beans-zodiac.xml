@@ -24,8 +24,11 @@
     	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
     </bean>
  	
+ 	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
+ 	
     <bean class="com.ciphertool.sentencebuilder.util.SentenceHelper" id="sentenceHelper">
     	<constructor-arg index="0" type="java.lang.String" value="${grammar.file.location}"/>
+    	<property name="wordMapDao" ref="wordMapDao" />
     </bean>
     
     <bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
@@ -49,6 +52,7 @@
 		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
             <ref bean="cipherDao"/>
         </constructor-arg>
+        <property name="sentenceHelper" ref="sentenceHelper" />
 	</bean>
 
     <bean id="solutionEvaluator" class="com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator" >
