@@ -18,10 +18,19 @@
 		</property>
 	</bean>
  	
+ 	<!-- This is a straight thread-based implementation of concurrency for the app, which happens to be the most efficient. -->
  	<bean class="com.ciphertool.zodiacengine.CipherSolutionEngine" id="cipherSolutionEngine">
     	<property name="numIterations" value="${solution.generator.iterations}"/>
     	<property name="maxThreads" value="${max.threads}"/>
     	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
+    </bean>
+    
+    <!-- This is an Executor framework implementation of concurrency for the app. It's efficiency seems to depend greatly on how well the queue of tasks is managed. -->
+    <bean class="com.ciphertool.zodiacengine.CipherSolutionExecutor" id="cipherSolutionExecutor">
+    	<property name="applicationDurationType" value="${application.runtype}"/>
+    	<property name="numIterations" value="${solution.generator.iterations}"/>
+    	<property name="maxThreads" value="${max.threads}"/>
+    	<property name="applicationRunMillis" value="${solution.generator.runmillis}"/>
     </bean>
  	
  	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
