@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Plaintext {
 	private PlaintextId plaintextId;
 	private String value;
-	private boolean locked;
+	private boolean hasMatch;
 	
 	public Plaintext() {}
 	
@@ -43,20 +43,20 @@ public class Plaintext {
 		this.value = value;
 	}
 	
-	@Column(name="locked")
-	public boolean isLocked() {
-		return locked;
+	@Column(name="has_match")
+	public boolean hasMatch() {
+		return hasMatch;
 	}
 
-	public void setLocked(boolean locked) {
-		this.locked = locked;
+	public void setHasMatch(boolean hasMatch) {
+		this.hasMatch = hasMatch;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (locked ? 1231 : 1237);
+		result = prime * result + (hasMatch ? 1231 : 1237);
 		result = prime * result
 				+ ((plaintextId == null) ? 0 : plaintextId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
@@ -81,7 +81,7 @@ public class Plaintext {
 			return false;
 		}
 		
-		if (locked != other.locked) {
+		if (hasMatch != other.hasMatch) {
 			return false;
 		}
 		
@@ -98,6 +98,6 @@ public class Plaintext {
 	@Override
 	public String toString() {
 		return "Plaintext [plaintextId=" + plaintextId + ", value=" + value
-				+ ", locked=" + locked + "]";
+				+ ", hasMatch=" + hasMatch + "]";
 	}	
 }

@@ -85,8 +85,10 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 * 
 	 * From preliminary tests, it seems like this is about twice as fast as the old version 
 	 * when running single threaded, but when running multithreaded, it's about twice as slow...
+	 * 
+	 * This might be due to the fact that it is actually more CPU intensive but less memory intensive
 	 */
-	public void convertSentencesToPlaintextPerformance(Solution solution, List<Sentence> sentenceList) {
+	public void convertSentencesToPlaintextLowMemory(Solution solution, List<Sentence> sentenceList) {
 		char [] chars;
 		Plaintext pt;
 		int id = 1;

@@ -3,6 +3,7 @@ package com.ciphertool.zodiacengine.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -32,18 +33,19 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 	 * 
 	 * Calculates the confidence level as the number of instances that a ciphertext character has the same plaintext character mapped 
 	 * to it.  If a ciphertext character has multiple matches, then select the plaintext character with the most matches (or if 
-	 * there's a tie, then flip a coin).
+	 * there's a tie, then the first one wins).
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
 		Plaintext plaintext = null;
-		Plaintext otherPlaintext = null;
 		int total = 0;
 		int totalUnique = 0;
 		int maxMatches = 0;
-		int matches = 0;
+		String bestMatch = null;
 		boolean uniqueMatch = false;
+		String currentValue = null;
 		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		Map<String, List<Plaintext>> plaintextMatchMap = new HashMap<String, List<Plaintext>>();
 		
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -51,49 +53,48 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		for (List<Ciphertext> ciphertextIndices : ciphertextKey.values()) {
 			maxMatches = 0;
 			uniqueMatch = false;
+			bestMatch = null;
+			plaintextMatchMap = new HashMap<String, List<Plaintext>>();
 			
 			/*
 			 * Now iterate for each occurrence of the current Ciphertext character
 			 */
 			for (Ciphertext ciphertextIndice : ciphertextIndices) {
-				matches = 0;
-				
 				/*
 				 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
 				 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
 				 */
 				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId()-1);
 				
-				/*
-				 * Iterate through the same list of Ciphertext characters, checking if the corresponding Plaintext character has any matches
-				 */
-				for (Ciphertext otherCiphertext: ciphertextIndices) {
-					
-					/*
-					 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
-					 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
-					 */
-					otherPlaintext = plaintextCharacters.get(otherCiphertext.getCiphertextId().getId()-1);
-					
-					/*
-					 * Check if there are any Plaintext characters which are the same for this Ciphertext character.  
-					 * If so, then it is more likely that we have found the correct Plaintext character.
-					 * Remember to ignore case here since proper nouns can have capital letters in the database
-					 * 
-					 * Also, we don't add to the matches if this is the same PlaintextId.
-					 */
-					if ((plaintext.getPlaintextId().getCiphertextId() != otherPlaintext.getPlaintextId().getCiphertextId()) && plaintext.getValue().equalsIgnoreCase(otherPlaintext.getValue())) {
-						matches ++;
-						uniqueMatch=true;
-					}
+				currentValue = plaintext.getValue();
+				
+				if (!plaintextMatchMap.containsKey(currentValue)) {
+					plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
+				}
+				else {
+					uniqueMatch = true;
 				}
 				
-				/*
-				 * We want to use the most optimistic number of Plaintext character matches possible for the given Ciphertext character
-				 */
-				if (matches > maxMatches) {
-					maxMatches = matches;
-				}				
+				plaintextMatchMap.get(currentValue).add(plaintext);
+				
+				if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
+					/*
+					 * Subtract by one when setting maxMatches so that a match on just a pair does not count as two matches.
+					 */
+					maxMatches = plaintextMatchMap.get(currentValue).size() - 1;
+					
+					bestMatch = currentValue;
+				}
+			}
+			
+			/*
+			 * If there was a match on this Ciphertext, set the hasMatch property to true on all the Plaintext matches.
+			 * Use the bestMatch value so that only the Plaintext with the optimal number of matches is set. 
+			 */
+			if (bestMatch != null) {
+				for (Plaintext pt : plaintextMatchMap.get(bestMatch)) {
+					pt.setHasMatch(true);
+				}
 			}
 			
 			/*

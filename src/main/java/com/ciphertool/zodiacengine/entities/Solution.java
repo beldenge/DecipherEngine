@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name="solution")
@@ -67,10 +66,8 @@ public class Solution {
 
 	/**
 	 * @return the uniqueMatches
-	 * 
-	 * TODO: Make this an actual database column
 	 */
-	@Transient
+	@Column(name="unique_matches")
 	public int getUniqueMatches() {
 		return uniqueMatches;
 	}
@@ -163,12 +160,18 @@ public class Solution {
 		for (int i = 1; i <= cipher.length(); i ++) {
 			
 			// subtract 1 since the get method begins with 0
-			s += plaintextCharacters.get(i - 1).getValue();
+			if (plaintextCharacters.get(i - 1).hasMatch()) {
+				s += "[" + plaintextCharacters.get(i - 1).getValue() + "]";
+			}
+			else {
+				s += " " + plaintextCharacters.get(i - 1).getValue() + " ";
+			}
 			
 			// print a newline if we are at the end of the row
 			if ((i % cipher.getColumns()) == 0) {
 				s += "\n";
-			} else {
+			}
+			else {
 				s += " ";
 			}
 		}
