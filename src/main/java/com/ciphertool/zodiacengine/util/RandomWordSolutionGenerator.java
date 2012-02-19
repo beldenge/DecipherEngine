@@ -16,17 +16,11 @@ import com.ciphertool.zodiacengine.entities.Solution;
 
 
 public class RandomWordSolutionGenerator implements SolutionGenerator {
-	@SuppressWarnings("unused")
-	private String cipherName;
-	@SuppressWarnings("unused")
-	private CipherDao cipherDao;
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 	
 	public RandomWordSolutionGenerator(String cipherName, CipherDao cipherDao) {
-		this.cipherName = cipherName;
-		this.cipherDao = cipherDao;
 		cipher = cipherDao.findByCipherName(cipherName);
 	}
 	
@@ -60,9 +54,9 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 	}
 	
 	public void convertWordsToPlaintext(Solution solution, List<Word> wordList) {
-		String rawText = "";
+		StringBuffer rawText = new StringBuffer();
 		for (Word w: wordList) {
-			rawText += w.getWordId().getWord();
+			rawText.append(w.getWordId().getWord());
 		}
 		char [] chars = new char [cipher.length()];
 		rawText.getChars(0, cipher.length(), chars, 0);

@@ -62,10 +62,10 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	}
 	
 	public void convertSentencesToPlaintext(Solution solution, List<Sentence> sentenceList) {
-		String rawText = "";
+		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w: sentence.getWords()) {
-				rawText += w.getWordId().getWord();
+				rawText.append(w.getWordId().getWord());
 			}
 		}
 		char [] chars = new char [cipherLength];
@@ -92,10 +92,10 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		char [] chars;
 		Plaintext pt;
 		int id = 1;
-		String rawText="";
+		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w: sentence.getWords()) {
-				rawText = w.getWordId().getWord();
+				rawText.append(w.getWordId().getWord());
 				chars = new char [rawText.length()];
 				rawText.getChars(0, rawText.length(), chars, 0);
 				for (char c : chars) {

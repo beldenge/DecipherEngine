@@ -45,7 +45,7 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		boolean uniqueMatch = false;
 		String currentValue = null;
 		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
-		Map<String, List<Plaintext>> plaintextMatchMap = new HashMap<String, List<Plaintext>>();
+		Map<String, List<Plaintext>> plaintextMatchMap;
 		
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext

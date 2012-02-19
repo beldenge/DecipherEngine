@@ -1,5 +1,6 @@
 package com.ciphertool.zodiacengine.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,12 +15,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="cipher")
-public class Cipher {
+public class Cipher implements Serializable {
+	private static final long serialVersionUID = 3417112220260206089L;
+	
 	private int id;
 	private String name;
 	private int columns;
 	private int rows;
-	private List<Ciphertext> ciphertextCharacters;
+	private transient List<Ciphertext> ciphertextCharacters;
 	
 	public Cipher() {
 	}

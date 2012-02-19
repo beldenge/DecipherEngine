@@ -10,16 +10,10 @@ import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class RandomCharacterSolutionGenerator implements SolutionGenerator {
-	@SuppressWarnings("unused")
-	private String cipherName;
-	@SuppressWarnings("unused")
-	private CipherDao cipherDao;
 	private Cipher cipher;
 	private Logger log = Logger.getLogger(getClass());
 	
 	public RandomCharacterSolutionGenerator(String cipherName, CipherDao cipherDao) {
-		this.cipherName = cipherName;
-		this.cipherDao = cipherDao;
 		cipher = cipherDao.findByCipherName(cipherName);
 	}
 	
