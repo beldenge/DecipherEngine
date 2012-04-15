@@ -30,7 +30,7 @@
     	<property name="applicationDurationType" value="${application.runtype}"/>
     	<property name="numIterations" value="${solution.generator.iterations}"/>
     	<property name="maxThreads" value="${max.threads}"/>
-    	<property name="applicationRunMillis" value="${solution.generator.runmillis}"/>
+    	<property name="applicationRunMillis" value="${engine.runmillis}"/>
     </bean>
  	
  	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
@@ -56,6 +56,10 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     
+    <bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
     <bean id="solutionGenerator" class="com.ciphertool.zodiacengine.util.ZodiacSolutionGenerator" >
 		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
 		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
@@ -69,6 +73,16 @@
 		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
             <ref bean="cipherDao"/>
         </constructor-arg>
+        <property name="confidenceThreshold" value="${persistence.confidence.threshold}" />
+        <property name="uniqueMatchThreshold" value="${persistence.unique.threshold}" />
+        <property name="solutionDao" ref="solutionDao" />
+	</bean>
+	
+	<bean id="solutionMerger" class="com.ciphertool.zodiacengine.util.ZodiacSolutionMerger" >
+		<property name="solutionDao" ref="solutionDao" />
+		<property name="cipherName" value="${cipher.name}" />
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="solutionEvaluator" ref="solutionEvaluator" />
 	</bean>
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -94,7 +108,7 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 			</props>
 		</property>
 	</bean>

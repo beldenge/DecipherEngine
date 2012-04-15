@@ -447,7 +447,7 @@ CREATE TABLE plaintext
   CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id , ciphertext_id ),
   CONSTRAINT fk_solution_id FOREIGN KEY (solution_id)
       REFERENCES solution (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
   OIDS=FALSE

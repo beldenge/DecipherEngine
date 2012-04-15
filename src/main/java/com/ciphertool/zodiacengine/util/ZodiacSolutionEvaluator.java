@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
@@ -18,6 +20,9 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
 	Cipher cipher;
 	HashMap<String, List<Ciphertext>> ciphertextKey;
+	private int confidenceThreshold;
+	private int uniqueMatchThreshold;
+	private SolutionDao solutionDao;
 	
 	/**
 	 * @param cipherName
@@ -112,6 +117,17 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		
 		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		
+		if (solution.getConfidence() >= confidenceThreshold)
+		{
+			log.info("Found solution with confidence: " + solution.getConfidence() + ".  Persisting to solution table.");
+			solutionDao.insert(solution);
+		}
+		else if (solution.getUniqueMatches() >= uniqueMatchThreshold)
+		{
+			log.info("Found solution with " + solution.getUniqueMatches() + " unique matches.  Persisting to solution table.");
+			solutionDao.insert(solution);
+		}
+		
 		return total;
 	}
 	
@@ -131,5 +147,29 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 			ciphertextKey.get(ct.getValue()).add(ct);
 		}
 		return ciphertextKey;
+	}
+
+	/**
+	 * @param confidenceThreshold the confidenceThreshold to set
+	 */
+	@Required
+	public void setConfidenceThreshold(int confidenceThreshold) {
+		this.confidenceThreshold = confidenceThreshold;
+	}
+
+	/**
+	 * @param uniqueMatchThreshold the uniqueMatchThreshold to set
+	 */
+	@Required
+	public void setUniqueMatchThreshold(int uniqueMatchThreshold) {
+		this.uniqueMatchThreshold = uniqueMatchThreshold;
+	}
+
+	/**
+	 * @param solutionDao the solutionDao to set
+	 */
+	@Required
+	public void setSolutionDao(SolutionDao solutionDao) {
+		this.solutionDao = solutionDao;
 	}
 }

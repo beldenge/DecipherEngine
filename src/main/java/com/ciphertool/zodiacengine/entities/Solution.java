@@ -81,7 +81,7 @@ public class Solution implements Serializable {
 		this.uniqueMatches = uniqueMatches;
 	}
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="plaintextId.solution", cascade=CascadeType.ALL)
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="plaintextId.solution", cascade=CascadeType.ALL)
 	public List<Plaintext> getPlaintextCharacters() {
 		if (this.plaintextCharacters == null) {
 			this.plaintextCharacters = new ArrayList<Plaintext>();

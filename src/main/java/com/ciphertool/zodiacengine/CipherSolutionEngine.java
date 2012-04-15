@@ -96,8 +96,8 @@ public class CipherSolutionEngine {
 		 * Sum up all data from all CipherDtos passed to the threads
 		 */
 		for (CipherDto nextCipherDto : cipherDtos) {
-			log.info("Best solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostMatches());
-			log.info("Most unique solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostUnique());
+			log.debug("Best solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostMatches());
+			log.debug("Most unique solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostUnique());
 			
 			totalSolutions += nextCipherDto.getNumSolutions();
 			confidenceSum += nextCipherDto.getConfidenceSum();
