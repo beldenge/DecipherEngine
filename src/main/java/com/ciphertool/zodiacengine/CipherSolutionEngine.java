@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
@@ -20,6 +21,8 @@ public class CipherSolutionEngine {
 	private static long numIterations;
 	private static int maxThreads;
 	private static int monitorSleepMillis;
+	private static CipherDao cipherDao;
+	private static String cipherName;
 	
 	/**
 	 * @param args
@@ -36,6 +39,7 @@ public class CipherSolutionEngine {
 		Runnable cipherTask = null;
 		Thread cipherWorker = null;
 		long threadIterations = 0;
+		int cipherId = cipherDao.findByCipherName(cipherName).getId();
 		
 		long start = System.currentTimeMillis();
 		
@@ -54,7 +58,7 @@ public class CipherSolutionEngine {
 				threadIterations += (numIterations % maxThreads);
 			}
 			
-			cipherDto = new CipherDto(String.valueOf(i));
+			cipherDto = new CipherDto(String.valueOf(i), cipherId);
 			cipherDtos.add(cipherDto);
 			
 			cipherTask = new CipherSolutionRunnable(threadIterations, solutionGenerator, solutionEvaluator, cipherDto);
@@ -88,9 +92,11 @@ public class CipherSolutionEngine {
 		long totalSolutions = 0;
 		long confidenceSum = 0;
 		long uniqueMatchSum = 0;
+		long adjacentMatchSum = 0;
 		
-		Solution solutionMostMatches = new Solution(1, 0, 0);
-		Solution solutionMostUnique = new Solution(1, 0, 0);
+		Solution solutionMostMatches = new Solution(cipherId, 0, 0);
+		Solution solutionMostUnique = new Solution(cipherId, 0, 0);
+		Solution solutionMostAdjacent = new Solution(cipherId, 0, 0);
 
 		/*
 		 * Sum up all data from all CipherDtos passed to the threads
@@ -98,10 +104,12 @@ public class CipherSolutionEngine {
 		for (CipherDto nextCipherDto : cipherDtos) {
 			log.debug("Best solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostMatches());
 			log.debug("Most unique solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostUnique());
+			log.debug("Solution with most adjacent matches from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostAdjacent());
 			
 			totalSolutions += nextCipherDto.getNumSolutions();
 			confidenceSum += nextCipherDto.getConfidenceSum();
 			uniqueMatchSum += nextCipherDto.getUniqueMatchSum();
+			adjacentMatchSum += nextCipherDto.getAdjacentMatchSum();
 			
 			/*
 			 * Find the Solution with the highest confidence level (most matches in plaintext)
@@ -116,6 +124,13 @@ public class CipherSolutionEngine {
 			if (nextCipherDto.getSolutionMostUnique().getUniqueMatches() > solutionMostUnique.getUniqueMatches()) {
 				solutionMostUnique = nextCipherDto.getSolutionMostUnique();
 			}
+			
+			/*
+			 * Find the Solution with the highest number of adjacent matches in plaintext
+			 */
+			if (nextCipherDto.getSolutionMostAdjacent().getAdjacentMatchCount() > solutionMostAdjacent.getAdjacentMatchCount()) {
+				solutionMostAdjacent = nextCipherDto.getSolutionMostAdjacent();
+			}
 		}
 		
 		/*
@@ -128,6 +143,9 @@ public class CipherSolutionEngine {
 		log.info("Most unique matches achieved: " + solutionMostUnique.getUniqueMatches());
 		log.info("Average unique matches: " + (uniqueMatchSum / totalSolutions));
 		log.info("Solution with most unique matches found: " + solutionMostUnique);
+		log.info("Most adjacent matches achieved: " + solutionMostAdjacent.getAdjacentMatchCount());
+		log.info("Average adjacent matches: " + (adjacentMatchSum / totalSolutions));
+		log.info("Solution with most adjacent matches found: " + solutionMostAdjacent);
 	}
 	
 	/**
@@ -163,5 +181,21 @@ public class CipherSolutionEngine {
 	@Required
 	public void setMonitorSleepMillis(int monitorSleepMillis) {
 		CipherSolutionEngine.monitorSleepMillis = monitorSleepMillis;
+	}
+	
+	/**
+	 * @param cipherDao the cipherDao to set
+	 */
+	@Required
+	public void setCipherDao(CipherDao cipherDao) {
+		CipherSolutionEngine.cipherDao = cipherDao;
+	}
+
+	/**
+	 * @param cipherName the cipherName to set
+	 */
+	@Required
+	public void setCipherName(String cipherName) {
+		CipherSolutionEngine.cipherName = cipherName;
 	}
 }

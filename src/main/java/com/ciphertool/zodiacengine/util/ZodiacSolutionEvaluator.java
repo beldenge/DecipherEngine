@@ -22,6 +22,7 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 	HashMap<String, List<Ciphertext>> ciphertextKey;
 	private int confidenceThreshold;
 	private int uniqueMatchThreshold;
+	private int adjacencyThreshold;
 	private SolutionDao solutionDao;
 	
 	/**
@@ -115,16 +116,34 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		solution.setConfidence(total);
 		solution.setUniqueMatches(totalUnique);
 		
+		boolean countAdjacent = false;
+		int adjacentMatchCount = 0;
+		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
+			if(countAdjacent == false && plaintextCharacters.get(ct.getCiphertextId().getId()-1).hasMatch()) {
+				countAdjacent = true;
+			}
+			else if (countAdjacent == true && plaintextCharacters.get(ct.getCiphertextId().getId()-1).hasMatch()) {
+				adjacentMatchCount ++;
+			}
+			else {
+				countAdjacent = false;
+			}
+		}
+		
+		solution.setAdjacentMatchCount(adjacentMatchCount);
+		
 		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		
-		if (solution.getConfidence() >= confidenceThreshold)
-		{
+		if (solution.getConfidence() >= confidenceThreshold) {
 			log.info("Found solution with confidence: " + solution.getConfidence() + ".  Persisting to solution table.");
 			solutionDao.insert(solution);
 		}
-		else if (solution.getUniqueMatches() >= uniqueMatchThreshold)
-		{
+		else if (solution.getUniqueMatches() >= uniqueMatchThreshold) {
 			log.info("Found solution with " + solution.getUniqueMatches() + " unique matches.  Persisting to solution table.");
+			solutionDao.insert(solution);
+		}
+		else if (solution.getAdjacentMatchCount() >= adjacencyThreshold) {
+			log.info("Found solution with " + solution.getAdjacentMatchCount() + " adjacent matches.  Persisting to solution table.");
 			solutionDao.insert(solution);
 		}
 		
@@ -171,5 +190,13 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 	@Required
 	public void setSolutionDao(SolutionDao solutionDao) {
 		this.solutionDao = solutionDao;
+	}
+
+	/**
+	 * @param adjacencyThreshold the adjacencyThreshold to set
+	 */
+	@Required
+	public void setAdjacencyThreshold(int adjacencyThreshold) {
+		this.adjacencyThreshold = adjacencyThreshold;
 	}
 }

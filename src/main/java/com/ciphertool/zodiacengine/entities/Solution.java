@@ -25,6 +25,7 @@ public class Solution implements Serializable {
 	private int cipherId;
 	private int confidence;
 	private int uniqueMatches;
+	private int adjacentMatchCount;
 	private transient List<Plaintext> plaintextCharacters;
 	private Cipher cipher;
 	
@@ -79,6 +80,21 @@ public class Solution implements Serializable {
 	 */
 	public void setUniqueMatches(int uniqueMatches) {
 		this.uniqueMatches = uniqueMatches;
+	}
+
+	/**
+	 * @return the adjacentMatchCount
+	 */
+	@Column(name="adjacent_matches")
+	public int getAdjacentMatchCount() {
+		return adjacentMatchCount;
+	}
+
+	/**
+	 * @param adjacentMatchCount the adjacentMatchCount to set
+	 */
+	public void setAdjacentMatchCount(int adjacentMatchCount) {
+		this.adjacentMatchCount = adjacentMatchCount;
 	}
 
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="plaintextId.solution", cascade=CascadeType.ALL)
@@ -157,7 +173,7 @@ public class Solution implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId + ", confidence=" + confidence + "" + ", unique matches=" + uniqueMatches + "]\n");
+		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId + ", confidence=" + confidence + "" + ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
 		
 		// start at 1 instead of 0 so that the modulus function below isn't messed up
 		for (int i = 1; i <= cipher.length(); i ++) {

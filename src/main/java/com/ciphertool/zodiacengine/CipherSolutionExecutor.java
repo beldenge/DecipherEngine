@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.enumerations.ApplicationDurationType;
@@ -23,6 +24,8 @@ public class CipherSolutionExecutor {
 	private static long applicationRunMillis;
 	private static long numIterations;
 	private static int maxThreads;
+	private static CipherDao cipherDao;
+	private static String cipherName;
 	
 	/**
 	 * @param args
@@ -37,11 +40,13 @@ public class CipherSolutionExecutor {
 
 		CipherDto cipherDto = null;
 		
+		int cipherId = cipherDao.findByCipherName(cipherName).getId();
+		
 		long start = System.currentTimeMillis();
 		
 		ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
 		
-		cipherDto = new CipherDto(String.valueOf(0));
+		cipherDto = new CipherDto(String.valueOf(0), cipherId);
 		
 		/*
 		 * We want to generate and validate a specific number of solutions, no matter how long it takes.
@@ -111,6 +116,7 @@ public class CipherSolutionExecutor {
 		
 		Solution solutionMostMatches = cipherDto.getSolutionMostMatches();
 		Solution solutionMostUnique = cipherDto.getSolutionMostUnique();
+		Solution solutionMostAdjacent = cipherDto.getSolutionMostAdjacent();
 
 		/*
 		 * Print out summary information
@@ -122,6 +128,9 @@ public class CipherSolutionExecutor {
 		log.info("Most unique matches achieved: " + solutionMostUnique.getUniqueMatches());
 		log.info("Average unique matches: " + (cipherDto.getUniqueMatchSum() / cipherDto.getNumSolutions()));
 		log.info("Solution with most unique matches found: " + solutionMostUnique);
+		log.info("Most adjacent matches achieved: " + solutionMostAdjacent.getAdjacentMatchCount());
+		log.info("Average adjacent matches: " + (cipherDto.getAdjacentMatchSum() / cipherDto.getNumSolutions()));
+		log.info("Solution with most adjacent matches found: " + solutionMostAdjacent);
 	}
 	
 	/**
@@ -167,5 +176,21 @@ public class CipherSolutionExecutor {
 	 */
 	public void setApplicationRunMillis(long applicationRunMillis) {
 		CipherSolutionExecutor.applicationRunMillis = applicationRunMillis;
+	}
+
+	/**
+	 * @param cipherDao the cipherDao to set
+	 */
+	@Required
+	public void setCipherDao(CipherDao cipherDao) {
+		CipherSolutionExecutor.cipherDao = cipherDao;
+	}
+
+	/**
+	 * @param cipherName the cipherName to set
+	 */
+	@Required
+	public void setCipherName(String cipherName) {
+		CipherSolutionExecutor.cipherName = cipherName;
 	}
 }

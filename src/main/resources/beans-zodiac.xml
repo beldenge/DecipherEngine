@@ -23,6 +23,8 @@
     	<property name="numIterations" value="${solution.generator.iterations}"/>
     	<property name="maxThreads" value="${max.threads}"/>
     	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
+    	<property name="cipherName" value="${cipher.name}"/>
+    	<property name="cipherDao" ref="cipherDao" />
     </bean>
     
     <!-- This is an Executor framework implementation of concurrency for the app. It's efficiency seems to depend greatly on how well the queue of tasks is managed. -->
@@ -31,6 +33,8 @@
     	<property name="numIterations" value="${solution.generator.iterations}"/>
     	<property name="maxThreads" value="${max.threads}"/>
     	<property name="applicationRunMillis" value="${engine.runmillis}"/>
+    	<property name="cipherName" value="${cipher.name}"/>
+    	<property name="cipherDao" ref="cipherDao" />
     </bean>
  	
  	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
@@ -75,6 +79,7 @@
         </constructor-arg>
         <property name="confidenceThreshold" value="${persistence.confidence.threshold}" />
         <property name="uniqueMatchThreshold" value="${persistence.unique.threshold}" />
+        <property name="adjacencyThreshold" value="${persistence.adjacency.threshold}" />
         <property name="solutionDao" ref="solutionDao" />
 	</bean>
 	
