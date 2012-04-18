@@ -179,7 +179,7 @@ public class Solution implements Serializable {
 		for (int i = 1; i <= cipher.length(); i ++) {
 			
 			// subtract 1 since the get method begins with 0
-			if (plaintextCharacters.get(i - 1).hasMatch()) {
+			if (plaintextCharacters.get(i - 1).getHasMatch()) {
 				sb.append("[");
 				sb.append(plaintextCharacters.get(i - 1).getValue());
 				sb.append("]");

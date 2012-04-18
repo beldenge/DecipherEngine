@@ -44,7 +44,7 @@ public class Plaintext {
 	}
 	
 	@Column(name="has_match")
-	public boolean hasMatch() {
+	public boolean getHasMatch() {
 		return hasMatch;
 	}
 

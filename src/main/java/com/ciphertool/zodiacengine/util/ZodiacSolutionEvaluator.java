@@ -69,6 +69,10 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 				/*
 				 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
 				 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
+				 *  
+				 *  We could also make this into a map with the ciphertextId as the key.  Then we would no 
+				 *  longer have to worry about order and or subtracting one from the id.  It does come with a 
+				 *  performance hit though.
 				 */
 				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId()-1);
 				
@@ -119,10 +123,10 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		boolean countAdjacent = false;
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if(countAdjacent == false && plaintextCharacters.get(ct.getCiphertextId().getId()-1).hasMatch()) {
+			if(countAdjacent == false && plaintextCharacters.get(ct.getCiphertextId().getId()-1).getHasMatch()) {
 				countAdjacent = true;
 			}
-			else if (countAdjacent == true && plaintextCharacters.get(ct.getCiphertextId().getId()-1).hasMatch()) {
+			else if (countAdjacent == true && plaintextCharacters.get(ct.getCiphertextId().getId()-1).getHasMatch()) {
 				adjacentMatchCount ++;
 			}
 			else {
