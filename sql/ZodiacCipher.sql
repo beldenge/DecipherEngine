@@ -831,7 +831,7 @@ INSERT INTO ciphertext(cipher_id, id, "value") VALUES
 CREATE TABLE solution
 (
   id serial NOT NULL,
-  confidence integer,
+  total_matches integer,
   created_timestamp timestamp without time zone NOT NULL DEFAULT now(),
   cipher_id integer NOT NULL,
   unique_matches integer DEFAULT 0,

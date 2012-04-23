@@ -1,6 +1,5 @@
 package com.ciphertool.zodiacengine.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,15 +7,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
-public class ZodiacSolutionPredicateEvaluator implements SolutionEvaluator {
+public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorBase implements SolutionEvaluator {
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
-	Cipher cipher;
 	HashMap<String, List<Ciphertext>> ciphertextKey;
 	
 	/**
@@ -101,29 +98,11 @@ public class ZodiacSolutionPredicateEvaluator implements SolutionEvaluator {
 			 */
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
-		solution.setConfidence(total);
+		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
 		
 		log.info("Solution " + solution.getId() + " has a confidence level of: " + total);
 		
 		return total;
-	}
-	
-	/**
-	 * Creates a map with the key as the String value of the Ciphertext character and the value as a List of occurrences within the cipher
-	 * 
-	 * There's no reason to run this for every single iteration of the validator since the ciphertext is not going to change during a run
-	 * 
-	 * @return
-	 */
-	public HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
-		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
-		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (!ciphertextKey.containsKey(ct.getValue())) {
-				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
-			}
-			ciphertextKey.get(ct.getValue()).add(ct);
-		}
-		return ciphertextKey;
 	}
 }

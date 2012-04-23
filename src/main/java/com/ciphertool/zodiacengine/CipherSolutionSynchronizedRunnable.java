@@ -24,24 +24,24 @@ public class CipherSolutionSynchronizedRunnable implements Runnable {
 
 	public void run() {
 		Solution solution = null;
-		int confidence = 0;
+		int totalMatches = 0;
 		int uniqueMatches = 0;
 		int adjacentMatches = 0;
-	
+		
 		// generate a solution
 		solution = solutionGenerator.generateSolution();
 		
 		// find the confidence level for the solution
 		solutionEvaluator.determineConfidenceLevel(solution);
-		
+				
 		// we need the confidence level several times, so just call the getter once and store in a temp variable
-		confidence = solution.getConfidence();
+		totalMatches = solution.getTotalMatches();
 		uniqueMatches = solution.getUniqueMatches();
 		adjacentMatches = solution.getAdjacentMatchCount();
 		
 		synchronized (cipherDto) {
-			// check if there's a new higher confidence solution
-			if(confidence > cipherDto.getSolutionMostMatches().getConfidence()) {
+			// check if there's a new solution with more total matches
+			if(totalMatches > cipherDto.getSolutionMostMatches().getTotalMatches()) {
 				cipherDto.setSolutionMostMatches(solution);
 			}
 	
@@ -58,7 +58,7 @@ public class CipherSolutionSynchronizedRunnable implements Runnable {
 			cipherDto.incrementSolutions();
 			
 			// add to the running totals for computing the average later
-			cipherDto.addToSum(confidence);
+			cipherDto.addToSum(totalMatches);
 			cipherDto.addToUniqueSum(uniqueMatches);
 			cipherDto.addToAdjacentSum(adjacentMatches);
 		}

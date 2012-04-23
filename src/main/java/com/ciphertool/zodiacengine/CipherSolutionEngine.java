@@ -90,13 +90,13 @@ public class CipherSolutionEngine {
 		while (running > 0);
 		
 		long totalSolutions = 0;
-		long confidenceSum = 0;
+		long totalMatchSum = 0;
 		long uniqueMatchSum = 0;
 		long adjacentMatchSum = 0;
 		
-		Solution solutionMostMatches = new Solution(cipherId, 0, 0);
-		Solution solutionMostUnique = new Solution(cipherId, 0, 0);
-		Solution solutionMostAdjacent = new Solution(cipherId, 0, 0);
+		Solution solutionMostMatches = new Solution(cipherId, 0, 0, 0);
+		Solution solutionMostUnique = new Solution(cipherId, 0, 0, 0);
+		Solution solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
 
 		/*
 		 * Sum up all data from all CipherDtos passed to the threads
@@ -107,14 +107,14 @@ public class CipherSolutionEngine {
 			log.debug("Solution with most adjacent matches from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostAdjacent());
 			
 			totalSolutions += nextCipherDto.getNumSolutions();
-			confidenceSum += nextCipherDto.getConfidenceSum();
+			totalMatchSum += nextCipherDto.getTotalMatchSum();
 			uniqueMatchSum += nextCipherDto.getUniqueMatchSum();
 			adjacentMatchSum += nextCipherDto.getAdjacentMatchSum();
 			
 			/*
-			 * Find the Solution with the highest confidence level (most matches in plaintext)
+			 * Find the Solution with the highest number of total matches
 			 */
-			if (nextCipherDto.getSolutionMostMatches().getConfidence() > solutionMostMatches.getConfidence()) {
+			if (nextCipherDto.getSolutionMostMatches().getTotalMatches() > solutionMostMatches.getTotalMatches()) {
 				solutionMostMatches = nextCipherDto.getSolutionMostMatches();
 			}
 			
@@ -137,8 +137,8 @@ public class CipherSolutionEngine {
 		 * Print out summary information
 		 */
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate " + totalSolutions + " solutions.");
-		log.info("Highest confidence level achieved: " + solutionMostMatches.getConfidence());
-		log.info("Average confidence level: " + (confidenceSum / totalSolutions));
+		log.info("Most total matches achieved: " + solutionMostMatches.getTotalMatches());
+		log.info("Average total matches: " + (totalMatchSum / totalSolutions));
 		log.info("Best solution found: " + solutionMostMatches);
 		log.info("Most unique matches achieved: " + solutionMostUnique.getUniqueMatches());
 		log.info("Average unique matches: " + (uniqueMatchSum / totalSolutions));

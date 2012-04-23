@@ -35,7 +35,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	@Override
 	public Solution generateSolution() {	
 		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher.getId(), 0, 0);
+		Solution solution = new Solution(cipher.getId(), 0, 0, 0);
 		
 		/*
 		 *  TODO: May want to remove this setCipher since it should be lazy loaded somehow, but it doesn't cause any performance degradation.
@@ -49,7 +49,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		return solution;
 	}
 	
-	public List<Sentence> getSentences() {
+	private List<Sentence> getSentences() {
 		List<Sentence> sentenceList = new ArrayList<Sentence>();
 		Sentence nextSentence;
 		int length = 0;
@@ -61,7 +61,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		return sentenceList;
 	}
 	
-	public void convertSentencesToPlaintext(Solution solution, List<Sentence> sentenceList) {
+	private void convertSentencesToPlaintext(Solution solution, List<Sentence> sentenceList) {
 		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w: sentence.getWords()) {
@@ -80,7 +80,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	}
 	
 	/*
-	 * TODO: this method just tests if it is any faster to call the getChars on each word 
+	 * This method just tests if it is any faster to call the getChars on each word 
 	 * individually rather than on the entire sentence list
 	 * 
 	 * From preliminary tests, it seems like this is about twice as fast as the old version 
@@ -88,7 +88,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 * 
 	 * This might be due to the fact that it is actually more CPU intensive but less memory intensive
 	 */
-	public void convertSentencesToPlaintextLowMemory(Solution solution, List<Sentence> sentenceList) {
+	private void convertSentencesToPlaintextLowMemory(Solution solution, List<Sentence> sentenceList) {
 		char [] chars;
 		Plaintext pt;
 		int id = 1;

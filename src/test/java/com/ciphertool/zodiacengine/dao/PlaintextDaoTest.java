@@ -25,7 +25,7 @@ public class PlaintextDaoTest {
 	@Test
 	public void testFindByPlaintextId() {
 		PlaintextDao plaintextDao = (PlaintextDao) context.getBean("plaintextDao");
-		Solution solution = new Solution(1, 0, 0);
+		Solution solution = new Solution(1, 0, 0, 0);
 		solution.setId(26); //provided a solution with this id exists
 		PlaintextId plaintextId = new PlaintextId(solution, 5);
 		Plaintext plaintext = plaintextDao.findByPlaintextId(plaintextId);

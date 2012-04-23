@@ -35,6 +35,9 @@
     	<property name="applicationRunMillis" value="${engine.runmillis}"/>
     	<property name="cipherName" value="${cipher.name}"/>
     	<property name="cipherDao" ref="cipherDao" />
+    	<property name="queueTaskLimit" value="${executor.queue.limit}" />
+    	<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
+    	<property name="solutionEvaluator" ref="solutionEvaluator" />
     </bean>
  	
  	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
@@ -71,16 +74,33 @@
         </constructor-arg>
         <property name="sentenceHelper" ref="sentenceHelper" />
 	</bean>
+	
+	<bean id="incrementalSolutionGenerator" class="com.ciphertool.zodiacengine.util.IncrementalSolutionGenerator" >
+		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
+		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
+            <ref bean="cipherDao"/>
+        </constructor-arg>
+        <property name="sentenceHelper" ref="sentenceHelper" />
+        <property name="solutionEvaluator" ref="incrementalSolutionEvaluator" />
+        <property name="improvementAttempts" value="${solution.generator.improvement_attempts}" />
+	</bean>
 
     <bean id="solutionEvaluator" class="com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator" >
 		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
 		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
             <ref bean="cipherDao"/>
         </constructor-arg>
-        <property name="confidenceThreshold" value="${persistence.confidence.threshold}" />
-        <property name="uniqueMatchThreshold" value="${persistence.unique.threshold}" />
-        <property name="adjacencyThreshold" value="${persistence.adjacency.threshold}" />
+        <property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
+        <property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
+        <property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
         <property name="solutionDao" ref="solutionDao" />
+	</bean>
+	
+	<bean id="incrementalSolutionEvaluator" class="com.ciphertool.zodiacengine.util.IncrementalSolutionEvaluator" >
+		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
+		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
+            <ref bean="cipherDao"/>
+        </constructor-arg>
 	</bean>
 	
 	<bean id="solutionMerger" class="com.ciphertool.zodiacengine.util.ZodiacSolutionMerger" >

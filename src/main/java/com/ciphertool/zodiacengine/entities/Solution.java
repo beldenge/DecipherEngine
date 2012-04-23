@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="solution")
@@ -23,18 +24,21 @@ public class Solution implements Serializable {
 	
 	private int id;
 	private int cipherId;
-	private int confidence;
+	private int totalMatches;
 	private int uniqueMatches;
 	private int adjacentMatchCount;
 	private transient List<Plaintext> plaintextCharacters;
 	private Cipher cipher;
+	private int committedIndex;
+	private int uncommittedIndex;
 	
 	public Solution() {}
 
-	public Solution(int cipherId, int confidence, int uniqueMatches) {
+	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
 		this.cipherId=cipherId;
-		this.confidence = confidence;
+		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
+		this.adjacentMatchCount = adjacentMatches;
 		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 
@@ -58,13 +62,19 @@ public class Solution implements Serializable {
 		this.cipherId = cipherId;
 	}
 
-	@Column(name="confidence")
-	public int getConfidence() {
-		return confidence;
+	/**
+	 * @return
+	 */
+	@Column(name="total_matches")
+	public int getTotalMatches() {
+		return totalMatches;
 	}
 
-	public void setConfidence(int confidence) {
-		this.confidence = confidence;
+	/**
+	 * @param totalMatches
+	 */
+	public void setTotalMatches(int totalMatches) {
+		this.totalMatches = totalMatches;
 	}
 
 	/**
@@ -119,6 +129,40 @@ public class Solution implements Serializable {
 		this.cipher = cipher;
 	}
 
+	/**
+	 * This is the permanent index used to keep track of how far an incremental solution has progressed
+	 * 
+	 * @return the committedIndex
+	 */
+	@Transient
+	public int getCommittedIndex() {
+		return committedIndex;
+	}
+
+	/**
+	 * @param committedIndex the committedIndex to set
+	 */
+	public void setCommittedIndex(int committedIndex) {
+		this.committedIndex = committedIndex;
+	}
+
+	/**
+	 * This is the temporary index used to keep track of how far an incremental solution has progressed
+	 * 
+	 * @return the uncommittedIndex
+	 */
+	@Transient
+	public int getUncommittedIndex() {
+		return uncommittedIndex;
+	}
+
+	/**
+	 * @param uncommittedIndex the uncommittedIndex to set
+	 */
+	public void setUncommittedIndex(int uncommittedIndex) {
+		this.uncommittedIndex = uncommittedIndex;
+	}
+
 	public void addPlaintext(Plaintext plaintext) {
 		this.plaintextCharacters.add(plaintext);
 		plaintext.getPlaintextId().setSolution(this);
@@ -134,9 +178,11 @@ public class Solution implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + adjacentMatchCount;
 		result = prime * result + cipherId;
-		result = prime * result + confidence;
 		result = prime * result + id;
+		result = prime * result + totalMatches;
+		result = prime * result + uniqueMatches;
 		return result;
 	}
 
@@ -155,11 +201,15 @@ public class Solution implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Solution other = (Solution) obj;
+		if (adjacentMatchCount != other.adjacentMatchCount)
+			return false;
 		if (cipherId != other.cipherId)
 			return false;
-		if (confidence != other.confidence)
-			return false;
 		if (id != other.id)
+			return false;
+		if (totalMatches != other.totalMatches)
+			return false;
+		if (uniqueMatches != other.uniqueMatches)
 			return false;
 		return true;
 	}
@@ -173,7 +223,7 @@ public class Solution implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId + ", confidence=" + confidence + "" + ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
+		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId + ", totalMatches=" + totalMatches + "" + ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
 		
 		// start at 1 instead of 0 so that the modulus function below isn't messed up
 		for (int i = 1; i <= cipher.length(); i ++) {

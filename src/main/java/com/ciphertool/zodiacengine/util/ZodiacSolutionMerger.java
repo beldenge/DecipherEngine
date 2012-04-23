@@ -97,7 +97,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 			}
 		}
 		
-		bestFitSolution = new Solution(zodiacCipher.getId(), 0, 0);
+		bestFitSolution = new Solution(zodiacCipher.getId(), 0, 0, 0);
 		bestFitSolution.setCipher(zodiacCipher);
 		
 		for (int ciphertextId = 1; ciphertextId <= zodiacCipher.length(); ciphertextId++) {

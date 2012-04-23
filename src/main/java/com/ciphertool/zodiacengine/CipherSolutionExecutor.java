@@ -26,6 +26,9 @@ public class CipherSolutionExecutor {
 	private static int maxThreads;
 	private static CipherDao cipherDao;
 	private static String cipherName;
+	private static long queueTaskLimit;
+	private static SolutionGenerator solutionGenerator;
+	private static SolutionEvaluator solutionEvaluator;
 	
 	/**
 	 * @param args
@@ -34,9 +37,6 @@ public class CipherSolutionExecutor {
 	public static void main(String [] args) throws InterruptedException {
 		// Spin up the Spring application context
 		setUp();
-		
-		SolutionGenerator solutionGenerator = (SolutionGenerator) factory.getBean("solutionGenerator");
-		SolutionEvaluator solutionEvaluator = (SolutionEvaluator) factory.getBean("solutionEvaluator");
 
 		CipherDto cipherDto = null;
 		
@@ -89,7 +89,7 @@ public class CipherSolutionExecutor {
 				 * 
 				 * If we don't manage it somehow, the app will get bogged down by the continuous while loop and performance will degrade significantly.
 				 */
-				if (++count >= 10000) {
+				if (++count >= queueTaskLimit) {
 					count = 0;
 					
 					executor.shutdown();
@@ -122,8 +122,8 @@ public class CipherSolutionExecutor {
 		 * Print out summary information
 		 */
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate " + cipherDto.getNumSolutions() + " solutions.");
-		log.info("Highest confidence level achieved: " + solutionMostMatches.getConfidence());
-		log.info("Average confidence level: " + (cipherDto.getConfidenceSum() / cipherDto.getNumSolutions()));
+		log.info("Highest total matches achieved: " + solutionMostMatches.getTotalMatches());
+		log.info("Average total matches: " + (cipherDto.getTotalMatchSum() / cipherDto.getNumSolutions()));
 		log.info("Best solution found: " + solutionMostMatches);
 		log.info("Most unique matches achieved: " + solutionMostUnique.getUniqueMatches());
 		log.info("Average unique matches: " + (cipherDto.getUniqueMatchSum() / cipherDto.getNumSolutions()));
@@ -192,5 +192,29 @@ public class CipherSolutionExecutor {
 	@Required
 	public void setCipherName(String cipherName) {
 		CipherSolutionExecutor.cipherName = cipherName;
+	}
+
+	/**
+	 * @param queueTaskLimit the queueTaskLimit to set
+	 */
+	@Required
+	public void setQueueTaskLimit(long queueTaskLimit) {
+		CipherSolutionExecutor.queueTaskLimit = queueTaskLimit;
+	}
+
+	/**
+	 * @param solutionGenerator the solutionGenerator to set
+	 */
+	@Required
+	public void setSolutionGenerator(SolutionGenerator solutionGenerator) {
+		CipherSolutionExecutor.solutionGenerator = solutionGenerator;
+	}
+
+	/**
+	 * @param solutionEvaluator the solutionEvaluator to set
+	 */
+	@Required
+	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {
+		CipherSolutionExecutor.solutionEvaluator = solutionEvaluator;
 	}
 }

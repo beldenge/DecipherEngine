@@ -3,7 +3,7 @@ package com.ciphertool.zodiacengine.dto;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class CipherDto {
-	private long confidenceSum;
+	private long totalMatchSum;
 	private long numSolutions;
 	private long uniqueMatchSum;
 	private long adjacentMatchSum;
@@ -18,7 +18,7 @@ public class CipherDto {
 	public CipherDto(String threadName, int cipherId) {
 		this.threadName = threadName;
 		
-		this.confidenceSum = 0;
+		this.totalMatchSum = 0;
 		this.numSolutions = 0;
 		this.uniqueMatchSum  = 0;
 		this.adjacentMatchSum = 0;
@@ -26,37 +26,36 @@ public class CipherDto {
 		/*
 		 * We set "dummy" Solutions with the lowest possible confidence values
 		 */
-		this.solutionMostMatches = new Solution(cipherId, 0, 0);
-		this.solutionMostUnique = new Solution(cipherId, 0, 0);
-		this.solutionMostAdjacent = new Solution(cipherId, 0, 0);
+		this.solutionMostMatches = new Solution(cipherId, 0, 0, 0);
+		this.solutionMostUnique = new Solution(cipherId, 0, 0, 0);
+		this.solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
 	}
 	
 	/**
-	 * Computes the average confidence level of all solutions tried up to this point
+	 * Computes the average total matches of all solutions tried up to this point
 	 * 
 	 * @return
 	 */
 	public long getAverage() {
-		return (this.confidenceSum / this.numSolutions);
+		return (this.totalMatchSum / this.numSolutions);
 	}
 	
-	
 	/**
-	 * @param confidence
+	 * @param totalMatches
 	 */
-	public void addToSum(long confidence) {
-		this.confidenceSum += confidence;
+	public void addToSum(long totalMatches) {
+		this.totalMatchSum += totalMatches;
 	}
 
 	/**
-	 * @param confidence
+	 * @param uniqueMatches
 	 */
 	public void addToUniqueSum(long uniqueMatches) {
 		this.uniqueMatchSum += uniqueMatches;
 	}
 	
 	/**
-	 * @param confidence
+	 * @param adjacentMatches
 	 */
 	public void addToAdjacentSum(long adjacentMatches) {
 		this.adjacentMatchSum += adjacentMatches;
@@ -70,10 +69,10 @@ public class CipherDto {
 	}
 
 	/**
-	 * @return the confidenceSum
+	 * @return the totalMatchSum
 	 */
-	public long getConfidenceSum() {
-		return confidenceSum;
+	public long getTotalMatchSum() {
+		return totalMatchSum;
 	}
 
 	/**

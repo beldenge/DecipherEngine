@@ -10,17 +10,15 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
-public class ZodiacSolutionEvaluator implements SolutionEvaluator {
+public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements SolutionEvaluator {
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
-	Cipher cipher;
 	HashMap<String, List<Ciphertext>> ciphertextKey;
-	private int confidenceThreshold;
+	private int totalMatchThreshold;
 	private int uniqueMatchThreshold;
 	private int adjacencyThreshold;
 	private SolutionDao solutionDao;
@@ -117,7 +115,7 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 			 */
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
-		solution.setConfidence(total);
+		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
 		
 		boolean countAdjacent = false;
@@ -138,8 +136,8 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 		
 		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		
-		if (solution.getConfidence() >= confidenceThreshold) {
-			log.info("Found solution with confidence: " + solution.getConfidence() + ".  Persisting to solution table.");
+		if (solution.getTotalMatches() >= totalMatchThreshold) {
+			log.info("Found solution with " + solution.getTotalMatches() + " total matches.  Persisting to solution table.");
 			solutionDao.insert(solution);
 		}
 		else if (solution.getUniqueMatches() >= uniqueMatchThreshold) {
@@ -155,29 +153,11 @@ public class ZodiacSolutionEvaluator implements SolutionEvaluator {
 	}
 	
 	/**
-	 * Creates a map with the key as the String value of the Ciphertext character and the value as a List of occurrences within the cipher
-	 * 
-	 * There's no reason to run this for every single iteration of the validator since the ciphertext is not going to change during a run
-	 * 
-	 * @return
-	 */
-	public HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
-		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
-		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (!ciphertextKey.containsKey(ct.getValue())) {
-				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
-			}
-			ciphertextKey.get(ct.getValue()).add(ct);
-		}
-		return ciphertextKey;
-	}
-
-	/**
-	 * @param confidenceThreshold the confidenceThreshold to set
+	 * @param totalMatcheThreshold the totalMatcheThreshold to set
 	 */
 	@Required
-	public void setConfidenceThreshold(int confidenceThreshold) {
-		this.confidenceThreshold = confidenceThreshold;
+	public void setTotalMatchThreshold(int totalMatchThreshold) {
+		this.totalMatchThreshold = totalMatchThreshold;
 	}
 
 	/**
