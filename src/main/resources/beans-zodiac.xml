@@ -25,6 +25,8 @@
     	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
     	<property name="cipherName" value="${cipher.name}"/>
     	<property name="cipherDao" ref="cipherDao" />
+    	<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
+    	<property name="solutionEvaluator" ref="solutionEvaluator" />
     </bean>
     
     <!-- This is an Executor framework implementation of concurrency for the app. It's efficiency seems to depend greatly on how well the queue of tasks is managed. -->

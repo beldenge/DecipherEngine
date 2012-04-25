@@ -23,6 +23,8 @@ public class CipherSolutionEngine {
 	private static int monitorSleepMillis;
 	private static CipherDao cipherDao;
 	private static String cipherName;
+	private static SolutionGenerator solutionGenerator;
+	private static SolutionEvaluator solutionEvaluator;
 	
 	/**
 	 * @param args
@@ -32,9 +34,6 @@ public class CipherSolutionEngine {
 		// Spin up the Spring application context
 		setUp();
 		
-		SolutionGenerator solutionGenerator = (SolutionGenerator) factory.getBean("solutionGenerator");
-		SolutionEvaluator solutionEvaluator = (SolutionEvaluator) factory.getBean("solutionEvaluator");
-
 		CipherDto cipherDto = null;
 		Runnable cipherTask = null;
 		Thread cipherWorker = null;
@@ -45,6 +44,13 @@ public class CipherSolutionEngine {
 		
 		List<Thread> threads = new ArrayList<Thread>();
 		List<CipherDto> cipherDtos = new ArrayList<CipherDto>();
+		
+		if (maxThreads > numIterations)
+		{
+			log.warn("The number of threads is greater than the number of tasks.  Reducing thread count to " + numIterations + ".");
+			
+			maxThreads = (int) numIterations;
+		}
 		
 		log.info("Beginning solution generation.  Generating " + numIterations + " solutions using " + maxThreads +" threads.");
 		
@@ -197,5 +203,21 @@ public class CipherSolutionEngine {
 	@Required
 	public void setCipherName(String cipherName) {
 		CipherSolutionEngine.cipherName = cipherName;
+	}
+	
+	/**
+	 * @param solutionGenerator the solutionGenerator to set
+	 */
+	@Required
+	public void setSolutionGenerator(SolutionGenerator solutionGenerator) {
+		CipherSolutionEngine.solutionGenerator = solutionGenerator;
+	}
+
+	/**
+	 * @param solutionEvaluator the solutionEvaluator to set
+	 */
+	@Required
+	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {
+		CipherSolutionEngine.solutionEvaluator = solutionEvaluator;
 	}
 }
