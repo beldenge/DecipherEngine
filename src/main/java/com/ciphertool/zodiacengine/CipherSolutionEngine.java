@@ -25,56 +25,58 @@ public class CipherSolutionEngine {
 	private static String cipherName;
 	private static SolutionGenerator solutionGenerator;
 	private static SolutionEvaluator solutionEvaluator;
-	
+
 	/**
 	 * @param args
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
-	public static void main(String [] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException {
 		// Spin up the Spring application context
 		setUp();
-		
+
 		CipherDto cipherDto = null;
 		Runnable cipherTask = null;
 		Thread cipherWorker = null;
 		long threadIterations = 0;
 		int cipherId = cipherDao.findByCipherName(cipherName).getId();
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		List<Thread> threads = new ArrayList<Thread>();
 		List<CipherDto> cipherDtos = new ArrayList<CipherDto>();
-		
-		if (maxThreads > numIterations)
-		{
-			log.warn("The number of threads is greater than the number of tasks.  Reducing thread count to " + numIterations + ".");
-			
+
+		if (maxThreads > numIterations) {
+			log.warn("The number of threads is greater than the number of tasks.  Reducing thread count to "
+					+ numIterations + ".");
+
 			maxThreads = (int) numIterations;
 		}
-		
-		log.info("Beginning solution generation.  Generating " + numIterations + " solutions using " + maxThreads +" threads.");
-		
+
+		log.info("Beginning solution generation.  Generating " + numIterations
+				+ " solutions using " + maxThreads + " threads.");
+
 		for (int i = 1; i <= maxThreads; i++) {
 			threadIterations = (numIterations / maxThreads);
-			if (i == 1)
-			{
+			if (i == 1) {
 				/*
-				 * If the number of iterations doesn't divide evenly among the threads, add the remainder to the first thread
+				 * If the number of iterations doesn't divide evenly among the
+				 * threads, add the remainder to the first thread
 				 */
 				threadIterations += (numIterations % maxThreads);
 			}
-			
+
 			cipherDto = new CipherDto(String.valueOf(i), cipherId);
 			cipherDtos.add(cipherDto);
-			
-			cipherTask = new CipherSolutionRunnable(threadIterations, solutionGenerator, solutionEvaluator, cipherDto);
-			
+
+			cipherTask = new CipherSolutionRunnable(threadIterations, solutionGenerator,
+					solutionEvaluator, cipherDto);
+
 			cipherWorker = new Thread(cipherTask, String.valueOf(i));
-			
+
 			cipherWorker.start();
 			threads.add(cipherWorker);
 		}
-		
+
 		/*
 		 * Keep checking threads until no more are left running
 		 */
@@ -83,23 +85,23 @@ public class CipherSolutionEngine {
 			running = 0;
 			for (Thread thread : threads) {
 				if (thread.isAlive()) {
-					running ++;
+					running++;
 				}
 			}
-			
+
 			/*
-			 * There's no need to loop through this as fast as possible.  
-			 * Sleep for a short period so that there isn't so much overhead from monitoring the threads' state.
+			 * There's no need to loop through this as fast as possible. Sleep
+			 * for a short period so that there isn't so much overhead from
+			 * monitoring the threads' state.
 			 */
 			Thread.sleep(monitorSleepMillis);
-		}
-		while (running > 0);
-		
+		} while (running > 0);
+
 		long totalSolutions = 0;
 		long totalMatchSum = 0;
 		long uniqueMatchSum = 0;
 		long adjacentMatchSum = 0;
-		
+
 		Solution solutionMostMatches = new Solution(cipherId, 0, 0, 0);
 		Solution solutionMostUnique = new Solution(cipherId, 0, 0, 0);
 		Solution solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
@@ -108,41 +110,51 @@ public class CipherSolutionEngine {
 		 * Sum up all data from all CipherDtos passed to the threads
 		 */
 		for (CipherDto nextCipherDto : cipherDtos) {
-			log.debug("Best solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostMatches());
-			log.debug("Most unique solution from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostUnique());
-			log.debug("Solution with most adjacent matches from thread " + nextCipherDto.getThreadName() + ": " + nextCipherDto.getSolutionMostAdjacent());
-			
+			log.debug("Best solution from thread " + nextCipherDto.getThreadName() + ": "
+					+ nextCipherDto.getSolutionMostMatches());
+			log.debug("Most unique solution from thread " + nextCipherDto.getThreadName() + ": "
+					+ nextCipherDto.getSolutionMostUnique());
+			log.debug("Solution with most adjacent matches from thread "
+					+ nextCipherDto.getThreadName() + ": "
+					+ nextCipherDto.getSolutionMostAdjacent());
+
 			totalSolutions += nextCipherDto.getNumSolutions();
 			totalMatchSum += nextCipherDto.getTotalMatchSum();
 			uniqueMatchSum += nextCipherDto.getUniqueMatchSum();
 			adjacentMatchSum += nextCipherDto.getAdjacentMatchSum();
-			
+
 			/*
 			 * Find the Solution with the highest number of total matches
 			 */
-			if (nextCipherDto.getSolutionMostMatches().getTotalMatches() > solutionMostMatches.getTotalMatches()) {
+			if (nextCipherDto.getSolutionMostMatches().getTotalMatches() > solutionMostMatches
+					.getTotalMatches()) {
 				solutionMostMatches = nextCipherDto.getSolutionMostMatches();
 			}
-			
+
 			/*
-			 * Find the Solution with the highest number of unique matches in plaintext
+			 * Find the Solution with the highest number of unique matches in
+			 * plaintext
 			 */
-			if (nextCipherDto.getSolutionMostUnique().getUniqueMatches() > solutionMostUnique.getUniqueMatches()) {
+			if (nextCipherDto.getSolutionMostUnique().getUniqueMatches() > solutionMostUnique
+					.getUniqueMatches()) {
 				solutionMostUnique = nextCipherDto.getSolutionMostUnique();
 			}
-			
+
 			/*
-			 * Find the Solution with the highest number of adjacent matches in plaintext
+			 * Find the Solution with the highest number of adjacent matches in
+			 * plaintext
 			 */
-			if (nextCipherDto.getSolutionMostAdjacent().getAdjacentMatchCount() > solutionMostAdjacent.getAdjacentMatchCount()) {
+			if (nextCipherDto.getSolutionMostAdjacent().getAdjacentMatchCount() > solutionMostAdjacent
+					.getAdjacentMatchCount()) {
 				solutionMostAdjacent = nextCipherDto.getSolutionMostAdjacent();
 			}
 		}
-		
+
 		/*
 		 * Print out summary information
 		 */
-		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate " + totalSolutions + " solutions.");
+		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate "
+				+ totalSolutions + " solutions.");
 		log.info("Most total matches achieved: " + solutionMostMatches.getTotalMatches());
 		log.info("Average total matches: " + (totalMatchSum / totalSolutions));
 		log.info("Best solution found: " + solutionMostMatches);
@@ -153,15 +165,15 @@ public class CipherSolutionEngine {
 		log.info("Average adjacent matches: " + (adjacentMatchSum / totalSolutions));
 		log.info("Solution with most adjacent matches found: " + solutionMostAdjacent);
 	}
-	
+
 	/**
 	 * Spins up the Spring application context
 	 */
 	private static void setUp() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
-		
+
 		factory = context;
-		
+
 		log.info("Spring context created successfully!");
 	}
 
@@ -182,15 +194,17 @@ public class CipherSolutionEngine {
 	}
 
 	/**
-	 * @param monitorSleepMillis the monitorSleepMillis to set
+	 * @param monitorSleepMillis
+	 *            the monitorSleepMillis to set
 	 */
 	@Required
 	public void setMonitorSleepMillis(int monitorSleepMillis) {
 		CipherSolutionEngine.monitorSleepMillis = monitorSleepMillis;
 	}
-	
+
 	/**
-	 * @param cipherDao the cipherDao to set
+	 * @param cipherDao
+	 *            the cipherDao to set
 	 */
 	@Required
 	public void setCipherDao(CipherDao cipherDao) {
@@ -198,15 +212,17 @@ public class CipherSolutionEngine {
 	}
 
 	/**
-	 * @param cipherName the cipherName to set
+	 * @param cipherName
+	 *            the cipherName to set
 	 */
 	@Required
 	public void setCipherName(String cipherName) {
 		CipherSolutionEngine.cipherName = cipherName;
 	}
-	
+
 	/**
-	 * @param solutionGenerator the solutionGenerator to set
+	 * @param solutionGenerator
+	 *            the solutionGenerator to set
 	 */
 	@Required
 	public void setSolutionGenerator(SolutionGenerator solutionGenerator) {
@@ -214,7 +230,8 @@ public class CipherSolutionEngine {
 	}
 
 	/**
-	 * @param solutionEvaluator the solutionEvaluator to set
+	 * @param solutionEvaluator
+	 *            the solutionEvaluator to set
 	 */
 	@Required
 	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {

@@ -14,22 +14,22 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="cipher")
+@Table(name = "cipher")
 public class Cipher implements Serializable {
 	private static final long serialVersionUID = 3417112220260206089L;
-	
+
 	private int id;
 	private String name;
 	private int columns;
 	private int rows;
 	private transient List<Ciphertext> ciphertextCharacters;
-	
+
 	public Cipher() {
 	}
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -38,7 +38,7 @@ public class Cipher implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -47,7 +47,7 @@ public class Cipher implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name="columns")
+	@Column(name = "columns")
 	public int getColumns() {
 		return columns;
 	}
@@ -56,7 +56,7 @@ public class Cipher implements Serializable {
 		this.columns = columns;
 	}
 
-	@Column(name="rows")
+	@Column(name = "rows")
 	public int getRows() {
 		return rows;
 	}
@@ -65,7 +65,7 @@ public class Cipher implements Serializable {
 		this.rows = rows;
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="ciphertextId.cipher", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "ciphertextId.cipher", cascade = CascadeType.ALL)
 	public List<Ciphertext> getCiphertextCharacters() {
 		return ciphertextCharacters;
 	}
@@ -77,12 +77,15 @@ public class Cipher implements Serializable {
 	public int length() {
 		return rows * columns;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 * 
-	 * We must not use the Ciphertext characters else we may run into a stack overflow. 
-	 * It shouldn't be necessary anyway since the id makes the cipher unique.
+	 * We must not use the Ciphertext characters else we may run into a stack
+	 * overflow. It shouldn't be necessary anyway since the id makes the cipher
+	 * unique.
 	 */
 	@Override
 	public int hashCode() {
@@ -95,11 +98,14 @@ public class Cipher implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We must not check the Ciphertext characters else we may run into a stack overflow. 
-	 * It shouldn't be necessary anyway since the id makes the cipher unique.
+	 * We must not check the Ciphertext characters else we may run into a stack
+	 * overflow. It shouldn't be necessary anyway since the id makes the cipher
+	 * unique.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -126,9 +132,8 @@ public class Cipher implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns
-				+ ", rows=" + rows + ", ciphertextCharacters="
-				+ ciphertextCharacters + "]";
+		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns + ", rows=" + rows
+				+ ", ciphertextCharacters=" + ciphertextCharacters + "]";
 	}
-	
+
 }

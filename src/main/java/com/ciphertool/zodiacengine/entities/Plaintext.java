@@ -9,20 +9,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="plaintext")
-@AssociationOverrides(
-		@AssociationOverride(name = "plaintextId.solution", joinColumns = @JoinColumn(name = "solution_id"))
-)
+@Table(name = "plaintext")
+@AssociationOverrides(@AssociationOverride(name = "plaintextId.solution", joinColumns = @JoinColumn(name = "solution_id")))
 public class Plaintext {
 	private PlaintextId plaintextId;
 	private String value;
 	private boolean hasMatch;
-	
-	public Plaintext() {}
-	
+
+	public Plaintext() {
+	}
+
 	public Plaintext(PlaintextId plaintextId, String value) {
-		this.plaintextId=plaintextId;
-		this.value=value;
+		this.plaintextId = plaintextId;
+		this.value = value;
 	}
 
 	@EmbeddedId
@@ -34,7 +33,7 @@ public class Plaintext {
 		this.plaintextId = plaintextId;
 	}
 
-	@Column(name="value")
+	@Column(name = "value")
 	public String getValue() {
 		return value;
 	}
@@ -42,8 +41,8 @@ public class Plaintext {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
-	@Column(name="has_match")
+
+	@Column(name = "has_match")
 	public boolean getHasMatch() {
 		return hasMatch;
 	}
@@ -57,8 +56,7 @@ public class Plaintext {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (hasMatch ? 1231 : 1237);
-		result = prime * result
-				+ ((plaintextId == null) ? 0 : plaintextId.hashCode());
+		result = prime * result + ((plaintextId == null) ? 0 : plaintextId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -71,33 +69,35 @@ public class Plaintext {
 		if (!(obj instanceof Plaintext)) {
 			return false;
 		}
-		
+
 		Plaintext other = (Plaintext) obj;
-		
+
 		/*
-		 * We are not checking for null plaintextId because it should never happen and we want an exception to be thrown if so.
+		 * We are not checking for null plaintextId because it should never
+		 * happen and we want an exception to be thrown if so.
 		 */
 		if (!plaintextId.equals(other.plaintextId)) {
 			return false;
 		}
-		
+
 		if (hasMatch != other.hasMatch) {
 			return false;
 		}
-		
+
 		/*
-		 * We are not checking for null value because it should never happen and we want an exception to be thrown if so.
-		 */ 
+		 * We are not checking for null value because it should never happen and
+		 * we want an exception to be thrown if so.
+		 */
 		if (!value.equals(other.value)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Plaintext [plaintextId=" + plaintextId + ", value=" + value
-				+ ", hasMatch=" + hasMatch + "]";
-	}	
+		return "Plaintext [plaintextId=" + plaintextId + ", value=" + value + ", hasMatch="
+				+ hasMatch + "]";
+	}
 }

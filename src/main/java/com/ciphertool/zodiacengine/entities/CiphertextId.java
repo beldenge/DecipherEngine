@@ -13,9 +13,10 @@ public class CiphertextId implements Serializable {
 	private int id;
 	private Cipher cipher;
 
-	public CiphertextId() {}
-	
-	@Column(name="id")
+	public CiphertextId() {
+	}
+
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -23,9 +24,9 @@ public class CiphertextId implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	@ManyToOne
-	@JoinColumn(name="cipher_id")
+	@JoinColumn(name = "cipher_id")
 	public Cipher getCipher() {
 		return cipher;
 	}
@@ -34,10 +35,12 @@ public class CiphertextId implements Serializable {
 		this.cipher = cipher;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 * 
-	 * We need to use the cipherId only instead of the whole Cipher object.  
+	 * We need to use the cipherId only instead of the whole Cipher object.
 	 * Otherwise we will run into a stack overflow.
 	 */
 	@Override
@@ -49,10 +52,12 @@ public class CiphertextId implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We need to check the cipherId only instead of the whole Cipher object.  
+	 * We need to check the cipherId only instead of the whole Cipher object.
 	 * Otherwise we will run into a stack overflow.
 	 */
 	@Override
@@ -71,10 +76,12 @@ public class CiphertextId implements Serializable {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 * 
-	 * We need to use the cipherId only instead of the whole Cipher object.  
+	 * We need to use the cipherId only instead of the whole Cipher object.
 	 * Otherwise we will run into a stack overflow.
 	 */
 	@Override

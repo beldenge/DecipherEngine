@@ -10,25 +10,27 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.ciphertool.zodiacengine.entities.Cipher;
 
 public class CipherDaoTest {
-	
+
 	private static Logger log = Logger.getLogger(CipherDaoTest.class);
 	private static ApplicationContext context;
-	
+
 	@BeforeClass
 	public static void setUp() throws Exception {
 		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		log.info("Spring context created successfully!");
 	}
-	
+
 	@Test
 	public void testFindByCipherName() {
 		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		log.info(cipher);
 	}
-	
+
 	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage collected and subsequent unit tests may encounter an out of memory exception
+	 * Without setting these to null, the humongous wordMap will not be garbage
+	 * collected and subsequent unit tests may encounter an out of memory
+	 * exception
 	 */
 	@AfterClass
 	public static void cleanUp() {

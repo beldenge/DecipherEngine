@@ -12,16 +12,17 @@ public class PlaintextId implements Serializable {
 	private static final long serialVersionUID = -7647050018442693916L;
 	private Solution solution;
 	private int ciphertextId;
-	
-	public PlaintextId() {}
-	
-	public PlaintextId(Solution solution, int ciphertextId) {
-		this.solution=solution;
-		this.ciphertextId=ciphertextId;
+
+	public PlaintextId() {
 	}
-	
+
+	public PlaintextId(Solution solution, int ciphertextId) {
+		this.solution = solution;
+		this.ciphertextId = ciphertextId;
+	}
+
 	@ManyToOne
-	@JoinColumn(name="solution_id")
+	@JoinColumn(name = "solution_id")
 	public Solution getSolution() {
 		return solution;
 	}
@@ -29,8 +30,8 @@ public class PlaintextId implements Serializable {
 	public void setSolution(Solution solution) {
 		this.solution = solution;
 	}
-	
-	@Column(name="ciphertext_id")
+
+	@Column(name = "ciphertext_id")
 	public int getCiphertextId() {
 		return ciphertextId;
 	}
@@ -39,10 +40,12 @@ public class PlaintextId implements Serializable {
 		this.ciphertextId = ciphertextId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 * 
-	 * We need to use the solutionId only instead of the whole Solution object.  
+	 * We need to use the solutionId only instead of the whole Solution object.
 	 * Otherwise we will run into a stack overflow.
 	 */
 	@Override
@@ -54,11 +57,13 @@ public class PlaintextId implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We need to check the solutionId only instead of the whole Solution object.  
-	 * Otherwise we will run into a stack overflow.
+	 * We need to check the solutionId only instead of the whole Solution
+	 * object. Otherwise we will run into a stack overflow.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -68,33 +73,35 @@ public class PlaintextId implements Serializable {
 		if (!(obj instanceof PlaintextId)) {
 			return false;
 		}
-		
+
 		PlaintextId other = (PlaintextId) obj;
 		if (ciphertextId != other.ciphertextId) {
 			return false;
 		}
-		
+
 		/*
-		 * We are not checking for null solution because it should never happen and we want an exception to be thrown if so.
-		 */ 
+		 * We are not checking for null solution because it should never happen
+		 * and we want an exception to be thrown if so.
+		 */
 		if (solution.getId() != other.getSolution().getId()) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 * 
-	 * We need to use the solutionId only instead of the whole Solution object.  
+	 * We need to use the solutionId only instead of the whole Solution object.
 	 * Otherwise we will run into a stack overflow.
 	 */
 	@Override
 	public String toString() {
-		return "PlaintextId [solutionId=" + solution.getId() + ", ciphertextId="
-				+ ciphertextId + "]";
+		return "PlaintextId [solutionId=" + solution.getId() + ", ciphertextId=" + ciphertextId
+				+ "]";
 	}
-
 
 }

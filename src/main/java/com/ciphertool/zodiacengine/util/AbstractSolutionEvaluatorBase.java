@@ -9,11 +9,13 @@ import com.ciphertool.zodiacengine.entities.Ciphertext;
 
 public abstract class AbstractSolutionEvaluatorBase {
 	protected Cipher cipher;
-	
+
 	/**
-	 * Creates a map with the key as the String value of the Ciphertext character and the value as a List of occurrences within the cipher
+	 * Creates a map with the key as the String value of the Ciphertext
+	 * character and the value as a List of occurrences within the cipher
 	 * 
-	 * There's no reason to run this for every single iteration of the validator since the ciphertext is not going to change during a run
+	 * There's no reason to run this for every single iteration of the validator
+	 * since the ciphertext is not going to change during a run
 	 * 
 	 * @return
 	 */

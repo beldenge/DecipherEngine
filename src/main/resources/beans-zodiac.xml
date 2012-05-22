@@ -1,127 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        		http://www.springframework.org/schema/context
        		http://www.springframework.org/schema/context/spring-context-3.0.xsd">
- 
- 	<context:annotation-config/>
- 	<context:component-scan base-package="com.ciphertool.zodiacengine.util"/>
- 	<context:component-scan base-package="com.ciphertool.sentencebuilder.dao"/>
- 	<context:component-scan base-package="com.ciphertool.zodiacengine.dao"/>
- 	
-	 <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.ciphertool.zodiacengine.util" />
+	<context:component-scan base-package="com.ciphertool.sentencebuilder.dao" />
+	<context:component-scan base-package="com.ciphertool.zodiacengine.dao" />
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
 			<value>classpath:zodiacengine.properties</value>
 		</property>
 	</bean>
- 	
- 	<!-- This is a straight thread-based implementation of concurrency for the app, which happens to be the most efficient. -->
- 	<bean class="com.ciphertool.zodiacengine.CipherSolutionEngine" id="cipherSolutionEngine">
-    	<property name="numIterations" value="${solution.engine.iterations}"/>
-    	<property name="maxThreads" value="${max.threads}"/>
-    	<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}"/>
-    	<property name="cipherName" value="${cipher.name}"/>
-    	<property name="cipherDao" ref="cipherDao" />
-    	<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
-    	<property name="solutionEvaluator" ref="solutionEvaluator" />
-    </bean>
-    
-    <!-- This is an Executor framework implementation of concurrency for the app. It's efficiency seems to depend greatly on how well the queue of tasks is managed. -->
-    <bean class="com.ciphertool.zodiacengine.CipherSolutionExecutor" id="cipherSolutionExecutor">
-    	<property name="applicationDurationType" value="${application.runtype}"/>
-    	<property name="numIterations" value="${solution.engine.iterations}"/>
-    	<property name="maxThreads" value="${max.threads}"/>
-    	<property name="applicationRunMillis" value="${engine.runmillis}"/>
-    	<property name="cipherName" value="${cipher.name}"/>
-    	<property name="cipherDao" ref="cipherDao" />
-    	<property name="queueTaskLimit" value="${executor.queue.limit}" />
-    	<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
-    	<property name="solutionEvaluator" ref="solutionEvaluator" />
-    </bean>
- 	
- 	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao" id="wordMapDao" />
- 	
-    <bean class="com.ciphertool.sentencebuilder.util.SentenceHelper" id="sentenceHelper">
-    	<constructor-arg index="0" type="java.lang.String" value="${grammar.file.location}"/>
-    	<property name="wordMapDao" ref="wordMapDao" />
-    </bean>
-    
-    <bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    
-    <bean class="com.ciphertool.zodiacengine.dao.CiphertextDao" id="ciphertextDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    
-    <bean class="com.ciphertool.zodiacengine.dao.PlaintextDao" id="plaintextDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
 
-    <bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    
-    <bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    
-    <bean id="solutionGenerator" class="com.ciphertool.zodiacengine.util.ZodiacSolutionGenerator" >
-		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
-		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
-            <ref bean="cipherDao"/>
-        </constructor-arg>
-        <property name="sentenceHelper" ref="sentenceHelper" />
-	</bean>
-	
-	<bean id="incrementalSolutionGenerator" class="com.ciphertool.zodiacengine.util.IncrementalSolutionGenerator" >
-		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
-		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
-            <ref bean="cipherDao"/>
-        </constructor-arg>
-        <property name="sentenceHelper" ref="sentenceHelper" />
-        <property name="solutionEvaluator" ref="incrementalSolutionEvaluator" />
-        <property name="improvementAttempts" value="${solution.generator.improvement_attempts}" />
+	<!-- This is a straight thread-based implementation of concurrency for the 
+		app, which happens to be the most efficient. -->
+	<bean class="com.ciphertool.zodiacengine.CipherSolutionEngine" id="cipherSolutionEngine">
+		<property name="numIterations" value="${solution.engine.iterations}" />
+		<property name="maxThreads" value="${max.threads}" />
+		<property name="monitorSleepMillis" value="${thread.monitor.sleep.millis}" />
+		<property name="cipherName" value="${cipher.name}" />
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
+		<property name="solutionEvaluator" ref="solutionEvaluator" />
 	</bean>
 
-    <bean id="solutionEvaluator" class="com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator" >
-		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
-		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
-            <ref bean="cipherDao"/>
-        </constructor-arg>
-        <property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
-        <property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
-        <property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
-        <property name="solutionDao" ref="solutionDao" />
+	<!-- This is an Executor framework implementation of concurrency for the 
+		app. It's efficiency seems to depend greatly on how well the queue of tasks 
+		is managed. -->
+	<bean class="com.ciphertool.zodiacengine.CipherSolutionExecutor"
+		id="cipherSolutionExecutor">
+		<property name="applicationDurationType" value="${application.runtype}" />
+		<property name="numIterations" value="${solution.engine.iterations}" />
+		<property name="maxThreads" value="${max.threads}" />
+		<property name="applicationRunMillis" value="${engine.runmillis}" />
+		<property name="cipherName" value="${cipher.name}" />
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="queueTaskLimit" value="${executor.queue.limit}" />
+		<property name="solutionGenerator" ref="incrementalSolutionGenerator" />
+		<property name="solutionEvaluator" ref="solutionEvaluator" />
 	</bean>
-	
-	<bean id="incrementalSolutionEvaluator" class="com.ciphertool.zodiacengine.util.IncrementalSolutionEvaluator" >
-		<constructor-arg index="0" type="java.lang.String" value="${cipher.name}"/>
-		<constructor-arg index="1" type="com.ciphertool.zodiacengine.dao.CipherDao">
-            <ref bean="cipherDao"/>
-        </constructor-arg>
+
+	<bean class="com.ciphertool.sentencebuilder.dao.IndexedWordMapDao"
+		id="wordMapDao" />
+
+	<bean class="com.ciphertool.sentencebuilder.util.SentenceHelper"
+		id="sentenceHelper">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${grammar.file.location}" />
+		<property name="wordMapDao" ref="wordMapDao" />
 	</bean>
-	
-	<bean id="solutionMerger" class="com.ciphertool.zodiacengine.util.ZodiacSolutionMerger" >
+
+	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.CiphertextDao" id="ciphertextDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.PlaintextDao" id="plaintextDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="solutionGenerator"
+		class="com.ciphertool.zodiacengine.util.ZodiacSolutionGenerator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+		<property name="sentenceHelper" ref="sentenceHelper" />
+	</bean>
+
+	<bean id="incrementalSolutionGenerator"
+		class="com.ciphertool.zodiacengine.util.IncrementalSolutionGenerator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+		<property name="sentenceHelper" ref="sentenceHelper" />
+		<property name="solutionEvaluator" ref="incrementalSolutionEvaluator" />
+		<property name="improvementAttempts" value="${solution.generator.improvement_attempts}" />
+	</bean>
+
+	<bean id="solutionEvaluator"
+		class="com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+		<property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
+		<property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
+		<property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
+		<property name="solutionDao" ref="solutionDao" />
+	</bean>
+
+	<bean id="incrementalSolutionEvaluator"
+		class="com.ciphertool.zodiacengine.util.IncrementalSolutionEvaluator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="solutionMerger" class="com.ciphertool.zodiacengine.util.ZodiacSolutionMerger">
 		<property name="solutionDao" ref="solutionDao" />
 		<property name="cipherName" value="${cipher.name}" />
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="solutionEvaluator" ref="solutionEvaluator" />
 	</bean>
-    
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.user}"/>
-        <property name="password" value="${jdbc.password}"/>
-        <property name="initialSize" value="${jdbc.connections.initialsize}"/>
-		<property name="maxActive" value="${jdbc.connections.maxactive}"/>
-    </bean>
-    
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.connections.initialsize}" />
+		<property name="maxActive" value="${jdbc.connections.maxactive}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>

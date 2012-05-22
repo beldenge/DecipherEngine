@@ -18,10 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name="solution")
+@Table(name = "solution")
 public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
-	
+
 	private int id;
 	private int cipherId;
 	private int totalMatches;
@@ -31,11 +31,12 @@ public class Solution implements Serializable {
 	private Cipher cipher;
 	private int committedIndex;
 	private int uncommittedIndex;
-	
-	public Solution() {}
+
+	public Solution() {
+	}
 
 	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
-		this.cipherId=cipherId;
+		this.cipherId = cipherId;
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
 		this.adjacentMatchCount = adjacentMatches;
@@ -43,8 +44,8 @@ public class Solution implements Serializable {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -53,7 +54,7 @@ public class Solution implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name="cipher_id")
+	@Column(name = "cipher_id")
 	public int getCipherId() {
 		return cipherId;
 	}
@@ -65,7 +66,7 @@ public class Solution implements Serializable {
 	/**
 	 * @return
 	 */
-	@Column(name="total_matches")
+	@Column(name = "total_matches")
 	public int getTotalMatches() {
 		return totalMatches;
 	}
@@ -80,13 +81,14 @@ public class Solution implements Serializable {
 	/**
 	 * @return the uniqueMatches
 	 */
-	@Column(name="unique_matches")
+	@Column(name = "unique_matches")
 	public int getUniqueMatches() {
 		return uniqueMatches;
 	}
 
 	/**
-	 * @param uniqueMatches the uniqueMatches to set
+	 * @param uniqueMatches
+	 *            the uniqueMatches to set
 	 */
 	public void setUniqueMatches(int uniqueMatches) {
 		this.uniqueMatches = uniqueMatches;
@@ -95,19 +97,20 @@ public class Solution implements Serializable {
 	/**
 	 * @return the adjacentMatchCount
 	 */
-	@Column(name="adjacent_matches")
+	@Column(name = "adjacent_matches")
 	public int getAdjacentMatchCount() {
 		return adjacentMatchCount;
 	}
 
 	/**
-	 * @param adjacentMatchCount the adjacentMatchCount to set
+	 * @param adjacentMatchCount
+	 *            the adjacentMatchCount to set
 	 */
 	public void setAdjacentMatchCount(int adjacentMatchCount) {
 		this.adjacentMatchCount = adjacentMatchCount;
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="plaintextId.solution", cascade=CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "plaintextId.solution", cascade = CascadeType.ALL)
 	public List<Plaintext> getPlaintextCharacters() {
 		if (this.plaintextCharacters == null) {
 			this.plaintextCharacters = new ArrayList<Plaintext>();
@@ -118,9 +121,9 @@ public class Solution implements Serializable {
 	public void setPlaintextCharacters(List<Plaintext> plaintextCharacters) {
 		this.plaintextCharacters = plaintextCharacters;
 	}
-	
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="cipher_id", insertable=false, updatable=false)
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cipher_id", insertable = false, updatable = false)
 	public Cipher getCipher() {
 		return cipher;
 	}
@@ -130,7 +133,8 @@ public class Solution implements Serializable {
 	}
 
 	/**
-	 * This is the permanent index used to keep track of how far an incremental solution has progressed
+	 * This is the permanent index used to keep track of how far an incremental
+	 * solution has progressed
 	 * 
 	 * @return the committedIndex
 	 */
@@ -140,14 +144,16 @@ public class Solution implements Serializable {
 	}
 
 	/**
-	 * @param committedIndex the committedIndex to set
+	 * @param committedIndex
+	 *            the committedIndex to set
 	 */
 	public void setCommittedIndex(int committedIndex) {
 		this.committedIndex = committedIndex;
 	}
 
 	/**
-	 * This is the temporary index used to keep track of how far an incremental solution has progressed
+	 * This is the temporary index used to keep track of how far an incremental
+	 * solution has progressed
 	 * 
 	 * @return the uncommittedIndex
 	 */
@@ -157,7 +163,8 @@ public class Solution implements Serializable {
 	}
 
 	/**
-	 * @param uncommittedIndex the uncommittedIndex to set
+	 * @param uncommittedIndex
+	 *            the uncommittedIndex to set
 	 */
 	public void setUncommittedIndex(int uncommittedIndex) {
 		this.uncommittedIndex = uncommittedIndex;
@@ -168,11 +175,14 @@ public class Solution implements Serializable {
 		plaintext.getPlaintextId().setSolution(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 * 
-	 * We must not use the Plaintext characters else we may run into a stack overflow. 
-	 * It shouldn't be necessary anyway since the id makes the solution unique.
+	 * We must not use the Plaintext characters else we may run into a stack
+	 * overflow. It shouldn't be necessary anyway since the id makes the
+	 * solution unique.
 	 */
 	@Override
 	public int hashCode() {
@@ -186,11 +196,14 @@ public class Solution implements Serializable {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We must not check the Plaintext characters else we may run into a stack overflow. 
-	 * It shouldn't be necessary anyway since the id makes the solution unique.
+	 * We must not check the Plaintext characters else we may run into a stack
+	 * overflow. It shouldn't be necessary anyway since the id makes the
+	 * solution unique.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -214,42 +227,45 @@ public class Solution implements Serializable {
 		return true;
 	}
 
-	/* 
-	 * Prints the properties of the solution and then outputs the entire plaintext list in block format.
+	/*
+	 * Prints the properties of the solution and then outputs the entire
+	 * plaintext list in block format.
 	 * 
 	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId + ", totalMatches=" + totalMatches + "" + ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
-		
-		// start at 1 instead of 0 so that the modulus function below isn't messed up
-		for (int i = 1; i <= cipher.length(); i ++) {
-			
+		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId
+				+ ", totalMatches=" + totalMatches + "" + ", unique matches=" + uniqueMatches
+				+ ", adjacent matches=" + adjacentMatchCount + "]\n");
+
+		// start at 1 instead of 0 so that the modulus function below isn't
+		// messed up
+		for (int i = 1; i <= cipher.length(); i++) {
+
 			// subtract 1 since the get method begins with 0
 			if (plaintextCharacters.get(i - 1).getHasMatch()) {
 				sb.append("[");
 				sb.append(plaintextCharacters.get(i - 1).getValue());
 				sb.append("]");
-			}
-			else {
+			} else {
 				sb.append(" ");
 				sb.append(plaintextCharacters.get(i - 1).getValue());
 				sb.append(" ");
 			}
-			
+
 			// print a newline if we are at the end of the row
 			if ((i % cipher.getColumns()) == 0) {
 				sb.append("\n");
-			}
-			else {
+			} else {
 				sb.append(" ");
 			}
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 }

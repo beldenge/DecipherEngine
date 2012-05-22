@@ -11,18 +11,18 @@ public class CipherDto {
 	private Solution solutionMostUnique;
 	private Solution solutionMostAdjacent;
 	private String threadName;
-	
+
 	/**
 	 * No-args constructor
 	 */
 	public CipherDto(String threadName, int cipherId) {
 		this.threadName = threadName;
-		
+
 		this.totalMatchSum = 0;
 		this.numSolutions = 0;
-		this.uniqueMatchSum  = 0;
+		this.uniqueMatchSum = 0;
 		this.adjacentMatchSum = 0;
-		
+
 		/*
 		 * We set "dummy" Solutions with the lowest possible confidence values
 		 */
@@ -30,16 +30,17 @@ public class CipherDto {
 		this.solutionMostUnique = new Solution(cipherId, 0, 0, 0);
 		this.solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
 	}
-	
+
 	/**
-	 * Computes the average total matches of all solutions tried up to this point
+	 * Computes the average total matches of all solutions tried up to this
+	 * point
 	 * 
 	 * @return
 	 */
 	public long getAverage() {
 		return (this.totalMatchSum / this.numSolutions);
 	}
-	
+
 	/**
 	 * @param totalMatches
 	 */
@@ -53,19 +54,19 @@ public class CipherDto {
 	public void addToUniqueSum(long uniqueMatches) {
 		this.uniqueMatchSum += uniqueMatches;
 	}
-	
+
 	/**
 	 * @param adjacentMatches
 	 */
 	public void addToAdjacentSum(long adjacentMatches) {
 		this.adjacentMatchSum += adjacentMatches;
 	}
-	
+
 	/**
 	 * Increments by 1 the number of solutions tried up to this point
 	 */
 	public void incrementSolutions() {
-		this.numSolutions ++;
+		this.numSolutions++;
 	}
 
 	/**
@@ -104,7 +105,8 @@ public class CipherDto {
 	}
 
 	/**
-	 * @param solutionMostMatches the solutionMostMatches to set
+	 * @param solutionMostMatches
+	 *            the solutionMostMatches to set
 	 */
 	public void setSolutionMostMatches(Solution solutionMostMatches) {
 		this.solutionMostMatches = solutionMostMatches;
@@ -118,7 +120,8 @@ public class CipherDto {
 	}
 
 	/**
-	 * @param solutionMostUnique the solutionMostUnique to set
+	 * @param solutionMostUnique
+	 *            the solutionMostUnique to set
 	 */
 	public void setSolutionMostUnique(Solution solutionMostUnique) {
 		this.solutionMostUnique = solutionMostUnique;
@@ -132,7 +135,8 @@ public class CipherDto {
 	}
 
 	/**
-	 * @param solutionMostAdjacent the solutionMostAdjacent to set
+	 * @param solutionMostAdjacent
+	 *            the solutionMostAdjacent to set
 	 */
 	public void setSolutionMostAdjacent(Solution solutionMostAdjacent) {
 		this.solutionMostAdjacent = solutionMostAdjacent;

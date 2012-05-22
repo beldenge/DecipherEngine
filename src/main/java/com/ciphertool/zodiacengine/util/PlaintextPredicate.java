@@ -8,14 +8,15 @@ import com.ciphertool.zodiacengine.entities.Plaintext;
 public class PlaintextPredicate implements Predicate {
 
 	private Ciphertext ciphertext;
-	
-	public PlaintextPredicate (Ciphertext ciphertext) {
+
+	public PlaintextPredicate(Ciphertext ciphertext) {
 		this.ciphertext = ciphertext;
 	}
 
 	@Override
 	public boolean evaluate(Object p) {
 		Plaintext plaintext = (Plaintext) p;
-		return (plaintext.getPlaintextId().getCiphertextId() == this.ciphertext.getCiphertextId().getId());
+		return (plaintext.getPlaintextId().getCiphertextId() == this.ciphertext.getCiphertextId()
+				.getId());
 	}
 }

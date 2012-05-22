@@ -14,7 +14,8 @@ import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
-public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements SolutionEvaluator {
+public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
+		SolutionEvaluator {
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
 	HashMap<String, List<Ciphertext>> ciphertextKey;
@@ -22,7 +23,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	private int uniqueMatchThreshold;
 	private int adjacencyThreshold;
 	private SolutionDao solutionDao;
-	
+
 	/**
 	 * @param cipherName
 	 * @param cipherDao
@@ -31,13 +32,19 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		cipher = cipherDao.findByCipherName(cipherName);
 		ciphertextKey = createKeyFromCiphertext();
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel(com.ciphertool.zodiacengine.entities.Solution)
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * Calculates the confidence level as the number of instances that a ciphertext character has the same plaintext character mapped 
-	 * to it.  If a ciphertext character has multiple matches, then select the plaintext character with the most matches (or if 
-	 * there's a tie, then the first one wins).
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
+	 * (com.ciphertool.zodiacengine.entities.Solution)
+	 * 
+	 * Calculates the confidence level as the number of instances that a
+	 * ciphertext character has the same plaintext character mapped to it. If a
+	 * ciphertext character has multiple matches, then select the plaintext
+	 * character with the most matches (or if there's a tie, then the first one
+	 * wins).
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
@@ -50,7 +57,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		String currentValue = null;
 		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
-		
+
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
 		 */
@@ -59,57 +66,63 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 			uniqueMatch = false;
 			bestMatch = null;
 			plaintextMatchMap = new HashMap<String, List<Plaintext>>();
-			
+
 			/*
-			 * Now iterate for each occurrence of the current Ciphertext character
+			 * Now iterate for each occurrence of the current Ciphertext
+			 * character
 			 */
 			for (Ciphertext ciphertextIndice : ciphertextIndices) {
 				/*
-				 *  This just returns the Plaintext character that corresponds to the given Ciphertext character.
-				 *  The usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
-				 *  
-				 *  We could also make this into a map with the ciphertextId as the key.  Then we would no 
-				 *  longer have to worry about order and or subtracting one from the id.  It does come with a 
-				 *  performance hit though.
+				 * This just returns the Plaintext character that corresponds to
+				 * the given Ciphertext character. The usage of List.get()
+				 * assumes that the ArrayList is properly sorted by CiphertextId
+				 * 
+				 * We could also make this into a map with the ciphertextId as
+				 * the key. Then we would no longer have to worry about order
+				 * and or subtracting one from the id. It does come with a
+				 * performance hit though.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId()-1);
-				
+				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId() - 1);
+
 				currentValue = plaintext.getValue();
-				
+
 				if (!plaintextMatchMap.containsKey(currentValue)) {
 					plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
-				}
-				else {
+				} else {
 					uniqueMatch = true;
 				}
-				
+
 				plaintextMatchMap.get(currentValue).add(plaintext);
-				
+
 				if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
 					/*
-					 * Subtract by one when setting maxMatches so that a match on just a pair does not count as two matches.
+					 * Subtract by one when setting maxMatches so that a match
+					 * on just a pair does not count as two matches.
 					 */
 					maxMatches = plaintextMatchMap.get(currentValue).size() - 1;
-					
+
 					bestMatch = currentValue;
 				}
 			}
-			
+
 			/*
-			 * If there was a match on this Ciphertext, set the hasMatch property to true on all the Plaintext matches.
-			 * Use the bestMatch value so that only the Plaintext with the optimal number of matches is set. 
+			 * If there was a match on this Ciphertext, set the hasMatch
+			 * property to true on all the Plaintext matches. Use the bestMatch
+			 * value so that only the Plaintext with the optimal number of
+			 * matches is set.
 			 */
 			if (bestMatch != null) {
 				for (Plaintext pt : plaintextMatchMap.get(bestMatch)) {
 					pt.setHasMatch(true);
 				}
 			}
-			
+
 			/*
-			 * Add the Plaintext matches on this Ciphertext character to the overall confidence value, represented by total
+			 * Add the Plaintext matches on this Ciphertext character to the
+			 * overall confidence value, represented by total
 			 */
 			total += maxMatches;
-			
+
 			/*
 			 * Increment the unique matches by converting a boolean to an int
 			 */
@@ -117,43 +130,45 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		}
 		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
-		
+
 		boolean countAdjacent = false;
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if(countAdjacent == false && plaintextCharacters.get(ct.getCiphertextId().getId()-1).getHasMatch()) {
+			if (countAdjacent == false
+					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
 				countAdjacent = true;
-			}
-			else if (countAdjacent == true && plaintextCharacters.get(ct.getCiphertextId().getId()-1).getHasMatch()) {
-				adjacentMatchCount ++;
-			}
-			else {
+			} else if (countAdjacent == true
+					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+				adjacentMatchCount++;
+			} else {
 				countAdjacent = false;
 			}
 		}
-		
+
 		solution.setAdjacentMatchCount(adjacentMatchCount);
-		
+
 		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
-		
+
 		if (solution.getTotalMatches() >= totalMatchThreshold) {
-			log.info("Found solution with " + solution.getTotalMatches() + " total matches.  Persisting to solution table.");
+			log.info("Found solution with " + solution.getTotalMatches()
+					+ " total matches.  Persisting to solution table.");
+			solutionDao.insert(solution);
+		} else if (solution.getUniqueMatches() >= uniqueMatchThreshold) {
+			log.info("Found solution with " + solution.getUniqueMatches()
+					+ " unique matches.  Persisting to solution table.");
+			solutionDao.insert(solution);
+		} else if (solution.getAdjacentMatchCount() >= adjacencyThreshold) {
+			log.info("Found solution with " + solution.getAdjacentMatchCount()
+					+ " adjacent matches.  Persisting to solution table.");
 			solutionDao.insert(solution);
 		}
-		else if (solution.getUniqueMatches() >= uniqueMatchThreshold) {
-			log.info("Found solution with " + solution.getUniqueMatches() + " unique matches.  Persisting to solution table.");
-			solutionDao.insert(solution);
-		}
-		else if (solution.getAdjacentMatchCount() >= adjacencyThreshold) {
-			log.info("Found solution with " + solution.getAdjacentMatchCount() + " adjacent matches.  Persisting to solution table.");
-			solutionDao.insert(solution);
-		}
-		
+
 		return total;
 	}
-	
+
 	/**
-	 * @param totalMatcheThreshold the totalMatcheThreshold to set
+	 * @param totalMatcheThreshold
+	 *            the totalMatcheThreshold to set
 	 */
 	@Required
 	public void setTotalMatchThreshold(int totalMatchThreshold) {
@@ -161,7 +176,8 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	}
 
 	/**
-	 * @param uniqueMatchThreshold the uniqueMatchThreshold to set
+	 * @param uniqueMatchThreshold
+	 *            the uniqueMatchThreshold to set
 	 */
 	@Required
 	public void setUniqueMatchThreshold(int uniqueMatchThreshold) {
@@ -169,7 +185,8 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	}
 
 	/**
-	 * @param solutionDao the solutionDao to set
+	 * @param solutionDao
+	 *            the solutionDao to set
 	 */
 	@Required
 	public void setSolutionDao(SolutionDao solutionDao) {
@@ -177,7 +194,8 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	}
 
 	/**
-	 * @param adjacencyThreshold the adjacencyThreshold to set
+	 * @param adjacencyThreshold
+	 *            the adjacencyThreshold to set
 	 */
 	@Required
 	public void setAdjacencyThreshold(int adjacencyThreshold) {

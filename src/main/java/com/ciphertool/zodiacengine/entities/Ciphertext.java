@@ -9,15 +9,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ciphertext")
-@AssociationOverrides(
-		@AssociationOverride(name = "ciphertextId.cipher", joinColumns = @JoinColumn(name = "cipher_id"))
-)
+@Table(name = "ciphertext")
+@AssociationOverrides(@AssociationOverride(name = "ciphertextId.cipher", joinColumns = @JoinColumn(name = "cipher_id")))
 public class Ciphertext {
 	private String value;
 	private CiphertextId ciphertextId;
-	
-	public Ciphertext() {}
+
+	public Ciphertext() {
+	}
 
 	@EmbeddedId
 	public CiphertextId getCiphertextId() {
@@ -28,7 +27,7 @@ public class Ciphertext {
 		this.ciphertextId = ciphertextId;
 	}
 
-	@Column(name="value")
+	@Column(name = "value")
 	public String getValue() {
 		return value;
 	}
@@ -36,13 +35,12 @@ public class Ciphertext {
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((ciphertextId == null) ? 0 : ciphertextId.hashCode());
+		result = prime * result + ((ciphertextId == null) ? 0 : ciphertextId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -71,8 +69,7 @@ public class Ciphertext {
 
 	@Override
 	public String toString() {
-		return "Ciphertext [value=" + value + ", ciphertextId=" + ciphertextId
-				+ "]";
+		return "Ciphertext [value=" + value + ", ciphertextId=" + ciphertextId + "]";
 	}
-	
+
 }

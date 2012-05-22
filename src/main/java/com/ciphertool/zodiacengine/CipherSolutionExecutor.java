@@ -29,91 +29,105 @@ public class CipherSolutionExecutor {
 	private static long queueTaskLimit;
 	private static SolutionGenerator solutionGenerator;
 	private static SolutionEvaluator solutionEvaluator;
-	
+
 	/**
 	 * @param args
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
-	public static void main(String [] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException {
 		// Spin up the Spring application context
 		setUp();
 
 		CipherDto cipherDto = null;
-		
+
 		int cipherId = cipherDao.findByCipherName(cipherName).getId();
-		
+
 		long start = System.currentTimeMillis();
-		
+
 		ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
-		
+
 		cipherDto = new CipherDto(String.valueOf(0), cipherId);
-		
+
 		/*
-		 * We want to generate and validate a specific number of solutions, no matter how long it takes.
+		 * We want to generate and validate a specific number of solutions, no
+		 * matter how long it takes.
 		 */
 		if (applicationDurationType == ApplicationDurationType.ITERATION) {
 			if (numIterations <= 0) {
-				throw new IllegalArgumentException("ApplicationDurationType set to ITERATION, but numIterations was not set or was set incorrectly.");
+				throw new IllegalArgumentException(
+						"ApplicationDurationType set to ITERATION, but numIterations was not set or was set incorrectly.");
 			}
-			
-			log.info("Beginning solution generation.  Generating " + numIterations + " solutions using " + maxThreads +" threads.");
-			
-			for (long i = 1; i <= numIterations; i ++) {
-				Runnable cipherTask = new CipherSolutionSynchronizedRunnable(solutionGenerator, solutionEvaluator, cipherDto);
-				
+
+			log.info("Beginning solution generation.  Generating " + numIterations
+					+ " solutions using " + maxThreads + " threads.");
+
+			for (long i = 1; i <= numIterations; i++) {
+				Runnable cipherTask = new CipherSolutionSynchronizedRunnable(solutionGenerator,
+						solutionEvaluator, cipherDto);
+
 				executor.execute(cipherTask);
 			}
-			
-			// Make executor accept no new threads and finish all existing threads in the queue
+
+			// Make executor accept no new threads and finish all existing
+			// threads in the queue
 			executor.shutdown();
 		}
 		/*
-		 * We want to generate and validate solutions for a set amount of time, no matter how many we can generate in that time period.
+		 * We want to generate and validate solutions for a set amount of time,
+		 * no matter how many we can generate in that time period.
 		 */
 		else if (applicationDurationType == ApplicationDurationType.TEMPORAL) {
 			if (applicationRunMillis <= 0) {
-				throw new IllegalArgumentException("ApplicationDurationType set to TEMPORAL, but applicationRunMillis was not set or was set incorrectly.");
+				throw new IllegalArgumentException(
+						"ApplicationDurationType set to TEMPORAL, but applicationRunMillis was not set or was set incorrectly.");
 			}
-			
-			log.info("Beginning solution generation.  Generating solutions for " + applicationRunMillis + "ms using " + maxThreads +" threads.");
-			
+
+			log.info("Beginning solution generation.  Generating solutions for "
+					+ applicationRunMillis + "ms using " + maxThreads + " threads.");
+
 			long count = 0;
-			
+
 			while (true) {
-				Runnable cipherTask = new CipherSolutionSynchronizedRunnable(solutionGenerator, solutionEvaluator, cipherDto);
-				
+				Runnable cipherTask = new CipherSolutionSynchronizedRunnable(solutionGenerator,
+						solutionEvaluator, cipherDto);
+
 				executor.execute(cipherTask);
-				
+
 				/*
-				 * This is a fairly rudimentary way of managing the number of tasks sent to the executor.
+				 * This is a fairly rudimentary way of managing the number of
+				 * tasks sent to the executor.
 				 * 
-				 * If we don't manage it somehow, the app will get bogged down by the continuous while loop and performance will degrade significantly.
+				 * If we don't manage it somehow, the app will get bogged down
+				 * by the continuous while loop and performance will degrade
+				 * significantly.
 				 */
 				if (++count >= queueTaskLimit) {
 					count = 0;
-					
+
 					executor.shutdown();
-					
+
 					/*
-					 * We are mainly concerned about blocking until all tasks are finished, so the timeout is not a big concern.
+					 * We are mainly concerned about blocking until all tasks
+					 * are finished, so the timeout is not a big concern.
 					 */
 					executor.awaitTermination(1, TimeUnit.MINUTES);
-					
+
 					executor = Executors.newFixedThreadPool(maxThreads);
-					
-					if((System.currentTimeMillis() - start) > applicationRunMillis) {
+
+					if ((System.currentTimeMillis() - start) > applicationRunMillis) {
 						break;
 					}
 				}
 			}
-			
+
 			// Make executor stop immediately
 			executor.shutdownNow();
 		}
-		
+
 		// Wait until all threads are finished
-		while (!executor.isTerminated()) {}
-		
+		while (!executor.isTerminated()) {
+		}
+
 		Solution solutionMostMatches = cipherDto.getSolutionMostMatches();
 		Solution solutionMostUnique = cipherDto.getSolutionMostUnique();
 		Solution solutionMostAdjacent = cipherDto.getSolutionMostAdjacent();
@@ -121,26 +135,30 @@ public class CipherSolutionExecutor {
 		/*
 		 * Print out summary information
 		 */
-		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate " + cipherDto.getNumSolutions() + " solutions.");
+		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate and validate "
+				+ cipherDto.getNumSolutions() + " solutions.");
 		log.info("Highest total matches achieved: " + solutionMostMatches.getTotalMatches());
-		log.info("Average total matches: " + (cipherDto.getTotalMatchSum() / cipherDto.getNumSolutions()));
+		log.info("Average total matches: "
+				+ (cipherDto.getTotalMatchSum() / cipherDto.getNumSolutions()));
 		log.info("Best solution found: " + solutionMostMatches);
 		log.info("Most unique matches achieved: " + solutionMostUnique.getUniqueMatches());
-		log.info("Average unique matches: " + (cipherDto.getUniqueMatchSum() / cipherDto.getNumSolutions()));
+		log.info("Average unique matches: "
+				+ (cipherDto.getUniqueMatchSum() / cipherDto.getNumSolutions()));
 		log.info("Solution with most unique matches found: " + solutionMostUnique);
 		log.info("Most adjacent matches achieved: " + solutionMostAdjacent.getAdjacentMatchCount());
-		log.info("Average adjacent matches: " + (cipherDto.getAdjacentMatchSum() / cipherDto.getNumSolutions()));
+		log.info("Average adjacent matches: "
+				+ (cipherDto.getAdjacentMatchSum() / cipherDto.getNumSolutions()));
 		log.info("Solution with most adjacent matches found: " + solutionMostAdjacent);
 	}
-	
+
 	/**
 	 * Spins up the Spring application context
 	 */
 	private static void setUp() {
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
-		
+
 		factory = context;
-		
+
 		log.info("Spring context created successfully!");
 	}
 
@@ -151,7 +169,7 @@ public class CipherSolutionExecutor {
 	public void setMaxThreads(int maxThreads) {
 		CipherSolutionExecutor.maxThreads = maxThreads;
 	}
-	
+
 	/**
 	 * @param applicationDurationType
 	 */
@@ -159,7 +177,7 @@ public class CipherSolutionExecutor {
 	public void setApplicationDurationType(ApplicationDurationType applicationDurationType) {
 		CipherSolutionExecutor.applicationDurationType = applicationDurationType;
 	}
-	
+
 	/**
 	 * Not required since the duration type may not be iteration-based.
 	 * 
@@ -168,7 +186,7 @@ public class CipherSolutionExecutor {
 	public void setNumIterations(long numIterations) {
 		CipherSolutionExecutor.numIterations = numIterations;
 	}
-	
+
 	/**
 	 * Not required since the duration type may not be temporal.
 	 * 
@@ -179,7 +197,8 @@ public class CipherSolutionExecutor {
 	}
 
 	/**
-	 * @param cipherDao the cipherDao to set
+	 * @param cipherDao
+	 *            the cipherDao to set
 	 */
 	@Required
 	public void setCipherDao(CipherDao cipherDao) {
@@ -187,7 +206,8 @@ public class CipherSolutionExecutor {
 	}
 
 	/**
-	 * @param cipherName the cipherName to set
+	 * @param cipherName
+	 *            the cipherName to set
 	 */
 	@Required
 	public void setCipherName(String cipherName) {
@@ -195,7 +215,8 @@ public class CipherSolutionExecutor {
 	}
 
 	/**
-	 * @param queueTaskLimit the queueTaskLimit to set
+	 * @param queueTaskLimit
+	 *            the queueTaskLimit to set
 	 */
 	@Required
 	public void setQueueTaskLimit(long queueTaskLimit) {
@@ -203,7 +224,8 @@ public class CipherSolutionExecutor {
 	}
 
 	/**
-	 * @param solutionGenerator the solutionGenerator to set
+	 * @param solutionGenerator
+	 *            the solutionGenerator to set
 	 */
 	@Required
 	public void setSolutionGenerator(SolutionGenerator solutionGenerator) {
@@ -211,7 +233,8 @@ public class CipherSolutionExecutor {
 	}
 
 	/**
-	 * @param solutionEvaluator the solutionEvaluator to set
+	 * @param solutionEvaluator
+	 *            the solutionEvaluator to set
 	 */
 	@Required
 	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {

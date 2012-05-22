@@ -12,7 +12,7 @@ import com.ciphertool.zodiacengine.entities.Solution;
 @Component
 public class SolutionDao implements Dao {
 	private SessionFactory sessionFactory;
-	
+
 	public boolean insert(Solution solution) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
@@ -21,28 +21,31 @@ public class SolutionDao implements Dao {
 		session.close();
 		return true;
 	}
-	
+
 	public Solution findById(Integer id) {
 		Session session = sessionFactory.openSession();
-	    session.beginTransaction();
-		Solution solution = (Solution) session.createQuery( "from Solution where id = ?" ).setInteger(0, id).uniqueResult();
-	    session.getTransaction().commit();
-	    session.close();
-	    
+		session.beginTransaction();
+		Solution solution = (Solution) session.createQuery("from Solution where id = ?")
+				.setInteger(0, id).uniqueResult();
+		session.getTransaction().commit();
+		session.close();
+
 		return solution;
 	}
-	
+
 	public List<Solution> findByCipherName(String cipherName) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
-		List<Solution> solutions = (List<Solution>) session.createQuery("from Solution where cipherId = (select c.id from Cipher c where c.name = ?)").setParameter(0, cipherName).list();
+		List<Solution> solutions = (List<Solution>) session.createQuery(
+				"from Solution where cipherId = (select c.id from Cipher c where c.name = ?)")
+				.setParameter(0, cipherName).list();
 		session.getTransaction().commit();
 		session.close();
-		
+
 		return solutions;
 	}
-	
+
 	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

@@ -25,7 +25,7 @@ import com.ciphertool.zodiacengine.entities.Solution;
 
 /**
  * @author george
- *
+ * 
  */
 public class ZodiacSolutionMerger implements SolutionMerger {
 	private static Logger log = Logger.getLogger(ZodiacSolutionMerger.class);
@@ -33,101 +33,113 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	private String cipherName;
 	private CipherDao cipherDao;
 	private SolutionEvaluator solutionEvaluator;
-	
+
 	private static ApplicationContext context;
-	
+
 	private static void setUp() {
 		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		log.info("Spring context created successfully!");
 	}
 
-	public static void main(String [] args) throws IOException, SQLException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
 		setUp();
-		ZodiacSolutionMerger zodiacSolutionMerger = (ZodiacSolutionMerger) context.getBean("solutionMerger");
+		ZodiacSolutionMerger zodiacSolutionMerger = (ZodiacSolutionMerger) context
+				.getBean("solutionMerger");
 		zodiacSolutionMerger.mergeSolutions();
 	}
-	
+
 	@Override
 	public Solution mergeSolutions() {
 		Cipher zodiacCipher = cipherDao.findByCipherName(cipherName);
-		
+
 		Solution bestFitSolution = null;
 		List<Solution> solutions = new ArrayList<Solution>();
 		solutions.addAll(solutionDao.findByCipherName(cipherName));
-		
+
 		if (solutions == null || solutions.size() == 0) {
 			log.info("No solutions to merge.  Returning null.");
-			
+
 			return null;
 		}
-		
+
 		Map<Integer, Map<String, List<Plaintext>>> plaintextHistogramMap = new HashMap<Integer, Map<String, List<Plaintext>>>();
 		/*
 		 * Initialize the map
 		 */
 		for (Ciphertext ciphertext : zodiacCipher.getCiphertextCharacters()) {
-			if(plaintextHistogramMap.containsKey(ciphertext.getCiphertextId().getId())) {
+			if (plaintextHistogramMap.containsKey(ciphertext.getCiphertextId().getId())) {
 				log.warn("Found duplicate ciphertext key in cipher.  This should not be possible.  Returning null.");
-				
+
 				return null;
 			}
-			
-			plaintextHistogramMap.put(ciphertext.getCiphertextId().getId(), new HashMap<String, List<Plaintext>>());
+
+			plaintextHistogramMap.put(ciphertext.getCiphertextId().getId(),
+					new HashMap<String, List<Plaintext>>());
 		}
-		
+
 		for (Solution solution : solutions) {
-			if(solution.getPlaintextCharacters().size() != zodiacCipher.length()) {
-				log.warn("Cipher has " + zodiacCipher.length() + " characters, but found solution with " + solution.getPlaintextCharacters().size() + " characters.  This should not be possible. Returning null.");
-				
+			if (solution.getPlaintextCharacters().size() != zodiacCipher.length()) {
+				log.warn("Cipher has " + zodiacCipher.length()
+						+ " characters, but found solution with "
+						+ solution.getPlaintextCharacters().size()
+						+ " characters.  This should not be possible. Returning null.");
+
 				return null;
 			}
-			
+
 			for (Plaintext plaintext : solution.getPlaintextCharacters()) {
-				if (!plaintextHistogramMap.containsKey(plaintext.getPlaintextId().getCiphertextId())) {
+				if (!plaintextHistogramMap
+						.containsKey(plaintext.getPlaintextId().getCiphertextId())) {
 					log.warn("Encountered plaintextId which does not match any ciphertext character.  This should not be possible.  Returning null.");
-					
+
 					return null;
 				}
-				
-				if(!plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).containsKey(plaintext.getValue())) {
-					plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).put(plaintext.getValue(), new ArrayList<Plaintext>());
+
+				if (!plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId())
+						.containsKey(plaintext.getValue())) {
+					plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).put(
+							plaintext.getValue(), new ArrayList<Plaintext>());
 				}
-				
-				plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).get(plaintext.getValue()).add(plaintext);
+
+				plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).get(
+						plaintext.getValue()).add(plaintext);
 			}
 		}
-		
+
 		bestFitSolution = new Solution(zodiacCipher.getId(), 0, 0, 0);
 		bestFitSolution.setCipher(zodiacCipher);
-		
+
 		for (int ciphertextId = 1; ciphertextId <= zodiacCipher.length(); ciphertextId++) {
 			log.info("ciphertextId: " + ciphertextId);
 			String bestMatch = "";
 			int mostMatches = 0;
-			
+
 			for (String plaintextCharacter : plaintextHistogramMap.get(ciphertextId).keySet()) {
 				Map<String, List<Plaintext>> plaintextMap = plaintextHistogramMap.get(ciphertextId);
-				
-				log.info("Plaintext character : " + plaintextCharacter + ", count: " + plaintextMap.get(plaintextCharacter).size());
-				
-				if(plaintextMap.get(plaintextCharacter).size() > mostMatches) {
+
+				log.info("Plaintext character : " + plaintextCharacter + ", count: "
+						+ plaintextMap.get(plaintextCharacter).size());
+
+				if (plaintextMap.get(plaintextCharacter).size() > mostMatches) {
 					bestMatch = plaintextCharacter;
 					mostMatches = plaintextMap.get(plaintextCharacter).size();
 				}
 			}
-			
-			bestFitSolution.addPlaintext(new Plaintext(new PlaintextId(bestFitSolution, ciphertextId), bestMatch));
+
+			bestFitSolution.addPlaintext(new Plaintext(new PlaintextId(bestFitSolution,
+					ciphertextId), bestMatch));
 		}
-		
+
 		solutionEvaluator.determineConfidenceLevel(bestFitSolution);
-		
+
 		log.info("bestFitSolution: " + bestFitSolution);
-		
+
 		return bestFitSolution;
 	}
 
 	/**
-	 * @param solutionDao the solutionDao to set
+	 * @param solutionDao
+	 *            the solutionDao to set
 	 */
 	@Required
 	public void setSolutionDao(SolutionDao solutionDao) {
@@ -135,7 +147,8 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	}
 
 	/**
-	 * @param cipherName the cipherName to set
+	 * @param cipherName
+	 *            the cipherName to set
 	 */
 	@Required
 	public void setCipherName(String cipherName) {
@@ -143,7 +156,8 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	}
 
 	/**
-	 * @param cipherDao the cipherDao to set
+	 * @param cipherDao
+	 *            the cipherDao to set
 	 */
 	@Required
 	public void setCipherDao(CipherDao cipherDao) {
@@ -151,7 +165,8 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	}
 
 	/**
-	 * @param solutionEvaluator the solutionEvaluator to set
+	 * @param solutionEvaluator
+	 *            the solutionEvaluator to set
 	 */
 	@Required
 	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {

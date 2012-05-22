@@ -10,17 +10,18 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 @Component
 public class CipherDao implements Dao {
 	private SessionFactory sessionFactory;
-	
+
 	public Cipher findByCipherName(String name) {
 		Session session = sessionFactory.openSession();
-	    session.beginTransaction();
-		Cipher cipher = (Cipher) session.createQuery( "from Cipher where name = ?" ).setString(0, name).uniqueResult();
-	    session.getTransaction().commit();
-	    session.close();
-	    
+		session.beginTransaction();
+		Cipher cipher = (Cipher) session.createQuery("from Cipher where name = ?").setString(0,
+				name).uniqueResult();
+		session.getTransaction().commit();
+		session.close();
+
 		return cipher;
 	}
-	
+
 	@Required
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;

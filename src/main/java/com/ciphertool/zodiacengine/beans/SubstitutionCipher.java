@@ -5,20 +5,23 @@ import com.ciphertool.zodiacengine.enumerations.SubstitutionType;
 
 public class SubstitutionCipher extends Cipher {
 	private static final long serialVersionUID = 5227121564551865387L;
-	
+
 	protected SubstitutionType type;
-	
-	public SubstitutionCipher () {}
-	
+
+	public SubstitutionCipher() {
+	}
+
 	public SubstitutionType getType() {
 		return type;
 	}
-	
+
 	public void setType(SubstitutionType type) {
 		this.type = type;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -29,7 +32,9 @@ public class SubstitutionCipher extends Cipher {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
