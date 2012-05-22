@@ -1,5 +1,8 @@
 package com.ciphertool.zodiacengine.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -30,8 +33,7 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 	/**
 	 * @return
 	 * 
-	 * Generates a solution by calling the helper method getSentences() and 
-	 * passing the result to convertSentencesToPlaintext(List<Sentence>)
+	 * Generates a solution
 	 */
 	@Override
 	public Solution generateSolution() {
@@ -53,6 +55,8 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 			 * Advance the committed index
 			 */
 			solution.setCommittedIndex(solution.getUncommittedIndex());
+			
+			log.info("New index of " + solution.getCommittedIndex() + " achieved.");
 		} while (solution.getCommittedIndex() < cipherLength);
 		
 		log.debug(solution);
@@ -85,18 +89,8 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 	 * @return
 	 */
 	private void compareSentenceToSolution(Solution solution, Sentence sentence) {
-		Solution placeholderSolution = new Solution(cipher.getId(), 0, 0, 0);
-		placeholderSolution.setCipher(cipher);
+		List<Plaintext> candidatePlaintextList = new ArrayList<Plaintext>(); 
 		
-		/*
-		 * Clone all the plaintext characters into the placeholder solution
-		 */
-		Plaintext clonedPlaintext = null;
-		for (Plaintext currentPlaintext : solution.getPlaintextCharacters()) {
-			clonedPlaintext = new Plaintext(new PlaintextId(placeholderSolution, currentPlaintext.getPlaintextId().getCiphertextId()), currentPlaintext.getValue());
-			placeholderSolution.addPlaintext(clonedPlaintext);
-		}
-				
 		StringBuilder rawText = new StringBuilder();
 		
 		for (Word w: sentence.getWords()) {
@@ -117,38 +111,31 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 			 * Don't add the plaintext character if the index has surpassed the cipher length.  It's pointless.
 			 */
 			if(newIndex <= cipherLength) {
-				pt = new Plaintext(new PlaintextId(placeholderSolution, newIndex), String.valueOf(c));
+				pt = new Plaintext(new PlaintextId(solution, newIndex), String.valueOf(c));
 				
-				placeholderSolution.addPlaintext(pt);
+				candidatePlaintextList.add(pt);
 	
 				newIndex ++;
 			}
 		}
 		
-		placeholderSolution.setUncommittedIndex(newIndex);
-		
-		solutionEvaluator.determineConfidenceLevel(placeholderSolution);
-		
 		/*
-		 * Longer sentences will naturally have more matches, so we need to select on sentences that have the
-		 * least amount of mismatches instead.
+		 * If the indexes are equal, then this is the first sentence tried at this index, so go ahead and add it.
 		 */
-		int placeholderMismatches = placeholderSolution.getUncommittedIndex() - (placeholderSolution.getTotalMatches() + placeholderSolution.getUniqueMatches());
-		int currentMismatches = solution.getUncommittedIndex() - (solution.getTotalMatches() + solution.getUniqueMatches());
-		
-		/*
-		 * If this is the first sentence attempted at this index, or if this sentence is a better match, 
-		 * set it as the next sentence at this index.
-		 */
-		if((solution.getCommittedIndex() == solution.getUncommittedIndex())
-				|| (placeholderMismatches < currentMismatches)) {
-			solution.setPlaintextCharacters(placeholderSolution.getPlaintextCharacters());
-			
-			for (Plaintext plaintext : solution.getPlaintextCharacters()) {
-				plaintext.getPlaintextId().setSolution(solution);
-			}
+		if (solution.getCommittedIndex() == solution.getUncommittedIndex())
+		{
+			solution.getPlaintextCharacters().addAll(candidatePlaintextList);			
 			
 			solution.setUncommittedIndex(newIndex);
+			
+			solutionEvaluator.determineConfidenceLevel(solution);
+		}
+		/*
+		 * Otherwise, compare it to what already exists and see if there is a better match.
+		 */
+		else
+		{
+			((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(solution, candidatePlaintextList);	
 		}
 	}
 	
