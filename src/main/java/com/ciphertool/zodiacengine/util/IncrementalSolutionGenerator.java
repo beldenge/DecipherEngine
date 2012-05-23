@@ -57,7 +57,15 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 			 * Advance the committed index
 			 */
 			solution.setCommittedIndex(solution.getUncommittedIndex());
+
+			log.debug("New committed index achieved: " + solution.getCommittedIndex());
 		} while (solution.getCommittedIndex() < cipherLength);
+
+		/*
+		 * Set the final confidence levels and the hasMatch values on each
+		 * Plaintext
+		 */
+		solutionEvaluator.determineConfidenceLevel(solution);
 
 		log.debug(solution);
 
@@ -111,9 +119,13 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 			/*
 			 * Don't add the plaintext character if the index has surpassed the
 			 * cipher length. It's pointless.
+			 * 
+			 * It is very important to convert to lowercase here, since map
+			 * lookups within the evaluator are case-sensitive.
 			 */
 			if (newIndex <= cipherLength) {
-				pt = new Plaintext(new PlaintextId(solution, newIndex), String.valueOf(c));
+				pt = new Plaintext(new PlaintextId(solution, newIndex), String.valueOf(c)
+						.toLowerCase());
 
 				candidatePlaintextList.add(pt);
 
@@ -121,25 +133,8 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 			}
 		}
 
-		/*
-		 * If the indexes are equal, then this is the first sentence tried at
-		 * this index, so go ahead and add it.
-		 */
-		if (solution.getCommittedIndex() == solution.getUncommittedIndex()) {
-			solution.getPlaintextCharacters().addAll(candidatePlaintextList);
-
-			solution.setUncommittedIndex(newIndex);
-
-			solutionEvaluator.determineConfidenceLevel(solution);
-		}
-		/*
-		 * Otherwise, compare it to what already exists and see if there is a
-		 * better match.
-		 */
-		else {
-			((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(solution,
-					candidatePlaintextList);
-		}
+		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(solution,
+				candidatePlaintextList);
 	}
 
 	/**

@@ -75,7 +75,11 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		int id = 1;
 		Plaintext pt;
 		for (char c : chars) {
-			pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c));
+			/*
+			 * It is very important to convert to lowercase here, since map
+			 * lookups within the evaluator are case-sensitive.
+			 */
+			pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c).toLowerCase());
 			solution.addPlaintext(pt);
 			id++;
 		}

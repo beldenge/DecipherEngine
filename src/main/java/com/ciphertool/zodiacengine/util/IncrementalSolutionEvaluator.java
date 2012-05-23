@@ -162,11 +162,9 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 */
 	public int comparePlaintextToSolution(Solution solution, List<Plaintext> plaintextList) {
 		Plaintext plaintext = null;
-		int total = 0;
-		int totalUnique = 0;
+		int totalMismatches = 0;
+		int ciphertextCharacterCount = 0;
 		int maxMatches = 0;
-		String bestMatch = null;
-		boolean uniqueMatch = false;
 		String currentValue = null;
 		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
@@ -177,8 +175,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		 */
 		for (List<Ciphertext> ciphertextIndices : ciphertextKey.values()) {
 			maxMatches = 0;
-			uniqueMatch = false;
-			bestMatch = null;
+			ciphertextCharacterCount = 0;
 			plaintextMatchMap = new HashMap<String, List<Plaintext>>();
 
 			/*
@@ -200,6 +197,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 				 * performance hit though.
 				 */
 				if (ciphertextIndice.getCiphertextId().getId() <= uncommittedIndex) {
+					ciphertextCharacterCount++;
+
 					/*
 					 * Set the plaintext from the existing solution if the index
 					 * is within the committed range
@@ -220,33 +219,13 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 
 					if (!plaintextMatchMap.containsKey(currentValue)) {
 						plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
-					} else {
-						uniqueMatch = true;
 					}
 
 					plaintextMatchMap.get(currentValue).add(plaintext);
 
 					if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
-						/*
-						 * Subtract by one when setting maxMatches so that a
-						 * match on just a pair does not count as two matches.
-						 */
-						maxMatches = plaintextMatchMap.get(currentValue).size() - 1;
-
-						bestMatch = currentValue;
+						maxMatches = plaintextMatchMap.get(currentValue).size();
 					}
-				}
-			}
-
-			/*
-			 * If there was a match on this Ciphertext, set the hasMatch
-			 * property to true on all the Plaintext matches. Use the bestMatch
-			 * value so that only the Plaintext with the optimal number of
-			 * matches is set.
-			 */
-			if (bestMatch != null) {
-				for (Plaintext pt : plaintextMatchMap.get(bestMatch)) {
-					pt.setHasMatch(true);
 				}
 			}
 
@@ -254,59 +233,20 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			 * Add the Plaintext matches on this Ciphertext character to the
 			 * overall confidence value, represented by total
 			 */
-			total += maxMatches;
-
-			/*
-			 * Increment the unique matches by converting a boolean to an int
-			 */
-			totalUnique += (uniqueMatch ? 1 : 0);
+			totalMismatches += (ciphertextCharacterCount - maxMatches);
 		}
 
-		boolean countAdjacent = false;
-		int adjacentMatchCount = 0;
-		Plaintext pt;
-		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			/*
-			 * Only check this ciphertext if it is within the uncommitted index
-			 * range.
-			 */
-			if (ct.getCiphertextId().getId() <= uncommittedIndex) {
-				/*
-				 * Set the plaintext from the existing solution if the index is
-				 * within the committed range
-				 */
-				if (ct.getCiphertextId().getId() <= solution.getCommittedIndex()) {
-					pt = plaintextCharacters.get(ct.getCiphertextId().getId() - 1);
-				}
-				/*
-				 * Otherwise, set the plaintext from the new list to compare
-				 */
-				else {
-					pt = plaintextList.get(ct.getCiphertextId().getId()
-							- solution.getCommittedIndex() - 1);
-				}
-
-				if (countAdjacent == false && pt.getHasMatch()) {
-					countAdjacent = true;
-				} else if (countAdjacent == true && pt.getHasMatch()) {
-					adjacentMatchCount++;
-				} else {
-					countAdjacent = false;
-				}
-			}
-		}
-
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getId() + " has a confidence level of: " + totalMismatches);
 
 		/*
 		 * Longer sentences will naturally have more matches, so we need to
 		 * select on sentences that have the least amount of mismatches instead.
 		 * 
-		 * TODO: Unfortunately, by taking this approach, shorter sentences will
+		 * Unfortunately, by taking this approach, shorter sentences will
 		 * naturally have less mismatches and so we will tend towards shorter
-		 * sentences on each increment.
+		 * sentences on each increment. To guard against this a little, we
+		 * select the longer sentence when two have equal mismatches.
 		 */
-		int placeholderMismatches = uncommittedIndex - (total + totalUnique);
 		int currentMismatches = solution.getUncommittedIndex()
 				- (solution.getTotalMatches() + solution.getUniqueMatches());
 
@@ -314,7 +254,9 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		 * If this sentence is a better match, set it as the next sentence at
 		 * this index.
 		 */
-		if (placeholderMismatches < currentMismatches) {
+		if ((totalMismatches < currentMismatches)
+				|| (totalMismatches == currentMismatches && uncommittedIndex > solution
+						.getUncommittedIndex())) {
 			/*
 			 * First remove all the Plaintext characters from the previous match
 			 */
@@ -333,12 +275,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			}
 
 			solution.setUncommittedIndex(uncommittedIndex);
-
-			solution.setTotalMatches(total);
-			solution.setUniqueMatches(totalUnique);
-			solution.setAdjacentMatchCount(adjacentMatchCount);
 		}
 
-		return total;
+		return totalMismatches;
 	}
 }
