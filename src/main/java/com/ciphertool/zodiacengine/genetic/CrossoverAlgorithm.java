@@ -1,6 +1,6 @@
 package com.ciphertool.zodiacengine.genetic;
 
-public interface CrossoverAlgorithm<T extends Gene> {
+public interface CrossoverAlgorithm {
 
 	/*
 	 * Performs crossover to a single child by cloning parentA and then
@@ -10,5 +10,5 @@ public interface CrossoverAlgorithm<T extends Gene> {
 	 * Crossover from parentB to parentA can be achieved simply by reversing the
 	 * supplied arguments.
 	 */
-	public Chromosome<T> crossover(Chromosome<T> parentA, Chromosome<T> parentB);
+	public Chromosome crossover(Chromosome parentA, Chromosome parentB);
 }

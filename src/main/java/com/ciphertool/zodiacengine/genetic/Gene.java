@@ -9,4 +9,9 @@ public interface Gene extends Cloneable {
 	public int size();
 
 	public Gene clone();
+
+	/*
+	 * Mutate a random sequence
+	 */
+	public void mutateSequence();
 }

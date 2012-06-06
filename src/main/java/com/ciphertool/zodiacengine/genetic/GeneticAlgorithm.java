@@ -4,14 +4,14 @@ public interface GeneticAlgorithm {
 	/**
 	 * @return
 	 */
-	public Chromosome<?> iterateUntilTermination();
+	public Chromosome iterateUntilTermination();
 
 	public void spawnInitialPopulation();
 
 	/**
 	 * @return
 	 */
-	public Chromosome<?> crossover();
+	public void crossover();
 
 	public void mutate();
 }

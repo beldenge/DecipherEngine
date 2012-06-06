@@ -9,39 +9,39 @@ import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
 public class Population<T extends Gene> {
 	private SolutionGenerator solutionGenerator;
-	private List<Chromosome<T>> individuals;
+	private List<Chromosome> individuals;
 	private FitnessEvaluator fitnessEvaluator;
 
 	public void populateIndividuals(Integer numIndividuals) {
 		if (this.individuals == null) {
-			this.individuals = new ArrayList<Chromosome<T>>();
+			this.individuals = new ArrayList<Chromosome>();
 		}
 
 		for (int i = this.individuals.size(); i < numIndividuals; i++) {
-			this.individuals.add((Chromosome<T>) solutionGenerator.generateSolution());
+			this.individuals.add((Chromosome) solutionGenerator.generateSolution());
 		}
 	}
 
 	public long evaluateFitness() {
 		long totalFitness = 0;
 
-		for (Chromosome<T> individual : individuals) {
+		for (Chromosome individual : individuals) {
 			totalFitness += fitnessEvaluator.evaluate(individual);
 		}
 
 		return totalFitness;
 	}
 
-	public Chromosome<T> getBestFitIndividual() {
+	public Chromosome getBestFitIndividual() {
 		/*
 		 * Evaluate fitness once more for safety so that we are guaranteed to
 		 * have updated fitness values
 		 */
 		this.evaluateFitness();
 
-		Chromosome<T> bestFitIndividual = null;
+		Chromosome bestFitIndividual = null;
 
-		for (Chromosome<T> individual : individuals) {
+		for (Chromosome individual : individuals) {
 			if (bestFitIndividual == null
 					|| individual.getFitness() > bestFitIndividual.getFitness()) {
 				bestFitIndividual = individual;
@@ -51,12 +51,12 @@ public class Population<T extends Gene> {
 		return bestFitIndividual;
 	}
 
-	public Chromosome<T> spinRouletteWheel() {
+	public Chromosome spinRouletteWheel() {
 		long totalFitness = this.evaluateFitness();
 
 		long randomIndex = (int) (Math.random() * totalFitness);
 
-		for (Chromosome<T> individual : individuals) {
+		for (Chromosome individual : individuals) {
 			randomIndex -= fitnessEvaluator.evaluate(individual);
 
 			/*
@@ -72,6 +72,20 @@ public class Population<T extends Gene> {
 	}
 
 	/**
+	 * @param individual
+	 */
+	public void removeIndividual(Chromosome individual) {
+		this.individuals.remove(individual);
+	}
+
+	/**
+	 * @param individual
+	 */
+	public void addIndividual(Chromosome individual) {
+		this.individuals.add(individual);
+	}
+
+	/**
 	 * @param solutionGenerator
 	 *            the solutionGenerator to set
 	 */
@@ -84,6 +98,7 @@ public class Population<T extends Gene> {
 	 * @param fitnessEvaluator
 	 *            the fitnessEvaluator to set
 	 */
+	@Required
 	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
 		this.fitnessEvaluator = fitnessEvaluator;
 	}

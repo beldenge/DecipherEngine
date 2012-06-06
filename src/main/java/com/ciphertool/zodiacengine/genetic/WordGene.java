@@ -43,4 +43,13 @@ public class WordGene extends Word implements Gene {
 	public int size() {
 		return this.wordId.getWord().length();
 	}
+
+	@Override
+	public void mutateSequence() {
+		int randomIndex = (int) (Math.random() * this.size());
+
+		/*
+		 * TODO replace the sequence at randomIndex with a random letter
+		 */
+	}
 }

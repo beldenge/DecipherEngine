@@ -2,21 +2,21 @@ package com.ciphertool.zodiacengine.genetic;
 
 import java.util.List;
 
-public interface Chromosome<T extends Gene> extends Cloneable {
+public interface Chromosome extends Cloneable {
 	/**
 	 * @return
 	 */
-	public List<T> getGenes();
+	public List<Gene> getGenes();
 
 	/**
 	 * @param genes
 	 */
-	public void setGenes(List<T> genes);
+	public void setGenes(List<Gene> genes);
 
 	/**
 	 * @param gene
 	 */
-	public void addGene(T gene);
+	public void addGene(Gene gene);
 
 	/**
 	 * @return
@@ -32,5 +32,10 @@ public interface Chromosome<T extends Gene> extends Cloneable {
 
 	public void mutate();
 
-	public Chromosome<T> clone();
+	public Chromosome clone();
+
+	/*
+	 * Mutates a random Gene
+	 */
+	public void mutateGene(Gene gene);
 }

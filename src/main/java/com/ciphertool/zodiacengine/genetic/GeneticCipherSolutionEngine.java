@@ -18,6 +18,7 @@ public class GeneticCipherSolutionEngine {
 
 	private static CipherDao cipherDao;
 	private static String cipherName;
+	private static GeneticAlgorithm geneticAlgorithm;
 
 	/**
 	 * @param args
@@ -127,5 +128,14 @@ public class GeneticCipherSolutionEngine {
 	@Required
 	public void setCipherName(String cipherName) {
 		GeneticCipherSolutionEngine.cipherName = cipherName;
+	}
+
+	/**
+	 * @param geneticAlgorithm
+	 *            the geneticAlgorithm to set
+	 */
+	@Required
+	public static void setGeneticAlgorithm(GeneticAlgorithm geneticAlgorithm) {
+		GeneticCipherSolutionEngine.geneticAlgorithm = geneticAlgorithm;
 	}
 }

@@ -49,7 +49,7 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	 * wins).
 	 */
 	@Override
-	public int evaluate(Chromosome<?> chromosome) {
+	public int evaluate(Chromosome chromosome) {
 		Solution solution = (SolutionChromosome) chromosome;
 		Plaintext plaintext = null;
 		int total = 0;

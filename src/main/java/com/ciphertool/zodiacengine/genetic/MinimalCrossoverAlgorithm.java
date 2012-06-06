@@ -1,6 +1,10 @@
 package com.ciphertool.zodiacengine.genetic;
 
-public class MinimalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgorithm<T> {
+import org.springframework.beans.factory.annotation.Required;
+
+public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
+	private FitnessEvaluator fitnessEvaluator;
+
 	/**
 	 * This crossover algorithm does a minimal amount of changes since it only
 	 * replaces genes that begin and end at the exact same sequence positions
@@ -10,14 +14,14 @@ public class MinimalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Chromosome<T> crossover(Chromosome<T> parentA, Chromosome<T> parentB) {
-		Chromosome<T> child = (Chromosome<T>) parentA.clone();
+	public Chromosome crossover(Chromosome parentA, Chromosome parentB) {
+		Chromosome child = (Chromosome) parentA.clone();
 
 		int childSequencePosition = 0;
 		int parentSequencePosition = 0;
 		int childGeneIndex = 0;
 		int parentGeneIndex = 0;
-		T geneCopy = null;
+		Gene geneCopy = null;
 		Integer originalFitness = 0;
 
 		/*
@@ -45,8 +49,14 @@ public class MinimalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 					originalFitness = child.getFitness();
 
 					child.getGenes().set(childGeneIndex,
-							(T) parentB.getGenes().get(parentGeneIndex).clone());
+							parentB.getGenes().get(parentGeneIndex).clone());
 
+					fitnessEvaluator.evaluate(child);
+
+					/*
+					 * Revert to the original gene if this did not increase
+					 * fitness
+					 */
 					if (child.getFitness() <= originalFitness) {
 						child.getGenes().set(childGeneIndex, geneCopy);
 					}
@@ -64,5 +74,14 @@ public class MinimalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 		 * Child is guaranteed to have at least as good fitness as its parent
 		 */
 		return child;
+	}
+
+	/**
+	 * @param fitnessEvaluator
+	 *            the fitnessEvaluator to set
+	 */
+	@Required
+	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
+		this.fitnessEvaluator = fitnessEvaluator;
 	}
 }

@@ -1,7 +1,10 @@
 package com.ciphertool.zodiacengine.genetic;
 
-public class MaximalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgorithm<T> {
+import org.springframework.beans.factory.annotation.Required;
+
+public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 	private GeneListDao geneListDao;
+	private FitnessEvaluator fitnessEvaluator;
 
 	/**
 	 * This crossover algorithm does a maximal amount of changes since it
@@ -12,12 +15,12 @@ public class MaximalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Chromosome<T> crossover(Chromosome<T> parentA, Chromosome<T> parentB) {
-		Chromosome<T> child = (Chromosome<T>) parentA.clone();
+	public Chromosome crossover(Chromosome parentA, Chromosome parentB) {
+		Chromosome child = (Chromosome) parentA.clone();
 
 		int childSequencePosition = 0;
 		int childGeneIndex = 0;
-		T geneCopy = null;
+		Gene geneCopy = null;
 		Integer originalFitness = 0;
 
 		/*
@@ -36,9 +39,13 @@ public class MaximalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 
 			originalFitness = child.getFitness();
 
-			child.getGenes()
-					.set(childGeneIndex, (T) parentB.getGenes().get(childGeneIndex).clone());
+			child.getGenes().set(childGeneIndex, parentB.getGenes().get(childGeneIndex).clone());
 
+			fitnessEvaluator.evaluate(child);
+
+			/*
+			 * Revert to the original gene if this did not increase fitness
+			 */
 			if (child.getFitness() <= originalFitness) {
 				child.getGenes().set(childGeneIndex, geneCopy);
 			}
@@ -49,7 +56,7 @@ public class MaximalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 		 * Chromosome to decrease in size
 		 */
 		while (childSequencePosition < parentB.size()) {
-			T nextGene = (T) geneListDao.findRandomGene();
+			Gene nextGene = geneListDao.findRandomGene();
 
 			childSequencePosition += nextGene.size();
 
@@ -66,7 +73,17 @@ public class MaximalCrossoverAlgorithm<T extends Gene> implements CrossoverAlgor
 	 * @param geneListDao
 	 *            the geneListDao to set
 	 */
+	@Required
 	public void setGeneListDao(GeneListDao geneListDao) {
 		this.geneListDao = geneListDao;
+	}
+
+	/**
+	 * @param fitnessEvaluator
+	 *            the fitnessEvaluator to set
+	 */
+	@Required
+	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
+		this.fitnessEvaluator = fitnessEvaluator;
 	}
 }

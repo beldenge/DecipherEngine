@@ -19,7 +19,7 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 * ()
 	 */
 	@Override
-	public Chromosome<WordGene> iterateUntilTermination() {
+	public Chromosome iterateUntilTermination() {
 		for (int i = 0; i < maxGenerations; i++) {
 			population.evaluateFitness();
 		}
@@ -35,11 +35,11 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 * @see com.ciphertool.zodiacengine.genetic.GeneticAlgorithm#crossover()
 	 */
 	@Override
-	public Chromosome<WordGene> crossover() {
-		Chromosome<WordGene> mom = null;
-		Chromosome<WordGene> dad = null;
-		Chromosome<WordGene> child1 = null;
-		Chromosome<WordGene> child2 = null;
+	public void crossover() {
+		Chromosome mom = null;
+		Chromosome dad = null;
+		Chromosome child1 = null;
+		Chromosome child2 = null;
 
 		for (int i = 0; i < crossoverRate; i++) {
 			mom = this.population.spinRouletteWheel();
@@ -51,7 +51,15 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 			child2 = crossoverAlgorithm.crossover(dad, mom);
 		}
 
-		return null;
+		/*
+		 * Remove the parents from the populationa and add the children since
+		 * they are guaranteed to be at least as fit as their parents
+		 */
+		this.population.removeIndividual(mom);
+		this.population.removeIndividual(dad);
+
+		this.population.addIndividual(child1);
+		this.population.addIndividual(child2);
 	}
 
 	/*
@@ -61,7 +69,12 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public void mutate() {
-
+		for (int i = 0; i < mutationRate; i++) {
+			/*
+			 * TODO Mutate a gene within a Chromosome and/or a sequence within a
+			 * Gene
+			 */
+		}
 	}
 
 	/*
@@ -73,7 +86,7 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public void spawnInitialPopulation() {
-		this.population = new Population();
+		this.population = new Population<WordGene>();
 
 		this.population.populateIndividuals(initialPopulationSize);
 

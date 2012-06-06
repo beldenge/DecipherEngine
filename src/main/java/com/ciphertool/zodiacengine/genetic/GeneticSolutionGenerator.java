@@ -30,7 +30,7 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		// loaded somehow
 		solution.setCipher(cipher);
 
-		List<WordGene> words = getWords(solution);
+		List<Gene> words = getWords(solution);
 
 		solution.setGenes(words);
 
@@ -39,8 +39,8 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		return solution;
 	}
 
-	private List<WordGene> getWords(Solution solution) {
-		List<WordGene> wordList = new ArrayList<WordGene>();
+	private List<Gene> getWords(Solution solution) {
+		List<Gene> wordList = new ArrayList<Gene>();
 		WordGene nextWord;
 		int length = 0;
 		do {
