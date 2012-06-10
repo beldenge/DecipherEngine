@@ -1,18 +1,22 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	private Logger log = Logger.getLogger(getClass());
-	private Integer initialPopulationSize;
-	private Double selectionRate;
+	private Integer populationSize;
+	private Double survivalRate;
 	private Double mutationRate;
 	private Double crossoverRate;
 	private Integer maxGenerations;
 	private Population population;
 	private CrossoverAlgorithm crossoverAlgorithm;
 	private FitnessEvaluator fitnessEvaluator;
+	private FitnessComparator fitnessComparator;
 
 	public ZodiacGeneticAlgorithm() {
 	}
@@ -26,11 +30,37 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public Chromosome iterateUntilTermination() {
+		if (this.population == null) {
+			log.info("Attempted to start algorithm with a null population.  Spawning population of size "
+					+ populationSize + ".");
+
+			this.spawnInitialPopulation();
+		}
+
 		for (int i = 0; i < maxGenerations; i++) {
+			select();
+
+			population.populateIndividuals(populationSize);
+
 			population.evaluateFitness();
 		}
 
 		return population.getBestFitIndividual();
+	}
+
+	@Override
+	public void select() {
+		List<Chromosome> individuals = this.population.getIndividuals();
+
+		Collections.sort(individuals, fitnessComparator);
+
+		int initialPopulationSize = this.population.size();
+
+		int survivorIndex = (int) (initialPopulationSize * survivalRate);
+
+		for (int i = survivorIndex; i < initialPopulationSize; i++) {
+			individuals.remove(survivorIndex);
+		}
 	}
 
 	/*
@@ -103,7 +133,7 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public void spawnInitialPopulation() {
-		this.population.populateIndividuals(initialPopulationSize);
+		this.population.populateIndividuals(populationSize);
 
 		this.population.evaluateFitness();
 	}
@@ -125,11 +155,11 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	}
 
 	/**
-	 * @param initialPopulationSize
+	 * @param populationSize
 	 */
 	@Required
-	public void setInitialPopulationSize(Integer initialPopulationSize) {
-		this.initialPopulationSize = initialPopulationSize;
+	public void setPopulationSize(Integer populationSize) {
+		this.populationSize = populationSize;
 	}
 
 	/**
@@ -178,11 +208,20 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	}
 
 	/**
-	 * @param selectionRate
-	 *            the selectionRate to set
+	 * @param survivalRate
+	 *            the survivalRate to set
 	 */
 	@Required
-	public void setSelectionRate(Double selectionRate) {
-		this.selectionRate = selectionRate;
+	public void setSurvivalRate(Double survivalRate) {
+		this.survivalRate = survivalRate;
+	}
+
+	/**
+	 * @param fitnessComparator
+	 *            the fitnessComparator to set
+	 */
+	@Required
+	public void setFitnessComparator(FitnessComparator fitnessComparator) {
+		this.fitnessComparator = fitnessComparator;
 	}
 }

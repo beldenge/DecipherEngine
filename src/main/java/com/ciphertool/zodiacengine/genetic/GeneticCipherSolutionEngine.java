@@ -26,11 +26,13 @@ public class GeneticCipherSolutionEngine {
 		log.info("Took " + (System.currentTimeMillis() - start)
 				+ "ms to spawn initial population of " + geneticAlgorithm.getPopulation().size());
 
+		Chromosome bestFitIndividual = geneticAlgorithm.iterateUntilTermination();
+
 		/*
 		 * Print out summary information
 		 */
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to finish.");
-		log.info("Best solution found: " + geneticAlgorithm.getPopulation().getBestFitIndividual());
+		log.info("Best solution found: " + bestFitIndividual);
 	}
 
 	/**

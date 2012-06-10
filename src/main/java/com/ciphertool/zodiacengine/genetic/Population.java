@@ -92,6 +92,13 @@ public class Population {
 	}
 
 	/**
+	 * @return the individuals
+	 */
+	public List<Chromosome> getIndividuals() {
+		return individuals;
+	}
+
+	/**
 	 * @param individual
 	 */
 	public void removeIndividual(Chromosome individual) {

@@ -49,6 +49,8 @@
 		<property name="solutionDao" ref="solutionDao" />
 	</bean>
 	
+	<bean class="com.ciphertool.zodiacengine.genetic.MaximizationFitnessComparator" id="fitnessComparator" />
+
 	<bean class="com.ciphertool.zodiacengine.genetic.Population" id="population">
 		<property name="solutionGenerator" ref="solutionGenerator" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
@@ -59,14 +61,15 @@
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.ZodiacGeneticAlgorithm" id="geneticAlgorithm">
-		<property name="initialPopulationSize" value="${genetic.population.initialSize}" />
-		<property name="selectionRate" value="${genetic.algorithm.selectionRate}" />
+		<property name="populationSize" value="${genetic.population.size}" />
+		<property name="survivalRate" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
 		<property name="crossoverRate" value="${genetic.algorithm.crossoverRate}" />
 		<property name="maxGenerations" value="${genetic.algorithm.maxGenerations}" />
 		<property name="crossoverAlgorithm" ref="crossoverAlgorithm" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="population" ref="population" />
+		<property name="fitnessComparator" ref="fitnessComparator" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">

@@ -11,4 +11,6 @@ public interface GeneticAlgorithm {
 	public void mutate();
 
 	public Population getPopulation();
+
+	public void select();
 }
