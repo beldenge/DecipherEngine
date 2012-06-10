@@ -12,7 +12,6 @@ public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 	 * @see com.ciphertool.zodiacengine.genetic.CrossoverAlgorithm#crossover(com.ciphertool.zodiacengine.genetic.Chromosome,
 	 *      com.ciphertool.zodiacengine.genetic.Chromosome)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Chromosome crossover(Chromosome parentA, Chromosome parentB) {
 		Chromosome child = (Chromosome) parentA.clone();

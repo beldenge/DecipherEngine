@@ -12,7 +12,6 @@ import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 import com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator;
 
@@ -50,7 +49,7 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	 */
 	@Override
 	public int evaluate(Chromosome chromosome) {
-		Solution solution = (SolutionChromosome) chromosome;
+		SolutionChromosome solution = (SolutionChromosome) chromosome;
 		Plaintext plaintext = null;
 		int total = 0;
 		int totalUnique = 0;
@@ -165,6 +164,8 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 					+ " adjacent matches.  Persisting to solution table.");
 			solutionDao.insert(solution);
 		}
+
+		solution.setFitness(total);
 
 		return total;
 	}

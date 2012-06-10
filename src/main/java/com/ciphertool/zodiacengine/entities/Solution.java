@@ -27,8 +27,8 @@ public class Solution implements Serializable {
 	private int totalMatches;
 	private int uniqueMatches;
 	private int adjacentMatchCount;
-	private transient List<Plaintext> plaintextCharacters;
-	private Cipher cipher;
+	protected transient List<Plaintext> plaintextCharacters;
+	protected Cipher cipher;
 	private int committedIndex;
 	private int uncommittedIndex;
 

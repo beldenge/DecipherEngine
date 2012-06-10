@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
@@ -14,7 +13,7 @@ import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
 public class GeneticSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
-	private WordListDao wordListDao;
+	private GeneListDao wordGeneListDao;
 	private Logger log = Logger.getLogger(getClass());
 
 	public GeneticSolutionGenerator(String cipherName, CipherDao cipherDao) {
@@ -26,8 +25,6 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		// Set confidence levels to lowest possible
 		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0);
 
-		// TODO: may want to remove this setCipher since it should be lazy
-		// loaded somehow
 		solution.setCipher(cipher);
 
 		List<Gene> words = getWords(solution);
@@ -43,20 +40,24 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		List<Gene> wordList = new ArrayList<Gene>();
 		WordGene nextWord;
 		int length = 0;
+
 		do {
-			nextWord = (WordGene) wordListDao.findRandomWord();
+			nextWord = (WordGene) wordGeneListDao.findRandomGene();
+
 			length += nextWord.getWordId().getWord().length();
+
 			wordList.add(nextWord);
 		} while (length < cipher.length());
+
 		return wordList;
 	}
 
 	/**
-	 * @param wordListDao
-	 *            the wordListDao to set
+	 * @param geneListDao
+	 *            geneListDao wordListDao to set
 	 */
-	@Autowired
-	public void setWordListDao(WordListDao wordListDao) {
-		this.wordListDao = wordListDao;
+	@Required
+	public void setGeneListDao(GeneListDao geneListDao) {
+		this.wordGeneListDao = geneListDao;
 	}
 }

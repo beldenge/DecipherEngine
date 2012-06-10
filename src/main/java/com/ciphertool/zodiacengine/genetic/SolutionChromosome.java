@@ -19,7 +19,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 	private List<Gene> genes;
 	private Integer fitness;
-	private int cipherLength;
 
 	public SolutionChromosome() {
 		super();
@@ -95,6 +94,24 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		this.genes.add(gene);
 	}
 
+	/*
+	 * Be careful to call this method only when necessary as it is expensive to
+	 * repeatedly convert the words to plaintext.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.entities.Solution#getPlaintextCharacters()
+	 */
+	@Override
+	public List<Plaintext> getPlaintextCharacters() {
+		this.plaintextCharacters = new ArrayList<Plaintext>();
+
+		convertWordsToPlaintext();
+
+		return this.plaintextCharacters;
+	}
+
 	/**
 	 * It is necessary to call this method before persisting a solution to
 	 * database, since SolutionChromosome stores genes at the Word level, but
@@ -105,8 +122,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		for (Gene w : this.getGenes()) {
 			rawText.append(((WordGene) w).getWordId().getWord());
 		}
-		char[] chars = new char[cipherLength];
-		rawText.getChars(0, cipherLength, chars, 0);
+		char[] chars = new char[this.cipher.length()];
+		rawText.getChars(0, this.cipher.length(), chars, 0);
 		int id = 1;
 		Plaintext pt;
 		for (char c : chars) {
@@ -119,32 +136,41 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#mutate()
+	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#mutateRandomGene()
 	 */
 	@Override
-	public void mutate() {
-		// TODO Auto-generated method stub
+	public void mutateRandomGene() {
+		int randomIndex = (int) (Math.random() * this.genes.size());
+
+		this.genes.get(randomIndex).mutateSequence();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.entities.Solution#toString()
+	 */
 	public String toString() {
 		this.convertWordsToPlaintext();
 
 		return super.toString();
 	}
 
-	/**
-	 * @param cipherLength
-	 *            the cipherLength to set
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#size()
 	 */
-	public void setCipherLength(int cipherLength) {
-		this.cipherLength = cipherLength;
-	}
-
 	@Override
 	public Integer size() {
-		return this.cipherLength;
+		return this.cipher.length();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public SolutionChromosome clone() {
 		SolutionChromosome copyChromosome = null;
@@ -163,14 +189,5 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		}
 
 		return copyChromosome;
-	}
-
-	@Override
-	public void mutateGene(Gene gene) {
-		int randomIndex = (int) (Math.random() * this.genes.size());
-
-		/*
-		 * TODO replace the Gene at randomIndex with gene
-		 */
 	}
 }

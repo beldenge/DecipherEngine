@@ -30,12 +30,10 @@ public interface Chromosome extends Cloneable {
 
 	public Integer size();
 
-	public void mutate();
-
 	public Chromosome clone();
 
 	/*
 	 * Mutates a random Gene
 	 */
-	public void mutateGene(Gene gene);
+	public void mutateRandomGene();
 }

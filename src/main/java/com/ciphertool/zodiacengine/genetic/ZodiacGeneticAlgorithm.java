@@ -1,15 +1,21 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
+	private Logger log = Logger.getLogger(getClass());
 	private Integer initialPopulationSize;
+	private Double selectionRate;
 	private Double mutationRate;
 	private Double crossoverRate;
 	private Integer maxGenerations;
-	private Population<WordGene> population;
-	private int cipherLength = 408;
+	private Population population;
 	private CrossoverAlgorithm crossoverAlgorithm;
+	private FitnessEvaluator fitnessEvaluator;
+
+	public ZodiacGeneticAlgorithm() {
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -71,9 +77,20 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	public void mutate() {
 		for (int i = 0; i < mutationRate; i++) {
 			/*
-			 * TODO Mutate a gene within a Chromosome and/or a sequence within a
-			 * Gene
+			 * Mutate a gene within a Chromosome
 			 */
+			Chromosome original = this.population.spinRouletteWheel();
+
+			Chromosome mutation = original.clone();
+
+			mutation.mutateRandomGene();
+
+			fitnessEvaluator.evaluate(mutation);
+
+			if (mutation.getFitness() > original.getFitness()) {
+				this.population.removeIndividual(original);
+				this.population.addIndividual(mutation);
+			}
 		}
 	}
 
@@ -86,11 +103,25 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public void spawnInitialPopulation() {
-		this.population = new Population<WordGene>();
-
 		this.population.populateIndividuals(initialPopulationSize);
 
 		this.population.evaluateFitness();
+	}
+
+	/**
+	 * @return the population
+	 */
+	public Population getPopulation() {
+		return population;
+	}
+
+	/**
+	 * @param population
+	 *            the population to set
+	 */
+	@Required
+	public void setPopulation(Population population) {
+		this.population = population;
 	}
 
 	/**
@@ -135,5 +166,23 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	@Required
 	public void setCrossoverAlgorithm(CrossoverAlgorithm crossoverAlgorithm) {
 		this.crossoverAlgorithm = crossoverAlgorithm;
+	}
+
+	/**
+	 * @param fitnessEvaluator
+	 *            the fitnessEvaluator to set
+	 */
+	@Required
+	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
+		this.fitnessEvaluator = fitnessEvaluator;
+	}
+
+	/**
+	 * @param selectionRate
+	 *            the selectionRate to set
+	 */
+	@Required
+	public void setSelectionRate(Double selectionRate) {
+		this.selectionRate = selectionRate;
 	}
 }

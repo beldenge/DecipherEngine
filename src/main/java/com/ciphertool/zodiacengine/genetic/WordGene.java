@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.util.LetterUtils;
 
 public class WordGene extends Word implements Gene {
 	private static Logger log = Logger.getLogger(WordGene.class);
@@ -23,6 +24,11 @@ public class WordGene extends Word implements Gene {
 		super(wordId, frequencyWeight);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
 	public WordGene clone() {
 		WordGene copyGene = null;
@@ -39,17 +45,34 @@ public class WordGene extends Word implements Gene {
 		return copyGene;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#size()
+	 */
 	@Override
 	public int size() {
 		return this.wordId.getWord().length();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateSequence()
+	 */
 	@Override
 	public void mutateSequence() {
 		int randomIndex = (int) (Math.random() * this.size());
 
 		/*
-		 * TODO replace the sequence at randomIndex with a random letter
+		 * Replace the sequence at randomIndex with a random letter
 		 */
+		String newWord = this.wordId.getWord().substring(0, randomIndex);
+
+		newWord += LetterUtils.getRandomLetter();
+
+		newWord += this.wordId.getWord().substring(randomIndex + 1, this.size());
+
+		this.wordId.setWord(newWord);
 	}
 }

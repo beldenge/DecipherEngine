@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       		http://www.springframework.org/schema/context
+       		http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:zodiacengine.properties</value>
+		</property>
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionEngine" id="geneticSolutionEngine">
+		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.genetic.WordGeneListDao" id="geneListDao">
+		<constructor-arg index="0"
+			type="com.ciphertool.sentencebuilder.dao.WordDao">
+			<ref bean="wordDao" />
+		</constructor-arg>
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.genetic.GeneticSolutionGenerator" id="solutionGenerator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+		<property name="geneListDao" ref="geneListDao" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.genetic.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
+		<property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
+		<property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
+		<property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
+		<property name="solutionDao" ref="solutionDao" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.genetic.Population" id="population">
+		<property name="solutionGenerator" ref="solutionGenerator" />
+		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.genetic.MinimalCrossoverAlgorithm" id="crossoverAlgorithm">
+		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.genetic.ZodiacGeneticAlgorithm" id="geneticAlgorithm">
+		<property name="initialPopulationSize" value="${genetic.population.initialSize}" />
+		<property name="selectionRate" value="${genetic.algorithm.selectionRate}" />
+		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
+		<property name="crossoverRate" value="${genetic.algorithm.crossoverRate}" />
+		<property name="maxGenerations" value="${genetic.algorithm.maxGenerations}" />
+		<property name="crossoverAlgorithm" ref="crossoverAlgorithm" />
+		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		<property name="population" ref="population" />
+	</bean>
+
+	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.CiphertextDao" id="ciphertextDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.PlaintextDao" id="plaintextDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.connections.initialsize}" />
+		<property name="maxActive" value="${jdbc.connections.maxactive}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.ciphertool.zodiacengine.entities.Cipher</value>
+				<value>com.ciphertool.zodiacengine.entities.Ciphertext</value>
+				<value>com.ciphertool.zodiacengine.entities.Plaintext</value>
+				<value>com.ciphertool.zodiacengine.entities.Solution</value>
+				<value>com.ciphertool.sentencebuilder.entities.Word</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+</beans>
