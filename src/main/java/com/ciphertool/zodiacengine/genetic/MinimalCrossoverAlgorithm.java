@@ -35,12 +35,6 @@ public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 			 * position.
 			 */
 			if (childSequencePosition == parentSequencePosition) {
-				childSequencePosition += child.getGenes().get(childGeneIndex).size();
-				parentSequencePosition += parentB.getGenes().get(parentGeneIndex).size();
-
-				childGeneIndex++;
-				parentGeneIndex++;
-
 				if (child.getGenes().get(childGeneIndex).size() == parentB.getGenes().get(
 						parentGeneIndex).size()) {
 					geneCopy = child.getGenes().get(childGeneIndex);
@@ -60,6 +54,12 @@ public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 						child.getGenes().set(childGeneIndex, geneCopy);
 					}
 				}
+
+				childSequencePosition += child.getGenes().get(childGeneIndex).size();
+				parentSequencePosition += parentB.getGenes().get(parentGeneIndex).size();
+
+				childGeneIndex++;
+				parentGeneIndex++;
 			} else if (childSequencePosition > parentSequencePosition) {
 				parentSequencePosition += parentB.getGenes().get(parentGeneIndex).size();
 				parentGeneIndex++;

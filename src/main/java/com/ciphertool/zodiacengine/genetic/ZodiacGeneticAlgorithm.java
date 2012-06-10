@@ -38,6 +38,10 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 		}
 
 		for (int i = 0; i < maxGenerations; i++) {
+			crossover();
+
+			mutate();
+
 			select();
 
 			population.populateIndividuals(populationSize);

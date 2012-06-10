@@ -44,7 +44,7 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		do {
 			nextWord = (WordGene) wordGeneListDao.findRandomGene();
 
-			length += nextWord.getWordId().getWord().length();
+			length += nextWord.size();
 
 			wordList.add(nextWord);
 		} while (length < cipher.length());

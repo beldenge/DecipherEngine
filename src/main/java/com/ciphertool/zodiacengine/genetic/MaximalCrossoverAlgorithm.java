@@ -31,9 +31,6 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 			/*
 			 * Replace from parentB and reevaluate to see if it improves.
 			 */
-			childSequencePosition += child.getGenes().get(childGeneIndex).size();
-			childGeneIndex++;
-
 			geneCopy = child.getGenes().get(childGeneIndex);
 
 			originalFitness = child.getFitness();
@@ -48,6 +45,9 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 			if (child.getFitness() <= originalFitness) {
 				child.getGenes().set(childGeneIndex, geneCopy);
 			}
+
+			childSequencePosition += child.getGenes().get(childGeneIndex).size();
+			childGeneIndex++;
 		}
 
 		/*

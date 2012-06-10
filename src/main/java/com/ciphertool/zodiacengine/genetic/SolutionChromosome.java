@@ -122,12 +122,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		for (Gene w : this.getGenes()) {
 			rawText.append(((WordGene) w).getWordId().getWord());
 		}
+
 		char[] chars = new char[this.cipher.length()];
 		rawText.getChars(0, this.cipher.length(), chars, 0);
 		int id = 1;
 		Plaintext pt;
 		for (char c : chars) {
-			pt = new Plaintext(new PlaintextId(this, id), String.valueOf(c));
+			pt = new Plaintext(new PlaintextId(this, id), String.valueOf(c).toLowerCase());
 			this.addPlaintext(pt);
 			id++;
 		}
@@ -182,11 +183,15 @@ public class SolutionChromosome extends Solution implements Chromosome {
 					cnse);
 		}
 
-		copyChromosome.getGenes().clear();
+		copyChromosome.setGenes(new ArrayList<Gene>());
 
 		for (Gene wordGene : this.genes) {
 			copyChromosome.addGene(wordGene.clone());
 		}
+
+		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
+
+		copyChromosome.convertWordsToPlaintext();
 
 		return copyChromosome;
 	}

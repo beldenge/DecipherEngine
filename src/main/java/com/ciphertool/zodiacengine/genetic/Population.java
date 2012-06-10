@@ -76,7 +76,14 @@ public class Population {
 	public Chromosome spinRouletteWheel() {
 		long randomIndex = (int) (Math.random() * totalFitness);
 
+		Chromosome chosenIndividual = null;
+
 		for (Chromosome individual : individuals) {
+			if (individual.getFitness() == null) {
+				log.warn("Attempted to spin roulette wheel but an individual was found with a null fitness value.  Please make a call to evaluateFitness() before attempting to spin the roulette wheel. "
+						+ individual);
+			}
+
 			randomIndex -= individual.getFitness();
 
 			/*
@@ -84,11 +91,13 @@ public class Population {
 			 * has stopped rolling.
 			 */
 			if (randomIndex <= 0) {
+				chosenIndividual = individual;
+
 				break;
 			}
 		}
 
-		return null;
+		return chosenIndividual;
 	}
 
 	/**
