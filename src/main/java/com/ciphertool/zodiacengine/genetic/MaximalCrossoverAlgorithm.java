@@ -37,6 +37,10 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 
 			child.getGenes().set(childGeneIndex, parentB.getGenes().get(childGeneIndex).clone());
 
+			/*
+			 * TODO if a replacement word is shorter than the replaced word, the
+			 * solution length could be less than the cipher length.
+			 */
 			fitnessEvaluator.evaluate(child);
 
 			/*

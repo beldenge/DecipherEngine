@@ -124,7 +124,15 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		}
 
 		char[] chars = new char[this.cipher.length()];
-		rawText.getChars(0, this.cipher.length(), chars, 0);
+
+		try {
+			rawText.getChars(0, this.cipher.length(), chars, 0);
+		} catch (StringIndexOutOfBoundsException sioobe) {
+			log.error(
+					"Caught StringIndexOutOfBoundsException while converting solution words to plaintext. Raw text length is "
+							+ rawText.length(), sioobe);
+		}
+
 		int id = 1;
 		Plaintext pt;
 		for (char c : chars) {
