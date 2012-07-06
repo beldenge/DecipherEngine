@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.sentencebuilder.dao.WordListDao;
+import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
@@ -13,7 +15,7 @@ import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
 public class GeneticSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
-	private GeneListDao wordGeneListDao;
+	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 
 	public GeneticSolutionGenerator(String cipherName, CipherDao cipherDao) {
@@ -27,37 +29,40 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 
 		solution.setCipher(cipher);
 
-		List<Gene> words = getWords(solution);
+		List<Gene> wordGenes = getWordGenes(solution);
 
-		solution.setGenes(words);
+		solution.setGenes(wordGenes);
 
 		log.debug(solution);
 
 		return solution;
 	}
 
-	private List<Gene> getWords(Solution solution) {
-		List<Gene> wordList = new ArrayList<Gene>();
-		WordGene nextWord;
+	private List<Gene> getWordGenes(Solution solution) {
+		List<Gene> geneList = new ArrayList<Gene>();
+		Word nextWord;
+		WordGene nextGene;
 		int length = 0;
 
 		do {
-			nextWord = (WordGene) wordGeneListDao.findRandomGene();
+			nextWord = wordListDao.findRandomWord();
 
-			length += nextWord.size();
+			nextGene = new WordGene(nextWord, solution, length);
 
-			wordList.add(nextWord);
+			length += nextGene.size();
+
+			geneList.add(nextGene);
 		} while (length < cipher.length());
 
-		return wordList;
+		return geneList;
 	}
 
 	/**
-	 * @param geneListDao
-	 *            geneListDao wordListDao to set
+	 * @param wordListDao
+	 *            the wordListDao to set
 	 */
 	@Required
-	public void setGeneListDao(GeneListDao geneListDao) {
-		this.wordGeneListDao = geneListDao;
+	public void setWordListDao(WordListDao wordListDao) {
+		this.wordListDao = wordListDao;
 	}
 }

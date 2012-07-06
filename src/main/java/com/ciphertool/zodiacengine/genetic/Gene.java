@@ -1,5 +1,7 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import java.util.List;
+
 public interface Gene extends Cloneable {
 
 	/*
@@ -10,8 +12,18 @@ public interface Gene extends Cloneable {
 
 	public Gene clone();
 
+	public List<Sequence> getSequences();
+
+	public void setSequences(List<Sequence> sequences);
+
+	public void addSequence(Sequence sequence);
+
+	public Sequence removeSequence(int index);
+
 	/*
 	 * Mutate a random sequence
 	 */
-	public void mutateSequence();
+	public void mutateRandomSequence();
+
+	public void mutateSequence(int index);
 }

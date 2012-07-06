@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "plaintext")
 @AssociationOverrides(@AssociationOverride(name = "plaintextId.solution", joinColumns = @JoinColumn(name = "solution_id")))
 public class Plaintext {
-	private PlaintextId plaintextId;
+	protected PlaintextId plaintextId;
 	private String value;
 	private boolean hasMatch;
 

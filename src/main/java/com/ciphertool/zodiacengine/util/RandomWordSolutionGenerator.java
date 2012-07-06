@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -73,9 +73,8 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 	 * @param wordListDao
 	 *            the wordListDao to set
 	 */
-	@Autowired
+	@Required
 	public void setWordListDao(WordListDao wordListDao) {
 		this.wordListDao = wordListDao;
 	}
-
 }

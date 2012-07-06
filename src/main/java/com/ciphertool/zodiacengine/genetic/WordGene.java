@@ -1,27 +1,36 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
+import com.ciphertool.zodiacengine.entities.PlaintextId;
+import com.ciphertool.zodiacengine.entities.Solution;
 
-public class WordGene extends Word implements Gene {
+public class WordGene implements Gene {
 	private static Logger log = Logger.getLogger(WordGene.class);
+	private List<Sequence> sequences;
 
 	/**
 	 * @param wordId
 	 */
-	public WordGene(WordId wordId) {
-		super(wordId);
-	}
+	public WordGene(Word word, Solution solution, int beginCiphertextIndex) {
+		this.sequences = new ArrayList<Sequence>();
 
-	/**
-	 * @param wordId
-	 * @param frequencyWeight
-	 */
-	public WordGene(WordId wordId, int frequencyWeight) {
-		super(wordId, frequencyWeight);
+		int wordLength = word.getWordId().getWord().length();
+
+		for (int i = 0; i < wordLength; i++) {
+			PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(solution,
+					beginCiphertextIndex + i), String.valueOf(word.getWordId().getWord().charAt(i))
+					.toLowerCase(), this);
+
+			solution.addPlaintext(plaintextSequence);
+
+			this.sequences.add(plaintextSequence);
+		}
 	}
 
 	/*
@@ -40,7 +49,13 @@ public class WordGene extends Word implements Gene {
 					cnse);
 		}
 
-		copyGene.wordId = (WordId) this.wordId.clone();
+		List<Sequence> sequencesToClone = new ArrayList<Sequence>();
+
+		for (Sequence sequenceToClone : this.sequences) {
+			sequencesToClone.add(((Sequence) sequenceToClone).clone());
+		}
+
+		copyGene.setSequences(sequencesToClone);
 
 		return copyGene;
 	}
@@ -52,27 +67,76 @@ public class WordGene extends Word implements Gene {
 	 */
 	@Override
 	public int size() {
-		return this.wordId.getWord().length();
+		return this.sequences.size();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateSequence()
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateRandomSequence()
 	 */
 	@Override
-	public void mutateSequence() {
+	public void mutateRandomSequence() {
 		int randomIndex = (int) (Math.random() * this.size());
 
+		mutateSequence(randomIndex);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateSequence(int)
+	 */
+	@Override
+	public void mutateSequence(int index) {
+		if (index > this.size() - 1) {
+			log.info("Attempted to mutate a sequence in WordGene with index of " + index
+					+ " (zero-indexed), but the size is only " + this.size()
+					+ ".  Cannot continue.");
+
+			return;
+		}
+
+		String newLetter;
+
 		/*
-		 * Replace the sequence at randomIndex with a random letter
+		 * Loop just in case the random letter is the same as the existing
+		 * letter, since that would defeat the purpose of the mutation.
 		 */
-		String newWord = this.wordId.getWord().substring(0, randomIndex);
+		do {
+			newLetter = String.valueOf(LetterUtils.getRandomLetter());
+		} while (((PlaintextSequence) this.sequences.get(index)).getValue().equals(newLetter));
 
-		newWord += LetterUtils.getRandomLetter();
+		((PlaintextSequence) this.sequences.get(index)).setValue(newLetter);
+	}
 
-		newWord += this.wordId.getWord().substring(randomIndex + 1, this.size());
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "WordGene [sequences=" + sequences + "]";
+	}
 
-		this.wordId.setWord(newWord);
+	@Override
+	public List<Sequence> getSequences() {
+		return this.sequences;
+	}
+
+	@Override
+	public void setSequences(List<Sequence> sequences) {
+		this.sequences = sequences;
+	}
+
+	@Override
+	public void addSequence(Sequence sequence) {
+		this.sequences.add(sequence);
+	}
+
+	@Override
+	public Sequence removeSequence(int index) {
+		return this.sequences.remove(index);
 	}
 }

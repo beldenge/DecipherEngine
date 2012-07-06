@@ -19,7 +19,7 @@
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.WordGeneListDao" id="geneListDao">
+	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao" id="wordListDao">
 		<constructor-arg index="0"
 			type="com.ciphertool.sentencebuilder.dao.WordDao">
 			<ref bean="wordDao" />
@@ -33,7 +33,7 @@
 			type="com.ciphertool.zodiacengine.dao.CipherDao">
 			<ref bean="cipherDao" />
 		</constructor-arg>
-		<property name="geneListDao" ref="geneListDao" />
+		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
@@ -58,7 +58,6 @@
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.MaximalCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
-		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.ZodiacGeneticAlgorithm" id="geneticAlgorithm">

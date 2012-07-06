@@ -3,7 +3,6 @@ package com.ciphertool.zodiacengine.genetic;
 import org.springframework.beans.factory.annotation.Required;
 
 public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
-	private GeneListDao geneListDao;
 	private FitnessEvaluator fitnessEvaluator;
 
 	/**
@@ -55,30 +54,9 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 		}
 
 		/*
-		 * Fill in the end of the Chromosome in case replacements caused the
-		 * Chromosome to decrease in size
-		 */
-		while (childSequencePosition < parentB.size()) {
-			Gene nextGene = geneListDao.findRandomGene();
-
-			childSequencePosition += nextGene.size();
-
-			child.addGene(nextGene);
-		}
-
-		/*
 		 * Child is guaranteed to have at least as good fitness as its parent
 		 */
 		return child;
-	}
-
-	/**
-	 * @param geneListDao
-	 *            the geneListDao to set
-	 */
-	@Required
-	public void setGeneListDao(GeneListDao geneListDao) {
-		this.geneListDao = geneListDao;
 	}
 
 	/**

@@ -8,7 +8,6 @@ import javax.persistence.Transient;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class SolutionChromosome extends Solution implements Chromosome {
@@ -95,54 +94,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	}
 
 	/*
-	 * Be careful to call this method only when necessary as it is expensive to
-	 * repeatedly convert the words to plaintext.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.entities.Solution#getPlaintextCharacters()
-	 */
-	@Override
-	public List<Plaintext> getPlaintextCharacters() {
-		this.plaintextCharacters = new ArrayList<Plaintext>();
-
-		convertWordsToPlaintext();
-
-		return this.plaintextCharacters;
-	}
-
-	/**
-	 * It is necessary to call this method before persisting a solution to
-	 * database, since SolutionChromosome stores genes at the Word level, but
-	 * the Solution entity stores them at the Plaintext character level
-	 */
-	public void convertWordsToPlaintext() {
-		StringBuffer rawText = new StringBuffer();
-		for (Gene w : this.getGenes()) {
-			rawText.append(((WordGene) w).getWordId().getWord());
-		}
-
-		char[] chars = new char[this.cipher.length()];
-
-		try {
-			rawText.getChars(0, this.cipher.length(), chars, 0);
-		} catch (StringIndexOutOfBoundsException sioobe) {
-			log.error(
-					"Caught StringIndexOutOfBoundsException while converting solution words to plaintext. Raw text length is "
-							+ rawText.length(), sioobe);
-		}
-
-		int id = 1;
-		Plaintext pt;
-		for (char c : chars) {
-			pt = new Plaintext(new PlaintextId(this, id), String.valueOf(c).toLowerCase());
-			this.addPlaintext(pt);
-			id++;
-		}
-	}
-
-	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#mutateRandomGene()
@@ -151,7 +102,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	public void mutateRandomGene() {
 		int randomIndex = (int) (Math.random() * this.genes.size());
 
-		this.genes.get(randomIndex).mutateSequence();
+		this.genes.get(randomIndex).mutateRandomSequence();
 	}
 
 	/*
@@ -160,8 +111,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.zodiacengine.entities.Solution#toString()
 	 */
 	public String toString() {
-		this.convertWordsToPlaintext();
-
 		return super.toString();
 	}
 
@@ -171,7 +120,17 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#size()
 	 */
 	@Override
-	public Integer size() {
+	public Integer actualSize() {
+		Integer length = 0;
+
+		for (Gene gene : this.genes) {
+			length += gene.size();
+		}
+
+		return length;
+	}
+
+	public Integer targetSize() {
 		return this.cipher.length();
 	}
 
@@ -199,7 +158,17 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
 
-		copyChromosome.convertWordsToPlaintext();
+		/*
+		 * Clone the bi-directional relationship between Plaintext and Solution
+		 */
+		for (Gene wordGene : copyChromosome.getGenes()) {
+			for (Sequence plaintextSequence : wordGene.getSequences()) {
+				((PlaintextSequence) plaintextSequence).getPlaintextId()
+						.setSolution(copyChromosome);
+
+				copyChromosome.addPlaintext((PlaintextSequence) plaintextSequence);
+			}
+		}
 
 		return copyChromosome;
 	}

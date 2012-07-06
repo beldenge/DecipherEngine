@@ -115,7 +115,8 @@ public class Solution implements Serializable {
 		if (this.plaintextCharacters == null) {
 			this.plaintextCharacters = new ArrayList<Plaintext>();
 		}
-		return plaintextCharacters;
+
+		return this.plaintextCharacters;
 	}
 
 	public void setPlaintextCharacters(List<Plaintext> plaintextCharacters) {
@@ -171,8 +172,15 @@ public class Solution implements Serializable {
 	}
 
 	public void addPlaintext(Plaintext plaintext) {
-		this.plaintextCharacters.add(plaintext);
+		if (this.plaintextCharacters == null) {
+			this.plaintextCharacters = new ArrayList<Plaintext>();
+		}
+
 		plaintext.getPlaintextId().setSolution(this);
+
+		this.plaintextCharacters.add(plaintext);
+
+		this.getPlaintextCharacters();
 	}
 
 	/*
@@ -275,5 +283,4 @@ public class Solution implements Serializable {
 
 		return sb.toString();
 	}
-
 }

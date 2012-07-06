@@ -28,7 +28,12 @@ public interface Chromosome extends Cloneable {
 	 */
 	public void setFitness(Integer fitness);
 
-	public Integer size();
+	/*
+	 * Returns the size as the number of gene sequences
+	 */
+	public Integer actualSize();
+
+	public Integer targetSize();
 
 	public Chromosome clone();
 
