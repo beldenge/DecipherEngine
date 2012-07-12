@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.entities.Solution;
+
 public class PopulationTest {
 	private static Logger log = Logger.getLogger(PopulationTest.class);
 	private static ApplicationContext context;
@@ -28,6 +30,11 @@ public class PopulationTest {
 		population.populateIndividuals(populationSize);
 
 		assertEquals(population.size(), populationSize);
+
+		for (Chromosome individual : population.getIndividuals()) {
+			assertEquals(individual.actualSize().intValue(), ((Solution) individual)
+					.getPlaintextCharacters().size());
+		}
 	}
 
 	@Test

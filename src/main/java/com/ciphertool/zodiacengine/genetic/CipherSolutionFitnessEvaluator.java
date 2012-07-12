@@ -83,8 +83,18 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 				 * the key. Then we would no longer have to worry about order
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
+				 * 
+				 * TODO: Find out why this IOOBE is occurring and fix.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId() - 1);
+				try {
+					plaintext = plaintextCharacters
+							.get(ciphertextIndice.getCiphertextId().getId() - 1);
+				} catch (IndexOutOfBoundsException ioobe) {
+					log.error("Caught IndexOutOfBoundsException for index "
+							+ (ciphertextIndice.getCiphertextId().getId() - 1) + " and size "
+							+ plaintextCharacters.size() + " while evaluating Chromosome: "
+							+ chromosome, ioobe);
+				}
 
 				currentValue = plaintext.getValue();
 

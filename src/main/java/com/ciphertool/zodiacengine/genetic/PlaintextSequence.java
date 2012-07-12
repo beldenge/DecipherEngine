@@ -40,13 +40,40 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 					cnse);
 		}
 
+		copySequence.setPlaintextId(new PlaintextId());
+
 		copySequence.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId());
 
 		/*
-		 * The Solution must be set at a higher level
+		 * The Solution must be set at a higher level.
 		 */
 		copySequence.plaintextId.setSolution(null);
 
+		/*
+		 * The Gene must bet set at a higher level.
+		 */
+		copySequence.gene = null;
+
 		return copySequence;
+	}
+
+	/**
+	 * Shifts all the plaintext characters to the right the specified number of
+	 * places.
+	 * 
+	 * @param places
+	 */
+	public void shiftRight(int places) {
+		this.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId() + places);
+	}
+
+	/**
+	 * Shifts all the plaintext characters to the left the specified number of
+	 * places.
+	 * 
+	 * @param places
+	 */
+	public void shiftLeft(int places) {
+		this.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId() - places);
 	}
 }

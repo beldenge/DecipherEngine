@@ -56,8 +56,13 @@
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 	</bean>
 	
+	<bean class="com.ciphertool.zodiacengine.genetic.WordGeneListDao" id="geneListDao">
+		<property name="wordListDao" ref="wordListDao" />
+	</bean>
+	
 	<bean class="com.ciphertool.zodiacengine.genetic.MaximalCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.ZodiacGeneticAlgorithm" id="geneticAlgorithm">

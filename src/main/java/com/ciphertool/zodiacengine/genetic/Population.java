@@ -31,17 +31,17 @@ public class Population {
 			individualsAdded++;
 		}
 
-		log.info("Added " + individualsAdded + " individuals to the population.");
+		log.debug("Added " + individualsAdded + " individuals to the population.");
 	}
 
 	public long evaluateFitness() {
-		long totalFitness = 0;
+		this.totalFitness = 0;
 
 		for (Chromosome individual : individuals) {
-			totalFitness += fitnessEvaluator.evaluate(individual);
+			this.totalFitness += fitnessEvaluator.evaluate(individual);
 		}
 
-		return totalFitness;
+		return this.totalFitness;
 	}
 
 	/**

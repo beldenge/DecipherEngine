@@ -35,6 +35,10 @@ public class Solution implements Serializable {
 	public Solution() {
 	}
 
+	/*
+	 * TODO: I think it would be better to use the Cipher rather than the
+	 * cipherId in this constructor.
+	 */
 	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
 		this.cipherId = cipherId;
 		this.totalMatches = totalMatches;
@@ -179,8 +183,6 @@ public class Solution implements Serializable {
 		plaintext.getPlaintextId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);
-
-		this.getPlaintextCharacters();
 	}
 
 	/*
@@ -258,26 +260,30 @@ public class Solution implements Serializable {
 				+ ", totalMatches=" + totalMatches + "" + ", unique matches=" + uniqueMatches
 				+ ", adjacent matches=" + adjacentMatchCount + "]\n");
 
-		// start at 1 instead of 0 so that the modulus function below isn't
-		// messed up
-		for (int i = 1; i <= cipher.length(); i++) {
+		/*
+		 * Start at 1 instead of 0 so that the modulus function below isn't
+		 * messed up.
+		 */
+		if (this.cipher != null) {
+			for (int i = 1; i <= this.plaintextCharacters.size(); i++) {
 
-			// subtract 1 since the get method begins with 0
-			if (plaintextCharacters.get(i - 1).getHasMatch()) {
-				sb.append("[");
-				sb.append(plaintextCharacters.get(i - 1).getValue());
-				sb.append("]");
-			} else {
-				sb.append(" ");
-				sb.append(plaintextCharacters.get(i - 1).getValue());
-				sb.append(" ");
-			}
+				// subtract 1 since the get method begins with 0
+				if (plaintextCharacters.get(i - 1).getHasMatch()) {
+					sb.append("[");
+					sb.append(plaintextCharacters.get(i - 1).getValue());
+					sb.append("]");
+				} else {
+					sb.append(" ");
+					sb.append(plaintextCharacters.get(i - 1).getValue());
+					sb.append(" ");
+				}
 
-			// print a newline if we are at the end of the row
-			if ((i % cipher.getColumns()) == 0) {
-				sb.append("\n");
-			} else {
-				sb.append(" ");
+				// print a newline if we are at the end of the row
+				if ((i % cipher.getColumns()) == 0) {
+					sb.append("\n");
+				} else {
+					sb.append(" ");
+				}
 			}
 		}
 

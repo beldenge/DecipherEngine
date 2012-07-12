@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 	private FitnessEvaluator fitnessEvaluator;
+	@SuppressWarnings("unused")
+	private GeneListDao geneListDao;
 
 	/**
 	 * This crossover algorithm does a minimal amount of changes since it only
@@ -41,6 +43,10 @@ public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 
 					originalFitness = child.getFitness();
 
+					/*
+					 * TODO: Does this actually change anything, since the
+					 * Plaintext characters for the Solution are not updated?
+					 */
 					child.getGenes().set(childGeneIndex,
 							parentB.getGenes().get(parentGeneIndex).clone());
 
@@ -82,5 +88,14 @@ public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
 	@Required
 	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
 		this.fitnessEvaluator = fitnessEvaluator;
+	}
+
+	/**
+	 * @param geneListDao
+	 *            the geneListDao to set
+	 */
+	@Required
+	public void setGeneListDao(GeneListDao geneListDao) {
+		this.geneListDao = geneListDao;
 	}
 }

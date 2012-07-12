@@ -37,7 +37,9 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 			this.spawnInitialPopulation();
 		}
 
-		for (int i = 0; i < maxGenerations; i++) {
+		for (int i = 1; i <= maxGenerations; i++) {
+			log.info("Generation " + i);
+
 			crossover();
 
 			mutate();
@@ -76,6 +78,12 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	 */
 	@Override
 	public void crossover() {
+		if (this.population.size() < 2) {
+			log.info("Unable to perform crossover because there is only 1 individual in the population. Returning.");
+
+			return;
+		}
+
 		Chromosome mom = null;
 		Chromosome dad = null;
 		Chromosome child1 = null;
@@ -84,7 +92,12 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 		for (int i = 0; i < crossoverRate; i++) {
 			mom = this.population.spinRouletteWheel();
 
-			dad = this.population.spinRouletteWheel();
+			/*
+			 * Keep retrying until we find a different Chromosome.
+			 */
+			do {
+				dad = this.population.spinRouletteWheel();
+			} while (mom != dad);
 
 			child1 = crossoverAlgorithm.crossover(mom, dad);
 

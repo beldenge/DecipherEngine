@@ -1,9 +1,12 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
+	private Logger log = Logger.getLogger(getClass());
 	private FitnessEvaluator fitnessEvaluator;
+	private GeneListDao geneListDao;
 
 	/**
 	 * This crossover algorithm does a maximal amount of changes since it
@@ -14,9 +17,8 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 	 */
 	@Override
 	public Chromosome crossover(Chromosome parentA, Chromosome parentB) {
-		Chromosome child = (Chromosome) parentA.clone();
+		Chromosome child = parentA.clone();
 
-		int childSequencePosition = 0;
 		int childGeneIndex = 0;
 		Gene geneCopy = null;
 		Integer originalFitness = 0;
@@ -30,26 +32,33 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 			/*
 			 * Replace from parentB and reevaluate to see if it improves.
 			 */
-			geneCopy = child.getGenes().get(childGeneIndex);
+			geneCopy = child.getGenes().get(childGeneIndex).clone();
 
 			originalFitness = child.getFitness();
 
-			child.getGenes().set(childGeneIndex, parentB.getGenes().get(childGeneIndex).clone());
+			child.replaceGene(childGeneIndex, parentB.getGenes().get(childGeneIndex).clone());
 
 			/*
-			 * TODO if a replacement word is shorter than the replaced word, the
-			 * solution length could be less than the cipher length.
+			 * TODO: these genes are never removed if the cloned gene does not
+			 * increase fitness, and how come we don't run into a problem in the
+			 * below method when we comment this out?
+			 * 
+			 * Moreover, why doesn't this method seem to get called until about
+			 * 10 generations in?
 			 */
+			while (child.actualSize() < child.targetSize()) {
+				child.addGene(geneListDao.findRandomGene(child, child.actualSize() - 1));
+			}
+
 			fitnessEvaluator.evaluate(child);
 
 			/*
 			 * Revert to the original gene if this did not increase fitness
 			 */
 			if (child.getFitness() <= originalFitness) {
-				child.getGenes().set(childGeneIndex, geneCopy);
+				child.replaceGene(childGeneIndex, geneCopy);
 			}
 
-			childSequencePosition += child.getGenes().get(childGeneIndex).size();
 			childGeneIndex++;
 		}
 
@@ -66,5 +75,14 @@ public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
 	@Required
 	public void setFitnessEvaluator(FitnessEvaluator fitnessEvaluator) {
 		this.fitnessEvaluator = fitnessEvaluator;
+	}
+
+	/**
+	 * @param geneListDao
+	 *            the geneListDao to set
+	 */
+	@Required
+	public void setGeneListDao(GeneListDao geneListDao) {
+		this.geneListDao = geneListDao;
 	}
 }

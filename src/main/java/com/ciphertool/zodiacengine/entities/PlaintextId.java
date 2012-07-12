@@ -7,12 +7,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.apache.log4j.Logger;
-
 @Embeddable
-public class PlaintextId implements Serializable, Cloneable {
-	private Logger log = Logger.getLogger(getClass());
-
+public class PlaintextId implements Serializable {
 	private static final long serialVersionUID = -7647050018442693916L;
 	private Solution solution;
 	private int ciphertextId;
@@ -23,24 +19,6 @@ public class PlaintextId implements Serializable, Cloneable {
 	public PlaintextId(Solution solution, int ciphertextId) {
 		this.solution = solution;
 		this.ciphertextId = ciphertextId;
-	}
-
-	@Override
-	public PlaintextId clone() {
-		PlaintextId copyId = null;
-
-		try {
-			copyId = (PlaintextId) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNoteSupportedException while attempting to clone PlaintextId.",
-					cnse);
-		}
-
-		/*
-		 * TODO: clone Solution?
-		 */
-
-		return copyId;
 	}
 
 	@ManyToOne
@@ -122,8 +100,8 @@ public class PlaintextId implements Serializable, Cloneable {
 	 */
 	@Override
 	public String toString() {
-		return "PlaintextId [solutionId=" + solution.getId() + ", ciphertextId=" + ciphertextId
-				+ "]";
+		return "PlaintextId [solutionId=" + ((solution == null) ? "null" : solution.getId())
+				+ ", ciphertextId=" + ciphertextId + "]";
 	}
 
 }

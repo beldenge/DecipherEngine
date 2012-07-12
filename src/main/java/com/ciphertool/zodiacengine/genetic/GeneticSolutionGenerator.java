@@ -47,7 +47,7 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 		do {
 			nextWord = wordListDao.findRandomWord();
 
-			nextGene = new WordGene(nextWord, solution, length);
+			nextGene = new WordGene(nextWord, (SolutionChromosome) solution, length);
 
 			length += nextGene.size();
 
