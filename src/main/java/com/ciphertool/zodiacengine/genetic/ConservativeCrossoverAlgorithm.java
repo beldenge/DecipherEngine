@@ -2,14 +2,15 @@ package com.ciphertool.zodiacengine.genetic;
 
 import org.springframework.beans.factory.annotation.Required;
 
-public class MinimalCrossoverAlgorithm implements CrossoverAlgorithm {
+public class ConservativeCrossoverAlgorithm implements CrossoverAlgorithm {
 	private FitnessEvaluator fitnessEvaluator;
 	@SuppressWarnings("unused")
 	private GeneListDao geneListDao;
 
 	/**
-	 * This crossover algorithm does a minimal amount of changes since it only
-	 * replaces genes that begin and end at the exact same sequence positions
+	 * This crossover algorithm does a conservative amount of changes since it
+	 * only replaces genes that begin and end at the exact same sequence
+	 * positions
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.CrossoverAlgorithm#crossover(com.ciphertool.zodiacengine.genetic.Chromosome,
 	 *      com.ciphertool.zodiacengine.genetic.Chromosome)

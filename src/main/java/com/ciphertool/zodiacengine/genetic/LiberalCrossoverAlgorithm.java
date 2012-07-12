@@ -3,13 +3,13 @@ package com.ciphertool.zodiacengine.genetic;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-public class MaximalCrossoverAlgorithm implements CrossoverAlgorithm {
+public class LiberalCrossoverAlgorithm implements CrossoverAlgorithm {
 	private Logger log = Logger.getLogger(getClass());
 	private FitnessEvaluator fitnessEvaluator;
 	private GeneListDao geneListDao;
 
 	/**
-	 * This crossover algorithm does a maximal amount of changes since it
+	 * This crossover algorithm does a liberal amount of changes since it
 	 * replaces genes regardless of their begin and end sequence positions
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.CrossoverAlgorithm#crossover(com.ciphertool.zodiacengine.genetic.Chromosome,

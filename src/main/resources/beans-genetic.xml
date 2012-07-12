@@ -60,7 +60,7 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.genetic.MaximalCrossoverAlgorithm" id="crossoverAlgorithm">
+	<bean class="com.ciphertool.zodiacengine.genetic.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
