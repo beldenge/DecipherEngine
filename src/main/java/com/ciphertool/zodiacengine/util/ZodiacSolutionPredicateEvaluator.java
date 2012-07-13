@@ -40,6 +40,8 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
+		clearHasMatchValues(solution);
+
 		Plaintext plaintext = null;
 		Plaintext otherPlaintext = null;
 		int total = 0;

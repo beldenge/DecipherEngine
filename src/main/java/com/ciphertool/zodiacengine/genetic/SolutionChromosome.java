@@ -118,9 +118,11 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		for (int i = 0; i < gene.size(); i++) {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
 
-			plaintextSequence.getPlaintextId().setSolution(this);
-
 			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
+
+			plaintextSequence.setHasMatch(false);
+
+			plaintextSequence.getPlaintextId().setSolution(this);
 
 			/*
 			 * We additionally have to reset the ciphertextId since the current
@@ -235,6 +237,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
 
 			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
+
+			plaintextSequence.setHasMatch(false);
 
 			plaintextSequence.getPlaintextId().setSolution(this);
 

@@ -48,6 +48,8 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
+		clearHasMatchValues(solution);
+
 		Plaintext plaintext = null;
 		int total = 0;
 		int totalUnique = 0;

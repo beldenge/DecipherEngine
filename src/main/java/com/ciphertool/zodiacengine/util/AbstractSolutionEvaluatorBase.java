@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
+import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.Solution;
 
 public abstract class AbstractSolutionEvaluatorBase {
 	protected Cipher cipher;
@@ -28,5 +30,11 @@ public abstract class AbstractSolutionEvaluatorBase {
 			ciphertextKey.get(ct.getValue()).add(ct);
 		}
 		return ciphertextKey;
+	}
+
+	protected void clearHasMatchValues(Solution solution) {
+		for (Plaintext plaintext : solution.getPlaintextCharacters()) {
+			plaintext.setHasMatch(false);
+		}
 	}
 }

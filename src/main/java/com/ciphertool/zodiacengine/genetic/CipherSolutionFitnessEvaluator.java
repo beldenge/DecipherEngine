@@ -49,6 +49,8 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	 */
 	@Override
 	public int evaluate(Chromosome chromosome) {
+		clearHasMatchValues((SolutionChromosome) chromosome);
+
 		SolutionChromosome solution = (SolutionChromosome) chromosome;
 		Plaintext plaintext = null;
 		int total = 0;

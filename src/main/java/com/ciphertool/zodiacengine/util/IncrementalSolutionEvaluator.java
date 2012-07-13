@@ -36,6 +36,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
+		clearHasMatchValues(solution);
+
 		Plaintext plaintext = null;
 		int total = 0;
 		int totalUnique = 0;
