@@ -37,8 +37,13 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 			this.spawnInitialPopulation();
 		}
 
-		for (int i = 1; i <= maxGenerations; i++) {
-			log.info("Generation " + i);
+		long genesis = System.currentTimeMillis();
+		long generationStart = 0;
+		int i;
+		for (i = 1; i <= maxGenerations; i++) {
+			generationStart = System.currentTimeMillis();
+
+			log.info("Starting generation " + i);
 
 			crossover();
 
@@ -49,7 +54,12 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 			population.populateIndividuals(populationSize);
 
 			population.evaluateFitness();
+
+			log.info("Generation " + i + " finished in "
+					+ (System.currentTimeMillis() - generationStart) + "ms.");
 		}
+		log.info("Average generation time is " + ((System.currentTimeMillis() - genesis) / (i - 1))
+				+ "ms.");
 
 		return population.getBestFitIndividual();
 	}

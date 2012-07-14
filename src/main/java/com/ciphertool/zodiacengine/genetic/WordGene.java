@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
-import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class WordGene implements Gene {
@@ -172,13 +171,13 @@ public class WordGene implements Gene {
 	 * @see com.ciphertool.zodiacengine.genetic.Gene#insertSequence(int,
 	 * com.ciphertool.zodiacengine.genetic.Sequence)
 	 * 
+	 * It is necessary to shift the ciphertextIds at a higher level so that they
+	 * remain in order in the SolutionChromosome.
+	 * 
 	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
 	 * relationship at the Chromosome level, so that Sequences within a Gene can
 	 * be managed independently of a Chromosome until they are actually added to
 	 * the Chromosome.
-	 * 
-	 * TODO: It would be more efficient to shift the sequences at a higher level
-	 * so we don't have to repeatedly loop through the elements.
 	 */
 	@Override
 	public void insertSequence(int index, Sequence sequence) {
@@ -187,17 +186,6 @@ public class WordGene implements Gene {
 					+ this);
 
 			return;
-		}
-
-		/*
-		 * For efficiency's sake, don't keep calling the actualSize() method
-		 */
-		int actualSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
-
-		List<Plaintext> sequences = ((SolutionChromosome) this.chromosome).getPlaintextCharacters();
-
-		for (int i = index; i < actualSize; i++) {
-			((PlaintextSequence) sequences.get(i)).shiftRight(1);
 		}
 
 		this.sequences.add(index, sequence);
@@ -214,13 +202,13 @@ public class WordGene implements Gene {
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.Gene#removeSequence(int)
 	 * 
+	 * It is necessary to shift the ciphertextIds at a higher level so that they
+	 * remain in order in the SolutionChromosome.
+	 * 
 	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
 	 * relationship at the Chromosome level, so that Sequences within a Gene can
 	 * be managed independently of a Chromosome until they are actually added to
 	 * the Chromosome.
-	 * 
-	 * TODO: It would be more efficient to shift the sequences at a higher level
-	 * so we don't have to repeatedly loop through the elements.
 	 */
 	@Override
 	public void removeSequence(Sequence sequence) {
@@ -229,19 +217,6 @@ public class WordGene implements Gene {
 					+ this);
 
 			return;
-		}
-
-		/*
-		 * For efficiency's sake, don't keep calling the actualSize() method
-		 */
-		/*
-		 * TODO Remove try/catch block once no longer applicable
-		 */
-		int actualSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
-
-		for (int i = ((PlaintextSequence) sequence).getPlaintextId().getCiphertextId() + 1; i < actualSize; i++) {
-			((PlaintextSequence) ((SolutionChromosome) this.chromosome).getPlaintextCharacters()
-					.get(i)).shiftLeft(1);
 		}
 
 		((SolutionChromosome) this.chromosome).getPlaintextCharacters().remove(sequence);

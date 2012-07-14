@@ -173,8 +173,10 @@ public class WordGeneTest {
 
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
 			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getPlaintextId()
-					.getCiphertextId(), i);
+			/*
+			 * We don't test the ciphertextId since that should only be updated
+			 * when adding the Gene back to the SolutionChromosome.
+			 */
 
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
 					.getSequences().get(i));
@@ -217,8 +219,10 @@ public class WordGeneTest {
 
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
 			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getPlaintextId()
-					.getCiphertextId(), i);
+			/*
+			 * We don't test the ciphertextId since that should only be updated
+			 * when removing the Gene from the SolutionChromosome.
+			 */
 
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
 					.getSequences().get(i));

@@ -267,6 +267,23 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		Gene geneToRemove = this.genes.get(index);
 
 		/*
+		 * We want the next Sequence ID to be one greater than the current
+		 * Gene's greatest Sequence ID.
+		 */
+		int beginIndex = ((PlaintextSequence) geneToRemove.getSequences().get(
+				geneToRemove.getSequences().size() - 1)).getPlaintextId().getCiphertextId() + 1;
+
+		int actualSize = this.plaintextCharacters.size();
+
+		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		for (int i = beginIndex; i < actualSize; i++) {
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
+		}
+
+		/*
 		 * We loop across the indices backwards since, if starting from the
 		 * beginning, they should decrement each time an element is removed.
 		 */
