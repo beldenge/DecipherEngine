@@ -97,7 +97,7 @@ public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 			 */
 			do {
 				dad = this.population.spinRouletteWheel();
-			} while (mom != dad);
+			} while (mom == dad);
 
 			child1 = crossoverAlgorithm.crossover(mom, dad);
 

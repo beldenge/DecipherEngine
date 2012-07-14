@@ -19,6 +19,7 @@ public class LiberalCrossoverAlgorithm implements CrossoverAlgorithm {
 	public Chromosome crossover(Chromosome parentA, Chromosome parentB) {
 		Chromosome child = parentA.clone();
 
+		int genesBefore = 0;
 		int childGeneIndex = 0;
 		Gene geneCopy = null;
 		Integer originalFitness = 0;
@@ -36,16 +37,10 @@ public class LiberalCrossoverAlgorithm implements CrossoverAlgorithm {
 
 			originalFitness = child.getFitness();
 
+			genesBefore = child.getGenes().size();
+
 			child.replaceGene(childGeneIndex, parentB.getGenes().get(childGeneIndex).clone());
 
-			/*
-			 * TODO: these genes are never removed if the cloned gene does not
-			 * increase fitness, and how come we don't run into a problem in the
-			 * below method when we comment this out?
-			 * 
-			 * Moreover, why doesn't this method seem to get called until about
-			 * 10 generations in?
-			 */
 			while (child.actualSize() < child.targetSize()) {
 				child.addGene(geneListDao.findRandomGene(child, child.actualSize() - 1));
 			}
@@ -57,6 +52,10 @@ public class LiberalCrossoverAlgorithm implements CrossoverAlgorithm {
 			 */
 			if (child.getFitness() <= originalFitness) {
 				child.replaceGene(childGeneIndex, geneCopy);
+
+				while (child.getGenes().size() > genesBefore) {
+					child.removeGene(child.getGenes().size() - 1);
+				}
 			}
 
 			childGeneIndex++;
