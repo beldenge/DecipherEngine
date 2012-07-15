@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
@@ -21,8 +21,8 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	private Logger log = Logger.getLogger(getClass());
 	int cipherLength;
 
-	public ZodiacSolutionGenerator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public ZodiacSolutionGenerator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		cipherLength = cipher.length();
 	}
 

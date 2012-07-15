@@ -8,11 +8,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -28,8 +28,8 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public ZodiacSolutionEvaluator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public ZodiacSolutionEvaluator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		ciphertextKey = createKeyFromCiphertext();
 	}
 

@@ -27,21 +27,17 @@
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.SolutionChromosomeGenerator" id="chromosomeGenerator">
-		<constructor-arg index="0" type="java.lang.String"
-			value="${cipher.name}" />
-		<constructor-arg index="1"
-			type="com.ciphertool.zodiacengine.dao.CipherDao">
-			<ref bean="cipherDao" />
+		<constructor-arg index="0"
+			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
+			<ref bean="cipherSingleton" />
 		</constructor-arg>
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
-		<constructor-arg index="0" type="java.lang.String"
-			value="${cipher.name}" />
-		<constructor-arg index="1"
-			type="com.ciphertool.zodiacengine.dao.CipherDao">
-			<ref bean="cipherDao" />
+		<constructor-arg index="0"
+			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
+			<ref bean="cipherSingleton" />
 		</constructor-arg>
 		<property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
 		<property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
@@ -95,6 +91,15 @@
 
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
 		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton" id="cipherSingleton">
+		<constructor-arg index="0" type="java.lang.String"
+			value="${cipher.name}" />
+		<constructor-arg index="1"
+			type="com.ciphertool.zodiacengine.dao.CipherDao">
+			<ref bean="cipherDao" />
+		</constructor-arg>
 	</bean>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

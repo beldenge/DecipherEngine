@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.Chromosome;
 import com.ciphertool.genetics.FitnessEvaluator;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 import com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator;
 
@@ -32,8 +32,8 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public CipherSolutionFitnessEvaluator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public CipherSolutionFitnessEvaluator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		ciphertextKey = createKeyFromCiphertext();
 	}
 

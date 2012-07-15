@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 /**
  * @author george
@@ -31,7 +31,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	private static Logger log = Logger.getLogger(ZodiacSolutionMerger.class);
 	private SolutionDao solutionDao;
 	private String cipherName;
-	private CipherDao cipherDao;
+	private CipherSingleton cipherSingleton;
 	private SolutionEvaluator solutionEvaluator;
 
 	private static ApplicationContext context;
@@ -50,7 +50,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 
 	@Override
 	public Solution mergeSolutions() {
-		Cipher zodiacCipher = cipherDao.findByCipherName(cipherName);
+		Cipher zodiacCipher = cipherSingleton.getInstance();
 
 		Solution bestFitSolution = null;
 		List<Solution> solutions = new ArrayList<Solution>();
@@ -156,20 +156,20 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	}
 
 	/**
-	 * @param cipherDao
-	 *            the cipherDao to set
-	 */
-	@Required
-	public void setCipherDao(CipherDao cipherDao) {
-		this.cipherDao = cipherDao;
-	}
-
-	/**
 	 * @param solutionEvaluator
 	 *            the solutionEvaluator to set
 	 */
 	@Required
 	public void setSolutionEvaluator(SolutionEvaluator solutionEvaluator) {
 		this.solutionEvaluator = solutionEvaluator;
+	}
+
+	/**
+	 * @param cipherSingleton
+	 *            the cipherSingleton to set
+	 */
+	@Required
+	public void setCipherSingleton(CipherSingleton cipherSingleton) {
+		this.cipherSingleton = cipherSingleton;
 	}
 }

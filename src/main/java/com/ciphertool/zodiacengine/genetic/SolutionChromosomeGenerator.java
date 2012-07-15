@@ -11,19 +11,19 @@ import com.ciphertool.genetics.ChromosomeGenerator;
 import com.ciphertool.genetics.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 
-	public SolutionChromosomeGenerator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public SolutionChromosomeGenerator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 	}
 
 	@Override

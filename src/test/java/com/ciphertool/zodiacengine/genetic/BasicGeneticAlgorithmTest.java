@@ -41,6 +41,8 @@ public class BasicGeneticAlgorithmTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		population = null;
+		geneticAlgorithm = null;
 		context = null;
 	}
 

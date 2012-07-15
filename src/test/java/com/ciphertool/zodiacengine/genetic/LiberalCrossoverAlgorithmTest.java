@@ -49,6 +49,9 @@ public class LiberalCrossoverAlgorithmTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		fitnessEvaluator = null;
+		crossoverAlgorithm = null;
+		population = null;
 		context = null;
 	}
 

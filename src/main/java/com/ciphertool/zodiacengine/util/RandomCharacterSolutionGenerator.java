@@ -3,18 +3,18 @@ package com.ciphertool.zodiacengine.util;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.sentencebuilder.util.LetterUtils;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
 	private Logger log = Logger.getLogger(getClass());
 
-	public RandomCharacterSolutionGenerator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public RandomCharacterSolutionGenerator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 	}
 
 	/**

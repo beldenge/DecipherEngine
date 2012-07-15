@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -21,8 +21,8 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public ZodiacSolutionPredicateEvaluator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public ZodiacSolutionPredicateEvaluator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		ciphertextKey = createKeyFromCiphertext();
 	}
 

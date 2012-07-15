@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase implements
 		SolutionGenerator {
@@ -26,8 +26,8 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public IncrementalSolutionGenerator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public IncrementalSolutionGenerator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		cipherLength = cipher.length();
 	}
 

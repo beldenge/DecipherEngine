@@ -44,6 +44,7 @@ public class SolutionChromosomeTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		cipher = null;
 		context = null;
 	}
 

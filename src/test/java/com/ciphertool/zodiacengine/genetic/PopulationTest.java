@@ -58,6 +58,7 @@ public class PopulationTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		population = null;
 		context = null;
 	}
 }

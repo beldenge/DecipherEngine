@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,7 +16,6 @@ import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
 public class CipherSolutionEngine {
 	private static Logger log = Logger.getLogger(CipherSolutionEngine.class);
-	private static BeanFactory factory;
 	private static long numIterations;
 	private static int maxThreads;
 	private static int monitorSleepMillis;
@@ -170,9 +168,8 @@ public class CipherSolutionEngine {
 	 * Spins up the Spring application context
 	 */
 	private static void setUp() {
+		@SuppressWarnings("unused")
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
-
-		factory = context;
 
 		log.info("Spring context created successfully!");
 	}

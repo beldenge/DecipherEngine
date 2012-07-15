@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -22,8 +22,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public IncrementalSolutionEvaluator(String cipherName, CipherDao cipherDao) {
-		cipher = cipherDao.findByCipherName(cipherName);
+	public IncrementalSolutionEvaluator(CipherSingleton cipherSingleton) {
+		cipher = cipherSingleton.getInstance();
 		ciphertextKey = createKeyFromCiphertext();
 	}
 
