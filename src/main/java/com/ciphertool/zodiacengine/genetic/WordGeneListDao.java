@@ -2,8 +2,13 @@ package com.ciphertool.zodiacengine.genetic;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.GeneListDao;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class WordGeneListDao implements GeneListDao {
 	private WordListDao wordListDao;

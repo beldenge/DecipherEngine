@@ -26,7 +26,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.GeneticSolutionGenerator" id="solutionGenerator">
+	<bean class="com.ciphertool.zodiacengine.genetic.SolutionChromosomeGenerator" id="chromosomeGenerator">
 		<constructor-arg index="0" type="java.lang.String"
 			value="${cipher.name}" />
 		<constructor-arg index="1"
@@ -49,10 +49,10 @@
 		<property name="solutionDao" ref="solutionDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.genetic.MaximizationFitnessComparator" id="fitnessComparator" />
+	<bean class="com.ciphertool.genetics.MaximizationFitnessComparator" id="fitnessComparator" />
 
-	<bean class="com.ciphertool.zodiacengine.genetic.Population" id="population">
-		<property name="solutionGenerator" ref="solutionGenerator" />
+	<bean class="com.ciphertool.genetics.Population" id="population">
+		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 	</bean>
 	
@@ -60,7 +60,7 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.genetic.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>

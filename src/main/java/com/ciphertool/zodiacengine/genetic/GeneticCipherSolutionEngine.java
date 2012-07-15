@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.GeneticAlgorithm;
+
 public class GeneticCipherSolutionEngine {
 	private static Logger log = Logger.getLogger(GeneticCipherSolutionEngine.class);
 	@SuppressWarnings("unused")

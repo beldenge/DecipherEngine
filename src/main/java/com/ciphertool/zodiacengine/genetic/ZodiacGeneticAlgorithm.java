@@ -6,6 +6,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.CrossoverAlgorithm;
+import com.ciphertool.genetics.FitnessComparator;
+import com.ciphertool.genetics.FitnessEvaluator;
+import com.ciphertool.genetics.GeneticAlgorithm;
+import com.ciphertool.genetics.Population;
+
 public class ZodiacGeneticAlgorithm implements GeneticAlgorithm {
 	private Logger log = Logger.getLogger(getClass());
 	private Integer populationSize;

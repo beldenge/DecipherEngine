@@ -6,24 +6,28 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.ChromosomeGenerator;
+import com.ciphertool.genetics.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.util.SolutionGenerator;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
-public class GeneticSolutionGenerator implements SolutionGenerator {
+public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 
-	public GeneticSolutionGenerator(String cipherName, CipherDao cipherDao) {
+	public SolutionChromosomeGenerator(String cipherName, CipherDao cipherDao) {
 		cipher = cipherDao.findByCipherName(cipherName);
 	}
 
 	@Override
-	public Solution generateSolution() {
+	public Chromosome generateChromosome() {
 		// Set confidence levels to lowest possible
 		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0);
 
@@ -35,7 +39,7 @@ public class GeneticSolutionGenerator implements SolutionGenerator {
 
 		log.debug(solution);
 
-		return solution;
+		return (Chromosome) solution;
 	}
 
 	private List<Gene> getWordGenes(Solution solution) {

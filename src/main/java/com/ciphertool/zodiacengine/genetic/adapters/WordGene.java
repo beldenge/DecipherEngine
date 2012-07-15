@@ -1,10 +1,13 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
 import com.ciphertool.zodiacengine.entities.PlaintextId;

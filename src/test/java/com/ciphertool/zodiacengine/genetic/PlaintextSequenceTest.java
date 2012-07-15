@@ -10,8 +10,12 @@ import org.junit.Test;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class PlaintextSequenceTest {
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(PlaintextSequenceTest.class);
 
 	@Test

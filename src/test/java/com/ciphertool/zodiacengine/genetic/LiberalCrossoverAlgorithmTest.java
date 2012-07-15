@@ -11,12 +11,20 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.CrossoverAlgorithm;
+import com.ciphertool.genetics.FitnessEvaluator;
+import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.Population;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+
 public class LiberalCrossoverAlgorithmTest {
 	private static Logger log = Logger.getLogger(LiberalCrossoverAlgorithmTest.class);
 
 	private static ApplicationContext context;
 	private static CrossoverAlgorithm crossoverAlgorithm;
 	private static Population population;
+	@SuppressWarnings("unused")
 	private static FitnessEvaluator fitnessEvaluator;
 
 	@BeforeClass

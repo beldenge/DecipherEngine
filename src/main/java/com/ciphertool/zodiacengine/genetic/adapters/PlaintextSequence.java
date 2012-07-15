@@ -1,7 +1,9 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.adapters;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 

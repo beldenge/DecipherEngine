@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.Chromosome;
+import com.ciphertool.genetics.Gene;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
