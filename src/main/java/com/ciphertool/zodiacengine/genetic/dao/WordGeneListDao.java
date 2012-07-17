@@ -1,10 +1,10 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.dao;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.Chromosome;
-import com.ciphertool.genetics.Gene;
-import com.ciphertool.genetics.GeneListDao;
+import com.ciphertool.genetics.dao.GeneListDao;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;

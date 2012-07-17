@@ -2,8 +2,8 @@ package com.ciphertool.zodiacengine.genetic.adapters;
 
 import org.apache.log4j.Logger;
 
-import com.ciphertool.genetics.Gene;
-import com.ciphertool.genetics.Sequence;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 
@@ -77,5 +77,10 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	public void shiftLeft(int places) {
 		this.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId() - places);
+	}
+
+	@Override
+	public Integer getSequenceId() {
+		return this.plaintextId.getCiphertextId();
 	}
 }

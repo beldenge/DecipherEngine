@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.Chromosome;
-import com.ciphertool.genetics.ChromosomeGenerator;
-import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.util.ChromosomeGenerator;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.Cipher;

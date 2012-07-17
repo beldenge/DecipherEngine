@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.genetics.Chromosome;
 import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class PopulationTest {

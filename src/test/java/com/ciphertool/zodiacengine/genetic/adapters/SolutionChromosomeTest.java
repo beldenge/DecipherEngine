@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.adapters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.genetics.Gene;
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.dao.CipherDao;

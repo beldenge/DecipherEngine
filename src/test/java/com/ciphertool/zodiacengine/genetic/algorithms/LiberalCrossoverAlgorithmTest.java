@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,11 +11,11 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.genetics.Chromosome;
-import com.ciphertool.genetics.CrossoverAlgorithm;
-import com.ciphertool.genetics.FitnessEvaluator;
-import com.ciphertool.genetics.Gene;
 import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class LiberalCrossoverAlgorithmTest {

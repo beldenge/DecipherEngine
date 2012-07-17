@@ -26,7 +26,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.SolutionChromosomeGenerator" id="chromosomeGenerator">
+	<bean class="com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator" id="chromosomeGenerator">
 		<constructor-arg index="0"
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
@@ -34,7 +34,7 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.genetic.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
+	<bean class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
 		<constructor-arg index="0"
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
@@ -45,23 +45,23 @@
 		<property name="solutionDao" ref="solutionDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.MaximizationFitnessComparator" id="fitnessComparator" />
+	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator" id="fitnessComparator" />
 
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.genetic.WordGeneListDao" id="geneListDao">
+	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao" id="geneListDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.BasicGeneticAlgorithm" id="geneticAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm" id="geneticAlgorithm">
 		<property name="populationSize" value="${genetic.population.size}" />
 		<property name="survivalRate" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />

@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,9 +10,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.genetics.BasicGeneticAlgorithm;
-import com.ciphertool.genetics.GeneticAlgorithm;
 import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
+import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class BasicGeneticAlgorithmTest {

@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.Chromosome;
-import com.ciphertool.genetics.FitnessEvaluator;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
