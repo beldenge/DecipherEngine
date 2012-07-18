@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
@@ -338,24 +337,5 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		int randomIndex = (int) (Math.random() * this.genes.size());
 
 		this.mutateGene(randomIndex);
-	}
-
-	/*
-	 * This is kind of a horrible implementation. Building the List every time
-	 * just to satisfy the type casting is horrible.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#getSequences()
-	 */
-	@Override
-	public List<? extends Sequence> getSequences() {
-		List<PlaintextSequence> plaintextSequences = new ArrayList<PlaintextSequence>();
-
-		for (Plaintext plaintext : this.plaintextCharacters) {
-			plaintextSequences.add((PlaintextSequence) plaintext);
-		}
-
-		return plaintextSequences;
 	}
 }
