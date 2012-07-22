@@ -1,5 +1,7 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
@@ -29,13 +31,16 @@ public class GeneticCipherSolutionEngine {
 		log.info("Took " + (System.currentTimeMillis() - start)
 				+ "ms to spawn initial population of " + geneticAlgorithm.getPopulation().size());
 
-		Chromosome bestFitIndividual = geneticAlgorithm.iterateUntilTermination();
+		List<Chromosome> bestFitIndividuals = geneticAlgorithm.iterateUntilTermination();
 
 		/*
 		 * Print out summary information
 		 */
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to finish.");
-		log.info("Best solution found: " + bestFitIndividual);
+		log.info("Best " + bestFitIndividuals.size() + " solutions in ascending order: ");
+		for (Chromosome bestFitIndividual : bestFitIndividuals) {
+			log.info(bestFitIndividual);
+		}
 	}
 
 	/**

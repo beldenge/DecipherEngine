@@ -56,7 +56,7 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.LiberalCrossoverAlgorithm" id="crossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.ConservativeCrossoverAlgorithm" id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
@@ -67,6 +67,7 @@
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
 		<property name="crossoverRate" value="${genetic.algorithm.crossoverRate}" />
 		<property name="maxGenerations" value="${genetic.algorithm.maxGenerations}" />
+		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
 		<property name="crossoverAlgorithm" ref="crossoverAlgorithm" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="population" ref="population" />

@@ -18,8 +18,8 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
-public class LiberalCrossoverAlgorithmTest {
-	private static Logger log = Logger.getLogger(LiberalCrossoverAlgorithmTest.class);
+public class CrossoverAlgorithmTest {
+	private static Logger log = Logger.getLogger(CrossoverAlgorithmTest.class);
 
 	private static ApplicationContext context;
 	private static CrossoverAlgorithm crossoverAlgorithm;
