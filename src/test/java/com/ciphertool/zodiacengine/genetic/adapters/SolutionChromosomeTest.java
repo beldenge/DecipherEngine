@@ -18,8 +18,6 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
@@ -44,6 +42,7 @@ public class SolutionChromosomeTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		cipher = null;
 		context = null;
 	}

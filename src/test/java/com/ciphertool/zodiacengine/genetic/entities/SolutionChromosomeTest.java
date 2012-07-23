@@ -44,6 +44,7 @@ public class SolutionChromosomeTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		cipher = null;
 		context = null;
 	}

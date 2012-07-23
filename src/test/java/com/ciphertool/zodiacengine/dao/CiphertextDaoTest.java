@@ -37,6 +37,7 @@ public class CiphertextDaoTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		context = null;
 	}
 }

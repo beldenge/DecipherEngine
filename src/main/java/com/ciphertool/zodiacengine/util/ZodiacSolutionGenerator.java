@@ -96,6 +96,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 * This might be due to the fact that it is actually more CPU intensive but
 	 * less memory intensive
 	 */
+	@SuppressWarnings("unused")
 	private void convertSentencesToPlaintextLowMemory(Solution solution, List<Sentence> sentenceList) {
 		char[] chars;
 		Plaintext pt;

@@ -49,6 +49,7 @@ public class CrossoverAlgorithmTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		fitnessEvaluator = null;
 		crossoverAlgorithm = null;
 		population = null;

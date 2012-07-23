@@ -39,6 +39,7 @@ public class PlaintextDaoTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		context = null;
 	}
 }

@@ -41,6 +41,7 @@ public class BasicGeneticAlgorithmTest {
 	 */
 	@AfterClass
 	public static void cleanUp() {
+		((ClassPathXmlApplicationContext) context).close();
 		population = null;
 		geneticAlgorithm = null;
 		context = null;
