@@ -50,6 +50,7 @@
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao" id="geneListDao">
@@ -101,6 +102,14 @@
 			type="com.ciphertool.zodiacengine.dao.CipherDao">
 			<ref bean="cipherDao" />
 		</constructor-arg>
+	</bean>
+
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="4" />
+		<property name="maxPoolSize" value="4" />
+		<property name="queueCapacity" value="1000" />
+		<property name="keepAliveSeconds" value="5" />
+		<property name="allowCoreThreadTimeOut" value="true" />
 	</bean>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
