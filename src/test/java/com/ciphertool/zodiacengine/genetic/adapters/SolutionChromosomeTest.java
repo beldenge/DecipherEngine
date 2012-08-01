@@ -55,13 +55,6 @@ public class SolutionChromosomeTest {
 	}
 
 	@Test
-	public void testGetNullGenes() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
-		assertNotNull(solutionChromosome.getGenes());
-	}
-
-	@Test
 	public void testActualSize() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 

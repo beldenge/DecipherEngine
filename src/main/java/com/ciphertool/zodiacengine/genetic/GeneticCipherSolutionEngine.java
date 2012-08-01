@@ -29,7 +29,8 @@ public class GeneticCipherSolutionEngine {
 		geneticAlgorithm.spawnInitialPopulation();
 
 		log.info("Took " + (System.currentTimeMillis() - start)
-				+ "ms to spawn initial population of " + geneticAlgorithm.getPopulation().size());
+				+ "ms to spawn initial population of size "
+				+ geneticAlgorithm.getPopulation().size());
 
 		List<Chromosome> bestFitIndividuals = geneticAlgorithm.iterateUntilTermination();
 

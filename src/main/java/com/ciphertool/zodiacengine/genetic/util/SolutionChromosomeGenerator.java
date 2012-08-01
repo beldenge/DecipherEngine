@@ -35,7 +35,9 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 
 		List<Gene> wordGenes = getWordGenes(solution);
 
-		solution.setGenes(wordGenes);
+		for (Gene gene : wordGenes) {
+			solution.addGene(gene);
+		}
 
 		log.debug(solution);
 

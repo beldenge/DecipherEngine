@@ -66,10 +66,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	@Transient
 	public List<Gene> getGenes() {
-		if (this.genes == null) {
-			this.genes = new ArrayList<Gene>();
-		}
-
 		return genes;
 	}
 
@@ -81,11 +77,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public void setGenes(List<Gene> genes) {
-		this.genes = null;
-
-		for (Gene gene : genes) {
-			this.addGene(gene);
-		}
+		this.genes = genes;
 	}
 
 	/*

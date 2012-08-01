@@ -2,6 +2,7 @@ package com.ciphertool.zodiacengine.genetic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -40,15 +41,29 @@ public class PopulationTest {
 	}
 
 	@Test
-	public void testSpinRouletteWheel() {
+	public void testSpinObjectRouletteWheel() {
 		// Just in case a previous test modified the population
 		population.populateIndividuals(populationSize);
 
 		population.evaluateFitness();
 
-		Chromosome chromosome = population.spinRouletteWheel();
+		Chromosome chromosome = population.spinObjectRouletteWheel();
 
 		assertNotNull(chromosome);
+	}
+
+	@Test
+	public void testSpinIndexRouletteWheel() {
+		// Just in case a previous test modified the population
+		population.populateIndividuals(populationSize);
+
+		population.evaluateFitness();
+
+		int winningNumber = -1;
+
+		winningNumber = population.spinIndexRouletteWheel();
+
+		assertTrue(winningNumber > -1);
 	}
 
 	/**

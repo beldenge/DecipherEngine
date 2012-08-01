@@ -210,10 +210,6 @@ public class Solution implements Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
-	 * We must not check the Plaintext characters else we may run into a stack
-	 * overflow. It shouldn't be necessary anyway since the id makes the
-	 * solution unique.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -242,6 +238,25 @@ public class Solution implements Serializable {
 		if (uniqueMatches != other.uniqueMatches) {
 			return false;
 		}
+
+		if (this.plaintextCharacters == null && other.plaintextCharacters != null) {
+			return false;
+		}
+		if (this.plaintextCharacters != null && other.plaintextCharacters == null) {
+			return false;
+		}
+		if (this.plaintextCharacters != null && other.plaintextCharacters != null) {
+			if (this.plaintextCharacters.size() != other.plaintextCharacters.size()) {
+				return false;
+			}
+
+			for (int i = 0; i < this.plaintextCharacters.size(); i++) {
+				if (!this.plaintextCharacters.get(i).equals(other.plaintextCharacters.get(i))) {
+					return false;
+				}
+			}
+		}
+
 		return true;
 	}
 

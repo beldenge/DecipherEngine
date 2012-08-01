@@ -58,10 +58,10 @@ public class CrossoverAlgorithmTest {
 
 	@Test
 	public void testCrossover() {
-		Chromosome mom = population.spinRouletteWheel();
+		Chromosome mom = population.spinObjectRouletteWheel();
 		log.info("Mom: " + mom);
 
-		Chromosome dad = population.spinRouletteWheel();
+		Chromosome dad = population.spinObjectRouletteWheel();
 		log.info("Dad: " + dad);
 
 		Chromosome child = crossoverAlgorithm.crossover(mom, dad);
