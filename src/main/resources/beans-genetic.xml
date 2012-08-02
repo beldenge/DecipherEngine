@@ -73,6 +73,7 @@
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="population" ref="population" />
 		<property name="fitnessComparator" ref="fitnessComparator" />
+		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
