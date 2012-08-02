@@ -62,7 +62,7 @@
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm" id="geneticAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm" id="geneticAlgorithm">
 		<property name="populationSize" value="${genetic.population.size}" />
 		<property name="survivalRate" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
