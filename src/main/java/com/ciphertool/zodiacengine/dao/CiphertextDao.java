@@ -10,13 +10,16 @@ import com.ciphertool.zodiacengine.entities.Ciphertext;
 
 public class CiphertextDao implements Dao {
 	private SessionFactory sessionFactory;
+	private static final String separator = ":";
+	private static final String cipherIdParameter = "cipherId";
 
 	public List<Ciphertext> findAllByCipherId(int cipherId) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
 		List<Ciphertext> cipherCharacters = session.createQuery(
-				"from Ciphertext where cipher_id = ?").setInteger(0, cipherId).list();
+				"from Ciphertext where cipher_id = " + separator + cipherIdParameter).setParameter(
+				cipherIdParameter, cipherId).list();
 		session.getTransaction().commit();
 		session.close();
 

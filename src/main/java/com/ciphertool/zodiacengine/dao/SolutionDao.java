@@ -12,6 +12,9 @@ import com.ciphertool.zodiacengine.entities.Solution;
 @Component
 public class SolutionDao implements Dao {
 	private SessionFactory sessionFactory;
+	private static final String separator = ":";
+	private static final String solutionIdParameter = "solutionId";
+	private static final String nameParameter = "name";
 
 	public boolean insert(Solution solution) {
 		Session session = sessionFactory.openSession();
@@ -25,8 +28,9 @@ public class SolutionDao implements Dao {
 	public Solution findById(Integer id) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		Solution solution = (Solution) session.createQuery("from Solution where id = ?")
-				.setInteger(0, id).uniqueResult();
+		Solution solution = (Solution) session.createQuery(
+				"from Solution where id = " + separator + solutionIdParameter).setParameter(
+				solutionIdParameter, id).uniqueResult();
 		session.getTransaction().commit();
 		session.close();
 
@@ -38,8 +42,9 @@ public class SolutionDao implements Dao {
 		session.beginTransaction();
 		@SuppressWarnings("unchecked")
 		List<Solution> solutions = (List<Solution>) session.createQuery(
-				"from Solution where cipherId = (select c.id from Cipher c where c.name = ?)")
-				.setParameter(0, cipherName).list();
+				"from Solution where cipherId = (select c.id from Cipher c where c.name = "
+						+ separator + nameParameter + ")").setParameter(nameParameter, cipherName)
+				.list();
 		session.getTransaction().commit();
 		session.close();
 

@@ -10,12 +10,15 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 @Component
 public class CipherDao implements Dao {
 	private SessionFactory sessionFactory;
+	private static final String separator = ":";
+	private static final String nameParameter = "name";
 
 	public Cipher findByCipherName(String name) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		Cipher cipher = (Cipher) session.createQuery("from Cipher where name = ?").setString(0,
-				name).uniqueResult();
+		Cipher cipher = (Cipher) session.createQuery(
+				"from Cipher where name = " + separator + nameParameter).setParameter(
+				nameParameter, name).uniqueResult();
 		session.getTransaction().commit();
 		session.close();
 
