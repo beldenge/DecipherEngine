@@ -3,6 +3,7 @@ package com.ciphertool.zodiacengine.genetic.algorithms;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -12,10 +13,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.algorithms.ConservativeCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.FitnessEvaluator;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class CrossoverAlgorithmTest {
@@ -91,5 +95,24 @@ public class CrossoverAlgorithmTest {
 		log.info("Solution size: " + ((SolutionChromosome) child).getPlaintextCharacters().size());
 
 		assertEquals(genesBefore, child.getGenes().size());
+
+		/*
+		 * For LowestCommonGroupCrossoverAlgorithm and
+		 * ConservativeCrossoverAlgorithm only
+		 */
+		if (crossoverAlgorithm instanceof LowestCommonGroupCrossoverAlgorithm
+				|| crossoverAlgorithm instanceof ConservativeCrossoverAlgorithm) {
+			for (Plaintext plaintext : ((SolutionChromosome) child).getPlaintextCharacters()) {
+				if ((!plaintext.getValue().equals(
+						((SolutionChromosome) mom).getPlaintextCharacters().get(
+								plaintext.getPlaintextId().getCiphertextId()).getValue()))
+						&& (!plaintext.getValue().equals(
+								((SolutionChromosome) dad).getPlaintextCharacters().get(
+										plaintext.getPlaintextId().getCiphertextId()).getValue()))) {
+					fail("Plaintext value from child does not match Plaintext from either parent: "
+							+ plaintext);
+				}
+			}
+		}
 	}
 }
