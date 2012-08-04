@@ -122,8 +122,9 @@
 		<property name="cipherSingleton" ref="cipherSingleton" />
 		<property name="solutionEvaluator" ref="solutionEvaluator" />
 	</bean>
-	
-	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton" id="cipherSingleton">
+
+	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton"
+		id="cipherSingleton">
 		<constructor-arg index="0" type="java.lang.String"
 			value="${cipher.name}" />
 		<constructor-arg index="1"

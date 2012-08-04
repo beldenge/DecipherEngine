@@ -15,26 +15,32 @@
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionEngine" id="geneticSolutionEngine">
+	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionEngine"
+		id="geneticSolutionEngine">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao" id="wordListDao">
+	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
+		id="wordListDao">
 		<constructor-arg index="0"
 			type="com.ciphertool.sentencebuilder.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator" id="chromosomeGenerator">
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator"
+		id="chromosomeGenerator">
 		<constructor-arg index="0"
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
 		</constructor-arg>
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
-	
-	<bean class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator" id="fitnessEvaluator">
+
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
+		id="fitnessEvaluator">
 		<constructor-arg index="0"
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
@@ -44,25 +50,31 @@
 		<property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
 		<property name="solutionDao" ref="solutionDao" />
 	</bean>
-	
-	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator" id="fitnessComparator" />
+
+	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator"
+		id="fitnessComparator" />
 
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
-	
-	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao" id="geneListDao">
+
+	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"
+		id="geneListDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
-	
-	<bean class="com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm" id="crossoverAlgorithm">
+
+	<bean
+		class="com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm"
+		id="crossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
-	
-	<bean class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm" id="geneticAlgorithm">
+
+	<bean
+		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
+		id="geneticAlgorithm">
 		<property name="populationSize" value="${genetic.population.size}" />
 		<property name="survivalRate" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
@@ -95,8 +107,9 @@
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
-	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton" id="cipherSingleton">
+
+	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton"
+		id="cipherSingleton">
 		<constructor-arg index="0" type="java.lang.String"
 			value="${cipher.name}" />
 		<constructor-arg index="1"
@@ -105,10 +118,12 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		<property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
 		<property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />
-		<!-- queueCapacity should be the same as populationSize, or we will get rejected execution exceptions -->
+		<!-- queueCapacity should be the same as populationSize, or we will get 
+			rejected execution exceptions -->
 		<property name="queueCapacity" value="${taskExecutor.queueCapacity}" />
 		<property name="keepAliveSeconds" value="5" />
 		<property name="allowCoreThreadTimeOut" value="true" />
