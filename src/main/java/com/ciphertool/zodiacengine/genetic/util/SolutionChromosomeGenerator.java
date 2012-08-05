@@ -57,6 +57,15 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 
 			length += nextGene.size();
 
+			/*
+			 * Truncate the last WordGene if it exceeds the Cipher length.
+			 */
+			if (length > cipher.length()) {
+				for (int i = length; i > cipher.length(); i--) {
+					nextGene.removeSequence(nextGene.getSequences().get(nextGene.size() - 1));
+				}
+			}
+
 			geneList.add(nextGene);
 		} while (length < cipher.length());
 

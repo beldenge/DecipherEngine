@@ -47,7 +47,17 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 		int length = 0;
 		do {
 			nextWord = wordListDao.findRandomWord();
+
 			length += nextWord.getWordId().getWord().length();
+
+			/*
+			 * Truncate the last Word if it exceeds the Cipher length.
+			 */
+			if (length > cipher.length()) {
+				int endIndex = (nextWord.getWordId().getWord().length() - (length - cipher.length()));
+				nextWord.getWordId().setWord(nextWord.getWordId().getWord().substring(0, endIndex));
+			}
+
 			wordList.add(nextWord);
 		} while (length < cipher.length());
 		return wordList;
