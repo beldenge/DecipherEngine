@@ -41,7 +41,7 @@
 	<!-- Old fitnessEvaluator bean definition is currently unused but the definition 
 		is here for backward compatibility -->
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
 		id="oldFitnessEvaluator">
 		<constructor-arg index="0"
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
