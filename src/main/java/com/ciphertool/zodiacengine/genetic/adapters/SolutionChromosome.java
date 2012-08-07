@@ -19,7 +19,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	private static final long serialVersionUID = -8636317309324068652L;
 
 	private List<Gene> genes;
-	private Integer fitness;
+	private Double fitness;
 
 	public SolutionChromosome() {
 		super();
@@ -42,7 +42,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	@Transient
-	public Integer getFitness() {
+	public Double getFitness() {
 		return fitness;
 	}
 
@@ -54,7 +54,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * )
 	 */
 	@Override
-	public void setFitness(Integer fitness) {
+	public void setFitness(Double fitness) {
 		this.fitness = fitness;
 	}
 

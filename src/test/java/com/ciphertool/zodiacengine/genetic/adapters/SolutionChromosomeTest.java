@@ -90,7 +90,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testAddGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -132,7 +132,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testCloneSolutionChromosome() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -217,7 +217,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testInsertGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
@@ -272,7 +272,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -333,7 +333,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testReplaceGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -456,7 +456,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGeneOnClonedSolution() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
-		solutionChromosome.setFitness(0);
+		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));

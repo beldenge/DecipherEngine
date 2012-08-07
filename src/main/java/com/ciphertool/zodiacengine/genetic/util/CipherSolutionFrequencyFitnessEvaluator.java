@@ -18,8 +18,14 @@ import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 import com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator;
 
-public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBase implements
-		FitnessEvaluator {
+/**
+ * This class was modeled after CipherSolutionFitnessEvaluator, with additional
+ * evaluation based on letter frequencies.
+ * 
+ * @author george
+ */
+public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEvaluatorBase
+		implements FitnessEvaluator {
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
 	HashMap<String, List<Ciphertext>> ciphertextKey;
@@ -27,12 +33,13 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	private int uniqueMatchThreshold;
 	private int adjacencyThreshold;
 	private SolutionDao solutionDao;
+	private Map<Character, Double> expectedLetterFrequencies;
 
 	/**
 	 * @param cipherName
 	 * @param cipherDao
 	 */
-	public CipherSolutionFitnessEvaluator(CipherSingleton cipherSingleton) {
+	public CipherSolutionFrequencyFitnessEvaluator(CipherSingleton cipherSingleton) {
 		cipher = cipherSingleton.getInstance();
 		ciphertextKey = createKeyFromCiphertext();
 	}
@@ -62,8 +69,20 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
+		Character currentCharacter = null;
 		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
+		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
+		Double currentFrequency = 0.0;
+
+		/*
+		 * Initialize the actualLetterFrequencies Map
+		 */
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			actualLetterFrequencies.put(letter, 0.0);
+		}
+
+		Double oneCharacterFrequency = 1.0 / cipher.length();
 
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -88,8 +107,6 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 				 * the key. Then we would no longer have to worry about order
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
-				 * 
-				 * TODO: Find out why this IOOBE is occurring and fix.
 				 */
 				try {
 					plaintext = plaintextCharacters
@@ -102,6 +119,20 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 				}
 
 				currentValue = plaintext.getValue();
+
+				currentCharacter = currentValue.charAt(0);
+
+				/*
+				 * Put the new value in the HashMap. It will overwrite the
+				 * current entry, which is fine.
+				 */
+				currentFrequency = actualLetterFrequencies.get(currentCharacter);
+				if (currentFrequency != null) {
+					actualLetterFrequencies.put(currentCharacter, currentFrequency
+							+ oneCharacterFrequency);
+				} else {
+					log.debug("Found non-alpha character in Plaintext: " + currentValue.charAt(0));
+				}
 
 				if (!plaintextMatchMap.containsKey(currentValue)) {
 					plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
@@ -180,9 +211,17 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 			solutionDao.insert(solution);
 		}
 
-		solution.setFitness((double) total);
+		Double totalDifference = 0.0;
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			totalDifference += Math.abs(expectedLetterFrequencies.get(letter)
+					- actualLetterFrequencies.get(letter));
+		}
 
-		return (double) total;
+		Double fitness = (1 - totalDifference) * total;
+
+		solution.setFitness(fitness);
+
+		return fitness;
 	}
 
 	/**
@@ -219,5 +258,14 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 	@Required
 	public void setAdjacencyThreshold(int adjacencyThreshold) {
 		this.adjacencyThreshold = adjacencyThreshold;
+	}
+
+	/**
+	 * @param expectedLetterFrequencies
+	 *            the expectedLetterFrequencies to set
+	 */
+	@Required
+	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
+		this.expectedLetterFrequencies = expectedLetterFrequencies;
 	}
 }
