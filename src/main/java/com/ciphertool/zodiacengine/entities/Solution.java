@@ -22,11 +22,11 @@ import javax.persistence.Transient;
 public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
 
-	private int id;
-	private int cipherId;
-	private int totalMatches;
-	private int uniqueMatches;
-	private int adjacentMatchCount;
+	protected int id;
+	protected int cipherId;
+	protected int totalMatches;
+	protected int uniqueMatches;
+	protected int adjacentMatchCount;
 	protected transient List<Plaintext> plaintextCharacters;
 	protected Cipher cipher;
 	private int committedIndex;
@@ -272,7 +272,7 @@ public class Solution implements Serializable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId
-				+ ", totalMatches=" + totalMatches + "" + ", unique matches=" + uniqueMatches
+				+ ", totalMatches=" + totalMatches + ", unique matches=" + uniqueMatches
 				+ ", adjacent matches=" + adjacentMatchCount + "]\n");
 
 		/*
