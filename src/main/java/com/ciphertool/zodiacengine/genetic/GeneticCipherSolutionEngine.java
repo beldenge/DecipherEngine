@@ -1,5 +1,6 @@
 package com.ciphertool.zodiacengine.genetic;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -15,6 +16,8 @@ public class GeneticCipherSolutionEngine {
 	@SuppressWarnings("unused")
 	private static ApplicationContext context;
 	private static GeneticAlgorithm geneticAlgorithm;
+	private static String[] commandsBefore;
+	private static String[] commandsAfter;
 
 	/**
 	 * @param args
@@ -42,6 +45,8 @@ public class GeneticCipherSolutionEngine {
 		for (Chromosome bestFitIndividual : bestFitIndividuals) {
 			log.info(bestFitIndividual);
 		}
+
+		tearDown();
 	}
 
 	/**
@@ -51,6 +56,42 @@ public class GeneticCipherSolutionEngine {
 		context = new ClassPathXmlApplicationContext("beans-genetic.xml");
 
 		log.info("Spring context created successfully!");
+
+		/*
+		 * currentCommand is really just used for exception catching.
+		 */
+		String currentCommand = "";
+
+		try {
+			for (String commandBefore : commandsBefore) {
+				log.info("Executing shell command on start up: " + commandBefore);
+				currentCommand = commandBefore;
+
+				Runtime.getRuntime().exec(commandBefore);
+			}
+		} catch (IOException e) {
+			log.warn("Unable to execute commmand before app begin: " + currentCommand
+					+ ".  Continuing.");
+		}
+	}
+
+	private static void tearDown() {
+		/*
+		 * currentCommand is really just used for exception catching.
+		 */
+		String currentCommand = "";
+
+		try {
+			for (String commandAfter : commandsAfter) {
+				log.info("Executing shell command on termination: " + commandAfter);
+				currentCommand = commandAfter;
+
+				Runtime.getRuntime().exec(commandAfter);
+			}
+		} catch (IOException e) {
+			log.warn("Unable to execute commmand after app end: " + currentCommand
+					+ ".  Continuing.");
+		}
 	}
 
 	/**
@@ -60,5 +101,23 @@ public class GeneticCipherSolutionEngine {
 	@Required
 	public void setGeneticAlgorithm(GeneticAlgorithm geneticAlgorithm) {
 		GeneticCipherSolutionEngine.geneticAlgorithm = geneticAlgorithm;
+	}
+
+	/**
+	 * @param commandsBefore
+	 *            the commandsBefore to set
+	 */
+	@Required
+	public static void setCommandsBefore(String[] commandsBefore) {
+		GeneticCipherSolutionEngine.commandsBefore = commandsBefore;
+	}
+
+	/**
+	 * @param commandsAfter
+	 *            the commandsAfter to set
+	 */
+	@Required
+	public static void setCommandsAfter(String[] commandsAfter) {
+		GeneticCipherSolutionEngine.commandsAfter = commandsAfter;
 	}
 }

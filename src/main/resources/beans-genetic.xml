@@ -18,6 +18,8 @@
 	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionEngine"
 		id="geneticSolutionEngine">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+		<property name="commandsBefore" value="${app.commands.before}" />
+		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
