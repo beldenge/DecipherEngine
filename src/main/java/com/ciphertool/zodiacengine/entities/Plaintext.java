@@ -10,7 +10,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "plaintext")
-@AssociationOverrides(@AssociationOverride(name = "plaintextId.solution", joinColumns = @JoinColumn(name = "solution_id")))
+@AssociationOverrides(@AssociationOverride(name = "plaintextId.solution", joinColumns = {
+		@JoinColumn(name = "solution_id", referencedColumnName = "id"),
+		@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") }))
 public class Plaintext {
 	protected PlaintextId plaintextId;
 	protected String value;

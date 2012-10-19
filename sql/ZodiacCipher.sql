@@ -824,21 +824,40 @@ INSERT INTO ciphertext(cipher_id, id, "value") VALUES
 ('2', 407, 'i'),
 ('2', 408, 'backk');
 
+-- Table: solution_set
+
+-- DROP TABLE solution_set;
+
+CREATE TABLE solution_set
+(
+  id serial NOT NULL,
+  CONSTRAINT pk_solution_set_id PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE solution_set
+  OWNER TO postgres;
+
 -- Table: solution
 
 -- DROP TABLE solution;
 
 CREATE TABLE solution
 (
-  id serial NOT NULL,
+  id integer NOT NULL,
   total_matches integer,
   created_timestamp timestamp without time zone NOT NULL DEFAULT now(),
   cipher_id integer NOT NULL,
   unique_matches integer DEFAULT 0,
   adjacent_matches integer DEFAULT 0,
-  CONSTRAINT pk_solution_id PRIMARY KEY (id ),
+  solution_set_id integer NOT NULL,
+  CONSTRAINT pk_id_solution_set_id PRIMARY KEY (id, solution_set_id ),
   CONSTRAINT fk_cipher_id FOREIGN KEY (cipher_id)
       REFERENCES cipher (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_solution_set_id FOREIGN KEY (solution_set_id)
+      REFERENCES solution_set (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -856,10 +875,11 @@ CREATE TABLE plaintext
   ciphertext_id integer NOT NULL,
   value character varying NOT NULL,
   solution_id integer NOT NULL,
-  locked boolean DEFAULT false,
-  CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id , ciphertext_id ),
-  CONSTRAINT fk_solution_id FOREIGN KEY (solution_id)
-      REFERENCES solution (id) MATCH SIMPLE
+  solution_set_id integer NOT NULL,
+  has_match boolean DEFAULT false,
+  CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id, solution_set_id, ciphertext_id ),
+  CONSTRAINT fk_solution_id FOREIGN KEY (solution_id, solution_set_id)
+      REFERENCES solution (id, solution_set_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (

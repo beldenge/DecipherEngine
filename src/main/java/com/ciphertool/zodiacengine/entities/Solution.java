@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.AssociationOverride;
+import javax.persistence.AssociationOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -19,10 +19,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "solution")
+@AssociationOverrides(@AssociationOverride(name = "solutionId.solutionSet", joinColumns = @JoinColumn(name = "solution_set_id")))
 public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
 
-	protected int id;
+	protected SolutionId solutionId;
 	protected int cipherId;
 	protected int totalMatches;
 	protected int uniqueMatches;
@@ -47,15 +48,20 @@ public class Solution implements Serializable {
 		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	public int getId() {
-		return id;
+	/**
+	 * @return the solutionId
+	 */
+	@EmbeddedId
+	public SolutionId getSolutionId() {
+		return solutionId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	/**
+	 * @param solutionId
+	 *            the solutionId to set
+	 */
+	public void setSolutionId(SolutionId solutionId) {
+		this.solutionId = solutionId;
 	}
 
 	@Column(name = "cipher_id")
@@ -200,7 +206,7 @@ public class Solution implements Serializable {
 		int result = 1;
 		result = prime * result + adjacentMatchCount;
 		result = prime * result + cipherId;
-		result = prime * result + id;
+		result = prime * result + solutionId.hashCode();
 		result = prime * result + totalMatches;
 		result = prime * result + uniqueMatches;
 		return result;
@@ -229,7 +235,7 @@ public class Solution implements Serializable {
 		if (cipherId != other.cipherId) {
 			return false;
 		}
-		if (id != other.id) {
+		if (!solutionId.equals(other.solutionId)) {
 			return false;
 		}
 		if (totalMatches != other.totalMatches) {
@@ -271,9 +277,9 @@ public class Solution implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId
-				+ ", totalMatches=" + totalMatches + ", unique matches=" + uniqueMatches
-				+ ", adjacent matches=" + adjacentMatchCount + "]\n");
+		sb.append("Solution [id=" + solutionId + ", cipherId=" + cipherId + ", totalMatches="
+				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
+				+ adjacentMatchCount + "]\n");
 
 		/*
 		 * Start at 1 instead of 0 so that the modulus function below isn't

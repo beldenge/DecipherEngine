@@ -11,6 +11,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.entities.SolutionId;
 
 public class SolutionChromosome extends Solution implements Chromosome {
 
@@ -160,10 +161,12 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		try {
 			copyChromosome = (SolutionChromosome) super.clone();
 		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNoteSupportedException while attempting to clone WordGene.",
+			log.error(
+					"Caught CloneNoteSupportedException while attempting to clone SolutionChromosome.",
 					cnse);
 		}
 
+		copyChromosome.setSolutionId(new SolutionId());
 		copyChromosome.setGenes(new ArrayList<Gene>());
 		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
 
@@ -342,10 +345,10 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + ((id == 0) ? "NOT_SET" : id) + ", cipherId=" + cipherId
-				+ ", fitness=" + String.format("%1$,.2f", fitness) + ", totalMatches="
-				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
-				+ adjacentMatchCount + "]\n");
+		sb.append("Solution [id=" + solutionId + ", cipherId=" + cipherId + ", fitness="
+				+ String.format("%1$,.2f", fitness) + ", totalMatches=" + totalMatches
+				+ ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount
+				+ "]\n");
 
 		/*
 		 * Start at 1 instead of 0 so that the modulus function below isn't

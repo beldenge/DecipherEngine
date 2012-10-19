@@ -149,7 +149,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
 
 		return total;
 	}
@@ -238,7 +238,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			totalMismatches += (ciphertextCharacterCount - maxMatches);
 		}
 
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + totalMismatches);
+		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: "
+				+ totalMismatches);
 
 		/*
 		 * Longer sentences will naturally have more matches, so we need to

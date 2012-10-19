@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 @Embeddable
@@ -22,7 +23,8 @@ public class PlaintextId implements Serializable {
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "solution_id")
+	@JoinColumns({ @JoinColumn(name = "solution_id", referencedColumnName = "id"),
+			@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") })
 	public Solution getSolution() {
 		return solution;
 	}
@@ -53,7 +55,7 @@ public class PlaintextId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ciphertextId;
-		result = prime * result + solution.getId();
+		result = prime * result + solution.getSolutionId().hashCode();
 		return result;
 	}
 
@@ -83,7 +85,11 @@ public class PlaintextId implements Serializable {
 		 * We are not checking for null solution because it should never happen
 		 * and we want an exception to be thrown if so.
 		 */
-		if (solution.getId() != other.getSolution().getId()) {
+		if (solution.getSolutionId() == null) {
+			if (other.getSolution() != null) {
+				return false;
+			}
+		} else if (!solution.getSolutionId().equals(other.getSolution().getSolutionId())) {
 			return false;
 		}
 
@@ -100,8 +106,9 @@ public class PlaintextId implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "PlaintextId [solutionId=" + ((solution == null) ? "null" : solution.getId())
-				+ ", ciphertextId=" + ciphertextId + "]";
+		return "PlaintextId [solutionId="
+				+ ((solution == null) ? "null" : solution.getSolutionId()) + ", ciphertextId="
+				+ ciphertextId + "]";
 	}
 
 }
