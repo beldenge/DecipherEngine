@@ -49,10 +49,6 @@
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
 		</constructor-arg>
-		<property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
-		<property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
-		<property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
-		<property name="solutionDao" ref="solutionDao" />
 	</bean>
 
 	<bean
@@ -62,10 +58,6 @@
 			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
 			<ref bean="cipherSingleton" />
 		</constructor-arg>
-		<property name="totalMatchThreshold" value="${persistence.total_match.threshold}" />
-		<property name="uniqueMatchThreshold" value="${persistence.unique_match.threshold}" />
-		<property name="adjacencyThreshold" value="${persistence.adjacent_match.threshold}" />
-		<property name="solutionDao" ref="solutionDao" />
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />

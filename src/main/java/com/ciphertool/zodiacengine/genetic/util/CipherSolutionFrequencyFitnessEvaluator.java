@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
-import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
@@ -29,10 +28,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
 	HashMap<String, List<Ciphertext>> ciphertextKey;
-	private int totalMatchThreshold;
-	private int uniqueMatchThreshold;
-	private int adjacencyThreshold;
-	private SolutionDao solutionDao;
 	private Map<Character, Double> expectedLetterFrequencies;
 
 	/**
@@ -197,20 +192,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
 
-		if (solution.getTotalMatches() >= totalMatchThreshold) {
-			log.info("Found solution with " + solution.getTotalMatches()
-					+ " total matches.  Persisting to solution table.");
-			solutionDao.insert(solution);
-		} else if (solution.getUniqueMatches() >= uniqueMatchThreshold) {
-			log.info("Found solution with " + solution.getUniqueMatches()
-					+ " unique matches.  Persisting to solution table.");
-			solutionDao.insert(solution);
-		} else if (solution.getAdjacentMatchCount() >= adjacencyThreshold) {
-			log.info("Found solution with " + solution.getAdjacentMatchCount()
-					+ " adjacent matches.  Persisting to solution table.");
-			solutionDao.insert(solution);
-		}
-
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {
 			totalDifference += Math.abs(expectedLetterFrequencies.get(letter)
@@ -222,42 +203,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		solution.setFitness(fitness);
 
 		return fitness;
-	}
-
-	/**
-	 * @param totalMatcheThreshold
-	 *            the totalMatcheThreshold to set
-	 */
-	@Required
-	public void setTotalMatchThreshold(int totalMatchThreshold) {
-		this.totalMatchThreshold = totalMatchThreshold;
-	}
-
-	/**
-	 * @param uniqueMatchThreshold
-	 *            the uniqueMatchThreshold to set
-	 */
-	@Required
-	public void setUniqueMatchThreshold(int uniqueMatchThreshold) {
-		this.uniqueMatchThreshold = uniqueMatchThreshold;
-	}
-
-	/**
-	 * @param solutionDao
-	 *            the solutionDao to set
-	 */
-	@Required
-	public void setSolutionDao(SolutionDao solutionDao) {
-		this.solutionDao = solutionDao;
-	}
-
-	/**
-	 * @param adjacencyThreshold
-	 *            the adjacencyThreshold to set
-	 */
-	@Required
-	public void setAdjacencyThreshold(int adjacencyThreshold) {
-		this.adjacencyThreshold = adjacencyThreshold;
 	}
 
 	/**
