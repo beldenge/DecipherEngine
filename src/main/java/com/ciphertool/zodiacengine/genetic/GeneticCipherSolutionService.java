@@ -5,29 +5,25 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.zodiacengine.AbstractCipherSolutionService;
 
-public class GeneticCipherSolutionEngine {
-	private static Logger log = Logger.getLogger(GeneticCipherSolutionEngine.class);
-	@SuppressWarnings("unused")
-	private static ApplicationContext context;
-	private static GeneticAlgorithm geneticAlgorithm;
-	private static String[] commandsBefore;
-	private static String[] commandsAfter;
+public class GeneticCipherSolutionService extends AbstractCipherSolutionService {
+	private Logger log = Logger.getLogger(getClass());
+
+	private GeneticAlgorithm geneticAlgorithm;
+	private String[] commandsBefore;
+	private String[] commandsAfter;
+	private long start;
 
 	/**
 	 * @param args
 	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) throws InterruptedException {
-		// Spin up the Spring application context
-		setUp();
-
-		long start = System.currentTimeMillis();
+	public void start() throws InterruptedException {
+		start = System.currentTimeMillis();
 
 		geneticAlgorithm.spawnInitialPopulation();
 
@@ -37,6 +33,10 @@ public class GeneticCipherSolutionEngine {
 
 		geneticAlgorithm.iterateUntilTermination();
 
+		end();
+	}
+
+	public void stop() {
 		List<Chromosome> bestFitIndividuals = geneticAlgorithm.getBestFitIndividuals();
 
 		/*
@@ -47,18 +47,9 @@ public class GeneticCipherSolutionEngine {
 		for (Chromosome bestFitIndividual : bestFitIndividuals) {
 			log.info(bestFitIndividual);
 		}
-
-		tearDown();
 	}
 
-	/**
-	 * Spins up the Spring application context
-	 */
-	private static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-genetic.xml");
-
-		log.info("Spring context created successfully!");
-
+	protected void setUp() {
 		/*
 		 * currentCommand is really just used for exception catching.
 		 */
@@ -77,7 +68,7 @@ public class GeneticCipherSolutionEngine {
 		}
 	}
 
-	private static void tearDown() {
+	protected void tearDown() {
 		/*
 		 * currentCommand is really just used for exception catching.
 		 */
@@ -102,7 +93,7 @@ public class GeneticCipherSolutionEngine {
 	 */
 	@Required
 	public void setGeneticAlgorithm(GeneticAlgorithm geneticAlgorithm) {
-		GeneticCipherSolutionEngine.geneticAlgorithm = geneticAlgorithm;
+		this.geneticAlgorithm = geneticAlgorithm;
 	}
 
 	/**
@@ -110,8 +101,8 @@ public class GeneticCipherSolutionEngine {
 	 *            the commandsBefore to set
 	 */
 	@Required
-	public static void setCommandsBefore(String[] commandsBefore) {
-		GeneticCipherSolutionEngine.commandsBefore = commandsBefore;
+	public void setCommandsBefore(String[] commandsBefore) {
+		this.commandsBefore = commandsBefore;
 	}
 
 	/**
@@ -119,7 +110,7 @@ public class GeneticCipherSolutionEngine {
 	 *            the commandsAfter to set
 	 */
 	@Required
-	public static void setCommandsAfter(String[] commandsAfter) {
-		GeneticCipherSolutionEngine.commandsAfter = commandsAfter;
+	public void setCommandsAfter(String[] commandsAfter) {
+		this.commandsAfter = commandsAfter;
 	}
 }

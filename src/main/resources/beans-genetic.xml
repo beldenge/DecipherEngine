@@ -15,8 +15,18 @@
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionEngine"
-		id="geneticSolutionEngine">
+	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
+		id="userInterface" init-method="init">
+		<property name="windowTitle" value="${ui.window.title}" />
+		<property name="windowWidth" value="${ui.window.width}" />
+		<property name="windowHeight" value="${ui.window.height}" />
+		<property name="startButtonText" value="${ui.window.startButton.text}" />
+		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
+		<property name="cipherSolutionService" ref="cipherSolutionService" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionService"
+		id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
