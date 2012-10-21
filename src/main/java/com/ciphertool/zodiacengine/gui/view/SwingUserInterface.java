@@ -18,7 +18,7 @@ import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.zodiacengine.AbstractCipherSolutionService;
+import com.ciphertool.zodiacengine.gui.controller.CipherSolutionController;
 
 public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final long serialVersionUID = -7682403631152076457L;
@@ -57,7 +57,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final double CROSSOVER_MAX = 1.0;
 	private static final double CROSSOVER_STEP = 0.01;
 
-	private AbstractCipherSolutionService cipherSolutionService;
+	private CipherSolutionController cipherSolutionController;
 
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
@@ -159,7 +159,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 		mainPanel.add(stopButton);
 
-		this.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				setVisible(true);
+				toFront();
+			}
+		});
 	}
 
 	public ActionListener getRunContinuouslyCheckBoxActionListener() {
@@ -179,11 +184,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 			public void actionPerformed(ActionEvent event) {
 				statusLabel.setText(statusRunning);
 
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						cipherSolutionService.begin();
-					}
-				});
+				cipherSolutionController.startServiceThread();
 			}
 		};
 	}
@@ -191,11 +192,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	public ActionListener getStopButtonActionListener() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						cipherSolutionService.end();
-					}
-				});
+				cipherSolutionController.stopServiceThread();
 
 				statusLabel.setText(statusNotRunning);
 			}
@@ -243,11 +240,11 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	}
 
 	/**
-	 * @param cipherSolutionService
-	 *            the cipherSolutionService to set
+	 * @param cipherSolutionController
+	 *            the cipherSolutionController to set
 	 */
 	@Required
-	public void setCipherSolutionService(AbstractCipherSolutionService cipherSolutionService) {
-		this.cipherSolutionService = cipherSolutionService;
+	public void setCipherSolutionController(CipherSolutionController cipherSolutionController) {
+		this.cipherSolutionController = cipherSolutionController;
 	}
 }

@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.gui.service;
 
 import java.io.IOException;
 import java.util.List;
@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.zodiacengine.AbstractCipherSolutionService;
 
 public class GeneticCipherSolutionService extends AbstractCipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());

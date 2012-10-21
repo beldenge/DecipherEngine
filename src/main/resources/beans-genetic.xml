@@ -15,6 +15,18 @@
 		</property>
 	</bean>
 
+	<bean class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
+		id="cipherSolutionService">
+		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+		<property name="commandsBefore" value="${app.commands.before}" />
+		<property name="commandsAfter" value="${app.commands.after}" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
+		id="cipherSolutionController">
+		<property name="cipherSolutionService" ref="cipherSolutionService" />
+	</bean>
+
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
 		id="userInterface" init-method="init">
 		<property name="windowTitle" value="${ui.window.title}" />
@@ -22,14 +34,7 @@
 		<property name="windowHeight" value="${ui.window.height}" />
 		<property name="startButtonText" value="${ui.window.startButton.text}" />
 		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
-		<property name="cipherSolutionService" ref="cipherSolutionService" />
-	</bean>
-
-	<bean class="com.ciphertool.zodiacengine.genetic.GeneticCipherSolutionService"
-		id="cipherSolutionService">
-		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
-		<property name="commandsBefore" value="${app.commands.before}" />
-		<property name="commandsAfter" value="${app.commands.after}" />
+		<property name="cipherSolutionController" ref="cipherSolutionController" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
