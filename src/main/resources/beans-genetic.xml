@@ -18,6 +18,7 @@
 	<bean class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
 		id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+		<property name="solutionSetDao" ref="solutionSetDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
@@ -159,6 +160,10 @@
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.dao.SolutionSetDao" id="solutionSetDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 

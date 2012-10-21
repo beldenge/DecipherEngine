@@ -4,12 +4,11 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.entities.SolutionId;
 
-@Component
 public class SolutionDao implements Dao {
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
@@ -25,12 +24,12 @@ public class SolutionDao implements Dao {
 		return true;
 	}
 
-	public Solution findById(Integer id) {
+	public Solution findBySolutionId(SolutionId solutionId) {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Solution solution = (Solution) session.createQuery(
 				"from Solution where id = " + separator + solutionIdParameter).setParameter(
-				solutionIdParameter, id).uniqueResult();
+				solutionIdParameter, solutionId).uniqueResult();
 		session.getTransaction().commit();
 		session.close();
 
@@ -51,7 +50,7 @@ public class SolutionDao implements Dao {
 		return solutions;
 	}
 
-	@Autowired
+	@Required
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}

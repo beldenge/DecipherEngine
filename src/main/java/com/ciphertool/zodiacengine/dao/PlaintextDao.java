@@ -12,8 +12,7 @@ import com.ciphertool.zodiacengine.entities.PlaintextId;
 public class PlaintextDao implements Dao {
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
-	private static final String ciphertextIdParameter = "ciphertextId";
-	private static final String solutionParameter = "solution";
+	private static final String plaintextIdParameter = "plaintextId";
 
 	public boolean insert(Plaintext plaintext) {
 		Session session = sessionFactory.openSession();
@@ -25,15 +24,11 @@ public class PlaintextDao implements Dao {
 	}
 
 	public Plaintext findByPlaintextId(PlaintextId plaintextId) {
-
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Plaintext plaintext = (Plaintext) session.createQuery(
-				"from Plaintext p where p.plaintextId.ciphertextId = " + separator
-						+ ciphertextIdParameter + " and p.plaintextId.solution = " + separator
-						+ solutionParameter).setParameter(ciphertextIdParameter,
-				plaintextId.getCiphertextId()).setParameter(solutionParameter,
-				plaintextId.getSolution()).uniqueResult();
+				"from Plaintext p where p.plaintextId = " + separator + plaintextIdParameter)
+				.setParameter(plaintextIdParameter, plaintextId).uniqueResult();
 		session.getTransaction().commit();
 		session.close();
 

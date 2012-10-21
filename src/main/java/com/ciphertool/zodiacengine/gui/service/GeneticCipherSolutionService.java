@@ -1,6 +1,7 @@
 package com.ciphertool.zodiacengine.gui.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -8,11 +9,17 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.zodiacengine.dao.SolutionSetDao;
+import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.entities.SolutionId;
+import com.ciphertool.zodiacengine.entities.SolutionSet;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class GeneticCipherSolutionService extends AbstractCipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());
 
 	private GeneticAlgorithm geneticAlgorithm;
+	private SolutionSetDao solutionSetDao;
 	private String[] commandsBefore;
 	private String[] commandsAfter;
 	private long start;
@@ -38,6 +45,8 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	public void stop() {
+		persistPopulation();
+
 		List<Chromosome> bestFitIndividuals = geneticAlgorithm.getBestFitIndividuals();
 
 		/*
@@ -88,6 +97,24 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
+	private void persistPopulation() {
+		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
+
+		SolutionSet solutionSet = new SolutionSet();
+		solutionSet.setSolutions(new ArrayList<Solution>());
+
+		int nextId = 0;
+		for (Chromosome individual : individuals) {
+			solutionSet.getSolutions().add((SolutionChromosome) individual);
+
+			nextId++;
+			SolutionId solutionId = new SolutionId(nextId, solutionSet);
+			((SolutionChromosome) individual).setSolutionId(solutionId);
+		}
+
+		solutionSetDao.insert(solutionSet);
+	}
+
 	/**
 	 * @param geneticAlgorithm
 	 *            the geneticAlgorithm to set
@@ -113,5 +140,14 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	@Required
 	public void setCommandsAfter(String[] commandsAfter) {
 		this.commandsAfter = commandsAfter;
+	}
+
+	/**
+	 * @param solutionSetDao
+	 *            the solutionSetDao to set
+	 */
+	@Required
+	public void setSolutionSetDao(SolutionSetDao solutionSetDao) {
+		this.solutionSetDao = solutionSetDao;
 	}
 }

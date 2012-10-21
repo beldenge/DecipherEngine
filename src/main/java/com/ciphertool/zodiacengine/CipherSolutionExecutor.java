@@ -19,6 +19,7 @@ import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
 public class CipherSolutionExecutor {
 	private static Logger log = Logger.getLogger(CipherSolutionExecutor.class);
+	@SuppressWarnings("unused")
 	private static BeanFactory factory;
 	private static ApplicationDurationType applicationDurationType;
 	private static long applicationRunMillis;

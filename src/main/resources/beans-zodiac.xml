@@ -152,6 +152,7 @@
 				<value>com.ciphertool.zodiacengine.entities.Ciphertext</value>
 				<value>com.ciphertool.zodiacengine.entities.Plaintext</value>
 				<value>com.ciphertool.zodiacengine.entities.Solution</value>
+				<value>com.ciphertool.zodiacengine.entities.SolutionSet</value>
 				<value>com.ciphertool.sentencebuilder.entities.Word</value>
 			</list>
 		</property>
