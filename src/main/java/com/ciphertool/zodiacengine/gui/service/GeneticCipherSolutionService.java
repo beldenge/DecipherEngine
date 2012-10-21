@@ -31,8 +31,10 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 				+ geneticAlgorithm.getPopulation().size());
 
 		geneticAlgorithm.iterateUntilTermination();
+	}
 
-		end();
+	public void endImmediately() {
+		geneticAlgorithm.requestStop();
 	}
 
 	public void stop() {

@@ -16,16 +16,19 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 		} catch (InterruptedException e) {
 			log.warn("Caught InterruptedException while running cipher solution service.  "
 					+ "Cannot continue.  Performing tear-down tasks.", e);
+		} finally {
 			end();
 		}
 	}
 
-	@Override
-	public void end() {
+	private void end() {
 		stop();
 		tearDown();
 		toggleRunning();
 	}
+
+	@Override
+	public abstract void endImmediately();
 
 	@Override
 	public synchronized boolean isRunning() {

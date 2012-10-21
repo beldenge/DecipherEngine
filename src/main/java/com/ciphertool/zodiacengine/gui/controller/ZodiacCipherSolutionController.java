@@ -29,7 +29,7 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 		if (cipherSolutionService.isRunning()) {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
-					cipherSolutionService.end();
+					cipherSolutionService.endImmediately();
 				}
 			});
 
