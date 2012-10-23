@@ -105,7 +105,7 @@ public class PlaintextId implements Serializable {
 		 * and we want an exception to be thrown if so.
 		 */
 		if (solution.getSolutionId() == null) {
-			if (other.getSolution() != null) {
+			if (other.getSolution().getSolutionId() != null) {
 				return false;
 			}
 		} else if (!solution.getSolutionId().equals(other.getSolution().getSolutionId())) {

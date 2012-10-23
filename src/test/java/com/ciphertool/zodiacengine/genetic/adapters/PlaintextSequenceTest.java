@@ -56,6 +56,7 @@ public class PlaintextSequenceTest {
 
 		assertFalse(plaintextSequence == clonedPlaintextSequence);
 
+		assertEquals(plaintextSequence.getPlaintextId(), clonedPlaintextSequence.getPlaintextId());
 		assertEquals(plaintextSequence, clonedPlaintextSequence);
 
 		/*

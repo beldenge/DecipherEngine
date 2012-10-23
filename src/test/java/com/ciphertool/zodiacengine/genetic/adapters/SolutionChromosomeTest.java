@@ -26,45 +26,18 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.SolutionId;
 
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
 
-	private static ApplicationContext context;
 	private static Cipher cipher;
-
-	@BeforeClass
-	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-genetic.xml");
-		log.info("Spring context created successfully!");
-
-		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
-
-		cipher = cipherDao.findByCipherName("zodiac408");
-	}
-
-	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage
-	 * collected and subsequent unit tests may encounter an out of memory
-	 * exception
-	 */
-	@AfterClass
-	public static void cleanUp() {
-		((ClassPathXmlApplicationContext) context).close();
-		cipher = null;
-		context = null;
-	}
 
 	@Test
 	public void testGetNullPlaintextCharacters() {
@@ -110,7 +83,7 @@ public class SolutionChromosomeTest {
 	public void testAddGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipher(new Cipher());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -151,8 +124,9 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testCloneSolutionChromosome() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		solutionChromosome.setSolutionId(new SolutionId());
 		solutionChromosome.setFitness(0.0);
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipher(new Cipher());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);

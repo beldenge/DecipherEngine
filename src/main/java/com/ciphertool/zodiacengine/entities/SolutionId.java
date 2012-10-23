@@ -119,11 +119,11 @@ public class SolutionId implements Serializable {
 			return false;
 		}
 
-		/*
-		 * We are not checking for null solutionSet because it should never
-		 * happen and we want an exception to be thrown if so.
-		 */
-		if (solutionSet.getId() != other.getId()) {
+		if (solutionSet == null) {
+			if (other.solutionSet != null) {
+				return false;
+			}
+		} else if (solutionSet.getId() != other.solutionSet.getId()) {
 			return false;
 		}
 		return true;

@@ -254,7 +254,12 @@ public class Solution implements Serializable {
 		if (cipherId != other.cipherId) {
 			return false;
 		}
-		if (!solutionId.equals(other.solutionId)) {
+
+		if (solutionId == null) {
+			if (other.solutionId != null) {
+				return false;
+			}
+		} else if (!solutionId.equals(other.solutionId)) {
 			return false;
 		}
 		if (totalMatches != other.totalMatches) {
