@@ -117,7 +117,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	private void persistPopulation() {
-		log.info("Please wait while the population of size is persisted to database.");
+		log.info("Please wait while the population is persisted to database.");
 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
 
