@@ -71,7 +71,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		/*
 		 * Print out summary information
 		 */
-		log.info("Took " + (System.currentTimeMillis() - start) + "ms to finish.");
+		log.info("Total running time was " + (System.currentTimeMillis() - start) + "ms.");
 		log.info("Best " + bestFitIndividuals.size() + " solutions in ascending order: ");
 		for (Chromosome bestFitIndividual : bestFitIndividuals) {
 			log.info(bestFitIndividual);
@@ -121,7 +121,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	private void persistPopulation() {
-		log.info("Please wait while the population is persisted to database.");
+		log.info("Persisting the entire population to database.");
 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
 
@@ -137,7 +137,12 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 			((SolutionChromosome) individual).setSolutionId(solutionId);
 		}
 
+		long startInsert = System.currentTimeMillis();
+
 		solutionSetDao.insert(solutionSet);
+
+		log.info("Took " + (System.currentTimeMillis() - startInsert)
+				+ "ms to persist population to database.");
 	}
 
 	/**
