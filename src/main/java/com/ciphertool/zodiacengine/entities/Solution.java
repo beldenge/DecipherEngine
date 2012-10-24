@@ -53,6 +53,7 @@ public class Solution implements Serializable {
 	private int uncommittedIndex;
 
 	public Solution() {
+		this.solutionId = new SolutionId();
 	}
 
 	/*
@@ -60,6 +61,7 @@ public class Solution implements Serializable {
 	 * cipherId in this constructor.
 	 */
 	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
+		this.solutionId = new SolutionId();
 		this.cipherId = cipherId;
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;

@@ -33,12 +33,11 @@ import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
-import com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator;
 
 public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBase implements
 		FitnessEvaluator {
 
-	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
+	private Logger log = Logger.getLogger(getClass());
 	HashMap<String, List<Ciphertext>> ciphertextKey;
 
 	/**
@@ -101,18 +100,8 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 				 * the key. Then we would no longer have to worry about order
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
-				 * 
-				 * TODO: Find out why this IOOBE is occurring and fix.
 				 */
-				try {
-					plaintext = plaintextCharacters
-							.get(ciphertextIndice.getCiphertextId().getId() - 1);
-				} catch (IndexOutOfBoundsException ioobe) {
-					log.error("Caught IndexOutOfBoundsException for index "
-							+ (ciphertextIndice.getCiphertextId().getId() - 1) + " and size "
-							+ plaintextCharacters.size() + " while evaluating Chromosome: "
-							+ chromosome, ioobe);
-				}
+				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId() - 1);
 
 				currentValue = plaintext.getValue();
 
@@ -177,7 +166,10 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: "
+					+ total);
+		}
 
 		solution.setFitness((double) total);
 

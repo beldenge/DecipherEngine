@@ -20,7 +20,8 @@
 package com.ciphertool.zodiacengine.gui.service;
 
 public interface CipherSolutionService {
-	public void begin();
+	public void begin(int populationSize, int numGenerations, double survivalRate,
+			double mutationRate, double crossoverRate);
 
 	public void endImmediately();
 

@@ -58,7 +58,9 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 			solution.addGene(gene);
 		}
 
-		log.debug(solution);
+		if (log.isDebugEnabled()) {
+			log.debug(solution);
+		}
 
 		return (Chromosome) solution;
 	}

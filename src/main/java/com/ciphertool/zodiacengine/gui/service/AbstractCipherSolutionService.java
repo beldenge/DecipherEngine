@@ -26,9 +26,10 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 	private boolean running = false;
 
 	@Override
-	public void begin() {
+	public void begin(int populationSize, int numGenerations, double survivalRate,
+			double mutationRate, double crossoverRate) {
 		toggleRunning();
-		setUp();
+		setUp(populationSize, numGenerations, survivalRate, mutationRate, crossoverRate);
 
 		try {
 			start();
@@ -62,7 +63,8 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 
 	protected abstract void stop();
 
-	protected abstract void setUp();
+	protected abstract void setUp(int populationInitial, int generationsInitial,
+			double survivalInitial, double mutationInitial, double crossoverInitial);
 
 	protected abstract void tearDown();
 }

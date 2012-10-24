@@ -29,13 +29,15 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 	private CipherSolutionService cipherSolutionService;
 
 	@Override
-	public void startServiceThread() {
+	public void startServiceThread(final int populationSize, final int numGenerations,
+			final double survivalRate, final double mutationRate, final double crossoverRate) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
-					cipherSolutionService.begin();
+					cipherSolutionService.begin(populationSize, numGenerations, survivalRate,
+							mutationRate, crossoverRate);
 				}
 			});
 

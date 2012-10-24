@@ -140,6 +140,6 @@ public class SolutionId implements Serializable {
 	@Override
 	public String toString() {
 		return "SolutionId [id=" + ((id == 0) ? "NOT_SET" : id) + ", solutionSet="
-				+ ((solutionSet == null) ? "null" : solutionSet.getId()) + "]";
+				+ ((solutionSet == null) ? "NOT_SET" : solutionSet.getId()) + "]";
 	}
 }

@@ -55,23 +55,23 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String continuousText = "Run until user stops";
 	private String statusRunning = "Running.";
 	private String statusNotRunning = "Not running.";
-	private static final int GENERATIONS_INITIAL = 50;
+	private int generationsInitial;
 	private static final int GENERATIONS_MIN = 1;
 	private static final int GENERATIONS_MAX = 100000;
 	private static final int GENERATIONS_STEP = 50;
-	private static final int POPULATION_INITIAL = 100;
+	private int populationInitial;
 	private static final int POPULATION_MIN = 1;
 	private static final int POPULATION_MAX = 100000;
 	private static final int POPULATION_STEP = 100;
-	private static final double SURVIVAL_INITIAL = 0.9;
+	private double survivalInitial;
 	private static final double SURVIVAL_MIN = 0.001;
 	private static final double SURVIVAL_MAX = 1.0;
 	private static final double SURVIVAL_STEP = 0.01;
-	private static final double MUTATION_INITIAL = 0.001;
+	private double mutationInitial;
 	private static final double MUTATION_MIN = 0.0001;
 	private static final double MUTATION_MAX = 1;
 	private static final double MUTATION_STEP = 0.001;
-	private static final double CROSSOVER_INITIAL = 0.05;
+	private double crossoverInitial;
 	private static final double CROSSOVER_MIN = 0.001;
 	private static final double CROSSOVER_MAX = 1.0;
 	private static final double CROSSOVER_STEP = 0.01;
@@ -80,6 +80,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
+	private JSpinner populationSpinner;
+	private JSpinner survivalRateSpinner;
+	private JSpinner mutationRateSpinner;
+	private JSpinner crossoverRateSpinner;
 	private JLabel statusLabel;
 
 	public SwingUserInterface() {
@@ -115,8 +119,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
-		SpinnerModel generationsModel = new SpinnerNumberModel(GENERATIONS_INITIAL,
-				GENERATIONS_MIN, GENERATIONS_MAX, GENERATIONS_STEP);
+		SpinnerModel generationsModel = new SpinnerNumberModel(generationsInitial, GENERATIONS_MIN,
+				GENERATIONS_MAX, GENERATIONS_STEP);
 		generationsSpinner = new JSpinner(generationsModel);
 		JLabel generationsLabel = new JLabel(generationsText);
 		generationsLabel.setLabelFor(generationsSpinner);
@@ -130,36 +134,36 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(new JLabel());
 		mainPanel.add(runContinuouslyCheckBox);
 
-		SpinnerModel populationModel = new SpinnerNumberModel(POPULATION_INITIAL, POPULATION_MIN,
+		SpinnerModel populationModel = new SpinnerNumberModel(populationInitial, POPULATION_MIN,
 				POPULATION_MAX, POPULATION_STEP);
-		JSpinner populationSpinner = new JSpinner(populationModel);
+		populationSpinner = new JSpinner(populationModel);
 		JLabel populationLabel = new JLabel(populationText);
 		populationLabel.setLabelFor(populationSpinner);
 
 		mainPanel.add(populationLabel);
 		mainPanel.add(populationSpinner);
 
-		SpinnerModel survivalRateModel = new SpinnerNumberModel(SURVIVAL_INITIAL, SURVIVAL_MIN,
+		SpinnerModel survivalRateModel = new SpinnerNumberModel(survivalInitial, SURVIVAL_MIN,
 				SURVIVAL_MAX, SURVIVAL_STEP);
-		JSpinner survivalRateSpinner = new JSpinner(survivalRateModel);
+		survivalRateSpinner = new JSpinner(survivalRateModel);
 		JLabel survivalRateLabel = new JLabel(survivalRateText);
 		survivalRateLabel.setLabelFor(survivalRateSpinner);
 
 		mainPanel.add(survivalRateLabel);
 		mainPanel.add(survivalRateSpinner);
 
-		SpinnerModel mutationRateModel = new SpinnerNumberModel(MUTATION_INITIAL, MUTATION_MIN,
+		SpinnerModel mutationRateModel = new SpinnerNumberModel(mutationInitial, MUTATION_MIN,
 				MUTATION_MAX, MUTATION_STEP);
-		JSpinner mutationRateSpinner = new JSpinner(mutationRateModel);
+		mutationRateSpinner = new JSpinner(mutationRateModel);
 		JLabel mutationRateLabel = new JLabel(mutationRateText);
 		mutationRateLabel.setLabelFor(mutationRateSpinner);
 
 		mainPanel.add(mutationRateLabel);
 		mainPanel.add(mutationRateSpinner);
 
-		SpinnerModel crossoverRateModel = new SpinnerNumberModel(CROSSOVER_INITIAL, CROSSOVER_MIN,
+		SpinnerModel crossoverRateModel = new SpinnerNumberModel(crossoverInitial, CROSSOVER_MIN,
 				CROSSOVER_MAX, CROSSOVER_STEP);
-		JSpinner crossoverRateSpinner = new JSpinner(crossoverRateModel);
+		crossoverRateSpinner = new JSpinner(crossoverRateModel);
 		JLabel crossoverRateLabel = new JLabel(crossoverRateText);
 		crossoverRateLabel.setLabelFor(crossoverRateSpinner);
 
@@ -203,7 +207,16 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 			public void actionPerformed(ActionEvent event) {
 				statusLabel.setText(statusRunning);
 
-				cipherSolutionController.startServiceThread();
+				int generations = (Integer) generationsSpinner.getValue();
+
+				if (runContinuouslyCheckBox.isSelected()) {
+					generations = -1;
+				}
+
+				cipherSolutionController.startServiceThread((Integer) populationSpinner.getValue(),
+						generations, (Double) survivalRateSpinner.getValue(),
+						(Double) mutationRateSpinner.getValue(), (Double) crossoverRateSpinner
+								.getValue());
 			}
 		};
 	}
@@ -265,5 +278,50 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	@Required
 	public void setCipherSolutionController(CipherSolutionController cipherSolutionController) {
 		this.cipherSolutionController = cipherSolutionController;
+	}
+
+	/**
+	 * @param generationsInitial
+	 *            the generationsInitial to set
+	 */
+	@Required
+	public void setGenerationsInitial(int generationsInitial) {
+		this.generationsInitial = generationsInitial;
+	}
+
+	/**
+	 * @param populationInitial
+	 *            the populationInitial to set
+	 */
+	@Required
+	public void setPopulationInitial(int populationInitial) {
+		this.populationInitial = populationInitial;
+	}
+
+	/**
+	 * @param survivalInitial
+	 *            the survivalInitial to set
+	 */
+	@Required
+	public void setSurvivalInitial(double survivalInitial) {
+		this.survivalInitial = survivalInitial;
+	}
+
+	/**
+	 * @param mutationInitial
+	 *            the mutationInitial to set
+	 */
+	@Required
+	public void setMutationInitial(double mutationInitial) {
+		this.mutationInitial = mutationInitial;
+	}
+
+	/**
+	 * @param crossoverInitial
+	 *            the crossoverInitial to set
+	 */
+	@Required
+	public void setCrossoverInitial(double crossoverInitial) {
+		this.crossoverInitial = crossoverInitial;
 	}
 }

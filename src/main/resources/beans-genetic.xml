@@ -47,6 +47,11 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="startButtonText" value="${ui.window.startButton.text}" />
 		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
 		<property name="cipherSolutionController" ref="cipherSolutionController" />
+		<property name="populationInitial" value="${genetic.population.size}" />
+		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
+		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
+		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />
+		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
@@ -141,11 +146,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
-		<property name="populationSize" value="${genetic.population.size}" />
-		<property name="survivalRate" value="${genetic.algorithm.survivalRate}" />
-		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
-		<property name="crossoverRate" value="${genetic.algorithm.crossoverRate}" />
-		<property name="maxGenerations" value="${genetic.algorithm.maxGenerations}" />
 		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
 		<property name="crossoverAlgorithm" ref="crossoverAlgorithm" />
 		<property name="fitnessEvaluator" ref="fitnessEvaluator" />

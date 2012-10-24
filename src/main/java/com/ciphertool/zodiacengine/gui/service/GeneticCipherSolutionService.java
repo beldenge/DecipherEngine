@@ -78,9 +78,13 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
-	protected void setUp() {
+	protected void setUp(int populationSize, int numGenerations, double survivalRate,
+			double mutationRate, double crossoverRate) {
+		geneticAlgorithm.setParameters(populationSize, numGenerations, survivalRate, mutationRate,
+				crossoverRate);
+
 		/*
-		 * currentCommand is really just used for exception catching.
+		 * currentCommand is really just used for exception logging.
 		 */
 		String currentCommand = "";
 
