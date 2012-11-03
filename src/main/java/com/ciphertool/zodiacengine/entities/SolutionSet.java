@@ -61,6 +61,22 @@ public class SolutionSet implements Serializable {
 		this.id = id;
 	}
 
+	/**
+	 * @return the name
+	 */
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solutionId.solutionSet", cascade = CascadeType.ALL)
 	public Set<Solution> getSolutions() {
 		if (this.solutions == null) {

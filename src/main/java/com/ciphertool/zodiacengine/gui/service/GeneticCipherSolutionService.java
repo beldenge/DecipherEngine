@@ -20,6 +20,8 @@
 package com.ciphertool.zodiacengine.gui.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -124,8 +126,12 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		log.info("Persisting the entire population to database.");
 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
+		String cipherName = ((SolutionChromosome) individuals.get(0)).getCipher().getName();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String formattedDate = sdf.format(new Date());
 
 		SolutionSet solutionSet = new SolutionSet();
+		solutionSet.setName(cipherName + "_" + formattedDate);
 		solutionSet.setSolutions(new HashSet<Solution>());
 
 		int nextId = 0;
