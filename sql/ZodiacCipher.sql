@@ -19,14 +19,23 @@ CREATE TABLE parts_of_speech
   word character varying NOT NULL,
   part_of_speech character(1) NOT NULL,
   frequency_weight integer DEFAULT 1,
-  CONSTRAINT pk_word_pos PRIMARY KEY (word , part_of_speech )
+  CONSTRAINT pk_word_pos PRIMARY KEY (part_of_speech, word )
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE parts_of_speech
   OWNER TO postgres;
-	   
+
+-- Index: idx_word
+
+-- DROP INDEX idx_word;
+
+CREATE INDEX idx_word
+  ON parts_of_speech
+  USING btree
+  (word COLLATE pg_catalog."default" );
+  
 
 -- Table: cipher
 
