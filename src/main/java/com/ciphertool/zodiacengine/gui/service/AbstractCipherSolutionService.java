@@ -36,14 +36,24 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 		} catch (InterruptedException e) {
 			log.warn("Caught InterruptedException while running cipher solution service.  "
 					+ "Cannot continue.  Performing tear-down tasks.", e);
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
 		} finally {
 			end();
 		}
 	}
 
 	private void end() {
-		stop();
-		tearDown();
+		try {
+			stop();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while attempting to stop service.  "
+					+ "Performing tear-down tasks.", t);
+		} finally {
+			tearDown();
+		}
+
 		toggleRunning();
 	}
 

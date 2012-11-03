@@ -70,6 +70,7 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 		Word nextWord;
 		WordGene nextGene;
 		int length = 0;
+		int cipherLength = cipher.length();
 
 		do {
 			nextWord = wordListDao.findRandomWord();
@@ -81,14 +82,14 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 			/*
 			 * Truncate the last WordGene if it exceeds the Cipher length.
 			 */
-			if (length > cipher.length()) {
-				for (int i = length; i > cipher.length(); i--) {
+			if (length > cipherLength) {
+				for (int i = length; i > cipherLength; i--) {
 					nextGene.removeSequence(nextGene.getSequences().get(nextGene.size() - 1));
 				}
 			}
 
 			geneList.add(nextGene);
-		} while (length < cipher.length());
+		} while (length < cipherLength);
 
 		return geneList;
 	}
