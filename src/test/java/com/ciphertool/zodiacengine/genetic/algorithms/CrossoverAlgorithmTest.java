@@ -52,7 +52,7 @@ public class CrossoverAlgorithmTest {
 
 	@BeforeClass
 	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-genetic.xml");
+		context = new ClassPathXmlApplicationContext("beans-genetic-test.xml");
 		log.info("Spring context created successfully!");
 
 		fitnessEvaluator = (FitnessEvaluator) context.getBean("fitnessEvaluator");

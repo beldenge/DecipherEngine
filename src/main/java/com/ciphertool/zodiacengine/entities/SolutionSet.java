@@ -20,8 +20,8 @@
 package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,7 +40,8 @@ public class SolutionSet implements Serializable {
 	private static final long serialVersionUID = 2434992350084225015L;
 
 	private int id;
-	private transient List<Solution> solutions;
+	private String name;
+	private transient Set<Solution> solutions;
 
 	public SolutionSet() {
 	}
@@ -61,15 +62,15 @@ public class SolutionSet implements Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solutionId.solutionSet", cascade = CascadeType.ALL)
-	public List<Solution> getSolutions() {
+	public Set<Solution> getSolutions() {
 		if (this.solutions == null) {
-			this.solutions = new ArrayList<Solution>();
+			this.solutions = new HashSet<Solution>();
 		}
 
 		return this.solutions;
 	}
 
-	public void setSolutions(List<Solution> solutions) {
+	public void setSolutions(Set<Solution> solutions) {
 		this.solutions = solutions;
 	}
 
@@ -83,6 +84,7 @@ public class SolutionSet implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
+		result = prime * result + name.hashCode();
 		return result;
 	}
 
@@ -106,6 +108,9 @@ public class SolutionSet implements Serializable {
 		if (id != other.id) {
 			return false;
 		}
+		if (!name.equals(other.name)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -116,6 +121,6 @@ public class SolutionSet implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "SolutionSet [id=" + id + "]";
+		return "SolutionSet [id=" + id + ", name=" + name + "]";
 	}
 }

@@ -154,5 +154,4 @@ public class Cipher implements Serializable {
 		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns + ", rows=" + rows
 				+ ", ciphertextCharacters=" + ciphertextCharacters + "]";
 	}
-
 }

@@ -49,8 +49,8 @@ public class Solution implements Serializable {
 	protected int adjacentMatchCount;
 	protected transient List<Plaintext> plaintextCharacters;
 	protected Cipher cipher;
-	private int committedIndex;
-	private int uncommittedIndex;
+	private transient int committedIndex;
+	private transient int uncommittedIndex;
 
 	public Solution() {
 		this.solutionId = new SolutionId();
@@ -271,13 +271,13 @@ public class Solution implements Serializable {
 			return false;
 		}
 
-		if (this.plaintextCharacters == null && other.plaintextCharacters != null) {
+		if (this.plaintextCharacters == null) {
+			if (other.plaintextCharacters != null) {
+				return false;
+			}
+		} else if (other.plaintextCharacters == null) {
 			return false;
-		}
-		if (this.plaintextCharacters != null && other.plaintextCharacters == null) {
-			return false;
-		}
-		if (this.plaintextCharacters != null && other.plaintextCharacters != null) {
+		} else {
 			if (this.plaintextCharacters.size() != other.plaintextCharacters.size()) {
 				return false;
 			}

@@ -66,23 +66,35 @@ public class Ciphertext {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
+
 		Ciphertext other = (Ciphertext) obj;
 		if (ciphertextId == null) {
-			if (other.ciphertextId != null)
+			if (other.ciphertextId != null) {
 				return false;
-		} else if (!ciphertextId.equals(other.ciphertextId))
+			}
+		} else if (!ciphertextId.equals(other.ciphertextId)) {
 			return false;
+		}
+
 		if (value == null) {
-			if (other.value != null)
+			if (other.value != null) {
 				return false;
-		} else if (!value.equals(other.value))
+			}
+		} else if (!value.equals(other.value)) {
 			return false;
+		}
+
 		return true;
 	}
 

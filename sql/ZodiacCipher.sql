@@ -831,7 +831,9 @@ INSERT INTO ciphertext(cipher_id, id, "value") VALUES
 CREATE TABLE solution_set
 (
   id serial NOT NULL,
-  CONSTRAINT pk_solution_set_id PRIMARY KEY (id )
+  name character varying(50),
+  CONSTRAINT pk_solution_set_id PRIMARY KEY (id ),
+  CONSTRAINT unique_solution_set_name UNIQUE (name )
 )
 WITH (
   OIDS=FALSE
@@ -839,6 +841,7 @@ WITH (
 ALTER TABLE solution_set
   OWNER TO postgres;
 
+  
 -- Table: solution
 
 -- DROP TABLE solution;

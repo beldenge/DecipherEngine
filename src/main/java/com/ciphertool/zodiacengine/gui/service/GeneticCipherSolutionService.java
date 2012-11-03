@@ -20,7 +20,7 @@
 package com.ciphertool.zodiacengine.gui.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -64,8 +64,6 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	public void stop() {
-		persistPopulation();
-
 		List<Chromosome> bestFitIndividuals = geneticAlgorithm.getBestFitIndividuals();
 
 		/*
@@ -76,6 +74,8 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		for (Chromosome bestFitIndividual : bestFitIndividuals) {
 			log.info(bestFitIndividual);
 		}
+
+		persistPopulation();
 	}
 
 	protected void setUp(int populationSize, int numGenerations, double survivalRate,
@@ -126,7 +126,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
 
 		SolutionSet solutionSet = new SolutionSet();
-		solutionSet.setSolutions(new ArrayList<Solution>());
+		solutionSet.setSolutions(new HashSet<Solution>());
 
 		int nextId = 0;
 		for (Chromosome individual : individuals) {
