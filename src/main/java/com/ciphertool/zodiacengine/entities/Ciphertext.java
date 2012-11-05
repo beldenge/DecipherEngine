@@ -29,21 +29,21 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ciphertext")
-@AssociationOverrides(@AssociationOverride(name = "ciphertextId.cipher", joinColumns = @JoinColumn(name = "cipher_id")))
+@AssociationOverrides(@AssociationOverride(name = "id.cipher", joinColumns = @JoinColumn(name = "cipher_id")))
 public class Ciphertext {
 	private String value;
-	private CiphertextId ciphertextId;
+	private CiphertextId id;
 
 	public Ciphertext() {
 	}
 
 	@EmbeddedId
-	public CiphertextId getCiphertextId() {
-		return ciphertextId;
+	public CiphertextId getId() {
+		return id;
 	}
 
-	public void setCiphertextId(CiphertextId ciphertextId) {
-		this.ciphertextId = ciphertextId;
+	public void setId(CiphertextId id) {
+		this.id = id;
 	}
 
 	@Column(name = "value")
@@ -59,7 +59,7 @@ public class Ciphertext {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ciphertextId == null) ? 0 : ciphertextId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -79,11 +79,11 @@ public class Ciphertext {
 		}
 
 		Ciphertext other = (Ciphertext) obj;
-		if (ciphertextId == null) {
-			if (other.ciphertextId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!ciphertextId.equals(other.ciphertextId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 
@@ -100,7 +100,7 @@ public class Ciphertext {
 
 	@Override
 	public String toString() {
-		return "Ciphertext [value=" + value + ", ciphertextId=" + ciphertextId + "]";
+		return "Ciphertext [value=" + value + ", id=" + id + "]";
 	}
 
 }

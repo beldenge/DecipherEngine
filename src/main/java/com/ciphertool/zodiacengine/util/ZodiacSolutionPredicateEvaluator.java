@@ -143,7 +143,7 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
 
-		log.info("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
+		log.info("Solution " + solution.getId() + " has a confidence level of: " + total);
 
 		return total;
 	}

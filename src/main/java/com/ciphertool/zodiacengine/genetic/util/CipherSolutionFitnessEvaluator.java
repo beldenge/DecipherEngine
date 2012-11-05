@@ -101,7 +101,7 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId() - 1);
+				plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId() - 1);
 
 				currentValue = plaintext.getValue();
 
@@ -154,10 +154,10 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -167,7 +167,7 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
 		if (log.isDebugEnabled()) {
-			log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: "
+			log.debug("Solution " + solution.getId() + " has a confidence level of: "
 					+ total);
 		}
 

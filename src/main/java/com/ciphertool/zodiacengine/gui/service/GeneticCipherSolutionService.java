@@ -140,7 +140,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 
 			nextId++;
 			SolutionId solutionId = new SolutionId(nextId, solutionSet);
-			((SolutionChromosome) individual).setSolutionId(solutionId);
+			((SolutionChromosome) individual).setId(solutionId);
 		}
 
 		long startInsert = System.currentTimeMillis();

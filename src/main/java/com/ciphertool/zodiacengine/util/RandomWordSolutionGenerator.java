@@ -67,14 +67,14 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 		do {
 			nextWord = wordListDao.findRandomWord();
 
-			length += nextWord.getWordId().getWord().length();
+			length += nextWord.getId().getWord().length();
 
 			/*
 			 * Truncate the last Word if it exceeds the Cipher length.
 			 */
 			if (length > cipher.length()) {
-				int endIndex = (nextWord.getWordId().getWord().length() - (length - cipher.length()));
-				nextWord.getWordId().setWord(nextWord.getWordId().getWord().substring(0, endIndex));
+				int endIndex = (nextWord.getId().getWord().length() - (length - cipher.length()));
+				nextWord.getId().setWord(nextWord.getId().getWord().substring(0, endIndex));
 			}
 
 			wordList.add(nextWord);
@@ -85,7 +85,7 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 	public void convertWordsToPlaintext(Solution solution, List<Word> wordList) {
 		StringBuffer rawText = new StringBuffer();
 		for (Word w : wordList) {
-			rawText.append(w.getWordId().getWord());
+			rawText.append(w.getId().getWord());
 		}
 		char[] chars = new char[cipher.length()];
 		rawText.getChars(0, cipher.length(), chars, 0);

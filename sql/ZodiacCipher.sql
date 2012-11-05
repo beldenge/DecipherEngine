@@ -67,10 +67,10 @@ INSERT INTO "cipher"(id, "name", "rows", columns) VALUES
 
 CREATE TABLE ciphertext
 (
-  id integer NOT NULL,
+  ciphertext_id integer NOT NULL,
   "value" character varying NOT NULL,
   cipher_id integer NOT NULL,
-  CONSTRAINT pk_id_cipher_id PRIMARY KEY (id , cipher_id ),
+  CONSTRAINT pk_cipher_id_ciphertext_id PRIMARY KEY (cipher_id, ciphertext_id ),
   CONSTRAINT fk_cipher_id FOREIGN KEY (cipher_id)
       REFERENCES cipher (id) MATCH SIMPLE
       ON UPDATE  CASCADE ON DELETE NO ACTION
@@ -81,7 +81,7 @@ WITH (
 ALTER TABLE ciphertext
   OWNER TO postgres;
 
-INSERT INTO ciphertext(cipher_id, id, "value") VALUES
+INSERT INTO ciphertext(cipher_id, ciphertext_id, "value") VALUES
 ('1', 1, 'h'),
 ('1', 2, 'e'),
 ('1', 3, 'r'),
@@ -423,7 +423,7 @@ INSERT INTO ciphertext(cipher_id, id, "value") VALUES
 ('1', 339, 'leftdoti'),
 ('1', 340, 'plus');
 
-INSERT INTO ciphertext(cipher_id, id, "value") VALUES
+INSERT INTO ciphertext(cipher_id, ciphertext_id, "value") VALUES
 ('2', 1, 'tri'),
 ('2', 2, 'lrbox'),
 ('2', 3, 'p'),
@@ -857,14 +857,14 @@ ALTER TABLE solution_set
 
 CREATE TABLE solution
 (
-  id integer NOT NULL,
+  solution_id integer NOT NULL,
   total_matches integer,
   created_timestamp timestamp without time zone NOT NULL DEFAULT now(),
   cipher_id integer NOT NULL,
   unique_matches integer DEFAULT 0,
   adjacent_matches integer DEFAULT 0,
   solution_set_id integer NOT NULL,
-  CONSTRAINT pk_id_solution_set_id PRIMARY KEY (id, solution_set_id ),
+  CONSTRAINT pk_solution_set_id_solution_id PRIMARY KEY (solution_set_id, solution_id ),
   CONSTRAINT fk_cipher_id FOREIGN KEY (cipher_id)
       REFERENCES cipher (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -889,9 +889,9 @@ CREATE TABLE plaintext
   solution_id integer NOT NULL,
   solution_set_id integer NOT NULL,
   has_match boolean DEFAULT false,
-  CONSTRAINT pk_solution_id_ciphertext_id PRIMARY KEY (solution_id, solution_set_id, ciphertext_id ),
-  CONSTRAINT fk_solution_id FOREIGN KEY (solution_id, solution_set_id)
-      REFERENCES solution (id, solution_set_id) MATCH SIMPLE
+  CONSTRAINT pk_solution_set_id_solution_id_ciphertext_id PRIMARY KEY (solution_set_id, solution_id, ciphertext_id ),
+  CONSTRAINT fk_solution_set_id_solution_id FOREIGN KEY (solution_set_id, solution_id)
+      REFERENCES solution (solution_set_id, solution_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (

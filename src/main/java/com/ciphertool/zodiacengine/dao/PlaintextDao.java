@@ -46,8 +46,8 @@ public class PlaintextDao implements Dao {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Plaintext plaintext = (Plaintext) session.createQuery(
-				"from Plaintext p where p.plaintextId = " + separator + plaintextIdParameter)
-				.setParameter(plaintextIdParameter, plaintextId).uniqueResult();
+				"from Plaintext p where p.id = " + separator + plaintextIdParameter).setParameter(
+				plaintextIdParameter, plaintextId).uniqueResult();
 		session.getTransaction().commit();
 		session.close();
 

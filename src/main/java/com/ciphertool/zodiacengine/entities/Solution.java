@@ -38,11 +38,11 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "solution")
-@AssociationOverrides(@AssociationOverride(name = "solutionId.solutionSet", joinColumns = @JoinColumn(name = "solution_set_id")))
+@AssociationOverrides(@AssociationOverride(name = "id.solutionSet", joinColumns = @JoinColumn(name = "solution_set_id")))
 public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
 
-	protected SolutionId solutionId;
+	protected SolutionId id;
 	protected int cipherId;
 	protected int totalMatches;
 	protected int uniqueMatches;
@@ -53,7 +53,7 @@ public class Solution implements Serializable {
 	private transient int uncommittedIndex;
 
 	public Solution() {
-		this.solutionId = new SolutionId();
+		this.id = new SolutionId();
 	}
 
 	/*
@@ -61,7 +61,7 @@ public class Solution implements Serializable {
 	 * cipherId in this constructor.
 	 */
 	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
-		this.solutionId = new SolutionId();
+		this.id = new SolutionId();
 		this.cipherId = cipherId;
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
@@ -70,19 +70,19 @@ public class Solution implements Serializable {
 	}
 
 	/**
-	 * @return the solutionId
+	 * @return the id
 	 */
 	@EmbeddedId
-	public SolutionId getSolutionId() {
-		return solutionId;
+	public SolutionId getId() {
+		return id;
 	}
 
 	/**
-	 * @param solutionId
-	 *            the solutionId to set
+	 * @param id
+	 *            the id to set
 	 */
-	public void setSolutionId(SolutionId solutionId) {
-		this.solutionId = solutionId;
+	public void setId(SolutionId id) {
+		this.id = id;
 	}
 
 	@Column(name = "cipher_id")
@@ -141,7 +141,7 @@ public class Solution implements Serializable {
 		this.adjacentMatchCount = adjacentMatchCount;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "plaintextId.solution", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.solution", cascade = CascadeType.ALL)
 	public List<Plaintext> getPlaintextCharacters() {
 		if (this.plaintextCharacters == null) {
 			this.plaintextCharacters = new ArrayList<Plaintext>();
@@ -207,7 +207,7 @@ public class Solution implements Serializable {
 			this.plaintextCharacters = new ArrayList<Plaintext>();
 		}
 
-		plaintext.getPlaintextId().setSolution(this);
+		plaintext.getId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);
 	}
@@ -227,7 +227,7 @@ public class Solution implements Serializable {
 		int result = 1;
 		result = prime * result + adjacentMatchCount;
 		result = prime * result + cipherId;
-		result = prime * result + solutionId.hashCode();
+		result = prime * result + id.hashCode();
 		result = prime * result + totalMatches;
 		result = prime * result + uniqueMatches;
 		return result;
@@ -257,11 +257,11 @@ public class Solution implements Serializable {
 			return false;
 		}
 
-		if (solutionId == null) {
-			if (other.solutionId != null) {
+		if (id == null) {
+			if (other.id != null) {
 				return false;
 			}
-		} else if (!solutionId.equals(other.solutionId)) {
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (totalMatches != other.totalMatches) {
@@ -303,7 +303,7 @@ public class Solution implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + solutionId + ", cipherId=" + cipherId + ", totalMatches="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", totalMatches="
 				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
 				+ adjacentMatchCount + "]\n");
 

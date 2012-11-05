@@ -136,13 +136,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 			plaintextSequence.setHasMatch(false);
 
-			plaintextSequence.getPlaintextId().setSolution(this);
+			plaintextSequence.getId().setSolution(this);
 
 			/*
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.getPlaintextId().setCiphertextId(beginIndex + i);
+			plaintextSequence.getId().setCiphertextId(beginIndex + i);
 		}
 	}
 
@@ -185,7 +185,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 					cnse);
 		}
 
-		copyChromosome.setSolutionId(new SolutionId());
+		copyChromosome.setId(new SolutionId());
 		copyChromosome.setGenes(new ArrayList<Gene>());
 		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
 
@@ -235,7 +235,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		 */
 		if (index > 0) {
 			beginIndex = ((PlaintextSequence) this.genes.get(index - 1).getSequences().get(
-					this.genes.get(index - 1).size() - 1)).getPlaintextId().getCiphertextId() + 1;
+					this.genes.get(index - 1).size() - 1)).getId().getCiphertextId() + 1;
 		}
 
 		int actualSize = this.plaintextCharacters.size();
@@ -256,13 +256,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 			plaintextSequence.setHasMatch(false);
 
-			plaintextSequence.getPlaintextId().setSolution(this);
+			plaintextSequence.getId().setSolution(this);
 
 			/*
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.getPlaintextId().setCiphertextId(beginIndex + i);
+			plaintextSequence.getId().setCiphertextId(beginIndex + i);
 		}
 	}
 
@@ -287,7 +287,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		 * Gene's greatest Sequence ID.
 		 */
 		int beginIndex = ((PlaintextSequence) geneToRemove.getSequences().get(
-				geneToRemove.getSequences().size() - 1)).getPlaintextId().getCiphertextId() + 1;
+				geneToRemove.getSequences().size() - 1)).getId().getCiphertextId() + 1;
 
 		int actualSize = this.plaintextCharacters.size();
 
@@ -364,7 +364,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + solutionId + ", cipherId=" + cipherId + ", fitness="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness="
 				+ String.format("%1$,.2f", fitness) + ", totalMatches=" + totalMatches
 				+ ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount
 				+ "]\n");

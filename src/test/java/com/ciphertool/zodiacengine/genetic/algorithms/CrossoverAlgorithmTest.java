@@ -102,7 +102,7 @@ public class CrossoverAlgorithmTest {
 						.getSequences().get(j));
 
 				assertEquals(((SolutionChromosome) child).getPlaintextCharacters().get(count)
-						.getPlaintextId().getCiphertextId(), count);
+						.getId().getCiphertextId(), count);
 
 				count++;
 			}
@@ -124,10 +124,10 @@ public class CrossoverAlgorithmTest {
 			for (Plaintext plaintext : ((SolutionChromosome) child).getPlaintextCharacters()) {
 				if ((!plaintext.getValue().equals(
 						((SolutionChromosome) mom).getPlaintextCharacters().get(
-								plaintext.getPlaintextId().getCiphertextId()).getValue()))
+								plaintext.getId().getCiphertextId()).getValue()))
 						&& (!plaintext.getValue().equals(
 								((SolutionChromosome) dad).getPlaintextCharacters().get(
-										plaintext.getPlaintextId().getCiphertextId()).getValue()))) {
+										plaintext.getId().getCiphertextId()).getValue()))) {
 					fail("Plaintext value from child does not match Plaintext from either parent: "
 							+ plaintext);
 				}

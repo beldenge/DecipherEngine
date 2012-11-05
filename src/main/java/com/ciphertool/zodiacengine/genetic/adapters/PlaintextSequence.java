@@ -61,14 +61,14 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 					cnse);
 		}
 
-		copySequence.setPlaintextId(new PlaintextId());
+		copySequence.setId(new PlaintextId());
 
-		copySequence.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId());
+		copySequence.id.setCiphertextId(this.id.getCiphertextId());
 
 		/*
 		 * The Solution must be set at a higher level.
 		 */
-		copySequence.plaintextId.setSolution(null);
+		copySequence.id.setSolution(null);
 
 		/*
 		 * The Gene must bet set at a higher level.
@@ -85,7 +85,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * @param places
 	 */
 	public void shiftRight(int places) {
-		this.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId() + places);
+		this.id.setCiphertextId(this.id.getCiphertextId() + places);
 	}
 
 	/**
@@ -95,11 +95,11 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * @param places
 	 */
 	public void shiftLeft(int places) {
-		this.plaintextId.setCiphertextId(this.plaintextId.getCiphertextId() - places);
+		this.id.setCiphertextId(this.id.getCiphertextId() - places);
 	}
 
 	@Override
 	public Integer getSequenceId() {
-		return this.plaintextId.getCiphertextId();
+		return this.id.getCiphertextId();
 	}
 }

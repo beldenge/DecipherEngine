@@ -86,7 +86,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w : sentence.getWords()) {
-				rawText.append(w.getWordId().getWord());
+				rawText.append(w.getId().getWord());
 			}
 		}
 		char[] chars = new char[cipherLength];
@@ -123,7 +123,7 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w : sentence.getWords()) {
-				rawText.append(w.getWordId().getWord());
+				rawText.append(w.getId().getWord());
 				chars = new char[rawText.length()];
 				rawText.getChars(0, rawText.length(), chars, 0);
 				for (char c : chars) {

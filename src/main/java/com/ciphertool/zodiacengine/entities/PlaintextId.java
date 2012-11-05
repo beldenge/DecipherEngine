@@ -74,7 +74,7 @@ public class PlaintextId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ciphertextId;
-		result = prime * result + solution.getSolutionId().hashCode();
+		result = prime * result + solution.getId().hashCode();
 		return result;
 	}
 
@@ -104,11 +104,11 @@ public class PlaintextId implements Serializable {
 		 * We are not checking for null solution because it should never happen
 		 * and we want an exception to be thrown if so.
 		 */
-		if (solution.getSolutionId() == null) {
-			if (other.getSolution().getSolutionId() != null) {
+		if (solution.getId() == null) {
+			if (other.getSolution().getId() != null) {
 				return false;
 			}
-		} else if (!solution.getSolutionId().equals(other.getSolution().getSolutionId())) {
+		} else if (!solution.getId().equals(other.getSolution().getId())) {
 			return false;
 		}
 
@@ -126,7 +126,7 @@ public class PlaintextId implements Serializable {
 	@Override
 	public String toString() {
 		return "PlaintextId [solutionId="
-				+ ((solution == null) ? "null" : solution.getSolutionId()) + ", ciphertextId="
+				+ ((solution == null) ? "null" : solution.getId()) + ", ciphertextId="
 				+ ciphertextId + "]";
 	}
 

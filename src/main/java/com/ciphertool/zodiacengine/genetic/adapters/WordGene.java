@@ -43,12 +43,12 @@ public class WordGene implements Gene {
 		this.chromosome = solutionChromosome;
 		this.sequences = new ArrayList<Sequence>();
 
-		int wordLength = word.getWordId().getWord().length();
+		int wordLength = word.getId().getWord().length();
 
 		for (int i = 0; i < wordLength; i++) {
 			PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
 					solutionChromosome, beginCiphertextId + i), String.valueOf(
-					word.getWordId().getWord().charAt(i)).toLowerCase(), this);
+					word.getId().getWord().charAt(i)).toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}
@@ -85,7 +85,7 @@ public class WordGene implements Gene {
 
 			sequencesToClone.add(clonedSequence);
 
-			((PlaintextSequence) clonedSequence).getPlaintextId().setSolution(
+			((PlaintextSequence) clonedSequence).getId().setSolution(
 					(SolutionChromosome) chromosome);
 
 			clonedSequence.setGene(copyGene);
@@ -181,7 +181,7 @@ public class WordGene implements Gene {
 	public void addSequence(Sequence sequence) {
 		this.sequences.add(sequence);
 
-		((PlaintextSequence) sequence).getPlaintextId()
+		((PlaintextSequence) sequence).getId()
 				.setSolution((SolutionChromosome) chromosome);
 
 		((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
@@ -212,7 +212,7 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
-		((PlaintextSequence) sequence).getPlaintextId()
+		((PlaintextSequence) sequence).getId()
 				.setSolution((SolutionChromosome) chromosome);
 
 		((SolutionChromosome) chromosome).getPlaintextCharacters().add(index,

@@ -103,7 +103,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId().getId() - 1);
+				plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId() - 1);
 
 				currentValue = plaintext.getValue();
 
@@ -156,10 +156,10 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -168,7 +168,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 
 		if (solution.getTotalMatches() >= totalMatchThreshold) {
 			log.info("Found solution with " + solution.getTotalMatches()

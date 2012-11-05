@@ -79,13 +79,13 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 		 * Initialize the map
 		 */
 		for (Ciphertext ciphertext : zodiacCipher.getCiphertextCharacters()) {
-			if (plaintextHistogramMap.containsKey(ciphertext.getCiphertextId().getId())) {
+			if (plaintextHistogramMap.containsKey(ciphertext.getId().getCiphertextId())) {
 				log.warn("Found duplicate ciphertext key in cipher.  This should not be possible.  Returning null.");
 
 				return null;
 			}
 
-			plaintextHistogramMap.put(ciphertext.getCiphertextId().getId(),
+			plaintextHistogramMap.put(ciphertext.getId().getCiphertextId(),
 					new HashMap<String, List<Plaintext>>());
 		}
 
@@ -101,19 +101,19 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 
 			for (Plaintext plaintext : solution.getPlaintextCharacters()) {
 				if (!plaintextHistogramMap
-						.containsKey(plaintext.getPlaintextId().getCiphertextId())) {
+						.containsKey(plaintext.getId().getCiphertextId())) {
 					log.warn("Encountered plaintextId which does not match any ciphertext character.  This should not be possible.  Returning null.");
 
 					return null;
 				}
 
-				if (!plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId())
+				if (!plaintextHistogramMap.get(plaintext.getId().getCiphertextId())
 						.containsKey(plaintext.getValue())) {
-					plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).put(
+					plaintextHistogramMap.get(plaintext.getId().getCiphertextId()).put(
 							plaintext.getValue(), new ArrayList<Plaintext>());
 				}
 
-				plaintextHistogramMap.get(plaintext.getPlaintextId().getCiphertextId()).get(
+				plaintextHistogramMap.get(plaintext.getId().getCiphertextId()).get(
 						plaintext.getValue()).add(plaintext);
 			}
 		}

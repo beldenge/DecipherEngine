@@ -124,10 +124,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 				 */
 				try {
 					plaintext = plaintextCharacters
-							.get(ciphertextIndice.getCiphertextId().getId() - 1);
+							.get(ciphertextIndice.getId().getCiphertextId() - 1);
 				} catch (IndexOutOfBoundsException ioobe) {
 					log.error("Caught IndexOutOfBoundsException for index "
-							+ (ciphertextIndice.getCiphertextId().getId() - 1) + " and size "
+							+ (ciphertextIndice.getId().getCiphertextId() - 1) + " and size "
 							+ plaintextCharacters.size() + " while evaluating Chromosome: "
 							+ chromosome, ioobe);
 				}
@@ -197,10 +197,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -209,7 +209,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {

@@ -29,19 +29,19 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class CiphertextId implements Serializable {
 	private static final long serialVersionUID = -7924706093006822875L;
-	private int id;
+	private int ciphertextId;
 	private Cipher cipher;
 
 	public CiphertextId() {
 	}
 
-	@Column(name = "id")
-	public int getId() {
-		return id;
+	@Column(name = "ciphertext_id")
+	public int getCiphertextId() {
+		return ciphertextId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setCiphertextId(int ciphertextId) {
+		this.ciphertextId = ciphertextId;
 	}
 
 	@ManyToOne
@@ -67,7 +67,7 @@ public class CiphertextId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + cipher.getId();
-		result = prime * result + id;
+		result = prime * result + ciphertextId;
 		return result;
 	}
 
@@ -90,7 +90,7 @@ public class CiphertextId implements Serializable {
 		CiphertextId other = (CiphertextId) obj;
 		if (cipher.getId() != other.getCipher().getId())
 			return false;
-		if (id != other.id)
+		if (ciphertextId != other.ciphertextId)
 			return false;
 		return true;
 	}
@@ -105,6 +105,6 @@ public class CiphertextId implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "CiphertextId [id=" + id + ", cipherId=" + cipher.getId() + "]";
+		return "CiphertextId [ciphertextId=" + ciphertextId + ", cipherId=" + cipher.getId() + "]";
 	}
 }

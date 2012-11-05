@@ -29,11 +29,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "plaintext")
-@AssociationOverrides(@AssociationOverride(name = "plaintextId.solution", joinColumns = {
-		@JoinColumn(name = "solution_id", referencedColumnName = "id"),
+@AssociationOverrides(@AssociationOverride(name = "id.solution", joinColumns = {
+		@JoinColumn(name = "solution_id", referencedColumnName = "solution_id"),
 		@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") }))
 public class Plaintext {
-	protected PlaintextId plaintextId;
+	protected PlaintextId id;
 	protected String value;
 	protected boolean hasMatch;
 
@@ -41,17 +41,17 @@ public class Plaintext {
 	}
 
 	public Plaintext(PlaintextId plaintextId, String value) {
-		this.plaintextId = plaintextId;
+		this.id = plaintextId;
 		this.value = value;
 	}
 
 	@EmbeddedId
-	public PlaintextId getPlaintextId() {
-		return plaintextId;
+	public PlaintextId getId() {
+		return id;
 	}
 
-	public void setPlaintextId(PlaintextId plaintextId) {
-		this.plaintextId = plaintextId;
+	public void setId(PlaintextId id) {
+		this.id = id;
 	}
 
 	@Column(name = "value")
@@ -77,7 +77,7 @@ public class Plaintext {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (hasMatch ? 1231 : 1237);
-		result = prime * result + ((plaintextId == null) ? 0 : plaintextId.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -97,7 +97,7 @@ public class Plaintext {
 		 * We are not checking for null plaintextId because it should never
 		 * happen and we want an exception to be thrown if so.
 		 */
-		if (!plaintextId.equals(other.plaintextId)) {
+		if (!id.equals(other.id)) {
 			return false;
 		}
 
@@ -118,7 +118,6 @@ public class Plaintext {
 
 	@Override
 	public String toString() {
-		return "Plaintext [plaintextId=" + plaintextId + ", value=" + value + ", hasMatch="
-				+ hasMatch + "]";
+		return "Plaintext [id=" + id + ", value=" + value + ", hasMatch=" + hasMatch + "]";
 	}
 }

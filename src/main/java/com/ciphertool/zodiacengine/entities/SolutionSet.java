@@ -77,7 +77,7 @@ public class SolutionSet implements Serializable {
 		this.name = name;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "solutionId.solutionSet", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.solutionSet", cascade = CascadeType.ALL)
 	public Set<Solution> getSolutions() {
 		if (this.solutions == null) {
 			this.solutions = new HashSet<Solution>();

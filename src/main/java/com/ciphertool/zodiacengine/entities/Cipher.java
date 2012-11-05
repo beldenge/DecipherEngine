@@ -84,7 +84,7 @@ public class Cipher implements Serializable {
 		this.rows = rows;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "ciphertextId.cipher", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.cipher", cascade = CascadeType.ALL)
 	public List<Ciphertext> getCiphertextCharacters() {
 		return ciphertextCharacters;
 	}

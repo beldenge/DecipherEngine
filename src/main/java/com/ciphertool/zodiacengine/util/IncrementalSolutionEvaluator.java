@@ -94,9 +94,9 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				if (ciphertextIndice.getCiphertextId().getId() < solution.getUncommittedIndex()) {
+				if (ciphertextIndice.getId().getCiphertextId() < solution.getUncommittedIndex()) {
 					plaintext = plaintextCharacters
-							.get(ciphertextIndice.getCiphertextId().getId() - 1);
+							.get(ciphertextIndice.getId().getCiphertextId() - 1);
 
 					currentValue = plaintext.getValue();
 
@@ -153,12 +153,12 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			 * Only check this ciphertext if it is within the uncommitted index
 			 * range.
 			 */
-			if (ct.getCiphertextId().getId() < solution.getUncommittedIndex()) {
+			if (ct.getId().getCiphertextId() < solution.getUncommittedIndex()) {
 				if (countAdjacent == false
-						&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+						&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 					countAdjacent = true;
 				} else if (countAdjacent == true
-						&& plaintextCharacters.get(ct.getCiphertextId().getId() - 1).getHasMatch()) {
+						&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
 					adjacentMatchCount++;
 				} else {
 					countAdjacent = false;
@@ -168,7 +168,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: " + total);
+		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 
 		return total;
 	}
@@ -217,22 +217,22 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				if (ciphertextIndice.getCiphertextId().getId() <= uncommittedIndex) {
+				if (ciphertextIndice.getId().getCiphertextId() <= uncommittedIndex) {
 					ciphertextCharacterCount++;
 
 					/*
 					 * Set the plaintext from the existing solution if the index
 					 * is within the committed range
 					 */
-					if (ciphertextIndice.getCiphertextId().getId() <= solution.getCommittedIndex()) {
-						plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId()
-								.getId() - 1);
+					if (ciphertextIndice.getId().getCiphertextId() <= solution.getCommittedIndex()) {
+						plaintext = plaintextCharacters.get(ciphertextIndice.getId()
+								.getCiphertextId() - 1);
 					}
 					/*
 					 * Otherwise, set the plaintext from the new list to compare
 					 */
 					else {
-						plaintext = plaintextList.get(ciphertextIndice.getCiphertextId().getId()
+						plaintext = plaintextList.get(ciphertextIndice.getId().getCiphertextId()
 								- solution.getCommittedIndex() - 1);
 					}
 
@@ -257,7 +257,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			totalMismatches += (ciphertextCharacterCount - maxMatches);
 		}
 
-		log.debug("Solution " + solution.getSolutionId() + " has a confidence level of: "
+		log.debug("Solution " + solution.getId() + " has a confidence level of: "
 				+ totalMismatches);
 
 		/*

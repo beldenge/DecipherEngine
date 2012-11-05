@@ -45,7 +45,7 @@ public class WordGeneTest {
 
 		assertTrue(solutionChromosome == wordGene.getChromosome());
 
-		assertEquals(wordGene.size(), word.getWordId().getWord().length());
+		assertEquals(wordGene.size(), word.getId().getWord().length());
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class WordGeneTest {
 
 		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
 
-		assertEquals(wordGene.size(), george.getWordId().getWord().length());
+		assertEquals(wordGene.size(), george.getId().getWord().length());
 	}
 
 	@Test
@@ -284,7 +284,7 @@ public class WordGeneTest {
 
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
 			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getPlaintextId()
+			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getId()
 					.getCiphertextId(), i);
 
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene

@@ -122,7 +122,7 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 		StringBuilder rawText = new StringBuilder();
 
 		for (Word w : sentence.getWords()) {
-			rawText.append(w.getWordId().getWord());
+			rawText.append(w.getId().getWord());
 		}
 
 		int sentenceLength = sentence.length();

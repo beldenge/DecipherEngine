@@ -29,7 +29,7 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class SolutionId implements Serializable {
 	private static final long serialVersionUID = -788355825214706921L;
-	protected int id;
+	protected int solutionId;
 	protected SolutionSet solutionSet;
 
 	public SolutionId() {
@@ -40,25 +40,25 @@ public class SolutionId implements Serializable {
 	 * @param solutionSet
 	 */
 
-	public SolutionId(int id, SolutionSet solutionSet) {
-		this.id = id;
+	public SolutionId(int solutionId, SolutionSet solutionSet) {
+		this.solutionId = solutionId;
 		this.solutionSet = solutionSet;
 	}
 
 	/**
-	 * @return the id
+	 * @return the solutionId
 	 */
-	@Column(name = "id")
-	public int getId() {
-		return id;
+	@Column(name = "solution_id")
+	public int getSolutionId() {
+		return solutionId;
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param solutionId
+	 *            the solutionId to set
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setSolutionId(int solutionId) {
+		this.solutionId = solutionId;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class SolutionId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + solutionId;
 		result = prime * result + ((solutionSet == null) ? 0 : solutionSet.getId());
 		return result;
 	}
@@ -115,7 +115,7 @@ public class SolutionId implements Serializable {
 			return false;
 		}
 		SolutionId other = (SolutionId) obj;
-		if (id != other.id) {
+		if (solutionId != other.solutionId) {
 			return false;
 		}
 
@@ -139,7 +139,8 @@ public class SolutionId implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "SolutionId [id=" + ((id == 0) ? "NOT_SET" : id) + ", solutionSet="
-				+ ((solutionSet == null) ? "NOT_SET" : solutionSet.getId()) + "]";
+		return "SolutionId [solutionId=" + ((solutionId == 0) ? "NOT_SET" : solutionId)
+				+ ", solutionSet=" + ((solutionSet == null) ? "NOT_SET" : solutionSet.getId())
+				+ "]";
 	}
 }

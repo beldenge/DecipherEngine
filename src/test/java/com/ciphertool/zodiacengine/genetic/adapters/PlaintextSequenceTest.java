@@ -46,17 +46,17 @@ public class PlaintextSequenceTest {
 
 		PlaintextSequence clonedPlaintextSequence = plaintextSequence.clone();
 
-		assertFalse(plaintextSequence.getPlaintextId() == clonedPlaintextSequence.getPlaintextId());
+		assertFalse(plaintextSequence.getId() == clonedPlaintextSequence.getId());
 
 		/*
 		 * The Solution should not be cloned.
 		 */
-		assertTrue(clonedPlaintextSequence.getPlaintextId().getSolution() == null);
-		clonedPlaintextSequence.getPlaintextId().setSolution(solutionChromosome);
+		assertTrue(clonedPlaintextSequence.getId().getSolution() == null);
+		clonedPlaintextSequence.getId().setSolution(solutionChromosome);
 
 		assertFalse(plaintextSequence == clonedPlaintextSequence);
 
-		assertEquals(plaintextSequence.getPlaintextId(), clonedPlaintextSequence.getPlaintextId());
+		assertEquals(plaintextSequence.getId(), clonedPlaintextSequence.getId());
 		assertEquals(plaintextSequence, clonedPlaintextSequence);
 
 		/*
@@ -78,7 +78,7 @@ public class PlaintextSequenceTest {
 
 		plaintextSequence.shiftLeft(2);
 
-		assertEquals(plaintextSequence.getPlaintextId().getCiphertextId(), 3);
+		assertEquals(plaintextSequence.getId().getCiphertextId(), 3);
 	}
 
 	@Test
@@ -93,6 +93,6 @@ public class PlaintextSequenceTest {
 
 		plaintextSequence.shiftRight(2);
 
-		assertEquals(plaintextSequence.getPlaintextId().getCiphertextId(), 7);
+		assertEquals(plaintextSequence.getId().getCiphertextId(), 7);
 	}
 }
