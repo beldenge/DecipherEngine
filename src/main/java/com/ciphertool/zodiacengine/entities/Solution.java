@@ -56,6 +56,10 @@ public class Solution implements Serializable {
 		this.id = new SolutionId();
 	}
 
+	public Solution(SolutionSet solutionSet, int solutionId) {
+		this.id = new SolutionId(solutionSet, solutionId);
+	}
+
 	/*
 	 * TODO: I think it would be better to use the Cipher rather than the
 	 * cipherId in this constructor.

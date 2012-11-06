@@ -35,6 +35,11 @@ public class CiphertextId implements Serializable {
 	public CiphertextId() {
 	}
 
+	public CiphertextId(Cipher cipher, int ciphertextId) {
+		this.cipher = cipher;
+		this.ciphertextId = ciphertextId;
+	}
+
 	@Column(name = "ciphertext_id")
 	public int getCiphertextId() {
 		return ciphertextId;

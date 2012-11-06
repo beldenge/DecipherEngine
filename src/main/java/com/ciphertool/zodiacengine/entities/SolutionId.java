@@ -40,9 +40,9 @@ public class SolutionId implements Serializable {
 	 * @param solutionSet
 	 */
 
-	public SolutionId(int solutionId, SolutionSet solutionSet) {
-		this.solutionId = solutionId;
+	public SolutionId(SolutionSet solutionSet, int solutionId) {
 		this.solutionSet = solutionSet;
+		this.solutionId = solutionId;
 	}
 
 	/**

@@ -139,7 +139,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 			solutionSet.getSolutions().add((SolutionChromosome) individual);
 
 			nextId++;
-			SolutionId solutionId = new SolutionId(nextId, solutionSet);
+			SolutionId solutionId = new SolutionId(solutionSet, nextId);
 			((SolutionChromosome) individual).setId(solutionId);
 		}
 
