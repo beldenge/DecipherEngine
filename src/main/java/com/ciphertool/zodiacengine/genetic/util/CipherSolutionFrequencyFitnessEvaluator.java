@@ -123,11 +123,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 				 * performance hit though.
 				 */
 				try {
-					plaintext = plaintextCharacters
-							.get(ciphertextIndice.getId().getCiphertextId() - 1);
+					plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
 				} catch (IndexOutOfBoundsException ioobe) {
 					log.error("Caught IndexOutOfBoundsException for index "
-							+ (ciphertextIndice.getId().getCiphertextId() - 1) + " and size "
+							+ (ciphertextIndice.getId().getCiphertextId()) + " and size "
 							+ plaintextCharacters.size() + " while evaluating Chromosome: "
 							+ chromosome, ioobe);
 				}
@@ -197,10 +196,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getId().getCiphertextId() - 1).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;

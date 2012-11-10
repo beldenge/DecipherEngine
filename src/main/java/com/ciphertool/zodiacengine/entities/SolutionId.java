@@ -91,7 +91,8 @@ public class SolutionId implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + solutionId;
-		result = prime * result + ((solutionSet == null) ? 0 : solutionSet.getId());
+		result = prime * result
+				+ ((solutionSet == null || solutionSet.getId() == null) ? 0 : solutionSet.getId());
 		return result;
 	}
 

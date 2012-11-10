@@ -181,8 +181,7 @@ public class WordGene implements Gene {
 	public void addSequence(Sequence sequence) {
 		this.sequences.add(sequence);
 
-		((PlaintextSequence) sequence).getId()
-				.setSolution((SolutionChromosome) chromosome);
+		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
 
 		((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
 	}
@@ -212,8 +211,7 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
-		((PlaintextSequence) sequence).getId()
-				.setSolution((SolutionChromosome) chromosome);
+		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
 
 		((SolutionChromosome) chromosome).getPlaintextCharacters().add(index,
 				((PlaintextSequence) sequence));

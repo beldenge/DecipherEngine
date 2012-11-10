@@ -369,26 +369,29 @@ public class SolutionChromosome extends Solution implements Chromosome {
 				+ ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount
 				+ "]\n");
 
-		/*
-		 * Start at 1 instead of 0 so that the modulus function below isn't
-		 * messed up.
-		 */
 		if (this.cipher != null) {
-			for (int i = 1; i <= this.plaintextCharacters.size(); i++) {
+			Plaintext nextPlaintext = null;
+			for (int i = 0; i < this.plaintextCharacters.size(); i++) {
+
+				nextPlaintext = plaintextCharacters.get(i);
 
 				// subtract 1 since the get method begins with 0
-				if (plaintextCharacters.get(i - 1).getHasMatch()) {
+				if (nextPlaintext.getHasMatch()) {
 					sb.append("[");
-					sb.append(plaintextCharacters.get(i - 1).getValue());
+					sb.append(nextPlaintext.getValue());
 					sb.append("]");
 				} else {
 					sb.append(" ");
-					sb.append(plaintextCharacters.get(i - 1).getValue());
+					sb.append(nextPlaintext.getValue());
 					sb.append(" ");
 				}
+				sb.append(nextPlaintext.getId().getCiphertextId());
 
-				// print a newline if we are at the end of the row
-				if ((i % cipher.getColumns()) == 0) {
+				/*
+				 * Print a newline if we are at the end of the row. Add 1 to the
+				 * index so the modulus function doesn't break.
+				 */
+				if (((i + 1) % cipher.getColumns()) == 0) {
 					sb.append("\n");
 				} else {
 					sb.append(" ");
