@@ -115,7 +115,7 @@ public class Cipher implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + columns;
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + rows;
 		return result;
@@ -132,24 +132,36 @@ public class Cipher implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Cipher other = (Cipher) obj;
-		if (columns != other.columns)
+		if (columns != other.columns) {
 			return false;
-		if (id != other.id)
-			return false;
-		if (name == null) {
-			if (other.name != null)
+		}
+		if (id == null) {
+			if (other.id != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
-		if (rows != other.rows)
+		}
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
+		if (rows != other.rows) {
+			return false;
+		}
 		return true;
 	}
 
