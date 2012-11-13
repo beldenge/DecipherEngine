@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -48,6 +49,13 @@ public class Cipher implements Serializable {
 
 	public Cipher(Integer id) {
 		this.id = id;
+	}
+
+	public Cipher(String name, int rows, int columns) {
+		this.name = name;
+		this.rows = rows;
+		this.columns = columns;
+		this.ciphertextCharacters = new ArrayList<Ciphertext>();
 	}
 
 	@Id
