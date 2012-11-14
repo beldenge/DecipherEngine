@@ -37,6 +37,11 @@ public class Ciphertext {
 	public Ciphertext() {
 	}
 
+	public Ciphertext(CiphertextId id, String value) {
+		this.id = id;
+		this.value = value;
+	}
+
 	@EmbeddedId
 	public CiphertextId getId() {
 		return id;

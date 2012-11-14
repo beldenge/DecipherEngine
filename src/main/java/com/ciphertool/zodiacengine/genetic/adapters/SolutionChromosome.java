@@ -385,7 +385,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 					sb.append(nextPlaintext.getValue());
 					sb.append(" ");
 				}
-				sb.append(nextPlaintext.getId().getCiphertextId());
 
 				/*
 				 * Print a newline if we are at the end of the row. Add 1 to the
