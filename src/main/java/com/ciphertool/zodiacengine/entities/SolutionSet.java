@@ -50,6 +50,10 @@ public class SolutionSet implements Serializable {
 		this.id = id;
 	}
 
+	public SolutionSet(String name) {
+		this.name = name;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -100,7 +104,7 @@ public class SolutionSet implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + name.hashCode();
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
