@@ -28,25 +28,21 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 
 public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBase implements
 		FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-	HashMap<String, List<Ciphertext>> ciphertextKey;
 
 	/**
-	 * @param cipherName
-	 * @param cipherDao
+	 * Default no-args constructor
 	 */
-	public CipherSolutionFitnessEvaluator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		ciphertextKey = createKeyFromCiphertext();
+	public CipherSolutionFitnessEvaluator() {
 	}
 
 	/*
@@ -173,5 +169,18 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 		solution.setFitness((double) total);
 
 		return (double) total;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.genetics.util.FitnessEvaluator#setGeneticStructure(java
+	 * .lang.Object)
+	 */
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
+		this.ciphertextKey = createKeyFromCiphertext();
 	}
 }

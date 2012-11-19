@@ -19,6 +19,7 @@
 
 package com.ciphertool.zodiacengine.util;
 
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public interface SolutionGenerator {
@@ -26,8 +27,13 @@ public interface SolutionGenerator {
 	/**
 	 * Generates a Solution to the cipher
 	 * 
-	 * @return
+	 * @return the Solution
 	 */
 	public Solution generateSolution();
 
+	/**
+	 * @param cipher
+	 *            the Cipher
+	 */
+	public void setCipher(Cipher cipher);
 }

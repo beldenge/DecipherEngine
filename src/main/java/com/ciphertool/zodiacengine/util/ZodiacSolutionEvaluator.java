@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.zodiacengine.dao.SolutionDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -44,12 +44,9 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	private SolutionDao solutionDao;
 
 	/**
-	 * @param cipherName
-	 * @param cipherDao
+	 * Default no-args constructor
 	 */
-	public ZodiacSolutionEvaluator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		ciphertextKey = createKeyFromCiphertext();
+	public ZodiacSolutionEvaluator() {
 	}
 
 	/*
@@ -185,6 +182,19 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		}
 
 		return total;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+		this.ciphertextKey = createKeyFromCiphertext();
 	}
 
 	/**

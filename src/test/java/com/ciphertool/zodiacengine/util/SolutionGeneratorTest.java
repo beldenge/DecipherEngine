@@ -29,24 +29,35 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class SolutionGeneratorTest {
 
 	private static Logger log = Logger.getLogger(SolutionGeneratorTest.class);
 	private static ApplicationContext context;
+	private static ZodiacSolutionGenerator solutionGenerator;
+	private static ZodiacSolutionEvaluator solutionEvaluator;
 
 	@BeforeClass
 	public static void setUp() {
 		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		log.info("Spring context created successfully!");
+
+		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+
+		Cipher cipher = cipherDao.findByCipherName("zodiac340");
+
+		solutionGenerator = (ZodiacSolutionGenerator) context.getBean("solutionGenerator");
+		solutionEvaluator = (ZodiacSolutionEvaluator) context.getBean("solutionEvaluator");
+
+		solutionGenerator.setCipher(cipher);
+		solutionEvaluator.setCipher(cipher);
 	}
 
 	@Test
 	public void testGenerateSolution() {
-		ZodiacSolutionGenerator solutionGenerator = (ZodiacSolutionGenerator) context
-				.getBean("solutionGenerator");
-
 		@SuppressWarnings("unused")
 		Solution solution = solutionGenerator.generateSolution();
 
@@ -55,10 +66,6 @@ public class SolutionGeneratorTest {
 
 	@Test
 	public void testGeneratorPerformance() {
-		ZodiacSolutionGenerator solutionGenerator = (ZodiacSolutionGenerator) context
-				.getBean("solutionGenerator");
-		ZodiacSolutionEvaluator solutionEvaluator = (ZodiacSolutionEvaluator) context
-				.getBean("solutionEvaluator");
 		int i = 0;
 
 		List<Solution> solutions = new ArrayList<Solution>();

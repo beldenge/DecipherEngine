@@ -31,13 +31,17 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.ConservativeCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.FitnessEvaluator;
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
@@ -54,6 +58,16 @@ public class CrossoverAlgorithmTest {
 	public static void setUp() {
 		context = new ClassPathXmlApplicationContext("beans-genetic-test.xml");
 		log.info("Spring context created successfully!");
+
+		GeneticAlgorithm geneticAlgorithm = (GeneticAlgorithm) context.getBean("geneticAlgorithm");
+
+		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+
+		Cipher cipher = cipherDao.findByCipherName("zodiac340");
+		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
+				100, 50, 0.9, 0.001, 0.05);
+
+		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
 		fitnessEvaluator = (FitnessEvaluator) context.getBean("fitnessEvaluator");
 

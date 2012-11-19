@@ -19,9 +19,10 @@
 
 package com.ciphertool.zodiacengine.gui.service;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+
 public interface CipherSolutionService {
-	public void begin(int populationSize, int numGenerations, double survivalRate,
-			double mutationRate, double crossoverRate);
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy);
 
 	public void endImmediately();
 

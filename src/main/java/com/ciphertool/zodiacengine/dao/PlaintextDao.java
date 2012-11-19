@@ -23,33 +23,31 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 @Component
-public class PlaintextDao implements Dao {
+public class PlaintextDao {
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
 	private static final String plaintextIdParameter = "plaintextId";
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(Plaintext plaintext) {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		Session session = sessionFactory.getCurrentSession();
 		session.save(plaintext);
-		session.getTransaction().commit();
-		session.close();
 		return true;
 	}
 
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Plaintext findByPlaintextId(PlaintextId plaintextId) {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		Session session = sessionFactory.getCurrentSession();
 		Plaintext plaintext = (Plaintext) session.createQuery(
 				"from Plaintext p where p.id = " + separator + plaintextIdParameter).setParameter(
 				plaintextIdParameter, plaintextId).uniqueResult();
-		session.getTransaction().commit();
-		session.close();
 
 		return plaintext;
 	}

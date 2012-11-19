@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-Copyright 2012 George Belden
-
-This file is part of ZodiacEngine.
-
-ZodiacEngine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with ZodiacEngine.  If not, see <http://www.gnu.org/licenses/>.
- -->
+<!-- Copyright 2012 George Belden This file is part of ZodiacEngine. ZodiacEngine 
+	is free software: you can redistribute it and/or modify it under the terms 
+	of the GNU General Public License as published by the Free Software Foundation, 
+	either version 3 of the License, or (at your option) any later version. ZodiacEngine 
+	is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+	PURPOSE. See the GNU General Public License for more details. You should 
+	have received a copy of the GNU General Public License along with ZodiacEngine. 
+	If not, see <http://www.gnu.org/licenses/>. -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        		http://www.springframework.org/schema/context
-       		http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+       		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       		http://www.springframework.org/schema/tx 
+     		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<context:annotation-config />
+	<tx:annotation-driven />
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -26,17 +28,20 @@ You should have received a copy of the GNU General Public License along with Zod
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
+	<bean
+		class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
 		id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 		<property name="solutionSetDao" ref="solutionSetDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
-	
-	<bean class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
+
+	<bean
+		class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
 		id="cipherSolutionController">
 		<property name="cipherSolutionService" ref="cipherSolutionService" />
+		<property name="cipherDao" ref="cipherDao" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
@@ -47,6 +52,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="startButtonText" value="${ui.window.startButton.text}" />
 		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
 		<property name="cipherSolutionController" ref="cipherSolutionController" />
+		<property name="cipherDao" ref="cipherDao" />
 		<property name="populationInitial" value="${genetic.population.size}" />
 		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
@@ -65,10 +71,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator"
 		id="chromosomeGenerator">
-		<constructor-arg index="0"
-			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
-			<ref bean="cipherSingleton" />
-		</constructor-arg>
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
@@ -77,19 +79,11 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
 		id="oldFitnessEvaluator">
-		<constructor-arg index="0"
-			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
-			<ref bean="cipherSingleton" />
-		</constructor-arg>
 	</bean>
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
 		id="fitnessEvaluator">
-		<constructor-arg index="0"
-			type="com.ciphertool.zodiacengine.singleton.CipherSingleton">
-			<ref bean="cipherSingleton" />
-		</constructor-arg>
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -173,19 +167,9 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionSetDao" id="solutionSetDao">
 		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean class="com.ciphertool.zodiacengine.singleton.CipherFauxSingleton"
-		id="cipherSingleton">
-		<constructor-arg index="0" type="java.lang.String"
-			value="${cipher.name}" />
-		<constructor-arg index="1"
-			type="com.ciphertool.zodiacengine.dao.CipherDao">
-			<ref bean="cipherDao" />
-		</constructor-arg>
 	</bean>
 
 	<bean id="taskExecutor"
@@ -210,7 +194,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	</bean>
 
 	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
@@ -228,5 +212,10 @@ You should have received a copy of the GNU General Public License along with Zod
 				<prop key="hibernate.show_sql">false</prop>
 			</props>
 		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 </beans>

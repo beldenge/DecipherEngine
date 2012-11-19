@@ -34,15 +34,16 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 
-	public SolutionChromosomeGenerator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
+	/**
+	 * Default no-args constructor
+	 */
+	public SolutionChromosomeGenerator() {
 	}
 
 	@Override
@@ -92,6 +93,18 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 		} while (length < cipherLength);
 
 		return geneList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.genetics.util.ChromosomeGenerator#setGeneticStructure(
+	 * java.lang.Object)
+	 */
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
 	}
 
 	/**

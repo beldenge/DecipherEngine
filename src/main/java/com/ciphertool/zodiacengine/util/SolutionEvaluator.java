@@ -19,17 +19,23 @@
 
 package com.ciphertool.zodiacengine.util;
 
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public interface SolutionEvaluator {
 
 	/**
-	 * @param solution
-	 * @return
+	 * Calculates the confidence level of a solution and returns as an integer,
+	 * where the higher the number, the higher the confidence
 	 * 
-	 *         Calculates the confidence level of a solution and returns as an
-	 *         integer, where the higher the number, the higher the confidence
+	 * @param solution
+	 * @return the confidence level
 	 */
 	public int determineConfidenceLevel(Solution solution);
 
+	/**
+	 * @param cipher
+	 *            the Cipher
+	 */
+	public void setCipher(Cipher cipher);
 }

@@ -29,9 +29,12 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class BasicGeneticAlgorithmTest {
@@ -48,6 +51,14 @@ public class BasicGeneticAlgorithmTest {
 
 		population = (Population) context.getBean("population");
 		geneticAlgorithm = (GeneticAlgorithm) context.getBean("geneticAlgorithm");
+
+		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+
+		Cipher cipher = cipherDao.findByCipherName("zodiac340");
+		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
+				100, 50, 0.9, 0.001, 0.05);
+
+		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
 		population.populateIndividuals(10);
 		population.evaluateFitness();
@@ -68,7 +79,7 @@ public class BasicGeneticAlgorithmTest {
 
 	@Test
 	public void testSelect() {
-		((BasicGeneticAlgorithm) geneticAlgorithm).setSurvivalRate(0.9);
+		((BasicGeneticAlgorithm) geneticAlgorithm).getStrategy().setSurvivalRate(0.9);
 
 		SolutionChromosome bestChromosome = (SolutionChromosome) population.getBestFitIndividual();
 		log.info("Best fit individual before: " + bestChromosome);

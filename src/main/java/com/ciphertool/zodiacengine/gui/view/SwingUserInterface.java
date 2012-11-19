@@ -23,10 +23,12 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,6 +39,8 @@ import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.gui.controller.CipherSolutionController;
 
 public class SwingUserInterface extends JFrame implements UserInterface {
@@ -45,6 +49,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String windowTitle;
 	private int windowWidth;
 	private int windowHeight;
+	private String cipherNameText = "Cipher: ";
 	private String startButtonText = "Start";
 	private String stopButtonText = "Stop";
 	private String generationsText = "Generations: ";
@@ -77,7 +82,9 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final double CROSSOVER_STEP = 0.01;
 
 	private CipherSolutionController cipherSolutionController;
+	private CipherDao cipherDao;
 
+	private JComboBox<String> cipherComboBox;
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
 	private JSpinner populationSpinner;
@@ -110,14 +117,24 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make a 7-row, 2-column grid. This is for the five input boxes
+		 * Next make an 8-row, 2-column grid. This is for the six input boxes
 		 * with labels on the left and spinners on the right, and then the two
 		 * action buttons.
 		 */
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(7, 2, 5, 5));
+		mainPanel.setLayout(new GridLayout(8, 2, 5, 5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
+
+		List<Cipher> ciphers = cipherDao.findAll();
+		cipherComboBox = new JComboBox<String>();
+		for (Cipher cipher : ciphers) {
+			cipherComboBox.addItem(cipher.getName());
+		}
+		JLabel cipherNameLabel = new JLabel(cipherNameText);
+
+		mainPanel.add(cipherNameLabel);
+		mainPanel.add(cipherComboBox);
 
 		SpinnerModel generationsModel = new SpinnerNumberModel(generationsInitial, GENERATIONS_MIN,
 				GENERATIONS_MAX, GENERATIONS_STEP);
@@ -213,10 +230,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 					generations = -1;
 				}
 
-				cipherSolutionController.startServiceThread((Integer) populationSpinner.getValue(),
-						generations, (Double) survivalRateSpinner.getValue(),
-						(Double) mutationRateSpinner.getValue(), (Double) crossoverRateSpinner
-								.getValue());
+				cipherSolutionController.startServiceThread((String) cipherComboBox
+						.getSelectedItem(), (Integer) populationSpinner.getValue(), generations,
+						(Double) survivalRateSpinner.getValue(), (Double) mutationRateSpinner
+								.getValue(), (Double) crossoverRateSpinner.getValue());
 			}
 		};
 	}
@@ -278,6 +295,15 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	@Required
 	public void setCipherSolutionController(CipherSolutionController cipherSolutionController) {
 		this.cipherSolutionController = cipherSolutionController;
+	}
+
+	/**
+	 * @param cipherDao
+	 *            the cipherDao to set
+	 */
+	@Required
+	public void setCipherDao(CipherDao cipherDao) {
+		this.cipherDao = cipherDao;
 	}
 
 	/**

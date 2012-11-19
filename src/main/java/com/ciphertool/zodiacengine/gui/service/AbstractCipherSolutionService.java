@@ -21,15 +21,16 @@ package com.ciphertool.zodiacengine.gui.service;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+
 public abstract class AbstractCipherSolutionService implements CipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());
 	private boolean running = false;
 
 	@Override
-	public void begin(int populationSize, int numGenerations, double survivalRate,
-			double mutationRate, double crossoverRate) {
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
 		toggleRunning();
-		setUp(populationSize, numGenerations, survivalRate, mutationRate, crossoverRate);
+		setUp(geneticAlgorithmStrategy);
 
 		try {
 			start();
@@ -73,8 +74,7 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 
 	protected abstract void stop();
 
-	protected abstract void setUp(int populationInitial, int generationsInitial,
-			double survivalInitial, double mutationInitial, double crossoverInitial);
+	protected abstract void setUp(GeneticAlgorithmStrategy geneticAlgorithmStrategy);
 
 	protected abstract void tearDown();
 }

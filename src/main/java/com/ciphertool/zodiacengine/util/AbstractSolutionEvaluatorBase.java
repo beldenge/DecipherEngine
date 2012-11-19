@@ -30,6 +30,7 @@ import com.ciphertool.zodiacengine.entities.Solution;
 
 public abstract class AbstractSolutionEvaluatorBase {
 	protected Cipher cipher;
+	protected HashMap<String, List<Ciphertext>> ciphertextKey;
 
 	/**
 	 * Creates a map with the key as the String value of the Ciphertext

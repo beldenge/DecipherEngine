@@ -29,10 +29,10 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 import com.ciphertool.zodiacengine.util.ZodiacSolutionEvaluator;
 
@@ -46,16 +46,12 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		implements FitnessEvaluator {
 
 	private static Logger log = Logger.getLogger(ZodiacSolutionEvaluator.class);
-	HashMap<String, List<Ciphertext>> ciphertextKey;
 	private Map<Character, Double> expectedLetterFrequencies;
 
 	/**
-	 * @param cipherName
-	 * @param cipherDao
+	 * Default no-args constructor
 	 */
-	public CipherSolutionFrequencyFitnessEvaluator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		ciphertextKey = createKeyFromCiphertext();
+	public CipherSolutionFrequencyFitnessEvaluator() {
 	}
 
 	/*
@@ -221,6 +217,19 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		solution.setFitness(fitness);
 
 		return fitness;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.genetics.util.FitnessEvaluator#setGeneticStructure(java
+	 * .lang.Object)
+	 */
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
+		this.ciphertextKey = createKeyFromCiphertext();
 	}
 
 	/**

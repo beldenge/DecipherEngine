@@ -24,23 +24,23 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 
-public class CiphertextDao implements Dao {
+public class CiphertextDao {
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
 	private static final String cipherIdParameter = "cipherId";
 
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Ciphertext> findAllByCipherId(int cipherId) {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Ciphertext> cipherCharacters = session.createQuery(
 				"from Ciphertext where cipher_id = " + separator + cipherIdParameter).setParameter(
 				cipherIdParameter, cipherId).list();
-		session.getTransaction().commit();
-		session.close();
 
 		return cipherCharacters;
 	}

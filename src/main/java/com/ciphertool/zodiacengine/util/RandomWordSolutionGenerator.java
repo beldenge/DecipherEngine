@@ -31,15 +31,16 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class RandomWordSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
 
-	public RandomWordSolutionGenerator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
+	/**
+	 * Default no-args constructor
+	 */
+	public RandomWordSolutionGenerator() {
 	}
 
 	@Override
@@ -96,6 +97,18 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 			solution.addPlaintext(pt);
 			id++;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
 	}
 
 	/**

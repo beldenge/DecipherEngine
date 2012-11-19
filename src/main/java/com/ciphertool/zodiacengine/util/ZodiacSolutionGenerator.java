@@ -32,7 +32,6 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
@@ -40,9 +39,10 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	private Logger log = Logger.getLogger(getClass());
 	int cipherLength;
 
-	public ZodiacSolutionGenerator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		cipherLength = cipher.length();
+	/**
+	 * Default no-args constructor
+	 */
+	public ZodiacSolutionGenerator() {
 	}
 
 	/**
@@ -116,7 +116,8 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 * less memory intensive
 	 */
 	@SuppressWarnings("unused")
-	private void convertSentencesToPlaintextLowMemory(Solution solution, List<Sentence> sentenceList) {
+	private static void convertSentencesToPlaintextLowMemory(Solution solution,
+			List<Sentence> sentenceList) {
 		char[] chars;
 		Plaintext pt;
 		int id = 1;
@@ -133,6 +134,19 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 				}
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+		this.cipherLength = cipher.length();
 	}
 
 	@Required

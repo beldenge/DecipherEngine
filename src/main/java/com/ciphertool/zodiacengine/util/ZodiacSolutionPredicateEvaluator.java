@@ -25,10 +25,10 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -37,12 +37,9 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 	HashMap<String, List<Ciphertext>> ciphertextKey;
 
 	/**
-	 * @param cipherName
-	 * @param cipherDao
+	 * Default no-args constructor
 	 */
-	public ZodiacSolutionPredicateEvaluator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		ciphertextKey = createKeyFromCiphertext();
+	public ZodiacSolutionPredicateEvaluator() {
 	}
 
 	/*
@@ -146,5 +143,18 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 		log.info("Solution " + solution.getId() + " has a confidence level of: " + total);
 
 		return total;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+		this.ciphertextKey = createKeyFromCiphertext();
 	}
 }

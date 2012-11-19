@@ -19,29 +19,41 @@
 
 package com.ciphertool.zodiacengine.dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 
 @Component
-public class CipherDao implements Dao {
+public class CipherDao {
 	private SessionFactory sessionFactory;
 	private static final String separator = ":";
 	private static final String nameParameter = "name";
 
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Cipher findByCipherName(String name) {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		Session session = sessionFactory.getCurrentSession();
+
 		Cipher cipher = (Cipher) session.createQuery(
 				"from Cipher where name = " + separator + nameParameter).setParameter(
 				nameParameter, name).uniqueResult();
-		session.getTransaction().commit();
-		session.close();
 
 		return cipher;
+	}
+
+	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+	public List<Cipher> findAll() {
+		Session session = sessionFactory.getCurrentSession();
+
+		List<Cipher> ciphers = (List<Cipher>) session.createQuery("from Cipher").list();
+
+		return ciphers;
 	}
 
 	@Required

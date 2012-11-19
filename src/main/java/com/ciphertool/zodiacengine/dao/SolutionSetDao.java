@@ -22,18 +22,18 @@ package com.ciphertool.zodiacengine.dao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.zodiacengine.entities.SolutionSet;
 
-public class SolutionSetDao implements Dao {
+public class SolutionSetDao {
 	private SessionFactory sessionFactory;
 
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(SolutionSet solutionSet) {
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
+		Session session = sessionFactory.getCurrentSession();
 		session.save(solutionSet);
-		session.getTransaction().commit();
-		session.close();
 		return true;
 	}
 

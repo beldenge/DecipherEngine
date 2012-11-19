@@ -26,14 +26,15 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
 public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
 	private Logger log = Logger.getLogger(getClass());
 
-	public RandomCharacterSolutionGenerator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
+	/**
+	 * Default no-args constructor
+	 */
+	public RandomCharacterSolutionGenerator() {
 	}
 
 	/**
@@ -70,5 +71,17 @@ public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 
 			solution.addPlaintext(nextPlaintext);
 		} while (id < cipher.length());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
 	}
 }

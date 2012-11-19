@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.dao.SolutionSetDao;
@@ -80,10 +81,8 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		persistPopulation();
 	}
 
-	protected void setUp(int populationSize, int numGenerations, double survivalRate,
-			double mutationRate, double crossoverRate) {
-		geneticAlgorithm.setParameters(populationSize, numGenerations, survivalRate, mutationRate,
-				crossoverRate);
+	protected void setUp(GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
+		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
 		/*
 		 * currentCommand is really just used for exception logging.

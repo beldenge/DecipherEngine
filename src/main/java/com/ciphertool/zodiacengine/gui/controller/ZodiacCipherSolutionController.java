@@ -22,22 +22,30 @@ package com.ciphertool.zodiacengine.gui.controller;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.gui.service.CipherSolutionService;
 
 public class ZodiacCipherSolutionController implements CipherSolutionController {
 	private Logger log = Logger.getLogger(getClass());
 	private CipherSolutionService cipherSolutionService;
+	private CipherDao cipherDao;
 
 	@Override
-	public void startServiceThread(final int populationSize, final int numGenerations,
-			final double survivalRate, final double mutationRate, final double crossoverRate) {
+	public void startServiceThread(final String cipherName, final int populationSize,
+			final int numGenerations, final double survivalRate, final double mutationRate,
+			final double crossoverRate) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
-					cipherSolutionService.begin(populationSize, numGenerations, survivalRate,
-							mutationRate, crossoverRate);
+					Cipher cipher = cipherDao.findByCipherName(cipherName);
+					GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(
+							cipher, populationSize, numGenerations, survivalRate, mutationRate,
+							crossoverRate);
+					cipherSolutionService.begin(geneticAlgorithmStrategy);
 				}
 			});
 
@@ -67,5 +75,14 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 	@Required
 	public void setCipherSolutionService(CipherSolutionService cipherSolutionService) {
 		this.cipherSolutionService = cipherSolutionService;
+	}
+
+	/**
+	 * @param cipherDao
+	 *            the cipherDao to set
+	 */
+	@Required
+	public void setCipherDao(CipherDao cipherDao) {
+		this.cipherDao = cipherDao;
 	}
 }

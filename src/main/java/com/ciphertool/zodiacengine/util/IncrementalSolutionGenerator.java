@@ -28,26 +28,23 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.singleton.CipherSingleton;
 
-public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase implements
-		SolutionGenerator {
+public class IncrementalSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
 	private Logger log = Logger.getLogger(getClass());
+	private Cipher cipher;
 	private int cipherLength;
 	private long improvementAttempts;
 	private SolutionEvaluator solutionEvaluator;
 
 	/**
-	 * @param cipherName
-	 * @param cipherDao
+	 * Default no-args constructor
 	 */
-	public IncrementalSolutionGenerator(CipherSingleton cipherSingleton) {
-		cipher = cipherSingleton.getInstance();
-		cipherLength = cipher.length();
+	public IncrementalSolutionGenerator() {
 	}
 
 	/**
@@ -154,6 +151,19 @@ public class IncrementalSolutionGenerator extends AbstractSolutionEvaluatorBase 
 
 		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(solution,
 				candidatePlaintextList);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
+	 * .zodiacengine.entities.Cipher)
+	 */
+	@Override
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+		this.cipherLength = cipher.length();
 	}
 
 	/**

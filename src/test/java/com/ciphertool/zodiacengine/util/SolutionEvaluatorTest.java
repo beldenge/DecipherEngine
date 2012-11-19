@@ -26,28 +26,40 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.dao.CipherDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class SolutionEvaluatorTest {
 
 	private static Logger log = Logger.getLogger(SolutionEvaluatorTest.class);
 	private static ApplicationContext context;
+	private static ZodiacSolutionGenerator solutionGenerator;
+	private static SolutionEvaluator solutionEvaluator;
 
 	@BeforeClass
 	public static void setUp() {
 		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
 		log.info("Spring context created successfully!");
+
+		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+
+		Cipher cipher = cipherDao.findByCipherName("zodiac340");
+
+		solutionGenerator = (ZodiacSolutionGenerator) context.getBean("solutionGenerator");
+		solutionEvaluator = (SolutionEvaluator) context.getBean("solutionEvaluator");
+
+		solutionGenerator.setCipher(cipher);
+		solutionEvaluator.setCipher(cipher);
 	}
 
 	@Test
 	public void testValidateSolution() {
-		ZodiacSolutionGenerator solutionGenerator = (ZodiacSolutionGenerator) context
-				.getBean("solutionGenerator");
+
 		long start = System.currentTimeMillis();
 		Solution solution = solutionGenerator.generateSolution();
 		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate solution.");
-		SolutionEvaluator solutionEvaluator = (SolutionEvaluator) context
-				.getBean("solutionEvaluator");
+
 		start = System.currentTimeMillis();
 		solutionEvaluator.determineConfidenceLevel(solution);
 		log.info("Took " + (System.currentTimeMillis() - start)
