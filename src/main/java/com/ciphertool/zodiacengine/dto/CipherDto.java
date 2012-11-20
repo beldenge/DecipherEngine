@@ -19,6 +19,7 @@
 
 package com.ciphertool.zodiacengine.dto;
 
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
 public class CipherDto {
@@ -34,7 +35,7 @@ public class CipherDto {
 	/**
 	 * No-args constructor
 	 */
-	public CipherDto(String threadName, int cipherId) {
+	public CipherDto(String threadName, Cipher cipher) {
 		this.threadName = threadName;
 
 		this.totalMatchSum = 0;
@@ -45,9 +46,9 @@ public class CipherDto {
 		/*
 		 * We set "dummy" Solutions with the lowest possible confidence values
 		 */
-		this.solutionMostMatches = new Solution(cipherId, 0, 0, 0);
-		this.solutionMostUnique = new Solution(cipherId, 0, 0, 0);
-		this.solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
+		this.solutionMostMatches = new Solution(cipher, 0, 0, 0);
+		this.solutionMostUnique = new Solution(cipher, 0, 0, 0);
+		this.solutionMostAdjacent = new Solution(cipher, 0, 0, 0);
 	}
 
 	/**

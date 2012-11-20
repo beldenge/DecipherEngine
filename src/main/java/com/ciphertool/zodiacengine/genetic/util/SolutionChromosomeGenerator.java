@@ -49,7 +49,7 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 	@Override
 	public Chromosome generateChromosome() {
 		// Set confidence levels to lowest possible
-		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0);
+		SolutionChromosome solution = new SolutionChromosome(cipher, 0, 0, 0);
 
 		solution.setCipher(cipher);
 

@@ -32,6 +32,7 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.dao.SolutionSetDao;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.entities.SolutionId;
 import com.ciphertool.zodiacengine.entities.SolutionSet;
@@ -131,6 +132,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 
 		SolutionSet solutionSet = new SolutionSet();
 		solutionSet.setName(cipherName + "_" + formattedDate);
+		solutionSet.setCipher((Cipher) geneticAlgorithm.getStrategy().getGeneticStructure());
 		solutionSet.setSolutions(new HashSet<Solution>());
 
 		int nextId = 0;

@@ -43,7 +43,6 @@ public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
 
 	protected SolutionId id;
-	protected int cipherId;
 	protected int totalMatches;
 	protected int uniqueMatches;
 	protected int adjacentMatchCount;
@@ -60,13 +59,18 @@ public class Solution implements Serializable {
 		this.id = new SolutionId(solutionSet, solutionId);
 	}
 
+	public Solution(SolutionSet solutionSet, int solutionId, Cipher cipher) {
+		this.id = new SolutionId(solutionSet, solutionId);
+		this.cipher = cipher;
+	}
+
 	/*
 	 * TODO: I think it would be better to use the Cipher rather than the
 	 * cipherId in this constructor.
 	 */
-	public Solution(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
+	public Solution(Cipher cipher, int totalMatches, int uniqueMatches, int adjacentMatches) {
 		this.id = new SolutionId();
-		this.cipherId = cipherId;
+		this.cipher = cipher;
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
 		this.adjacentMatchCount = adjacentMatches;
@@ -87,15 +91,6 @@ public class Solution implements Serializable {
 	 */
 	public void setId(SolutionId id) {
 		this.id = id;
-	}
-
-	@Column(name = "cipher_id")
-	public int getCipherId() {
-		return cipherId;
-	}
-
-	public void setCipherId(int cipherId) {
-		this.cipherId = cipherId;
 	}
 
 	/**
@@ -159,7 +154,7 @@ public class Solution implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cipher_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cipher_id")
 	public Cipher getCipher() {
 		return cipher;
 	}
@@ -230,7 +225,7 @@ public class Solution implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + adjacentMatchCount;
-		result = prime * result + cipherId;
+		result = prime * result + ((cipher == null) ? 0 : cipher.getId());
 		result = prime * result + id.hashCode();
 		result = prime * result + totalMatches;
 		result = prime * result + uniqueMatches;
@@ -257,7 +252,11 @@ public class Solution implements Serializable {
 		if (adjacentMatchCount != other.adjacentMatchCount) {
 			return false;
 		}
-		if (cipherId != other.cipherId) {
+		if (cipher == null) {
+			if (other.cipher != null) {
+				return false;
+			}
+		} else if (!cipher.equals(other.cipher)) {
 			return false;
 		}
 
@@ -307,7 +306,7 @@ public class Solution implements Serializable {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", totalMatches="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", totalMatches="
 				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
 				+ adjacentMatchCount + "]\n");
 

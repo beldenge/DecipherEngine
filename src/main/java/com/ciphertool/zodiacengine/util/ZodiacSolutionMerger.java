@@ -123,7 +123,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 			}
 		}
 
-		bestFitSolution = new Solution(cipher.getId(), 0, 0, 0);
+		bestFitSolution = new Solution(cipher, 0, 0, 0);
 		bestFitSolution.setCipher(cipher);
 
 		for (int ciphertextId = 1; ciphertextId <= cipherLength; ciphertextId++) {

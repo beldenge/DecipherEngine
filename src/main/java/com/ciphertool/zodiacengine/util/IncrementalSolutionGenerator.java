@@ -55,7 +55,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	@Override
 	public Solution generateSolution() {
 		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher.getId(), 0, 0, 0);
+		Solution solution = new Solution(cipher, 0, 0, 0);
 
 		/*
 		 * TODO: May want to remove this setCipher since it should be lazy

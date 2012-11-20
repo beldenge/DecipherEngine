@@ -841,7 +841,12 @@ CREATE TABLE solution_set
 (
   id serial NOT NULL,
   name character varying(50),
+  cipher_id integer NOT NULL,
+  created_timestamp timestamp without time zone NOT NULL DEFAULT now(),
   CONSTRAINT pk_solution_set_id PRIMARY KEY (id ),
+  CONSTRAINT fk_cipher_id FOREIGN KEY (cipher_id)
+      REFERENCES cipher (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT unique_solution_set_name UNIQUE (name )
 )
 WITH (

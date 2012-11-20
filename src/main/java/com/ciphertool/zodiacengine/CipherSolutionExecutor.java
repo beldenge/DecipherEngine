@@ -31,6 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.enumerations.ApplicationDurationType;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
@@ -60,13 +61,13 @@ public class CipherSolutionExecutor {
 
 		CipherDto cipherDto = null;
 
-		int cipherId = cipherDao.findByCipherName(cipherName).getId();
+		Cipher cipher = cipherDao.findByCipherName(cipherName);
 
 		long start = System.currentTimeMillis();
 
 		ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
 
-		cipherDto = new CipherDto(String.valueOf(0), cipherId);
+		cipherDto = new CipherDto(String.valueOf(0), cipher);
 
 		/*
 		 * We want to generate and validate a specific number of solutions, no

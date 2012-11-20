@@ -81,7 +81,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testAddGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(new Cipher());
 
@@ -110,8 +110,8 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}
@@ -123,7 +123,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testCloneSolutionChromosome() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setId(new SolutionId());
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(new Cipher());
@@ -199,8 +199,8 @@ public class SolutionChromosomeTest {
 				assertTrue(clonedSolutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
-				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}
@@ -209,7 +209,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testInsertGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
@@ -244,8 +244,8 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}
@@ -257,14 +257,14 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 
 		assertNull(solutionChromosome.removeGene(0));
 	}
 
 	@Test
 	public void testRemoveGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
@@ -301,8 +301,8 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}
@@ -314,7 +314,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testReplaceInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 
 		/*
 		 * We just want to verify the log message and that no exceptions are
@@ -325,7 +325,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testReplaceGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
@@ -361,8 +361,8 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}
@@ -374,7 +374,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testMutateGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -399,7 +399,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testMutateInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -418,7 +418,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testMutateRandomGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -448,7 +448,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveGeneOnClonedSolution() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(1, 0, 0, 0);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(cipher);
 
@@ -476,8 +476,8 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(clonedSolutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
 
 				count++;
 			}

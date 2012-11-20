@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.entities.SolutionId;
@@ -51,8 +52,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @param uniqueMatches
 	 * @param adjacentMatches
 	 */
-	public SolutionChromosome(int cipherId, int totalMatches, int uniqueMatches, int adjacentMatches) {
-		super(cipherId, totalMatches, uniqueMatches, adjacentMatches);
+	public SolutionChromosome(Cipher cipher, int totalMatches, int uniqueMatches,
+			int adjacentMatches) {
+		super(cipher, totalMatches, uniqueMatches, adjacentMatches);
 	}
 
 	/*
@@ -364,7 +366,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
 				+ String.format("%1$,.2f", fitness) + ", totalMatches=" + totalMatches
 				+ ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount
 				+ "]\n");

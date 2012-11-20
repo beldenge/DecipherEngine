@@ -29,6 +29,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
 import com.ciphertool.zodiacengine.util.SolutionGenerator;
@@ -55,7 +56,7 @@ public class CipherSolutionEngine {
 		Runnable cipherTask = null;
 		Thread cipherWorker = null;
 		long threadIterations = 0;
-		int cipherId = cipherDao.findByCipherName(cipherName).getId();
+		Cipher cipher = cipherDao.findByCipherName(cipherName);
 
 		long start = System.currentTimeMillis();
 
@@ -82,7 +83,7 @@ public class CipherSolutionEngine {
 				threadIterations += (numIterations % maxThreads);
 			}
 
-			cipherDto = new CipherDto(String.valueOf(i), cipherId);
+			cipherDto = new CipherDto(String.valueOf(i), cipher);
 			cipherDtos.add(cipherDto);
 
 			cipherTask = new CipherSolutionRunnable(threadIterations, solutionGenerator,
@@ -119,9 +120,9 @@ public class CipherSolutionEngine {
 		long uniqueMatchSum = 0;
 		long adjacentMatchSum = 0;
 
-		Solution solutionMostMatches = new Solution(cipherId, 0, 0, 0);
-		Solution solutionMostUnique = new Solution(cipherId, 0, 0, 0);
-		Solution solutionMostAdjacent = new Solution(cipherId, 0, 0, 0);
+		Solution solutionMostMatches = new Solution(cipher, 0, 0, 0);
+		Solution solutionMostUnique = new Solution(cipher, 0, 0, 0);
+		Solution solutionMostAdjacent = new Solution(cipher, 0, 0, 0);
 
 		/*
 		 * Sum up all data from all CipherDtos passed to the threads

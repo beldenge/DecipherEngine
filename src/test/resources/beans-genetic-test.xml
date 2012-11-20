@@ -62,8 +62,7 @@
 		is here for backward compatibility -->
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
-		id="oldFitnessEvaluator">
-	</bean>
+		id="oldFitnessEvaluator" />
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"

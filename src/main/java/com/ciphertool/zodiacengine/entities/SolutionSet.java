@@ -30,6 +30,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -41,6 +43,7 @@ public class SolutionSet implements Serializable {
 
 	private Integer id;
 	private String name;
+	private Cipher cipher;
 	private transient Set<Solution> solutions;
 
 	public SolutionSet() {
@@ -81,6 +84,16 @@ public class SolutionSet implements Serializable {
 		this.name = name;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cipher_id")
+	public Cipher getCipher() {
+		return cipher;
+	}
+
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.solutionSet", cascade = CascadeType.ALL)
 	public Set<Solution> getSolutions() {
 		if (this.solutions == null) {
@@ -103,6 +116,7 @@ public class SolutionSet implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((cipher == null) ? 0 : cipher.getId());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -139,6 +153,13 @@ public class SolutionSet implements Serializable {
 		} else if (!name.equals(other.name)) {
 			return false;
 		}
+		if (cipher == null) {
+			if (other.cipher != null) {
+				return false;
+			}
+		} else if (!cipher.equals(other.cipher)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -149,6 +170,6 @@ public class SolutionSet implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "SolutionSet [id=" + id + ", name=" + name + "]";
+		return "SolutionSet [id=" + id + ", name=" + name + ", cipher=" + cipher.getName() + "]";
 	}
 }

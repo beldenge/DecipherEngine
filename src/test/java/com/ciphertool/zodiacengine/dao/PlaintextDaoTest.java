@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
@@ -46,7 +47,7 @@ public class PlaintextDaoTest {
 	@Test
 	public void testFindByPlaintextId() {
 		PlaintextDao plaintextDao = (PlaintextDao) context.getBean("plaintextDao");
-		Solution solution = new Solution(1, 0, 0, 0);
+		Solution solution = new Solution(new Cipher(), 0, 0, 0);
 		// provided a solution with this id exists
 		solution.setId(new SolutionId(new SolutionSet(1), 26));
 		PlaintextId plaintextId = new PlaintextId(solution, 5);
