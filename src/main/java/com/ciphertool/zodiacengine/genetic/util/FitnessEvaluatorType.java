@@ -43,4 +43,11 @@ public enum FitnessEvaluatorType {
 	public String getDescription() {
 		return description;
 	}
+
+	/**
+	 * @return the value returned by name()
+	 */
+	public String getName() {
+		return name();
+	}
 }
