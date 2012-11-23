@@ -20,31 +20,51 @@
 package com.ciphertool.zodiacengine.gui.controller;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.CrossoverAlgorithmType;
+import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;
 import com.ciphertool.zodiacengine.gui.service.CipherSolutionService;
 
-public class ZodiacCipherSolutionController implements CipherSolutionController {
+public class ZodiacCipherSolutionController implements CipherSolutionController,
+		ApplicationContextAware {
 	private Logger log = Logger.getLogger(getClass());
+	private ApplicationContext context;
 	private CipherSolutionService cipherSolutionService;
 	private CipherDao cipherDao;
+	private FitnessEvaluator fitnessEvaluatorDefault;
+	private CrossoverAlgorithm crossoverAlgorithmDefault;
 
 	@Override
 	public void startServiceThread(final String cipherName, final int populationSize,
 			final int numGenerations, final double survivalRate, final double mutationRate,
-			final double crossoverRate) {
+			final double crossoverRate, final String fitnessEvaluatorName,
+			final String crossoverAlgorithmName) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
 					Cipher cipher = cipherDao.findByCipherName(cipherName);
+
+					FitnessEvaluator fitnessEvaluator = getFitnessEvaluator(fitnessEvaluatorName);
+					log.info("FitnessEvaluator implementation: " + fitnessEvaluator.getClass());
+
+					CrossoverAlgorithm crossoverAlgorithm = getCrossoverAlgorithm(crossoverAlgorithmName);
+					log.info("CrossoverAlgorithm implementation: " + crossoverAlgorithm.getClass());
+
 					GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(
 							cipher, populationSize, numGenerations, survivalRate, mutationRate,
-							crossoverRate);
+							crossoverRate, fitnessEvaluator, crossoverAlgorithm);
+
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
 				}
 			});
@@ -68,6 +88,32 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 		}
 	}
 
+	private FitnessEvaluator getFitnessEvaluator(String fitnessEvaluatorName) {
+		FitnessEvaluator fitnessEvaluator = null;
+
+		try {
+			fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType.valueOf(
+					fitnessEvaluatorName).getType());
+		} catch (IllegalArgumentException iae) {
+			fitnessEvaluator = fitnessEvaluatorDefault;
+		}
+
+		return fitnessEvaluator;
+	}
+
+	private CrossoverAlgorithm getCrossoverAlgorithm(String crossoverAlgorithmName) {
+		CrossoverAlgorithm crossoverAlgorithm = null;
+
+		try {
+			crossoverAlgorithm = (CrossoverAlgorithm) context.getBean(CrossoverAlgorithmType
+					.valueOf(crossoverAlgorithmName).getType());
+		} catch (IllegalArgumentException iae) {
+			crossoverAlgorithm = crossoverAlgorithmDefault;
+		}
+
+		return crossoverAlgorithm;
+	}
+
 	/**
 	 * @param cipherSolutionService
 	 *            the cipherSolutionService to set
@@ -84,5 +130,28 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 	@Required
 	public void setCipherDao(CipherDao cipherDao) {
 		this.cipherDao = cipherDao;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext context) throws BeansException {
+		this.context = context;
+	}
+
+	/**
+	 * @param fitnessEvaluatorDefault
+	 *            the fitnessEvaluatorDefault to set
+	 */
+	 @Required
+	public void setFitnessEvaluatorDefault(FitnessEvaluator fitnessEvaluatorDefault) {
+		this.fitnessEvaluatorDefault = fitnessEvaluatorDefault;
+	}
+
+	/**
+	 * @param crossoverAlgorithmDefault
+	 *            the crossoverAlgorithmDefault to set
+	 */
+	 @Required
+	public void setCrossoverAlgorithmDefault(CrossoverAlgorithm crossoverAlgorithmDefault) {
+		this.crossoverAlgorithmDefault = crossoverAlgorithmDefault;
 	}
 }

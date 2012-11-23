@@ -51,8 +51,6 @@ public class CrossoverAlgorithmTest {
 	private static ApplicationContext context;
 	private static CrossoverAlgorithm crossoverAlgorithm;
 	private static Population population;
-	@SuppressWarnings("unused")
-	private static FitnessEvaluator fitnessEvaluator;
 
 	@BeforeClass
 	public static void setUp() {
@@ -63,15 +61,16 @@ public class CrossoverAlgorithmTest {
 
 		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
 
+		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context
+				.getBean("defaultFitnessEvaluator");
+
+		crossoverAlgorithm = (CrossoverAlgorithm) context.getBean("defaultCrossoverAlgorithm");
+
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, 50, 0.9, 0.001, 0.05);
+				100, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm);
 
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
-
-		fitnessEvaluator = (FitnessEvaluator) context.getBean("fitnessEvaluator");
-
-		crossoverAlgorithm = (CrossoverAlgorithm) context.getBean("crossoverAlgorithm");
 
 		population = (Population) context.getBean("population");
 
@@ -87,7 +86,6 @@ public class CrossoverAlgorithmTest {
 	@AfterClass
 	public static void cleanUp() {
 		((ClassPathXmlApplicationContext) context).close();
-		fitnessEvaluator = null;
 		crossoverAlgorithm = null;
 		population = null;
 		context = null;

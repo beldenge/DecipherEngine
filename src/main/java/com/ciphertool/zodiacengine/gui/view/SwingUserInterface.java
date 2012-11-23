@@ -39,8 +39,10 @@ import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.algorithms.CrossoverAlgorithmType;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;
 import com.ciphertool.zodiacengine.gui.controller.CipherSolutionController;
 
 public class SwingUserInterface extends JFrame implements UserInterface {
@@ -58,6 +60,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String mutationRateText = "Mutation Rate: ";
 	private String crossoverRateText = "Crossover Rate: ";
 	private String continuousText = "Run until user stops";
+	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
+	private String crossoverAlgorithmNameText = "Crossover Algorithm: ";
 	private String statusRunning = "Running.";
 	private String statusNotRunning = "Not running.";
 	private int generationsInitial;
@@ -85,6 +89,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private CipherDao cipherDao;
 
 	private JComboBox<String> cipherComboBox;
+	private JComboBox<String> fitnessEvaluatorComboBox;
+	private JComboBox<String> crossoverAlgorithmComboBox;
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
 	private JSpinner populationSpinner;
@@ -117,12 +123,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make an 8-row, 2-column grid. This is for the six input boxes
+		 * Next make a 10-row, 2-column grid. This is for the eight input boxes
 		 * with labels on the left and spinners on the right, and then the two
 		 * action buttons.
 		 */
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(8, 2, 5, 5));
+		mainPanel.setLayout(new GridLayout(10, 2, 5, 5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
@@ -187,6 +193,28 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(crossoverRateLabel);
 		mainPanel.add(crossoverRateSpinner);
 
+		fitnessEvaluatorComboBox = new JComboBox<String>();
+		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
+			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
+		}
+		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY
+				.name());
+		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
+
+		mainPanel.add(fitnessEvaluatorNameLabel);
+		mainPanel.add(fitnessEvaluatorComboBox);
+
+		crossoverAlgorithmComboBox = new JComboBox<String>();
+		for (CrossoverAlgorithmType crossoverAlgorithmType : CrossoverAlgorithmType.values()) {
+			crossoverAlgorithmComboBox.addItem(crossoverAlgorithmType.name());
+		}
+		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.LOWEST_COMMON_GROUP
+				.name());
+		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
+
+		mainPanel.add(crossoverAlgorithmNameLabel);
+		mainPanel.add(crossoverAlgorithmComboBox);
+
 		JButton startButton = new JButton(startButtonText);
 		startButton.setSize(80, 30);
 		startButton.addActionListener(getStartButtonActionListener());
@@ -233,7 +261,9 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				cipherSolutionController.startServiceThread((String) cipherComboBox
 						.getSelectedItem(), (Integer) populationSpinner.getValue(), generations,
 						(Double) survivalRateSpinner.getValue(), (Double) mutationRateSpinner
-								.getValue(), (Double) crossoverRateSpinner.getValue());
+								.getValue(), (Double) crossoverRateSpinner.getValue(),
+						(String) fitnessEvaluatorComboBox.getSelectedItem(),
+						(String) crossoverAlgorithmComboBox.getSelectedItem());
 			}
 		};
 	}

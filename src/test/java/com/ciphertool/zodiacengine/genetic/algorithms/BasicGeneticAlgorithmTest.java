@@ -32,7 +32,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
+import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
+import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
@@ -54,9 +56,15 @@ public class BasicGeneticAlgorithmTest {
 
 		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
 
+		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context
+				.getBean("defaultFitnessEvaluator");
+
+		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context
+				.getBean("defaultCrossoverAlgorithm");
+
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, 50, 0.9, 0.001, 0.05);
+				100, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm);
 
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 

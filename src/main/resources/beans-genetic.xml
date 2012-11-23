@@ -42,6 +42,8 @@
 		id="cipherSolutionController">
 		<property name="cipherSolutionService" ref="cipherSolutionService" />
 		<property name="cipherDao" ref="cipherDao" />
+		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
+		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
@@ -78,11 +80,11 @@
 		is here for backward compatibility -->
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
-		id="oldFitnessEvaluator" />
+		id="cipherSolutionFitnessEvaluator" />
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
-		id="fitnessEvaluator">
+		id="defaultFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -120,7 +122,7 @@
 
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
-		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
@@ -130,9 +132,23 @@
 	</bean>
 
 	<bean
+		class="com.ciphertool.genetics.algorithms.LiberalCrossoverAlgorithm"
+		id="liberalCrossoverAlgorithm">
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
+		<property name="geneListDao" ref="geneListDao" />
+	</bean>
+	
+	<bean
+		class="com.ciphertool.genetics.algorithms.ConservativeCrossoverAlgorithm"
+		id="conservativeCrossoverAlgorithm">
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
+		<property name="geneListDao" ref="geneListDao" />
+	</bean>
+
+	<bean
 		class="com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm"
-		id="crossoverAlgorithm">
-		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		id="defaultCrossoverAlgorithm">
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 
@@ -140,8 +156,8 @@
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
 		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
-		<property name="crossoverAlgorithm" ref="crossoverAlgorithm" />
-		<property name="fitnessEvaluator" ref="fitnessEvaluator" />
+		<property name="crossoverAlgorithm" ref="defaultCrossoverAlgorithm" />
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="population" ref="population" />
 		<property name="fitnessComparator" ref="fitnessComparator" />
 		<property name="taskExecutor" ref="taskExecutor" />
