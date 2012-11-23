@@ -29,6 +29,7 @@ import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.IncrementalSolution;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
@@ -55,7 +56,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	@Override
 	public Solution generateSolution() {
 		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher, 0, 0, 0);
+		IncrementalSolution solution = new IncrementalSolution(cipher, 0, 0, 0);
 
 		/*
 		 * TODO: May want to remove this setCipher since it should be lazy
@@ -92,15 +93,15 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	 * Select the best possible sentence starting at the current index, and then
 	 * advance the index.
 	 * 
-	 * @param solution
+	 * @param incrementalSolution
 	 */
-	private void appendNextBestSentence(Solution solution) {
+	private void appendNextBestSentence(IncrementalSolution incrementalSolution) {
 		Sentence nextSentence = null;
 
 		for (long i = 0; i < improvementAttempts; i++) {
 			nextSentence = sentenceHelper.generateRandomSentence();
 
-			compareSentenceToSolution(solution, nextSentence);
+			compareSentenceToSolution(incrementalSolution, nextSentence);
 		}
 	}
 
@@ -109,11 +110,12 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	 * the current solution. Returns the solution with the greater confidence
 	 * level.
 	 * 
-	 * @param solution
+	 * @param incrementalSolution
 	 * @param sentence
 	 * @return
 	 */
-	private void compareSentenceToSolution(Solution solution, Sentence sentence) {
+	private void compareSentenceToSolution(IncrementalSolution incrementalSolution,
+			Sentence sentence) {
 		List<Plaintext> candidatePlaintextList = new ArrayList<Plaintext>();
 
 		StringBuilder rawText = new StringBuilder();
@@ -128,7 +130,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 
 		rawText.getChars(0, sentenceLength, chars, 0);
 
-		int newIndex = solution.getCommittedIndex();
+		int newIndex = incrementalSolution.getCommittedIndex();
 
 		Plaintext pt = null;
 		for (char c : chars) {
@@ -140,8 +142,8 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 			 * lookups within the evaluator are case-sensitive.
 			 */
 			if (newIndex <= cipherLength) {
-				pt = new Plaintext(new PlaintextId(solution, newIndex), String.valueOf(c)
-						.toLowerCase());
+				pt = new Plaintext(new PlaintextId(incrementalSolution, newIndex), String
+						.valueOf(c).toLowerCase());
 
 				candidatePlaintextList.add(pt);
 
@@ -149,8 +151,8 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 			}
 		}
 
-		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(solution,
-				candidatePlaintextList);
+		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(
+				incrementalSolution, candidatePlaintextList);
 	}
 
 	/*

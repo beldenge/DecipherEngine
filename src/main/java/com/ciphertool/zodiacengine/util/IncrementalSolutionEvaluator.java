@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
+import com.ciphertool.zodiacengine.entities.IncrementalSolution;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.Solution;
 
@@ -51,7 +52,9 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 */
 	@Override
 	public int determineConfidenceLevel(Solution solution) {
-		clearHasMatchValues(solution);
+		IncrementalSolution incrementalSolution = (IncrementalSolution) solution;
+
+		clearHasMatchValues(incrementalSolution);
 
 		Plaintext plaintext = null;
 		int total = 0;
@@ -60,7 +63,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = incrementalSolution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*
@@ -90,7 +93,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 				 * and or adding one to the id. It does come with a performance
 				 * hit though.
 				 */
-				if (ciphertextIndice.getId().getCiphertextId() + 1 < solution.getUncommittedIndex()) {
+				if (ciphertextIndice.getId().getCiphertextId() + 1 < incrementalSolution
+						.getUncommittedIndex()) {
 					plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
 
 					currentValue = plaintext.getValue();
@@ -138,8 +142,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			 */
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
-		solution.setTotalMatches(total);
-		solution.setUniqueMatches(totalUnique);
+		incrementalSolution.setTotalMatches(total);
+		incrementalSolution.setUniqueMatches(totalUnique);
 
 		boolean countAdjacent = false;
 		int adjacentMatchCount = 0;
@@ -148,7 +152,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			 * Only check this ciphertext if it is within the uncommitted index
 			 * range.
 			 */
-			if (ct.getId().getCiphertextId() + 1 < solution.getUncommittedIndex()) {
+			if (ct.getId().getCiphertextId() + 1 < incrementalSolution.getUncommittedIndex()) {
 				if (countAdjacent == false
 						&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
 					countAdjacent = true;
@@ -161,9 +165,10 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		incrementalSolution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
+		log.debug("Solution " + incrementalSolution.getId() + " has a confidence level of: "
+				+ total);
 
 		return total;
 	}
@@ -172,19 +177,20 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 * Compares a list of Plaintext characters to a Solution and adds or
 	 * replaces the Plaintext if it results in a better Solution.
 	 * 
-	 * @param solution
+	 * @param incrementalSolution
 	 * @param plaintextList
 	 * @return
 	 */
-	public int comparePlaintextToSolution(Solution solution, List<Plaintext> plaintextList) {
+	public int comparePlaintextToSolution(IncrementalSolution incrementalSolution,
+			List<Plaintext> plaintextList) {
 		Plaintext plaintext = null;
 		int totalMismatches = 0;
 		int ciphertextCharacterCount = 0;
 		int maxMatches = 0;
 		String currentValue = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = incrementalSolution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
-		int uncommittedIndex = (solution.getCommittedIndex() + plaintextList.size());
+		int uncommittedIndex = (incrementalSolution.getCommittedIndex() + plaintextList.size());
 
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -219,7 +225,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 					 * Set the plaintext from the existing solution if the index
 					 * is within the committed range
 					 */
-					if (ciphertextIndice.getId().getCiphertextId() + 1 <= solution
+					if (ciphertextIndice.getId().getCiphertextId() + 1 <= incrementalSolution
 							.getCommittedIndex()) {
 						plaintext = plaintextCharacters.get(ciphertextIndice.getId()
 								.getCiphertextId());
@@ -229,7 +235,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 					 */
 					else {
 						plaintext = plaintextList.get(ciphertextIndice.getId().getCiphertextId()
-								- solution.getCommittedIndex());
+								- incrementalSolution.getCommittedIndex());
 					}
 
 					currentValue = plaintext.getValue();
@@ -253,7 +259,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			totalMismatches += (ciphertextCharacterCount - maxMatches);
 		}
 
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + totalMismatches);
+		log.debug("Solution " + incrementalSolution.getId() + " has a confidence level of: " + totalMismatches);
 
 		/*
 		 * Longer sentences will naturally have more matches, so we need to
@@ -264,34 +270,34 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		 * sentences on each increment. To guard against this a little, we
 		 * select the longer sentence when two have equal mismatches.
 		 */
-		int currentMismatches = solution.getUncommittedIndex()
-				- (solution.getTotalMatches() + solution.getUniqueMatches());
+		int currentMismatches = incrementalSolution.getUncommittedIndex()
+				- (incrementalSolution.getTotalMatches() + incrementalSolution.getUniqueMatches());
 
 		/*
 		 * If this sentence is a better match, set it as the next sentence at
 		 * this index.
 		 */
 		if ((totalMismatches < currentMismatches)
-				|| (totalMismatches == currentMismatches && uncommittedIndex > solution
+				|| (totalMismatches == currentMismatches && uncommittedIndex > incrementalSolution
 						.getUncommittedIndex())) {
 			/*
 			 * First remove all the Plaintext characters from the previous match
 			 */
-			for (int i = solution.getCommittedIndex(); i < solution.getUncommittedIndex(); i++) {
+			for (int i = incrementalSolution.getCommittedIndex(); i < incrementalSolution.getUncommittedIndex(); i++) {
 				// we always have to remove the last element in the list since
 				// the index decrements each time
-				solution.getPlaintextCharacters().remove(
-						solution.getPlaintextCharacters().size() - 1);
+				incrementalSolution.getPlaintextCharacters().remove(
+						incrementalSolution.getPlaintextCharacters().size() - 1);
 			}
 			/*
 			 * Then add all the Plaintext characters from the new, better match
 			 */
-			for (int j = solution.getCommittedIndex(); j < uncommittedIndex; j++) {
-				solution.getPlaintextCharacters().add(
-						plaintextList.get(j - solution.getCommittedIndex()));
+			for (int j = incrementalSolution.getCommittedIndex(); j < uncommittedIndex; j++) {
+				incrementalSolution.getPlaintextCharacters().add(
+						plaintextList.get(j - incrementalSolution.getCommittedIndex()));
 			}
 
-			solution.setUncommittedIndex(uncommittedIndex);
+			incrementalSolution.setUncommittedIndex(uncommittedIndex);
 		}
 
 		return totalMismatches;

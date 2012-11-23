@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.AssociationOverride;
@@ -34,7 +35,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "solution")
@@ -48,8 +50,7 @@ public class Solution implements Serializable {
 	protected int adjacentMatchCount;
 	protected transient List<Plaintext> plaintextCharacters;
 	protected Cipher cipher;
-	private transient int committedIndex;
-	private transient int uncommittedIndex;
+	private Date createdDate;
 
 	public Solution() {
 		this.id = new SolutionId();
@@ -64,10 +65,6 @@ public class Solution implements Serializable {
 		this.cipher = cipher;
 	}
 
-	/*
-	 * TODO: I think it would be better to use the Cipher rather than the
-	 * cipherId in this constructor.
-	 */
 	public Solution(Cipher cipher, int totalMatches, int uniqueMatches, int adjacentMatches) {
 		this.id = new SolutionId();
 		this.cipher = cipher;
@@ -163,44 +160,6 @@ public class Solution implements Serializable {
 		this.cipher = cipher;
 	}
 
-	/**
-	 * This is the permanent index used to keep track of how far an incremental
-	 * solution has progressed
-	 * 
-	 * @return the committedIndex
-	 */
-	@Transient
-	public int getCommittedIndex() {
-		return committedIndex;
-	}
-
-	/**
-	 * @param committedIndex
-	 *            the committedIndex to set
-	 */
-	public void setCommittedIndex(int committedIndex) {
-		this.committedIndex = committedIndex;
-	}
-
-	/**
-	 * This is the temporary index used to keep track of how far an incremental
-	 * solution has progressed
-	 * 
-	 * @return the uncommittedIndex
-	 */
-	@Transient
-	public int getUncommittedIndex() {
-		return uncommittedIndex;
-	}
-
-	/**
-	 * @param uncommittedIndex
-	 *            the uncommittedIndex to set
-	 */
-	public void setUncommittedIndex(int uncommittedIndex) {
-		this.uncommittedIndex = uncommittedIndex;
-	}
-
 	public void addPlaintext(Plaintext plaintext) {
 		if (this.plaintextCharacters == null) {
 			this.plaintextCharacters = new ArrayList<Plaintext>();
@@ -209,6 +168,27 @@ public class Solution implements Serializable {
 		plaintext.getId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	@Column(name = "created_timestamp", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * This should only be called for purposes of hydrating the entity. The
+	 * createdDate should never be modified.
+	 * 
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	@SuppressWarnings("unused")
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	/*

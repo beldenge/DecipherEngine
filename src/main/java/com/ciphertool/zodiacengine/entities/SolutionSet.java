@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,6 +35,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "solution_set")
@@ -45,6 +48,7 @@ public class SolutionSet implements Serializable {
 	private String name;
 	private Cipher cipher;
 	private transient Set<Solution> solutions;
+	private Date createdDate;
 
 	public SolutionSet() {
 	}
@@ -105,6 +109,27 @@ public class SolutionSet implements Serializable {
 
 	public void setSolutions(Set<Solution> solutions) {
 		this.solutions = solutions;
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	@Column(name = "created_timestamp", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * This should only be called for purposes of hydrating the entity. The
+	 * createdDate should never be modified.
+	 * 
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	@SuppressWarnings("unused")
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 	/*
