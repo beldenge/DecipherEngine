@@ -44,6 +44,7 @@
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
 		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
+		<property name="mutationAlgorithmDefault" ref="defaultMutationAlgorithm" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"

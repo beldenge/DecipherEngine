@@ -40,6 +40,7 @@ import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.algorithms.CrossoverAlgorithmType;
+import com.ciphertool.genetics.algorithms.MutationAlgorithmType;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;
@@ -62,6 +63,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String continuousText = "Run until user stops";
 	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
 	private String crossoverAlgorithmNameText = "Crossover Algorithm: ";
+	private String mutationAlgorithmNameText = "Mutation Algorithm: ";
 	private String statusRunning = "Running.";
 	private String statusNotRunning = "Not running.";
 	private int generationsInitial;
@@ -91,6 +93,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JComboBox<String> cipherComboBox;
 	private JComboBox<String> fitnessEvaluatorComboBox;
 	private JComboBox<String> crossoverAlgorithmComboBox;
+	private JComboBox<String> mutationAlgorithmComboBox;
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
 	private JSpinner populationSpinner;
@@ -123,12 +126,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make a 10-row, 2-column grid. This is for the eight input boxes
+		 * Next make a 11-row, 2-column grid. This is for the nine input boxes
 		 * with labels on the left and spinners on the right, and then the two
 		 * action buttons.
 		 */
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(10, 2, 5, 5));
+		mainPanel.setLayout(new GridLayout(11, 2, 5, 5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
@@ -215,6 +218,16 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(crossoverAlgorithmNameLabel);
 		mainPanel.add(crossoverAlgorithmComboBox);
 
+		mutationAlgorithmComboBox = new JComboBox<String>();
+		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
+			mutationAlgorithmComboBox.addItem(mutationAlgorithmType.name());
+		}
+		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.SINGLE_SEQUENCE.name());
+		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
+
+		mainPanel.add(mutationAlgorithmNameLabel);
+		mainPanel.add(mutationAlgorithmComboBox);
+
 		JButton startButton = new JButton(startButtonText);
 		startButton.setSize(80, 30);
 		startButton.addActionListener(getStartButtonActionListener());
@@ -263,7 +276,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 						(Double) survivalRateSpinner.getValue(), (Double) mutationRateSpinner
 								.getValue(), (Double) crossoverRateSpinner.getValue(),
 						(String) fitnessEvaluatorComboBox.getSelectedItem(),
-						(String) crossoverAlgorithmComboBox.getSelectedItem());
+						(String) crossoverAlgorithmComboBox.getSelectedItem(),
+						(String) mutationAlgorithmComboBox.getSelectedItem());
 			}
 		};
 	}

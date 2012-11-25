@@ -34,6 +34,7 @@ import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
+import com.ciphertool.genetics.algorithms.MutationAlgorithm;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -62,9 +63,12 @@ public class BasicGeneticAlgorithmTest {
 		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context
 				.getBean("defaultCrossoverAlgorithm");
 
+		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
+				.getBean("defaultMutationAlgorithm");
+
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm);
+				100, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm);
 
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
