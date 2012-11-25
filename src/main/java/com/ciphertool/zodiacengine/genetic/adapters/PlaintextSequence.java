@@ -102,4 +102,26 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	public Integer getSequenceId() {
 		return this.id.getCiphertextId();
 	}
+
+	/*
+	 * This method actually overrides both the interface and the superclass.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.entities.Plaintext#getValue()
+	 */
+	@Override
+	public String getValue() {
+		return this.value;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Sequence#setValue(java.lang.Object)
+	 */
+	@Override
+	public void setValue(Object obj) {
+		this.value = (String) obj;
+	}
 }

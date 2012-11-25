@@ -152,11 +152,24 @@
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 
+	<bean class="com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao" id="sequenceDao" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
+		<property name="sequenceDao" ref="sequenceDao"/>
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.algorithms.LiberalMutationAlgorithm" id="liberalMutationAlgorithm" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.LowestCommonGroupMutationAlgorithm" id="lowestCommonGroupMutationAlgorithm" />
+
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
 		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
 		<property name="crossoverAlgorithm" ref="defaultCrossoverAlgorithm" />
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="population" ref="population" />
 		<property name="fitnessComparator" ref="fitnessComparator" />

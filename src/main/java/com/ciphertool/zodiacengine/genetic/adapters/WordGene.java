@@ -28,7 +28,6 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.util.LetterUtils;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class WordGene implements Gene {
@@ -104,46 +103,6 @@ public class WordGene implements Gene {
 	@Override
 	public int size() {
 		return this.sequences.size();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateRandomSequence()
-	 */
-	@Override
-	public void mutateRandomSequence() {
-		int randomIndex = (int) (Math.random() * this.size());
-
-		mutateSequence(randomIndex);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#mutateSequence(int)
-	 */
-	@Override
-	public void mutateSequence(int index) {
-		if (index > this.size() - 1) {
-			log.info("Attempted to mutate a sequence in WordGene with index of " + index
-					+ " (zero-indexed), but the size is only " + this.size()
-					+ ".  Cannot continue.");
-
-			return;
-		}
-
-		String newLetter;
-
-		/*
-		 * Loop just in case the random letter is the same as the existing
-		 * letter, since that would defeat the purpose of the mutation.
-		 */
-		do {
-			newLetter = String.valueOf(LetterUtils.getRandomLetter());
-		} while (((PlaintextSequence) this.sequences.get(index)).getValue().equals(newLetter));
-
-		((PlaintextSequence) this.sequences.get(index)).setValue(newLetter);
 	}
 
 	@Override

@@ -326,36 +326,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#mutateGene(int)
-	 */
-	@Override
-	public void mutateGene(int index) {
-		if (index > this.genes.size() - 1) {
-			log.info("Attempted to mutate a Gene in SolutionChromosome with index of " + index
-					+ " (zero-indexed), but the size is only " + this.genes.size()
-					+ ".  Cannot continue.");
-
-			return;
-		}
-
-		this.genes.get(index).mutateRandomSequence();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#mutateRandomGene()
-	 */
-	@Override
-	public void mutateRandomGene() {
-		int randomIndex = (int) (Math.random() * this.genes.size());
-
-		this.mutateGene(randomIndex);
-	}
-
-	/*
 	 * Prints the properties of the solution and then outputs the entire
 	 * plaintext list in block format.
 	 * 
