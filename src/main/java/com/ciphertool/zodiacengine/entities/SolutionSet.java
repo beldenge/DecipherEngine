@@ -57,8 +57,9 @@ public class SolutionSet implements Serializable {
 		this.id = id;
 	}
 
-	public SolutionSet(String name) {
+	public SolutionSet(String name, Cipher cipher) {
 		this.name = name;
+		this.cipher = cipher;
 	}
 
 	@Id
