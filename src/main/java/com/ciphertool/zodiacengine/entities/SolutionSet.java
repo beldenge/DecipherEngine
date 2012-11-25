@@ -128,7 +128,6 @@ public class SolutionSet implements Serializable {
 	 * @param createdDate
 	 *            the createdDate to set
 	 */
-	@SuppressWarnings("unused")
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
