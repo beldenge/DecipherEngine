@@ -101,10 +101,6 @@ public class Plaintext {
 			return false;
 		}
 
-		if (hasMatch != other.hasMatch) {
-			return false;
-		}
-
 		/*
 		 * We are not checking for null value because it should never happen and
 		 * we want an exception to be thrown if so.

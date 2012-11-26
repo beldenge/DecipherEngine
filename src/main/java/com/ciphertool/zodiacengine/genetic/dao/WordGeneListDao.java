@@ -41,6 +41,24 @@ public class WordGeneListDao implements GeneListDao {
 		return gene;
 	}
 
+	@Override
+	public Gene findRandomGeneOfLength(Chromosome chromosome, int beginIndex, int length) {
+		Word word = null;
+
+		/*
+		 * Keep trying until we find a word with the right length. Not the most
+		 * efficient way to do this, but there isn't a better way without a lot
+		 * of redesign.
+		 */
+		do {
+			word = wordListDao.findRandomWord();
+		} while (word.getId().getWord().length() != length);
+
+		Gene gene = new WordGene(word, (SolutionChromosome) chromosome, beginIndex);
+
+		return gene;
+	}
+
 	/**
 	 * @param wordListDao
 	 *            the wordListDao to set

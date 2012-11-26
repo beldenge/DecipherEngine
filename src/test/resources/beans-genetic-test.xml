@@ -116,11 +116,16 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
+	<bean class="com.ciphertool.genetics.util.ChromosomeHelper" id="chromosomeHelper">
+		<property name="geneListDao" ref="geneListDao" />
+	</bean>
+
 	<bean
 		class="com.ciphertool.genetics.algorithms.LiberalCrossoverAlgorithm"
 		id="liberalCrossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
+		<property name="chromosomeHelper" ref="chromosomeHelper" />
 	</bean>
 	
 	<bean
@@ -143,11 +148,14 @@
 		<property name="sequenceDao" ref="sequenceDao"/>
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.LiberalMutationAlgorithm" id="liberalMutationAlgorithm" />
+	<bean class="com.ciphertool.genetics.algorithms.LiberalMutationAlgorithm" id="liberalMutationAlgorithm">
+		<property name="geneListDao" ref="geneListDao" />
+		<property name="chromosomeHelper" ref="chromosomeHelper" />
+	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm" />
-	
-	<bean class="com.ciphertool.genetics.algorithms.LowestCommonGroupMutationAlgorithm" id="lowestCommonGroupMutationAlgorithm" />
+	<bean class="com.ciphertool.genetics.algorithms.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm">
+		<property name="geneListDao" ref="geneListDao" />
+	</bean>
 	
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
