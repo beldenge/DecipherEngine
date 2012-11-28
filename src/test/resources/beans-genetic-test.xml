@@ -109,6 +109,7 @@
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"

@@ -57,6 +57,7 @@
 		<property name="cipherSolutionController" ref="cipherSolutionController" />
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="populationInitial" value="${genetic.population.size}" />
+		<property name="lifespanInitial" value="${genetic.algorithm.lifespan}" />
 		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
 		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />
@@ -125,6 +126,7 @@
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"

@@ -66,7 +66,8 @@ public class PopulationTest {
 
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm);
+				100, -1, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm,
+				mutationAlgorithm);
 
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 		population = (Population) context.getBean("population");

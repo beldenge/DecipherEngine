@@ -41,6 +41,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 	private List<Gene> genes;
 	private Double fitness;
+	private int age = 0;
 
 	public SolutionChromosome() {
 		super();
@@ -78,6 +79,37 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public void setFitness(Double fitness) {
 		this.fitness = fitness;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#getAge()
+	 */
+	@Override
+	@Transient
+	public int getAge() {
+		return age;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#setAge(int)
+	 */
+	@Override
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#increaseAge(int)
+	 */
+	@Override
+	public void increaseAge() {
+		this.age++;
 	}
 
 	/*
@@ -190,6 +222,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		copyChromosome.setId(new SolutionId());
 		copyChromosome.setGenes(new ArrayList<Gene>());
 		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
+		copyChromosome.setAge(0);
 
 		Gene nextGene = null;
 		for (Gene wordGene : this.genes) {
@@ -337,9 +370,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
-				+ String.format("%1$,.2f", fitness) + ", totalMatches=" + totalMatches
-				+ ", unique matches=" + uniqueMatches + ", adjacent matches=" + adjacentMatchCount
-				+ "]\n");
+				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", totalMatches="
+				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
+				+ adjacentMatchCount + "]\n");
 
 		if (this.cipher != null) {
 			Plaintext nextPlaintext = null;

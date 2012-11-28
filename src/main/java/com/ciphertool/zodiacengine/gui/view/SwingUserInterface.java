@@ -57,6 +57,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String stopButtonText = "Stop";
 	private String generationsText = "Generations: ";
 	private String populationText = "Population Size: ";
+	private String lifespanText = "Individual Lifespan: ";
 	private String survivalRateText = "Survival Rate: ";
 	private String mutationRateText = "Mutation Rate: ";
 	private String crossoverRateText = "Crossover Rate: ";
@@ -66,6 +67,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String mutationAlgorithmNameText = "Mutation Algorithm: ";
 	private String statusRunning = "Running.";
 	private String statusNotRunning = "Not running.";
+	private int lifespanInitial;
+	private static final int LIFESPAN_MIN = -1;
+	private static final int LIFESPAN_MAX = 1000;
+	private static final int LIFESPAN_STEP = 1;
 	private int generationsInitial;
 	private static final int GENERATIONS_MIN = 1;
 	private static final int GENERATIONS_MAX = 100000;
@@ -97,6 +102,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
 	private JSpinner populationSpinner;
+	private JSpinner lifespanSpinner;
 	private JSpinner survivalRateSpinner;
 	private JSpinner mutationRateSpinner;
 	private JSpinner crossoverRateSpinner;
@@ -126,12 +132,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make a 11-row, 2-column grid. This is for the nine input boxes
+		 * Next make a 12-row, 2-column grid. This is for the ten input boxes
 		 * with labels on the left and spinners on the right, and then the two
 		 * action buttons.
 		 */
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(11, 2, 5, 5));
+		mainPanel.setLayout(new GridLayout(12, 2, 5, 5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
@@ -168,6 +174,15 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 		mainPanel.add(populationLabel);
 		mainPanel.add(populationSpinner);
+
+		SpinnerModel lifespanModel = new SpinnerNumberModel(lifespanInitial, LIFESPAN_MIN,
+				LIFESPAN_MAX, LIFESPAN_STEP);
+		lifespanSpinner = new JSpinner(lifespanModel);
+		JLabel lifespanLabel = new JLabel(lifespanText);
+		lifespanLabel.setLabelFor(lifespanSpinner);
+
+		mainPanel.add(lifespanLabel);
+		mainPanel.add(lifespanSpinner);
 
 		SpinnerModel survivalRateModel = new SpinnerNumberModel(survivalInitial, SURVIVAL_MIN,
 				SURVIVAL_MAX, SURVIVAL_STEP);
@@ -272,7 +287,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				}
 
 				cipherSolutionController.startServiceThread((String) cipherComboBox
-						.getSelectedItem(), (Integer) populationSpinner.getValue(), generations,
+						.getSelectedItem(), (Integer) populationSpinner.getValue(),
+						(Integer) lifespanSpinner.getValue(), generations,
 						(Double) survivalRateSpinner.getValue(), (Double) mutationRateSpinner
 								.getValue(), (Double) crossoverRateSpinner.getValue(),
 						(String) fitnessEvaluatorComboBox.getSelectedItem(),
@@ -366,6 +382,15 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	@Required
 	public void setPopulationInitial(int populationInitial) {
 		this.populationInitial = populationInitial;
+	}
+
+	/**
+	 * @param lifespanInitial
+	 *            the lifespanInitial to set
+	 */
+	@Required
+	public void setLifespanInitial(int lifespanInitial) {
+		this.lifespanInitial = lifespanInitial;
 	}
 
 	/**

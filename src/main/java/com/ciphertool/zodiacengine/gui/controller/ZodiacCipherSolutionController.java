@@ -48,9 +48,10 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 
 	@Override
 	public void startServiceThread(final String cipherName, final int populationSize,
-			final int numGenerations, final double survivalRate, final double mutationRate,
-			final double crossoverRate, final String fitnessEvaluatorName,
-			final String crossoverAlgorithmName, final String mutationAlgorithmName) {
+			final int lifespan, final int numGenerations, final double survivalRate,
+			final double mutationRate, final double crossoverRate,
+			final String fitnessEvaluatorName, final String crossoverAlgorithmName,
+			final String mutationAlgorithmName) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
@@ -68,8 +69,9 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 					log.info("MutationAlgorithm implementation: " + mutationAlgorithm.getClass());
 
 					GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(
-							cipher, populationSize, numGenerations, survivalRate, mutationRate,
-							crossoverRate, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm);
+							cipher, populationSize, lifespan, numGenerations, survivalRate,
+							mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
+							mutationAlgorithm);
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
 				}
