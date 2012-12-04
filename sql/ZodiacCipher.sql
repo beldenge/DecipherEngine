@@ -942,7 +942,7 @@ CREATE TABLE generation_stats
   id serial NOT NULL,
   execution_id integer NOT NULL,
   generation integer NOT NULL,
-  execution_time integer,
+  execution_time bigint,
   best_fitness double precision,
   average_fitness double precision,
   CONSTRAINT pk_generation_id PRIMARY KEY (id ),
