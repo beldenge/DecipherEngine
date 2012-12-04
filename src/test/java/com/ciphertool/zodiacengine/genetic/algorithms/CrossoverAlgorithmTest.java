@@ -80,7 +80,7 @@ public class CrossoverAlgorithmTest {
 		population = (Population) context.getBean("population");
 
 		population.populateIndividuals(100);
-		population.evaluateFitness();
+		population.evaluateFitness(null);
 	}
 
 	/**

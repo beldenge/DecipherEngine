@@ -47,7 +47,7 @@ CREATE TABLE cipher
   "name" character varying NOT NULL,
   "rows" integer NOT NULL DEFAULT 0,
   columns integer NOT NULL DEFAULT 0,
-  CONSTRAINT pk_id PRIMARY KEY (id ),
+  CONSTRAINT pk_cipher_id PRIMARY KEY (id ),
   CONSTRAINT unique_name UNIQUE (name )
 )
 WITH (
@@ -883,6 +883,7 @@ WITH (
 ALTER TABLE solution
   OWNER TO postgres;
 
+  
 -- Table: plaintext
 
 -- DROP TABLE plaintext;
@@ -905,3 +906,52 @@ WITH (
 ALTER TABLE plaintext
   OWNER TO postgres;
 
+  
+-- Table: execution_stats
+
+-- DROP TABLE execution_stats;
+
+CREATE TABLE execution_stats
+(
+  id serial NOT NULL,
+  start_date timestamp without time zone,
+  end_date timestamp without time zone,
+  population_size integer,
+  lifespan integer,
+  survival_rate double precision,
+  mutation_rate double precision,
+  crossover_rate double precision,
+  crossover_algorithm character varying,
+  fitness_evaluator character varying,
+  mutation_algorithm character varying,
+  CONSTRAINT pk_execution_id PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE execution_stats
+  OWNER TO postgres;
+  
+  
+-- Table: generation_stats
+
+-- DROP TABLE generation_stats;
+
+CREATE TABLE generation_stats
+(
+  id serial NOT NULL,
+  execution_id integer NOT NULL,
+  generation integer NOT NULL,
+  execution_time integer,
+  best_fitness double precision,
+  average_fitness double precision,
+  CONSTRAINT pk_generation_id PRIMARY KEY (id ),
+  CONSTRAINT fk_execution_id FOREIGN KEY (execution_id)
+      REFERENCES execution_stats (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE generation_stats
+  OWNER TO postgres;

@@ -74,7 +74,7 @@ public class BasicGeneticAlgorithmTest {
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
 		population.populateIndividuals(10);
-		population.evaluateFitness();
+		population.evaluateFitness(null);
 	}
 
 	/**

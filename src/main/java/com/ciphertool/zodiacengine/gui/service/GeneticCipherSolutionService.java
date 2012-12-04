@@ -60,7 +60,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 				+ "ms to spawn initial population of size "
 				+ geneticAlgorithm.getPopulation().size());
 
-		geneticAlgorithm.iterateUntilTermination();
+		geneticAlgorithm.evolve();
 	}
 
 	public void endImmediately() {

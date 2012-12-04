@@ -90,7 +90,7 @@ public class PopulationTest {
 		// Just in case a previous test modified the population
 		population.populateIndividuals(populationSize);
 
-		population.evaluateFitness();
+		population.evaluateFitness(null);
 
 		Chromosome chromosome = population.spinObjectRouletteWheel();
 
@@ -102,7 +102,7 @@ public class PopulationTest {
 		// Just in case a previous test modified the population
 		population.populateIndividuals(populationSize);
 
-		population.evaluateFitness();
+		population.evaluateFitness(null);
 
 		int winningNumber = -1;
 

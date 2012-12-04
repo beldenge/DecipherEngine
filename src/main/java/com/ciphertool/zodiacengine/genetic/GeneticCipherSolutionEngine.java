@@ -54,7 +54,7 @@ public class GeneticCipherSolutionEngine {
 				+ "ms to spawn initial population of size "
 				+ geneticAlgorithm.getPopulation().size());
 
-		geneticAlgorithm.iterateUntilTermination();
+		geneticAlgorithm.evolve();
 
 		List<Chromosome> bestFitIndividuals = geneticAlgorithm.getBestFitIndividuals();
 

@@ -185,6 +185,7 @@
 		<property name="population" ref="population" />
 		<property name="fitnessComparator" ref="fitnessComparator" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
@@ -208,6 +209,10 @@
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionSetDao" id="solutionSetDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
@@ -243,6 +248,8 @@
 				<value>com.ciphertool.zodiacengine.entities.Solution</value>
 				<value>com.ciphertool.zodiacengine.entities.Plaintext</value>
 				<value>com.ciphertool.sentencebuilder.entities.Word</value>
+				<value>com.ciphertool.genetics.entities.ExecutionStatistics</value>
+				<value>com.ciphertool.genetics.entities.GenerationStatistics</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
