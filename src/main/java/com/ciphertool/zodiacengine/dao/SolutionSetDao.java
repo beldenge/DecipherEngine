@@ -33,7 +33,7 @@ public class SolutionSetDao {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(SolutionSet solutionSet) {
 		Session session = sessionFactory.getCurrentSession();
-		session.save(solutionSet);
+		session.persist(solutionSet);
 		return true;
 	}
 
