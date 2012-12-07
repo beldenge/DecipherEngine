@@ -26,10 +26,18 @@ public enum FitnessEvaluatorType {
 			"Cipher Solution",
 			CipherSolutionFitnessEvaluator.class,
 			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol"),
+	CIPHER_SOLUTION_TRUNCATED(
+			"Cipher Solution Truncated",
+			CipherSolutionTruncatedFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, skipping the last row of the Cipher"),
 	CIPHER_SOLUTION_FREQUENCY(
 			"Cipher Solution Frequency",
 			CipherSolutionFrequencyFitnessEvaluator.class,
 			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, including a reduction factor based on letter frequency"),
+	CIPHER_SOLUTION_FREQUENCY_TRUNCATED(
+			"Cipher Solution Frequency Truncated",
+			CipherSolutionFrequencyTruncatedFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, including a reduction factor based on letter frequency, skipping the last row of the Cipher"),
 	CIPHER_SOLUTION_FREQUENCY_LENGTH(
 			"Cipher Solution Frequency and Word Length",
 			CipherSolutionFrequencyLengthFitnessEvaluator.class,

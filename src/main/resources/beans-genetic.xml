@@ -78,15 +78,52 @@
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
-	<!-- Old fitnessEvaluator bean definition is currently unused but the definition 
-		is here for backward compatibility -->
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
 		id="cipherSolutionFitnessEvaluator" />
+		
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionTruncatedFitnessEvaluator"
+		id="cipherSolutionTruncatedFitnessEvaluator" />
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
 		id="defaultFitnessEvaluator">
+		<property name="expectedLetterFrequencies">
+			<map>
+				<entry key="a" value="${language.english.frequency.a}" />
+				<entry key="b" value="${language.english.frequency.b}" />
+				<entry key="c" value="${language.english.frequency.c}" />
+				<entry key="d" value="${language.english.frequency.d}" />
+				<entry key="e" value="${language.english.frequency.e}" />
+				<entry key="f" value="${language.english.frequency.f}" />
+				<entry key="g" value="${language.english.frequency.g}" />
+				<entry key="h" value="${language.english.frequency.h}" />
+				<entry key="i" value="${language.english.frequency.i}" />
+				<entry key="j" value="${language.english.frequency.j}" />
+				<entry key="k" value="${language.english.frequency.k}" />
+				<entry key="l" value="${language.english.frequency.l}" />
+				<entry key="m" value="${language.english.frequency.m}" />
+				<entry key="n" value="${language.english.frequency.n}" />
+				<entry key="o" value="${language.english.frequency.o}" />
+				<entry key="p" value="${language.english.frequency.p}" />
+				<entry key="q" value="${language.english.frequency.q}" />
+				<entry key="r" value="${language.english.frequency.r}" />
+				<entry key="s" value="${language.english.frequency.s}" />
+				<entry key="t" value="${language.english.frequency.t}" />
+				<entry key="u" value="${language.english.frequency.u}" />
+				<entry key="v" value="${language.english.frequency.v}" />
+				<entry key="w" value="${language.english.frequency.w}" />
+				<entry key="x" value="${language.english.frequency.x}" />
+				<entry key="y" value="${language.english.frequency.y}" />
+				<entry key="z" value="${language.english.frequency.z}" />
+			</map>
+		</property>
+	</bean>
+
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyTruncatedFitnessEvaluator"
+		id="frequencyTruncatedFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
