@@ -1,5 +1,7 @@
 package com.ciphertool.zodiacengine.genetic.util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +21,17 @@ import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
-public class CipherSolutionFrequencyLengthFitnessEvaluatorTest {
+public class CipherSolutionFitnessEvaluatorTest {
 	private static Logger log = Logger
-			.getLogger(CipherSolutionFrequencyLengthFitnessEvaluatorTest.class);
+			.getLogger(CipherSolutionFitnessEvaluatorTest.class);
 
-	private static CipherSolutionFrequencyLengthFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyLengthFitnessEvaluator();
 	private static SolutionChromosome knownSolution = new SolutionChromosome();
+	private static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
+	private static Double averageWordLength = 5.1;
+	private static Cipher zodiac408 = new Cipher("zodiac408", 24, 17);
 
 	@BeforeClass
 	public static void setUp() {
-		Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
 		expectedLetterFrequencies.put('a', 0.0812);
 		expectedLetterFrequencies.put('b', 0.0149);
 		expectedLetterFrequencies.put('c', 0.0271);
@@ -55,12 +58,7 @@ public class CipherSolutionFrequencyLengthFitnessEvaluatorTest {
 		expectedLetterFrequencies.put('x', 0.0017);
 		expectedLetterFrequencies.put('y', 0.0211);
 		expectedLetterFrequencies.put('z', 0.0007);
-		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 
-		Double averageWordLength = 5.1;
-		fitnessEvaluator.setAverageWordLength(averageWordLength);
-
-		Cipher zodiac408 = new Cipher("zodiac408", 24, 17);
 		List<Ciphertext> ciphertextCharacters = new ArrayList<Ciphertext>();
 		ciphertextCharacters.add(new Ciphertext(new CiphertextId(zodiac408, 0), "tri"));
 		ciphertextCharacters.add(new Ciphertext(new CiphertextId(zodiac408, 1), "lrbox"));
@@ -472,7 +470,6 @@ public class CipherSolutionFrequencyLengthFitnessEvaluatorTest {
 		ciphertextCharacters.add(new Ciphertext(new CiphertextId(zodiac408, 407), "backk"));
 
 		zodiac408.setCiphertextCharacters(ciphertextCharacters);
-		fitnessEvaluator.setGeneticStructure(zodiac408);
 		knownSolution.setCipher(zodiac408);
 
 		List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
@@ -1607,7 +1604,58 @@ public class CipherSolutionFrequencyLengthFitnessEvaluatorTest {
 	}
 
 	@Test
-	public void testEvaluate() {
+	public void testCipherSolutionFitnessEvaluator() {
+		CipherSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		log.info(knownSolution);
+		log.info("Fitness: " + fitness);
+
+		assertEquals(fitness, new Double(354.0));
+	}
+
+	@Test
+	public void testCipherSolutionTruncatedFitnessEvaluator() {
+		CipherSolutionTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionTruncatedFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		log.info(knownSolution);
+		log.info("Fitness: " + fitness);
+
+		assertEquals(fitness, new Double(337.0));
+	}
+
+	@Test
+	public void testCipherSolutionFrequencyFitnessEvaluator() {
+		CipherSolutionFrequencyFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
+
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		log.info(knownSolution);
+		log.info("Fitness: " + fitness);
+	}
+
+	@Test
+	public void testCipherSolutionFrequencyTruncatedFitnessEvaluator() {
+		CipherSolutionFrequencyTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyTruncatedFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
+
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		log.info(knownSolution);
+		log.info("Fitness: " + fitness);
+	}
+
+	@Test
+	public void testCipherSolutionFrequencyLengthFitnessEvaluator() {
+		CipherSolutionFrequencyLengthFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyLengthFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
+		fitnessEvaluator.setAverageWordLength(averageWordLength);
+
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
 		log.info(knownSolution);
 		log.info("Fitness: " + fitness);
