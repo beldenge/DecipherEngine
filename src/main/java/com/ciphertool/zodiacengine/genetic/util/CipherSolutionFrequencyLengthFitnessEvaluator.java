@@ -36,21 +36,23 @@ import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 
 /**
- * This class was modeled after CipherSolutionFitnessEvaluator, with additional
- * evaluation based on letter frequencies.
+ * This class was modeled after CipherSolutionFrequencyFitnessEvaluator, with
+ * additional evaluation based on average word length.
  * 
  * @author george
  */
-public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEvaluatorBase
+public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolutionEvaluatorBase
 		implements FitnessEvaluator {
 
-	private static Logger log = Logger.getLogger(CipherSolutionFrequencyFitnessEvaluator.class);
+	private static Logger log = Logger
+			.getLogger(CipherSolutionFrequencyLengthFitnessEvaluator.class);
 	private Map<Character, Double> expectedLetterFrequencies;
+	private Double averageWordLength;
 
 	/**
 	 * Default no-args constructor
 	 */
-	public CipherSolutionFrequencyFitnessEvaluator() {
+	public CipherSolutionFrequencyLengthFitnessEvaluator() {
 	}
 
 	/*
@@ -217,8 +219,19 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 		fitness = fitness * frequencyReductionFactor;
 
-		solution.setFitness(fitness);
+		double solutionAverageWordLength = solution.actualSize() / solution.getGenes().size();
 
+		double wordLengthReductionFactor;
+
+		if (solutionAverageWordLength > averageWordLength) {
+			wordLengthReductionFactor = averageWordLength / solutionAverageWordLength;
+		} else {
+			wordLengthReductionFactor = solutionAverageWordLength / averageWordLength;
+		}
+
+		fitness = fitness * wordLengthReductionFactor;
+
+		solution.setFitness(fitness);
 		return fitness;
 	}
 
@@ -242,5 +255,13 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 	@Required
 	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
 		this.expectedLetterFrequencies = expectedLetterFrequencies;
+	}
+
+	/**
+	 * @param averageWordLength
+	 *            the averageWordLength to set
+	 */
+	public void setAverageWordLength(Double averageWordLength) {
+		this.averageWordLength = averageWordLength;
 	}
 }

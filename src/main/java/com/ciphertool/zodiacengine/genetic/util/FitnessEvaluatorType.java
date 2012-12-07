@@ -29,7 +29,11 @@ public enum FitnessEvaluatorType {
 	CIPHER_SOLUTION_FREQUENCY(
 			"Cipher Solution Frequency",
 			CipherSolutionFrequencyFitnessEvaluator.class,
-			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, including a reduction factor based on letter frequency");
+			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, including a reduction factor based on letter frequency"),
+	CIPHER_SOLUTION_FREQUENCY_LENGTH(
+			"Cipher Solution Frequency and Word Length",
+			CipherSolutionFrequencyLengthFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, including a reduction factor based on letter frequency and another reduction factor based on average word length");
 
 	private String displayName;
 	private Class<? extends FitnessEvaluator> type;
