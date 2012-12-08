@@ -102,7 +102,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 				 */
 				plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
 
-				currentValue = plaintext.getValue();
+				currentValue = plaintext.getValue().toLowerCase();
 
 				if (!plaintextMatchMap.containsKey(currentValue)) {
 					plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());

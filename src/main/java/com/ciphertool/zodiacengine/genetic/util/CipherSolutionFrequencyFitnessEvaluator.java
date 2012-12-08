@@ -126,7 +126,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 							+ chromosome, ioobe);
 				}
 
-				currentValue = plaintext.getValue();
+				currentValue = plaintext.getValue().toLowerCase();
 
 				currentCharacter = currentValue.charAt(0);
 

@@ -128,7 +128,7 @@ public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolut
 							+ chromosome, ioobe);
 				}
 
-				currentValue = plaintext.getValue();
+				currentValue = plaintext.getValue().toLowerCase();
 
 				currentCharacter = currentValue.charAt(0);
 

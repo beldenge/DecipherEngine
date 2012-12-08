@@ -92,7 +92,11 @@ public class CipherSolutionFrequencyTruncatedFitnessEvaluator extends
 			actualLetterFrequencies.put(letter, 0.0);
 		}
 
-		Double oneCharacterFrequency = 1.0 / cipher.length();
+		/*
+		 * Don't use the last row when calculating the oneCharacterFrequency for
+		 * this evaluator
+		 */
+		Double oneCharacterFrequency = 1.0 / (cipher.getColumns() * (cipher.getRows() - 1));
 
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -127,7 +131,7 @@ public class CipherSolutionFrequencyTruncatedFitnessEvaluator extends
 							+ chromosome, ioobe);
 				}
 
-				currentValue = plaintext.getValue();
+				currentValue = plaintext.getValue().toLowerCase();
 
 				currentCharacter = currentValue.charAt(0);
 

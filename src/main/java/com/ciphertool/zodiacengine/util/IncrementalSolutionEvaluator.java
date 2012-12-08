@@ -97,7 +97,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 						.getUncommittedIndex()) {
 					plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
 
-					currentValue = plaintext.getValue();
+					currentValue = plaintext.getValue().toLowerCase();
 
 					if (!plaintextMatchMap.containsKey(currentValue)) {
 						plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
@@ -259,7 +259,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			totalMismatches += (ciphertextCharacterCount - maxMatches);
 		}
 
-		log.debug("Solution " + incrementalSolution.getId() + " has a confidence level of: " + totalMismatches);
+		log.debug("Solution " + incrementalSolution.getId() + " has a confidence level of: "
+				+ totalMismatches);
 
 		/*
 		 * Longer sentences will naturally have more matches, so we need to
@@ -283,7 +284,8 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 			/*
 			 * First remove all the Plaintext characters from the previous match
 			 */
-			for (int i = incrementalSolution.getCommittedIndex(); i < incrementalSolution.getUncommittedIndex(); i++) {
+			for (int i = incrementalSolution.getCommittedIndex(); i < incrementalSolution
+					.getUncommittedIndex(); i++) {
 				// we always have to remove the last element in the list since
 				// the index decrements each time
 				incrementalSolution.getPlaintextCharacters().remove(
