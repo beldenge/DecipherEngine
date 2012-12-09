@@ -22,24 +22,30 @@ package com.ciphertool.zodiacengine.genetic.algorithms;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.genetics.algorithms.SingleSequenceMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm;
 import com.ciphertool.genetics.dao.SequenceDao;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
 
-public class SingleSequenceMutationAlgorithmTest {
+public class SingleSequenceMutationAlgorithmTest extends GenericTestBase {
 	private static Logger log = Logger.getLogger(SingleSequenceMutationAlgorithmTest.class);
-	private static SingleSequenceMutationAlgorithm mutationAlgorithm = new SingleSequenceMutationAlgorithm();;
+	private static SingleSequenceMutationAlgorithm mutationAlgorithm = new SingleSequenceMutationAlgorithm();
 	private static Word word = new Word(new WordId("smile", 'N'));
 	private static int beginCiphertextIndex = 0;
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
@@ -62,7 +68,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
 
-		mutationAlgorithm.mutateGene(solutionChromosome, 0);
+		Class<?>[] params = { Chromosome.class, int.class };
+		Object[] args = { solutionChromosome, 0 };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateGene", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertFalse(wordGene1.getWordString().equals(word1.getId().getWord()));
 
@@ -87,7 +99,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
 
-		mutationAlgorithm.mutateGene(solutionChromosome, 5);
+		Class<?>[] params = { Chromosome.class, int.class };
+		Object[] args = { solutionChromosome, 5 };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateGene", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertEquals(wordGene1.getWordString(), word1.getId().getWord());
 
@@ -106,7 +124,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
 
-		mutationAlgorithm.mutateRandomGene(solutionChromosome);
+		Class<?>[] params = { Chromosome.class };
+		Object[] args = { solutionChromosome };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateRandomGene", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertFalse(wordGene1.getWordString().equals(word1.getId().getWord())
 				&& wordGene2.getWordString().equals(word2.getId().getWord()));
@@ -130,7 +154,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 
-		mutationAlgorithm.mutateSequence(wordGene, 4);
+		Class<?>[] params = { Gene.class, int.class };
+		Object[] args = { wordGene, 4 };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateSequence", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(0)).getValue(), "s");
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(1)).getValue(), "m");
@@ -147,7 +177,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 
-		mutationAlgorithm.mutateSequence(wordGene, 5);
+		Class<?>[] params = { Gene.class, int.class };
+		Object[] args = { wordGene, 5 };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateSequence", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(0)).getValue(), "s");
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(1)).getValue(), "m");
@@ -162,7 +198,13 @@ public class SingleSequenceMutationAlgorithmTest {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 
-		mutationAlgorithm.mutateRandomSequence(wordGene);
+		Class<?>[] params = { Gene.class };
+		Object[] args = { wordGene };
+		try {
+			invokeMethod(mutationAlgorithm, "mutateRandomSequence", params, args);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
 
 		assertFalse(((PlaintextSequence) wordGene.getSequences().get(0)).getValue().equals("s")
 				&& ((PlaintextSequence) wordGene.getSequences().get(1)).getValue().equals("m")

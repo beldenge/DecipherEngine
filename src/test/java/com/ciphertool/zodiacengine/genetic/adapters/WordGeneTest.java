@@ -26,6 +26,7 @@ import static org.junit.Assert.assertTrue;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
@@ -119,6 +120,22 @@ public class WordGeneTest {
 				.getPlaintextCharacters().size());
 
 		assertTrue(solutionChromosome.getPlaintextCharacters().get(ciphertextId) == plaintextSequence);
+
+		int count = 0;
+		for (Gene gene : solutionChromosome.getGenes()) {
+			for (int j = 0; j < gene.size(); j++) {
+				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
+						.getSequences().get(j));
+
+				log.info(solutionChromosome.getPlaintextCharacters().get(count));
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
+
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+
+				count++;
+			}
+		}
 	}
 
 	@Test
@@ -157,6 +174,23 @@ public class WordGeneTest {
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
 					.getSequences().get(i));
 		}
+
+		int count = 0;
+		for (Gene gene : solutionChromosome.getGenes()) {
+			for (int j = 0; j < gene.size(); j++) {
+				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
+						.getSequences().get(j));
+
+				log.info(solutionChromosome.getPlaintextCharacters().get(count));
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
+
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+
+				count++;
+			}
+		}
+
 	}
 
 	@Test
@@ -202,6 +236,22 @@ public class WordGeneTest {
 
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
 					.getSequences().get(i));
+		}
+
+		int count = 0;
+		for (Gene gene : solutionChromosome.getGenes()) {
+			for (int j = 0; j < gene.size(); j++) {
+				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
+						.getSequences().get(j));
+
+				log.info(solutionChromosome.getPlaintextCharacters().get(count));
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
+						.getCiphertextId(), count);
+
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+
+				count++;
+			}
 		}
 	}
 

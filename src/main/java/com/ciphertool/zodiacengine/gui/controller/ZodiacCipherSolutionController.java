@@ -26,10 +26,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.CrossoverAlgorithmType;
-import com.ciphertool.genetics.algorithms.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.MutationAlgorithmType;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;

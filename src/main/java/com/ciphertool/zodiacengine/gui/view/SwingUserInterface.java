@@ -39,8 +39,8 @@ import javax.swing.SwingUtilities;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.algorithms.CrossoverAlgorithmType;
-import com.ciphertool.genetics.algorithms.MutationAlgorithmType;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;

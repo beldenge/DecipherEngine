@@ -24,6 +24,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,11 +35,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
-import com.ciphertool.genetics.algorithms.ConservativeCrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
-import com.ciphertool.genetics.algorithms.LowestCommonGroupCrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.ConservativeCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.FitnessEvaluator;
@@ -104,33 +106,37 @@ public class CrossoverAlgorithmTest {
 		Chromosome dad = population.spinObjectRouletteWheel();
 		log.info("Dad: " + dad);
 
-		Chromosome child = crossoverAlgorithm.crossover(mom, dad);
+		List<Chromosome> children = crossoverAlgorithm.crossover(mom, dad);
 
-		assertNotNull(child);
+		assertNotNull(children);
+		assertNotNull(children.get(0));
 
-		int genesBefore = child.getGenes().size();
+		Chromosome firstChild = children.get(0);
 
-		log.info("Child: " + child);
+		int genesBefore = firstChild.getGenes().size();
+
+		log.info("Child: " + firstChild);
 
 		int count = 0;
-		for (Gene gene : child.getGenes()) {
+		for (Gene gene : firstChild.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(((SolutionChromosome) child).getPlaintextCharacters().get(count) == gene
+				assertTrue(((SolutionChromosome) firstChild).getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
-				assertEquals(((SolutionChromosome) child).getPlaintextCharacters().get(count)
+				assertEquals(((SolutionChromosome) firstChild).getPlaintextCharacters().get(count)
 						.getId().getCiphertextId(), count);
 
 				count++;
 			}
 		}
 
-		assertEquals(child.actualSize().intValue(), ((SolutionChromosome) child)
+		assertEquals(firstChild.actualSize().intValue(), ((SolutionChromosome) firstChild)
 				.getPlaintextCharacters().size());
 
-		log.info("Solution size: " + ((SolutionChromosome) child).getPlaintextCharacters().size());
+		log.info("Solution size: "
+				+ ((SolutionChromosome) firstChild).getPlaintextCharacters().size());
 
-		assertEquals(genesBefore, child.getGenes().size());
+		assertEquals(genesBefore, firstChild.getGenes().size());
 
 		/*
 		 * For LowestCommonGroupCrossoverAlgorithm and
@@ -138,7 +144,7 @@ public class CrossoverAlgorithmTest {
 		 */
 		if (crossoverAlgorithm instanceof LowestCommonGroupCrossoverAlgorithm
 				|| crossoverAlgorithm instanceof ConservativeCrossoverAlgorithm) {
-			for (Plaintext plaintext : ((SolutionChromosome) child).getPlaintextCharacters()) {
+			for (Plaintext plaintext : ((SolutionChromosome) firstChild).getPlaintextCharacters()) {
 				if ((!plaintext.getValue().equals(
 						((SolutionChromosome) mom).getPlaintextCharacters().get(
 								plaintext.getId().getCiphertextId()).getValue()))

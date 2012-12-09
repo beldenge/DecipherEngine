@@ -113,6 +113,8 @@ public class SolutionChromosomeTest {
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
 						.getCiphertextId(), count);
 
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+
 				count++;
 			}
 		}
@@ -247,6 +249,8 @@ public class SolutionChromosomeTest {
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
 						.getCiphertextId(), count);
 
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+
 				count++;
 			}
 		}
@@ -303,6 +307,8 @@ public class SolutionChromosomeTest {
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
 						.getCiphertextId(), count);
+
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
 
 				count++;
 			}

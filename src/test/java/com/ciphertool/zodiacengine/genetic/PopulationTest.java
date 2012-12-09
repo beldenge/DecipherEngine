@@ -32,9 +32,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
-import com.ciphertool.genetics.algorithms.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
-import com.ciphertool.genetics.algorithms.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;

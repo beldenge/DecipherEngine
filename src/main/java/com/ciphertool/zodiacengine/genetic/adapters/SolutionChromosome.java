@@ -339,7 +339,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		 * beginning, they should decrement each time an element is removed.
 		 */
 		for (int i = geneToRemove.size() - 1; i >= 0; i--) {
-			geneToRemove.removeSequence(geneToRemove.getSequences().get(i));
+			plaintextCharacters.remove(geneToRemove.getSequences().get(i));
+
+			geneToRemove.getSequences().remove(geneToRemove.getSequences().get(i));
 		}
 
 		return this.genes.remove(index);
