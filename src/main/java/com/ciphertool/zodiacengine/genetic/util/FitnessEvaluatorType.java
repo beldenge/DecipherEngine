@@ -30,6 +30,10 @@ public enum FitnessEvaluatorType {
 			"Cipher Solution Truncated",
 			CipherSolutionTruncatedFitnessEvaluator.class,
 			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, skipping the last row of the Cipher"),
+	CIPHER_SOLUTION_KNOWN_SOLUTION(
+			"Cipher Solution Known Solution",
+			CipherSolutionKnownSolutionFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match a known solution, skipping the last row of the Cipher"),
 	CIPHER_SOLUTION_MAGIC_WORD(
 			"Cipher Solution Magic Word",
 			CipherSolutionMagicWordFitnessEvaluator.class,

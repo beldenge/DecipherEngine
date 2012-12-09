@@ -35,6 +35,7 @@ import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -66,10 +67,13 @@ public class BasicGeneticAlgorithmTest {
 		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
 				.getBean("defaultMutationAlgorithm");
 
+		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context
+				.getBean("defaultSelectionAlgorithm");
+
 		Cipher cipher = cipherDao.findByCipherName("zodiac340");
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
 				100, -1, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm,
-				mutationAlgorithm);
+				mutationAlgorithm, selectionAlgorithm);
 
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 
@@ -93,6 +97,7 @@ public class BasicGeneticAlgorithmTest {
 	@Test
 	public void testSelect() {
 		((BasicGeneticAlgorithm) geneticAlgorithm).getStrategy().setSurvivalRate(0.9);
+		((BasicGeneticAlgorithm) geneticAlgorithm).getStrategy().setPopulationSize(10);
 
 		SolutionChromosome bestChromosome = (SolutionChromosome) population.getBestFitIndividual();
 		log.info("Best fit individual before: " + bestChromosome);

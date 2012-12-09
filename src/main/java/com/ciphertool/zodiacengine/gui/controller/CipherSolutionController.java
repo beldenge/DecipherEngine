@@ -22,7 +22,8 @@ package com.ciphertool.zodiacengine.gui.controller;
 public interface CipherSolutionController {
 	public void startServiceThread(String cipherName, int populationSize, int lifespan,
 			int numGenerations, double survivalRate, double mutationRate, double crossoverRate,
-			String fitnessEvaluatorName, String crossoverAlgorithmName, String mutationAlgorithmName);
+			String fitnessEvaluatorName, String crossoverAlgorithmName,
+			String mutationAlgorithmName, String selectionAlgorithmName);
 
 	public void stopServiceThread();
 }

@@ -30,6 +30,8 @@ import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
+import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -45,13 +47,14 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	private FitnessEvaluator fitnessEvaluatorDefault;
 	private CrossoverAlgorithm crossoverAlgorithmDefault;
 	private MutationAlgorithm mutationAlgorithmDefault;
+	private SelectionAlgorithm selectionAlgorithmDefault;
 
 	@Override
 	public void startServiceThread(final String cipherName, final int populationSize,
 			final int lifespan, final int numGenerations, final double survivalRate,
 			final double mutationRate, final double crossoverRate,
 			final String fitnessEvaluatorName, final String crossoverAlgorithmName,
-			final String mutationAlgorithmName) {
+			final String mutationAlgorithmName, final String selectionAlgorithmName) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
@@ -68,10 +71,13 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 					MutationAlgorithm mutationAlgorithm = getMutationAlgorithm(mutationAlgorithmName);
 					log.info("MutationAlgorithm implementation: " + mutationAlgorithm.getClass());
 
+					SelectionAlgorithm selectionAlgorithm = getSelectionAlgorithm(selectionAlgorithmName);
+					log.info("SelectionAlgorithm implementation: " + selectionAlgorithm.getClass());
+
 					GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(
 							cipher, populationSize, lifespan, numGenerations, survivalRate,
 							mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-							mutationAlgorithm);
+							mutationAlgorithm, selectionAlgorithm);
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
 				}
@@ -135,6 +141,19 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 		return mutationAlgorithm;
 	}
 
+	private SelectionAlgorithm getSelectionAlgorithm(String selectionAlgorithmName) {
+		SelectionAlgorithm selectionAlgorithm = null;
+
+		try {
+			selectionAlgorithm = (SelectionAlgorithm) context.getBean(SelectionAlgorithmType
+					.valueOf(selectionAlgorithmName).getType());
+		} catch (IllegalArgumentException iae) {
+			selectionAlgorithm = selectionAlgorithmDefault;
+		}
+
+		return selectionAlgorithm;
+	}
+
 	/**
 	 * @param cipherSolutionService
 	 *            the cipherSolutionService to set
@@ -183,5 +202,14 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	@Required
 	public void setMutationAlgorithmDefault(MutationAlgorithm mutationAlgorithmDefault) {
 		this.mutationAlgorithmDefault = mutationAlgorithmDefault;
+	}
+
+	/**
+	 * @param selectionAlgorithmDefault
+	 *            the selectionAlgorithmDefault to set
+	 */
+	@Required
+	public void setSelectionAlgorithmDefault(SelectionAlgorithm selectionAlgorithmDefault) {
+		this.selectionAlgorithmDefault = selectionAlgorithmDefault;
 	}
 }

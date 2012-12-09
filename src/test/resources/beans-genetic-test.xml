@@ -45,6 +45,7 @@
 		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
 		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
 		<property name="mutationAlgorithmDefault" ref="defaultMutationAlgorithm" />
+		<property name="selectionAlgorithmDefault" ref="defaultSelectionAlgorithm" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
@@ -68,7 +69,11 @@
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionTruncatedFitnessEvaluator"
 		id="cipherSolutionTruncatedFitnessEvaluator" />
-
+		
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator"
+		id="cipherSolutionKnownSolutionFitnessEvaluator" />
+		
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMagicWordFitnessEvaluator"
 		id="cipherSolutionMagicWordFitnessEvaluator" />
@@ -180,13 +185,14 @@
 	</bean>
 
 	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator"
-		id="fitnessComparator" />
+		id="defaultFitnessComparator" />
 
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
+		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"
@@ -242,14 +248,18 @@
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
+	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.selection.TruncationSelectionAlgorithm" id="truncationSelectionAlgorithm" />
+	
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
 		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
 		<property name="crossoverAlgorithm" ref="defaultCrossoverAlgorithm" />
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
+		<property name="selectionAlgorithm" ref="defaultSelectionAlgorithm" />
 		<property name="population" ref="population" />
-		<property name="fitnessComparator" ref="fitnessComparator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
 	</bean>

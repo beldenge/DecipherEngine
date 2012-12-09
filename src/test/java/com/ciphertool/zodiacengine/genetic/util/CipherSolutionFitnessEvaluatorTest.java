@@ -72,6 +72,18 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 	}
 
 	@Test
+	public void testCipherSolutionKnownSolutionFitnessEvaluator() {
+		CipherSolutionKnownSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		log.info(knownSolution);
+		log.info("Fitness: " + fitness);
+
+		assertEquals(fitness, new Double(391.0));
+	}
+
+	@Test
 	public void testCipherSolutionFrequencyFitnessEvaluator() {
 		CipherSolutionFrequencyFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
