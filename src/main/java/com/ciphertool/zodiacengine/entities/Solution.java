@@ -48,7 +48,7 @@ public class Solution implements Serializable {
 	protected int totalMatches;
 	protected int uniqueMatches;
 	protected int adjacentMatchCount;
-	protected transient List<Plaintext> plaintextCharacters;
+	protected transient List<Plaintext> plaintextCharacters = new ArrayList<Plaintext>();
 	protected Cipher cipher;
 	private Date createdDate;
 
@@ -139,10 +139,6 @@ public class Solution implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.solution", cascade = CascadeType.ALL)
 	public List<Plaintext> getPlaintextCharacters() {
-		if (this.plaintextCharacters == null) {
-			this.plaintextCharacters = new ArrayList<Plaintext>();
-		}
-
 		return this.plaintextCharacters;
 	}
 
@@ -161,10 +157,6 @@ public class Solution implements Serializable {
 	}
 
 	public void addPlaintext(Plaintext plaintext) {
-		if (this.plaintextCharacters == null) {
-			this.plaintextCharacters = new ArrayList<Plaintext>();
-		}
-
 		plaintext.getId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);

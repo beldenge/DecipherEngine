@@ -179,8 +179,8 @@ public class WordGene implements Gene {
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		for (int i = sequence.getSequenceId() + 1; i < ((SolutionChromosome) this.chromosome)
-				.actualSize(); i++) {
+		int chromosomeSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
+		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
 			((PlaintextSequence) ((SolutionChromosome) this.chromosome).getPlaintextCharacters()
 					.get(i)).shiftRight(1);
 		}
@@ -216,8 +216,8 @@ public class WordGene implements Gene {
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		for (int i = sequence.getSequenceId(); i < ((SolutionChromosome) this.chromosome)
-				.actualSize(); i++) {
+		int chromosomeSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
+		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
 			((PlaintextSequence) ((SolutionChromosome) this.chromosome).getPlaintextCharacters()
 					.get(i)).shiftLeft(1);
 		}

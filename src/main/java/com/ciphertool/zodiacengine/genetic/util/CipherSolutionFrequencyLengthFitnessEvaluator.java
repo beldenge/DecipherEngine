@@ -219,7 +219,7 @@ public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolut
 
 		fitness = fitness * frequencyReductionFactor;
 
-		double solutionAverageWordLength = solution.actualSize() / solution.getGenes().size();
+		double solutionAverageWordLength = cipher.length() / solution.getGenes().size();
 
 		double wordLengthReductionFactor;
 

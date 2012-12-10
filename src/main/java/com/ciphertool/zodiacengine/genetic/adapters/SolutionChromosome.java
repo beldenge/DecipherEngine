@@ -147,10 +147,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 			this.genes = new ArrayList<Gene>();
 		}
 
-		if (this.plaintextCharacters == null) {
-			this.plaintextCharacters = new ArrayList<Plaintext>();
-		}
-
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -187,15 +183,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public Integer actualSize() {
-		Integer length = 0;
-
-		if (this.genes != null) {
-			for (Gene gene : this.genes) {
-				length += gene.size();
-			}
-		}
-
-		return length;
+		return this.plaintextCharacters.size();
 	}
 
 	public Integer targetSize() {
