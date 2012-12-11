@@ -67,6 +67,14 @@
 		id="cipherSolutionFitnessEvaluator" />
 
 	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionUniqueWordFitnessEvaluator"
+		id="cipherSolutionUniqueWordFitnessEvaluator" />
+		
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMatchDistanceFitnessEvaluator"
+		id="cipherSolutionMatchDistanceFitnessEvaluator" />
+
+	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionTruncatedFitnessEvaluator"
 		id="cipherSolutionTruncatedFitnessEvaluator" />
 		
