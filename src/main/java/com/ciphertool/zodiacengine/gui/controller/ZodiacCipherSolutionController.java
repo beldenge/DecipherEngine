@@ -48,13 +48,15 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	private CrossoverAlgorithm crossoverAlgorithmDefault;
 	private MutationAlgorithm mutationAlgorithmDefault;
 	private SelectionAlgorithm selectionAlgorithmDefault;
+	private FitnessEvaluator knownSolutionFitnessEvaluator;
 
 	@Override
 	public void startServiceThread(final String cipherName, final int populationSize,
 			final int lifespan, final int numGenerations, final double survivalRate,
 			final double mutationRate, final double crossoverRate,
 			final String fitnessEvaluatorName, final String crossoverAlgorithmName,
-			final String mutationAlgorithmName, final String selectionAlgorithmName) {
+			final String mutationAlgorithmName, final String selectionAlgorithmName,
+			final boolean compareToKnownSolution) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
@@ -74,10 +76,19 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 					SelectionAlgorithm selectionAlgorithm = getSelectionAlgorithm(selectionAlgorithmName);
 					log.info("SelectionAlgorithm implementation: " + selectionAlgorithm.getClass());
 
-					GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(
-							cipher, populationSize, lifespan, numGenerations, survivalRate,
-							mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-							mutationAlgorithm, selectionAlgorithm);
+					GeneticAlgorithmStrategy geneticAlgorithmStrategy;
+					if (knownSolutionFitnessEvaluator != null) {
+						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
+								populationSize, lifespan, numGenerations, survivalRate,
+								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
+								mutationAlgorithm, selectionAlgorithm,
+								knownSolutionFitnessEvaluator, compareToKnownSolution);
+					} else {
+						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
+								populationSize, lifespan, numGenerations, survivalRate,
+								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
+								mutationAlgorithm, selectionAlgorithm);
+					}
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
 				}
@@ -211,5 +222,16 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	@Required
 	public void setSelectionAlgorithmDefault(SelectionAlgorithm selectionAlgorithmDefault) {
 		this.selectionAlgorithmDefault = selectionAlgorithmDefault;
+	}
+
+	/**
+	 * This is NOT required. We will not always know the solution. In fact, that
+	 * should be the rare case.
+	 * 
+	 * @param knownSolutionFitnessEvaluator
+	 *            the knownSolutionFitnessEvaluator to set
+	 */
+	public void setKnownSolutionFitnessEvaluator(FitnessEvaluator knownSolutionFitnessEvaluator) {
+		this.knownSolutionFitnessEvaluator = knownSolutionFitnessEvaluator;
 	}
 }

@@ -393,9 +393,11 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		}
 
-		solution.setFitness((double) total);
+		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
 
-		return (double) total;
+		solution.setFitness(proximityToKnownSolution);
+
+		return proximityToKnownSolution;
 	}
 
 	/*

@@ -69,6 +69,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String selectionAlgorithmNameText = "Selection Algorithm: ";
 	private String statusRunning = "Running.";
 	private String statusNotRunning = "Not running.";
+	private String compareToKnownSolutionText = "Compare to known solution";
 	private int lifespanInitial;
 	private static final int LIFESPAN_MIN = -1;
 	private static final int LIFESPAN_MAX = 1000;
@@ -110,6 +111,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JSpinner mutationRateSpinner;
 	private JSpinner crossoverRateSpinner;
 	private JLabel statusLabel;
+	private JCheckBox compareToKnownSolutionCheckBox;
 
 	public SwingUserInterface() {
 	}
@@ -135,12 +137,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make a 13-row, 2-column grid. This is for the eleven input boxes
-		 * with labels on the left and spinners on the right, and then the two
-		 * action buttons.
+		 * Next make a 14-row, 2-column grid. This is for the twelve input
+		 * elements with labels on the left and spinners on the right, and then
+		 * the two action buttons.
 		 */
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(13, 2, 5, 5));
+		mainPanel.setLayout(new GridLayout(14, 2, 5, 5));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
@@ -256,6 +258,11 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(selectionAlgorithmNameLabel);
 		mainPanel.add(selectionAlgorithmComboBox);
 
+		compareToKnownSolutionCheckBox = new JCheckBox(compareToKnownSolutionText);
+
+		mainPanel.add(new JLabel());
+		mainPanel.add(compareToKnownSolutionCheckBox);
+
 		JButton startButton = new JButton(startButtonText);
 		startButton.setSize(80, 30);
 		startButton.addActionListener(getStartButtonActionListener());
@@ -307,7 +314,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 						(String) fitnessEvaluatorComboBox.getSelectedItem(),
 						(String) crossoverAlgorithmComboBox.getSelectedItem(),
 						(String) mutationAlgorithmComboBox.getSelectedItem(),
-						(String) selectionAlgorithmComboBox.getSelectedItem());
+						(String) selectionAlgorithmComboBox.getSelectedItem(),
+						compareToKnownSolutionCheckBox.isSelected());
 			}
 		};
 	}

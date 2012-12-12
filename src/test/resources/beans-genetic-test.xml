@@ -46,6 +46,7 @@
 		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
 		<property name="mutationAlgorithmDefault" ref="defaultMutationAlgorithm" />
 		<property name="selectionAlgorithmDefault" ref="defaultSelectionAlgorithm" />
+		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"

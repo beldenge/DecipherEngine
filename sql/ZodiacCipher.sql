@@ -945,6 +945,7 @@ CREATE TABLE generation_stats
   execution_time bigint,
   best_fitness double precision,
   average_fitness double precision,
+  known_solution_proximity double precision,
   CONSTRAINT pk_generation_id PRIMARY KEY (id ),
   CONSTRAINT fk_execution_id FOREIGN KEY (execution_id)
       REFERENCES execution_stats (id) MATCH SIMPLE

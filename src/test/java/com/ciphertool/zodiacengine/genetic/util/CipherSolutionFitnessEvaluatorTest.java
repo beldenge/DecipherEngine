@@ -203,7 +203,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		log.info(knownSolution);
 		log.info("CipherSolutionKnownSolutionFitnessEvaluator Fitness: " + fitness);
 
-		assertEquals(fitness, new Double(391.0));
+		/*
+		 * This should return 100% since we know the solution.
+		 */
+		assertEquals(fitness, new Double(100.0));
 	}
 
 	@Test
