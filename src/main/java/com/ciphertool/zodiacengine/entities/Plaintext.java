@@ -33,8 +33,14 @@ import javax.persistence.Table;
 		@JoinColumn(name = "solution_id", referencedColumnName = "solution_id"),
 		@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") }))
 public class Plaintext {
+
+	@EmbeddedId
 	protected PlaintextId id;
+
+	@Column(name = "value")
 	protected String value;
+
+	@Column(name = "has_match")
 	protected boolean hasMatch;
 
 	public Plaintext() {
@@ -45,7 +51,6 @@ public class Plaintext {
 		this.value = value;
 	}
 
-	@EmbeddedId
 	public PlaintextId getId() {
 		return id;
 	}
@@ -54,7 +59,6 @@ public class Plaintext {
 		this.id = id;
 	}
 
-	@Column(name = "value")
 	public String getValue() {
 		return value;
 	}
@@ -63,7 +67,6 @@ public class Plaintext {
 		this.value = value;
 	}
 
-	@Column(name = "has_match")
 	public boolean getHasMatch() {
 		return hasMatch;
 	}

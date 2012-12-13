@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine.genetic.adapters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Transient;
@@ -39,8 +40,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 	private static final long serialVersionUID = -8636317309324068652L;
 
-	private List<Gene> genes;
+	@Transient
+	private List<Gene> genes = new ArrayList<Gene>();
+
+	@Transient
 	private Double fitness;
+
+	@Transient
 	private int age = 0;
 
 	public SolutionChromosome() {
@@ -64,7 +70,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#getFitness()
 	 */
 	@Override
-	@Transient
 	public Double getFitness() {
 		return fitness;
 	}
@@ -87,7 +92,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.genetics.entities.Chromosome#getAge()
 	 */
 	@Override
-	@Transient
 	public int getAge() {
 		return age;
 	}
@@ -118,20 +122,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#getGenes()
 	 */
 	@Override
-	@Transient
 	public List<Gene> getGenes() {
-		return genes;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.genetic.Chromosome#setGenes(java.util.List)
-	 */
-	@Override
-	public void setGenes(List<Gene> genes) {
-		this.genes = genes;
+		return Collections.unmodifiableList(genes);
 	}
 
 	/*
@@ -143,10 +135,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public void addGene(Gene gene) {
-		if (this.genes == null) {
-			this.genes = new ArrayList<Gene>();
-		}
-
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -208,8 +196,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		}
 
 		copyChromosome.setId(new SolutionId());
-		copyChromosome.setGenes(new ArrayList<Gene>());
-		copyChromosome.setPlaintextCharacters(new ArrayList<Plaintext>());
+		copyChromosome.resetGenes();
+		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
 
 		Gene nextGene = null;
@@ -232,14 +220,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public void insertGene(int index, Gene gene) {
-		if (this.genes == null) {
-			this.genes = new ArrayList<Gene>();
-		}
-
-		if (this.plaintextCharacters == null) {
-			this.plaintextCharacters = new ArrayList<Plaintext>();
-		}
-
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -315,21 +295,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		int actualSize = this.plaintextCharacters.size();
 
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
-		 */
-		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
-		}
-
-		/*
 		 * We loop across the indices backwards since, if starting from the
 		 * beginning, they should decrement each time an element is removed.
 		 */
 		for (int i = geneToRemove.size() - 1; i >= 0; i--) {
 			plaintextCharacters.remove(geneToRemove.getSequences().get(i));
 
-			geneToRemove.getSequences().remove(geneToRemove.getSequences().get(i));
+			geneToRemove.removeSequence(geneToRemove.getSequences().get(i));
 		}
 
 		return this.genes.remove(index);
@@ -346,6 +318,11 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		this.removeGene(index);
 
 		this.insertGene(index, newGene);
+	}
+
+	@Override
+	public void resetGenes() {
+		this.genes = new ArrayList<Gene>();
 	}
 
 	/*

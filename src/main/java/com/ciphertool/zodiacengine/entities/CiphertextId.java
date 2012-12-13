@@ -29,7 +29,12 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class CiphertextId implements Serializable {
 	private static final long serialVersionUID = -7924706093006822875L;
+
+	@Column(name = "ciphertext_id")
 	private int ciphertextId;
+
+	@ManyToOne
+	@JoinColumn(name = "cipher_id")
 	private Cipher cipher;
 
 	public CiphertextId() {
@@ -40,7 +45,6 @@ public class CiphertextId implements Serializable {
 		this.ciphertextId = ciphertextId;
 	}
 
-	@Column(name = "ciphertext_id")
 	public int getCiphertextId() {
 		return ciphertextId;
 	}
@@ -49,8 +53,6 @@ public class CiphertextId implements Serializable {
 		this.ciphertextId = ciphertextId;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "cipher_id")
 	public Cipher getCipher() {
 		return cipher;
 	}

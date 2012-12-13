@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine.genetic.adapters;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,14 +34,13 @@ import com.ciphertool.zodiacengine.entities.PlaintextId;
 public class WordGene implements Gene {
 	private static Logger log = Logger.getLogger(WordGene.class);
 	private Chromosome chromosome;
-	private List<Sequence> sequences;
+	private List<Sequence> sequences = new ArrayList<Sequence>();
 
 	/**
 	 * @param wordId
 	 */
 	public WordGene(Word word, SolutionChromosome solutionChromosome, int beginCiphertextId) {
 		this.chromosome = solutionChromosome;
-		this.sequences = new ArrayList<Sequence>();
 
 		int wordLength = word.getId().getWord().length();
 
@@ -70,27 +70,29 @@ public class WordGene implements Gene {
 		}
 
 		/*
-		 * TODO The Chromosome should be set at a higher level, but setting it
-		 * to null here will make the equals() method fail.
+		 * The Chromosome should be set at a higher level, so we just set it to
+		 * a dummy Chromosome which should be overwritten.
 		 */
-		copyGene.chromosome = null;
-
-		List<Sequence> sequencesToClone = new ArrayList<Sequence>();
+		copyGene.chromosome = new SolutionChromosome();
 
 		Sequence clonedSequence = null;
+
+		copyGene.resetSequences();
 
 		for (Sequence sequenceToClone : this.sequences) {
 			clonedSequence = sequenceToClone.clone();
 
-			sequencesToClone.add(clonedSequence);
+			copyGene.addSequence(clonedSequence);
 
-			((PlaintextSequence) clonedSequence).getId().setSolution(
-					(SolutionChromosome) chromosome);
+			/*
+			 * We do NOT want to set the SolutionChromosome for the
+			 * PlaintextSequence here, since the only SolutionChromosome we have
+			 * access to here is the one referenced by the WordGene being
+			 * cloned. It should be set at a higher level.
+			 */
 
 			clonedSequence.setGene(copyGene);
 		}
-
-		copyGene.setSequences(sequencesToClone);
 
 		return copyGene;
 	}
@@ -117,20 +119,15 @@ public class WordGene implements Gene {
 
 	@Override
 	public List<Sequence> getSequences() {
-		return this.sequences;
+		return Collections.unmodifiableList(this.sequences);
 	}
 
 	@Override
-	public void setSequences(List<Sequence> sequences) {
-		this.sequences = sequences;
+	public void resetSequences() {
+		this.sequences = new ArrayList<Sequence>();
 	}
 
 	/*
-	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
-	 * relationship at the Chromosome level, so that Sequences within a Gene can
-	 * be managed independently of a Chromosome until they are actually added to
-	 * the Chromosome.
-	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.Gene#addSequence(com.ciphertool.
@@ -142,7 +139,13 @@ public class WordGene implements Gene {
 
 		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
 
-		((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
+		/*
+		 * It is possible for the Chromosome to be null if this Gene is being
+		 * cloned.
+		 */
+		if (chromosome != null) {
+			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
+		}
 	}
 
 	/*
@@ -172,8 +175,7 @@ public class WordGene implements Gene {
 
 		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
 
-		((SolutionChromosome) chromosome).getPlaintextCharacters().add(index,
-				((PlaintextSequence) sequence));
+		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
@@ -208,7 +210,7 @@ public class WordGene implements Gene {
 			return;
 		}
 
-		((SolutionChromosome) this.chromosome).getPlaintextCharacters().remove(sequence);
+		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
 
 		this.sequences.remove(sequence);
 

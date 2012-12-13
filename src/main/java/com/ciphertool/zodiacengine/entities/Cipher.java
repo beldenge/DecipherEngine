@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -38,11 +39,22 @@ import javax.persistence.Table;
 public class Cipher implements Serializable {
 	private static final long serialVersionUID = 3417112220260206089L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "columns")
 	private int columns;
+
+	@Column(name = "rows")
 	private int rows;
-	private transient List<Ciphertext> ciphertextCharacters;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.cipher", cascade = CascadeType.ALL)
+	private List<Ciphertext> ciphertextCharacters = new ArrayList<Ciphertext>();
 
 	public Cipher() {
 	}
@@ -55,12 +67,8 @@ public class Cipher implements Serializable {
 		this.name = name;
 		this.rows = rows;
 		this.columns = columns;
-		this.ciphertextCharacters = new ArrayList<Ciphertext>();
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	public Integer getId() {
 		return id;
 	}
@@ -69,7 +77,6 @@ public class Cipher implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -78,7 +85,6 @@ public class Cipher implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "columns")
 	public int getColumns() {
 		return columns;
 	}
@@ -87,7 +93,6 @@ public class Cipher implements Serializable {
 		this.columns = columns;
 	}
 
-	@Column(name = "rows")
 	public int getRows() {
 		return rows;
 	}
@@ -96,13 +101,16 @@ public class Cipher implements Serializable {
 		this.rows = rows;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.cipher", cascade = CascadeType.ALL)
 	public List<Ciphertext> getCiphertextCharacters() {
-		return ciphertextCharacters;
+		return Collections.unmodifiableList(ciphertextCharacters);
 	}
 
-	public void setCiphertextCharacters(List<Ciphertext> ciphertextCharacters) {
-		this.ciphertextCharacters = ciphertextCharacters;
+	public void addCiphertextCharacter(Ciphertext ciphertext) {
+		this.ciphertextCharacters.add(ciphertext);
+	}
+
+	public void removeCiphertextCharacter(Ciphertext ciphertext) {
+		this.ciphertextCharacters.remove(ciphertext);
 	}
 
 	public int length() {

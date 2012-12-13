@@ -22,7 +22,6 @@ package com.ciphertool.zodiacengine.gui.service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,7 +32,6 @@ import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.dao.SolutionSetDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.entities.SolutionId;
 import com.ciphertool.zodiacengine.entities.SolutionSet;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
@@ -133,11 +131,10 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		SolutionSet solutionSet = new SolutionSet();
 		solutionSet.setName(cipherName + "_" + formattedDate);
 		solutionSet.setCipher((Cipher) geneticAlgorithm.getStrategy().getGeneticStructure());
-		solutionSet.setSolutions(new HashSet<Solution>());
 
 		int nextId = 0;
 		for (Chromosome individual : individuals) {
-			solutionSet.getSolutions().add((SolutionChromosome) individual);
+			solutionSet.addSolution((SolutionChromosome) individual);
 
 			nextId++;
 			SolutionId solutionId = new SolutionId(solutionSet, nextId);

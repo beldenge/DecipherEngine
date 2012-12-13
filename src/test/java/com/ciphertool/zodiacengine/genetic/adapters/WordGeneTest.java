@@ -24,12 +24,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
+import com.ciphertool.zodiacengine.entities.SolutionId;
 
 public class WordGeneTest {
 	private static Logger log = Logger.getLogger(WordGeneTest.class);
@@ -37,6 +39,11 @@ public class WordGeneTest {
 	private static Word word = new Word(new WordId("smile", 'N'));
 	private static int beginCiphertextIndex = 0;
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
+
+	@BeforeClass
+	public static void setUp() {
+		solutionChromosome.setId(new SolutionId());
+	}
 
 	@Test
 	public void testConstructor() {

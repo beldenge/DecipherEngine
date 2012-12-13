@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,10 +45,23 @@ public class SolutionSet implements Serializable {
 
 	private static final long serialVersionUID = 2434992350084225015L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
+
+	@Column(name = "name")
 	private String name;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cipher_id")
 	private Cipher cipher;
-	private transient Set<Solution> solutions;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.solutionSet", cascade = CascadeType.ALL)
+	private Set<Solution> solutions = new HashSet<Solution>();
+
+	@Column(name = "created_timestamp", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
 	public SolutionSet() {
@@ -62,9 +76,6 @@ public class SolutionSet implements Serializable {
 		this.cipher = cipher;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	public Integer getId() {
 		return id;
 	}
@@ -76,7 +87,6 @@ public class SolutionSet implements Serializable {
 	/**
 	 * @return the name
 	 */
-	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -89,8 +99,6 @@ public class SolutionSet implements Serializable {
 		this.name = name;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cipher_id")
 	public Cipher getCipher() {
 		return cipher;
 	}
@@ -99,24 +107,17 @@ public class SolutionSet implements Serializable {
 		this.cipher = cipher;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "id.solutionSet", cascade = CascadeType.ALL)
 	public Set<Solution> getSolutions() {
-		if (this.solutions == null) {
-			this.solutions = new HashSet<Solution>();
-		}
-
-		return this.solutions;
+		return Collections.unmodifiableSet(this.solutions);
 	}
 
-	public void setSolutions(Set<Solution> solutions) {
-		this.solutions = solutions;
+	public void addSolution(Solution solution) {
+		this.solutions.add(solution);
 	}
 
 	/**
 	 * @return the createdDate
 	 */
-	@Column(name = "created_timestamp", updatable = false, insertable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedDate() {
 		return createdDate;
 	}

@@ -3,7 +3,13 @@ package com.ciphertool.zodiacengine.entities;
 import javax.persistence.Transient;
 
 public class IncrementalSolution extends Solution {
+
+	private static final long serialVersionUID = 596464950445184226L;
+
+	@Transient
 	private transient int committedIndex;
+
+	@Transient
 	private transient int uncommittedIndex;
 
 	public IncrementalSolution(Cipher cipher, int totalMatches, int uniqueMatches,
@@ -17,7 +23,6 @@ public class IncrementalSolution extends Solution {
 	 * 
 	 * @return the committedIndex
 	 */
-	@Transient
 	public int getCommittedIndex() {
 		return committedIndex;
 	}
@@ -36,7 +41,6 @@ public class IncrementalSolution extends Solution {
 	 * 
 	 * @return the uncommittedIndex
 	 */
-	@Transient
 	public int getUncommittedIndex() {
 		return uncommittedIndex;
 	}

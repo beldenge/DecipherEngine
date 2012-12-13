@@ -30,7 +30,13 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class PlaintextId implements Serializable {
 	private static final long serialVersionUID = -7647050018442693916L;
+
+	@ManyToOne
+	@JoinColumns({ @JoinColumn(name = "solution_id", referencedColumnName = "id"),
+			@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") })
 	private Solution solution;
+
+	@Column(name = "ciphertext_id")
 	private int ciphertextId;
 
 	public PlaintextId() {
@@ -41,9 +47,6 @@ public class PlaintextId implements Serializable {
 		this.ciphertextId = ciphertextId;
 	}
 
-	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "solution_id", referencedColumnName = "id"),
-			@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") })
 	public Solution getSolution() {
 		return solution;
 	}
@@ -52,7 +55,6 @@ public class PlaintextId implements Serializable {
 		this.solution = solution;
 	}
 
-	@Column(name = "ciphertext_id")
 	public int getCiphertextId() {
 		return ciphertextId;
 	}
@@ -125,9 +127,8 @@ public class PlaintextId implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "PlaintextId [solutionId="
-				+ ((solution == null) ? "null" : solution.getId()) + ", ciphertextId="
-				+ ciphertextId + "]";
+		return "PlaintextId [solutionId=" + ((solution == null) ? "null" : solution.getId())
+				+ ", ciphertextId=" + ciphertextId + "]";
 	}
 
 }

@@ -29,7 +29,12 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class SolutionId implements Serializable {
 	private static final long serialVersionUID = -788355825214706921L;
+
+	@Column(name = "solution_id")
 	protected int solutionId;
+
+	@ManyToOne
+	@JoinColumn(name = "solution_set_id")
 	protected SolutionSet solutionSet;
 
 	public SolutionId() {
@@ -48,7 +53,6 @@ public class SolutionId implements Serializable {
 	/**
 	 * @return the solutionId
 	 */
-	@Column(name = "solution_id")
 	public int getSolutionId() {
 		return solutionId;
 	}
@@ -64,8 +68,6 @@ public class SolutionId implements Serializable {
 	/**
 	 * @return the solutionSet
 	 */
-	@ManyToOne
-	@JoinColumn(name = "solution_set_id")
 	public SolutionSet getSolutionSet() {
 		return solutionSet;
 	}

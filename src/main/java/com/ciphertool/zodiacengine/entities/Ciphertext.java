@@ -31,8 +31,12 @@ import javax.persistence.Table;
 @Table(name = "ciphertext")
 @AssociationOverrides(@AssociationOverride(name = "id.cipher", joinColumns = @JoinColumn(name = "cipher_id")))
 public class Ciphertext {
-	private String value;
+
+	@EmbeddedId
 	private CiphertextId id;
+
+	@Column(name = "value")
+	private String value;
 
 	public Ciphertext() {
 	}
@@ -42,7 +46,6 @@ public class Ciphertext {
 		this.value = value;
 	}
 
-	@EmbeddedId
 	public CiphertextId getId() {
 		return id;
 	}
@@ -51,7 +54,6 @@ public class Ciphertext {
 		this.id = id;
 	}
 
-	@Column(name = "value")
 	public String getValue() {
 		return value;
 	}

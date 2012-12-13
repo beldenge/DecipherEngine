@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -44,12 +45,27 @@ import javax.persistence.TemporalType;
 public class Solution implements Serializable {
 	private static final long serialVersionUID = -1293349461638306782L;
 
+	@EmbeddedId
 	protected SolutionId id;
+
+	@Column(name = "total_matches")
 	protected int totalMatches;
+
+	@Column(name = "unique_matches")
 	protected int uniqueMatches;
+
+	@Column(name = "adjacent_matches")
 	protected int adjacentMatchCount;
-	protected transient List<Plaintext> plaintextCharacters = new ArrayList<Plaintext>();
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.solution", cascade = CascadeType.ALL)
+	protected List<Plaintext> plaintextCharacters = new ArrayList<Plaintext>();
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cipher_id")
 	protected Cipher cipher;
+
+	@Column(name = "created_timestamp", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
 
 	public Solution() {
@@ -71,13 +87,11 @@ public class Solution implements Serializable {
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
 		this.adjacentMatchCount = adjacentMatches;
-		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 
 	/**
 	 * @return the id
 	 */
-	@EmbeddedId
 	public SolutionId getId() {
 		return id;
 	}
@@ -93,7 +107,6 @@ public class Solution implements Serializable {
 	/**
 	 * @return
 	 */
-	@Column(name = "total_matches")
 	public int getTotalMatches() {
 		return totalMatches;
 	}
@@ -108,7 +121,6 @@ public class Solution implements Serializable {
 	/**
 	 * @return the uniqueMatches
 	 */
-	@Column(name = "unique_matches")
 	public int getUniqueMatches() {
 		return uniqueMatches;
 	}
@@ -124,7 +136,6 @@ public class Solution implements Serializable {
 	/**
 	 * @return the adjacentMatchCount
 	 */
-	@Column(name = "adjacent_matches")
 	public int getAdjacentMatchCount() {
 		return adjacentMatchCount;
 	}
@@ -137,23 +148,8 @@ public class Solution implements Serializable {
 		this.adjacentMatchCount = adjacentMatchCount;
 	}
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.solution", cascade = CascadeType.ALL)
 	public List<Plaintext> getPlaintextCharacters() {
-		return this.plaintextCharacters;
-	}
-
-	public void setPlaintextCharacters(List<Plaintext> plaintextCharacters) {
-		this.plaintextCharacters = plaintextCharacters;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cipher_id")
-	public Cipher getCipher() {
-		return cipher;
-	}
-
-	public void setCipher(Cipher cipher) {
-		this.cipher = cipher;
+		return Collections.unmodifiableList(this.plaintextCharacters);
 	}
 
 	public void addPlaintext(Plaintext plaintext) {
@@ -162,11 +158,29 @@ public class Solution implements Serializable {
 		this.plaintextCharacters.add(plaintext);
 	}
 
+	public void insertPlaintext(int index, Plaintext plaintext) {
+		this.plaintextCharacters.add(index, plaintext);
+	}
+
+	public void removePlaintext(Plaintext plaintext) {
+		this.plaintextCharacters.remove(plaintext);
+	}
+
+	public void resetPlaintextCharacters() {
+		this.plaintextCharacters = new ArrayList<Plaintext>();
+	}
+
+	public Cipher getCipher() {
+		return cipher;
+	}
+
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
+	}
+
 	/**
 	 * @return the createdDate
 	 */
-	@Column(name = "created_timestamp", updatable = false, insertable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	public Date getCreatedDate() {
 		return createdDate;
 	}

@@ -22,7 +22,6 @@ package com.ciphertool.zodiacengine.genetic.adapters;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
@@ -37,7 +36,7 @@ import com.ciphertool.zodiacengine.entities.SolutionId;
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
 
-	private static Cipher cipher;
+	private static Cipher cipher = new Cipher("zodiac", 24, 17);
 
 	@Test
 	public void testGetNullPlaintextCharacters() {
@@ -260,13 +259,6 @@ public class SolutionChromosomeTest {
 	}
 
 	@Test
-	public void testRemoveInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
-
-		assertNull(solutionChromosome.removeGene(0));
-	}
-
-	@Test
 	public void testRemoveGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setFitness(0.0);
@@ -316,17 +308,6 @@ public class SolutionChromosomeTest {
 
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());
-	}
-
-	@Test
-	public void testReplaceInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
-
-		/*
-		 * We just want to verify the log message and that no exceptions are
-		 * thrown.
-		 */
-		solutionChromosome.replaceGene(0, null);
 	}
 
 	@Test
