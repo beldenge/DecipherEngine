@@ -24,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,11 +44,20 @@ public class WordGeneTest {
 	@BeforeClass
 	public static void setUp() {
 		solutionChromosome.setId(new SolutionId());
+		assertTrue(solutionChromosome.isDirty());
+	}
+
+	@Before
+	public void resetDirtiness() {
+		solutionChromosome = new SolutionChromosome();
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 	}
 
 	@Test
 	public void testConstructor() {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
 
@@ -59,6 +69,7 @@ public class WordGeneTest {
 	@Test
 	public void testCloneWordGene() {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		WordGene clonedWordGene = wordGene.clone();
 
@@ -104,13 +115,14 @@ public class WordGeneTest {
 
 	@Test
 	public void testAddSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		int ciphertextId = wordGene.size();
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
 				solutionChromosome, ciphertextId), "y", wordGene);
+		assertFalse(solutionChromosome.isDirty());
 
 		int geneSizeBefore = wordGene.size();
 
@@ -118,7 +130,15 @@ public class WordGeneTest {
 
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * addSequence
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		wordGene.addSequence(plaintextSequence);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(wordGene.size(), geneSizeBefore + 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore + 1);
@@ -147,8 +167,8 @@ public class WordGeneTest {
 
 	@Test
 	public void testInsertSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		int ciphertextId = 0;
 
@@ -161,7 +181,15 @@ public class WordGeneTest {
 
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * insertSequence
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		wordGene.insertSequence(ciphertextId, plaintextSequence);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(wordGene.size(), geneSizeBefore + 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore + 1);
@@ -202,7 +230,6 @@ public class WordGeneTest {
 
 	@Test
 	public void testRemoveInvalidSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 
 		wordGene.removeSequence(null);
@@ -210,8 +237,8 @@ public class WordGeneTest {
 
 	@Test
 	public void testRemoveSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		int ciphertextId = 1;
 
@@ -221,7 +248,15 @@ public class WordGeneTest {
 
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * removeSequence
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		wordGene.removeSequence(wordGene.getSequences().get(ciphertextId));
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(wordGene.size(), geneSizeBefore - 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore - 1);
@@ -264,7 +299,6 @@ public class WordGeneTest {
 
 	@Test
 	public void testReplaceInvalidSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 
 		wordGene.replaceSequence(0, null);
@@ -272,8 +306,8 @@ public class WordGeneTest {
 
 	@Test
 	public void testReplaceSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
 
 		int ciphertextId = 0;
 
@@ -286,7 +320,15 @@ public class WordGeneTest {
 
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * replaceSequence
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		wordGene.replaceSequence(ciphertextId, plaintextSequence);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(wordGene.size(), geneSizeBefore);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore);

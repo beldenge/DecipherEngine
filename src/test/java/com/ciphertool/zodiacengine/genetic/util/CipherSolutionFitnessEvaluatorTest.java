@@ -1,14 +1,18 @@
 package com.ciphertool.zodiacengine.genetic.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 
@@ -168,6 +172,21 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 			letterSum += letterCount;
 		}
 		log.info("Total letters known: " + letterSum);
+
+		int validWordCount = 0;
+		for (Gene gene : knownSolution.getGenes()) {
+			if (gene.getSequences().get(0).getSequenceId() < numCharsToEvaluate) {
+				validWordCount++;
+			}
+		}
+		log.info("Average word length known: "
+				+ ((double) numCharsToEvaluate / (double) (validWordCount)));
+	}
+
+	@Before
+	public void resetDirtiness() {
+		knownSolution.setNeedsEvaluation(true);
+		assertTrue(knownSolution.isDirty());
 	}
 
 	@Test
@@ -175,7 +194,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionFitnessEvaluator Fitness: " + fitness);
 
@@ -187,7 +209,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionTruncatedFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionTruncatedFitnessEvaluator Fitness: " + fitness);
 
@@ -199,7 +224,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionKnownSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionKnownSolutionFitnessEvaluator Fitness: " + fitness);
 
@@ -215,7 +243,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyFitnessEvaluator Fitness: " + fitness);
 	}
@@ -226,7 +257,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyTruncatedFitnessEvaluator Fitness: " + fitness);
 	}
@@ -238,7 +272,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setAverageWordLength(averageWordLength);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyLengthFitnessEvaluator Fitness: " + fitness);
 	}
@@ -248,7 +285,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionMatchDistanceFitnessEvaluator fitnessEvaluator = new CipherSolutionMatchDistanceFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionMatchDistanceFitnessEvaluator Fitness: " + fitness);
 	}
@@ -258,7 +298,10 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionUniqueWordFitnessEvaluator fitnessEvaluator = new CipherSolutionUniqueWordFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
+		assertTrue(knownSolution.isDirty());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
 		log.info(knownSolution);
 		log.info("CipherSolutionUniqueWordFitnessEvaluator Fitness: " + fitness);
 	}

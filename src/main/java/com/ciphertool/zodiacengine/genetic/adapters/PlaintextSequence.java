@@ -85,6 +85,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * @param places
 	 */
 	public void shiftRight(int places) {
+		this.gene.getChromosome().setDirty(true);
+
 		this.id.setCiphertextId(this.id.getCiphertextId() + places);
 	}
 
@@ -95,6 +97,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * @param places
 	 */
 	public void shiftLeft(int places) {
+		this.gene.getChromosome().setDirty(true);
+
 		this.id.setCiphertextId(this.id.getCiphertextId() - places);
 	}
 
@@ -122,6 +126,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	@Override
 	public void setValue(Object obj) {
+		this.gene.getChromosome().setDirty(true);
+
 		this.value = (String) obj;
 	}
 }

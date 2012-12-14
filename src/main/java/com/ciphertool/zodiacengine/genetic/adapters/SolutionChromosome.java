@@ -55,9 +55,13 @@ public class SolutionChromosome extends Solution implements Chromosome {
 
 	/**
 	 * @param cipherId
+	 *            the cipherId to set
 	 * @param totalMatches
+	 *            the totalMatches to set
 	 * @param uniqueMatches
+	 *            the uniqueMatches to set
 	 * @param adjacentMatches
+	 *            the adjacentMatches to set
 	 */
 	public SolutionChromosome(Cipher cipher, int totalMatches, int uniqueMatches,
 			int adjacentMatches) {
@@ -84,6 +88,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public void setFitness(Double fitness) {
 		this.fitness = fitness;
+
+		needsEvaluation = false;
 	}
 
 	/*
@@ -135,6 +141,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public void addGene(Gene gene) {
+		needsEvaluation = true;
+
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -199,6 +207,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		copyChromosome.resetGenes();
 		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
+		copyChromosome.needsEvaluation = true;
 
 		Gene nextGene = null;
 		for (Gene wordGene : this.genes) {
@@ -220,6 +229,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public void insertGene(int index, Gene gene) {
+		needsEvaluation = true;
+
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -276,6 +287,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 */
 	@Override
 	public Gene removeGene(int index) {
+		needsEvaluation = true;
+
 		if (this.genes == null) {
 			log.warn("Attempted to remove a Gene from SolutionChromosome at index " + index
 					+ ", but the List of Genes is null. " + this);
@@ -295,19 +308,30 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		int actualSize = this.plaintextCharacters.size();
 
 		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		for (int i = beginIndex; i < actualSize; i++) {
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
+		}
+
+		/*
 		 * We loop across the indices backwards since, if starting from the
 		 * beginning, they should decrement each time an element is removed.
 		 */
 		for (int i = geneToRemove.size() - 1; i >= 0; i--) {
-			plaintextCharacters.remove(geneToRemove.getSequences().get(i));
-
-			geneToRemove.removeSequence(geneToRemove.getSequences().get(i));
+			plaintextCharacters.remove(geneToRemove.getSequences().get(i).getSequenceId()
+					.intValue());
 		}
+
+		geneToRemove.resetSequences();
 
 		return this.genes.remove(index);
 	}
 
 	/*
+	 * This should just be a combination of the remove and insert methods.
+	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#replaceGene(int,
@@ -320,9 +344,31 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		this.insertGene(index, newGene);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#resetGenes()
+	 */
 	@Override
 	public void resetGenes() {
+		needsEvaluation = true;
+
 		this.genes = new ArrayList<Gene>();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#isDirty()
+	 */
+	@Override
+	public boolean isDirty() {
+		return needsEvaluation;
+	}
+
+	@Override
+	public void setDirty(boolean isDirty) {
+		this.needsEvaluation = isDirty;
 	}
 
 	/*

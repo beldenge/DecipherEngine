@@ -64,6 +64,8 @@ public class Plaintext {
 	}
 
 	public void setValue(String value) {
+		this.id.getSolution().setNeedsEvaluation(true);
+
 		this.value = value;
 	}
 

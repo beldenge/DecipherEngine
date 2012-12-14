@@ -81,16 +81,20 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testAddGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 		solutionChromosome.setCipher(new Cipher());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene1);
+		assertTrue(solutionChromosome.isDirty());
 
 		Word word2 = new Word(new WordId("belden", 'N'));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(solutionChromosome.getGenes().size(), 2);
 
@@ -211,20 +215,25 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testInsertGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 		solutionChromosome.setCipher(cipher);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
 		solutionChromosome.insertGene(0, wordGene3);
+		assertTrue(solutionChromosome.isDirty());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
 		solutionChromosome.insertGene(0, wordGene1);
+		assertTrue(solutionChromosome.isDirty());
 
 		Word word2 = new Word(new WordId("elmer", 'N'));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.insertGene(1, wordGene2);
+		assertTrue(solutionChromosome.isDirty());
 
 		log.info("Gene 1: " + ((WordGene) solutionChromosome.getGenes().get(0)).getWordString());
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
@@ -261,7 +270,9 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -278,7 +289,15 @@ public class SolutionChromosomeTest {
 
 		assertEquals(solutionChromosome.getGenes().size(), 3);
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * removeGene
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		solutionChromosome.removeGene(1);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(solutionChromosome.getGenes().size(), 2);
 
@@ -293,7 +312,7 @@ public class SolutionChromosomeTest {
 		int count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count), gene
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
@@ -313,7 +332,9 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testReplaceGene() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -329,7 +350,15 @@ public class SolutionChromosomeTest {
 		Word word2 = new Word(new WordId("elmer", 'N'));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * replaceGene
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		solutionChromosome.replaceGene(1, wordGene2);
+		assertTrue(solutionChromosome.isDirty());
 
 		assertEquals(solutionChromosome.getGenes().size(), beforeSize);
 
@@ -362,7 +391,9 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGeneOnClonedSolution() {
 		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
 		solutionChromosome.setCipher(cipher);
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -373,9 +404,26 @@ public class SolutionChromosomeTest {
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene3);
 
+		/*
+		 * Make the solution clean before checking for dirtiness after clone
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isDirty());
+
 		SolutionChromosome clonedSolutionChromosome = solutionChromosome.clone();
+		assertFalse(solutionChromosome.isDirty());
+		assertTrue(clonedSolutionChromosome.isDirty());
+
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * removeGene
+		 */
+		clonedSolutionChromosome.setFitness(0.0);
+		assertFalse(clonedSolutionChromosome.isDirty());
 
 		clonedSolutionChromosome.removeGene(1);
+		assertTrue(clonedSolutionChromosome.isDirty());
+		assertFalse(solutionChromosome.isDirty());
 
 		log.info("Gene 1: "
 				+ ((WordGene) clonedSolutionChromosome.getGenes().get(0)).getWordString());

@@ -38,6 +38,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "solution")
@@ -67,6 +68,9 @@ public class Solution implements Serializable {
 	@Column(name = "created_timestamp", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
+
+	@Transient
+	protected boolean needsEvaluation = true;
 
 	public Solution() {
 		this.id = new SolutionId();
@@ -153,20 +157,28 @@ public class Solution implements Serializable {
 	}
 
 	public void addPlaintext(Plaintext plaintext) {
+		needsEvaluation = true;
+
 		plaintext.getId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);
 	}
 
 	public void insertPlaintext(int index, Plaintext plaintext) {
+		needsEvaluation = true;
+
 		this.plaintextCharacters.add(index, plaintext);
 	}
 
 	public void removePlaintext(Plaintext plaintext) {
+		needsEvaluation = true;
+
 		this.plaintextCharacters.remove(plaintext);
 	}
 
 	public void resetPlaintextCharacters() {
+		needsEvaluation = true;
+
 		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 
@@ -194,6 +206,21 @@ public class Solution implements Serializable {
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	/**
+	 * @return the needsEvaluation
+	 */
+	public boolean isNeedsEvaluation() {
+		return needsEvaluation;
+	}
+
+	/**
+	 * @param needsEvaluation
+	 *            the needsEvaluation to set
+	 */
+	public void setNeedsEvaluation(boolean needsEvaluation) {
+		this.needsEvaluation = needsEvaluation;
 	}
 
 	/*

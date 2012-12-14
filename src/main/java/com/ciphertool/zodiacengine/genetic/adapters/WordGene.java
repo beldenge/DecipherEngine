@@ -122,8 +122,19 @@ public class WordGene implements Gene {
 		return Collections.unmodifiableList(this.sequences);
 	}
 
+	/*
+	 * This should only be called from cloning methods. Otherwise, resetting the
+	 * sequences of a Gene should also remove those sequences from the
+	 * Chromosome.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Gene#resetSequences()
+	 */
 	@Override
 	public void resetSequences() {
+		this.chromosome.setDirty(true);
+
 		this.sequences = new ArrayList<Sequence>();
 	}
 
@@ -135,6 +146,8 @@ public class WordGene implements Gene {
 	 */
 	@Override
 	public void addSequence(Sequence sequence) {
+		this.chromosome.setDirty(true);
+
 		this.sequences.add(sequence);
 
 		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
@@ -164,6 +177,8 @@ public class WordGene implements Gene {
 	 */
 	@Override
 	public void insertSequence(int index, Sequence sequence) {
+		this.chromosome.setDirty(true);
+
 		if (sequence == null) {
 			log.warn("Attempted to insert a Sequence into WordGene, but the supplied Sequence was null.  Cannot continue. "
 					+ this);
@@ -203,6 +218,8 @@ public class WordGene implements Gene {
 	 */
 	@Override
 	public void removeSequence(Sequence sequence) {
+		this.chromosome.setDirty(true);
+
 		if (sequence == null) {
 			log.warn("Attempted to remove a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
 					+ this);
@@ -226,6 +243,8 @@ public class WordGene implements Gene {
 	}
 
 	/*
+	 * This should just be a combination of the remove and insert methods.
+	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ciphertool.zodiacengine.genetic.Gene#replaceSequence(int,
