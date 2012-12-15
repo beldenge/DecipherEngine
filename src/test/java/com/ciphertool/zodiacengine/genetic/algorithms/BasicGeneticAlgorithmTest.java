@@ -21,77 +21,79 @@ package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.BasicGeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.util.FitnessEvaluator;
-import com.ciphertool.zodiacengine.dao.CipherDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
+import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
+import com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator;
 
-public class BasicGeneticAlgorithmTest {
+public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static Logger log = Logger.getLogger(BasicGeneticAlgorithmTest.class);
 
-	private static ApplicationContext context;
-	private static Population population;
+	private static Population population = new Population();
 	private static GeneticAlgorithm geneticAlgorithm;
+	private static final int POPULATION_SIZE = 10;
+	private static final double SURVIVAL_RATE = 0.9;
+	private static final double MUTATION_RATE = 0.001;
+	private static final double CROSSOVER_RATE = 0.05;
+	private static final int LIFESPAN = -1;
+	private static final int MAX_GENERATIONS = 50;
 
 	@BeforeClass
 	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-genetic-test.xml");
-		log.info("Spring context created successfully!");
+		FitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		population = (Population) context.getBean("population");
-		geneticAlgorithm = (GeneticAlgorithm) context.getBean("geneticAlgorithm");
+		CrossoverAlgorithm crossoverAlgorithm = new LowestCommonGroupCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
 
-		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+		SingleSequenceMutationAlgorithm mutationAlgorithm = new SingleSequenceMutationAlgorithm();
+		mutationAlgorithm.setSequenceDao(new PlaintextSequenceDao());
 
-		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context
-				.getBean("defaultFitnessEvaluator");
+		ProbabilisticSelectionAlgorithm selectionAlgorithm = new ProbabilisticSelectionAlgorithm();
 
-		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context
-				.getBean("defaultCrossoverAlgorithm");
+		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(zodiac408,
+				POPULATION_SIZE, LIFESPAN, MAX_GENERATIONS, SURVIVAL_RATE, MUTATION_RATE,
+				CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
+				selectionAlgorithm);
 
-		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
-				.getBean("defaultMutationAlgorithm");
+		SolutionChromosomeGenerator solutionChromosomeGeneratorMock = mock(SolutionChromosomeGenerator.class);
+		when(solutionChromosomeGeneratorMock.generateChromosome())
+				.thenReturn(knownSolution.clone());
+		population.setChromosomeGenerator(solutionChromosomeGeneratorMock);
 
-		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context
-				.getBean("defaultSelectionAlgorithm");
+		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+		taskExecutor.setCorePoolSize(4);
+		taskExecutor.setMaxPoolSize(4);
+		taskExecutor.setQueueCapacity(100);
+		taskExecutor.setKeepAliveSeconds(1);
+		taskExecutor.setAllowCoreThreadTimeOut(true);
+		taskExecutor.initialize();
 
-		Cipher cipher = cipherDao.findByCipherName("zodiac340");
-		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, -1, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm,
-				mutationAlgorithm, selectionAlgorithm);
-
-		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
-
+		population.setTaskExecutor(taskExecutor);
 		population.populateIndividuals(10);
 		population.evaluateFitness(null);
-	}
 
-	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage
-	 * collected and subsequent unit tests may encounter an out of memory
-	 * exception
-	 */
-	@AfterClass
-	public static void cleanUp() {
-		((ClassPathXmlApplicationContext) context).close();
-		population = null;
-		geneticAlgorithm = null;
-		context = null;
+		geneticAlgorithm = new BasicGeneticAlgorithm();
+		geneticAlgorithm.setPopulation(population);
+		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 	}
 
 	@Test
