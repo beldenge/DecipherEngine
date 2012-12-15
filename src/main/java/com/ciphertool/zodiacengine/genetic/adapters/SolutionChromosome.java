@@ -366,6 +366,11 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		return needsEvaluation;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#setDirty(boolean)
+	 */
 	@Override
 	public void setDirty(boolean isDirty) {
 		this.needsEvaluation = isDirty;
