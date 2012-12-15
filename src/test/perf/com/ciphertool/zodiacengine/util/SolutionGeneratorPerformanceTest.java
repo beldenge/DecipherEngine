@@ -33,9 +33,9 @@ import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Solution;
 
-public class SolutionGeneratorTest {
+public class SolutionGeneratorPerformanceTest {
 
-	private static Logger log = Logger.getLogger(SolutionGeneratorTest.class);
+	private static Logger log = Logger.getLogger(SolutionGeneratorPerformanceTest.class);
 	private static ApplicationContext context;
 	private static ZodiacSolutionGenerator solutionGenerator;
 	private static ZodiacSolutionEvaluator solutionEvaluator;
@@ -54,14 +54,6 @@ public class SolutionGeneratorTest {
 
 		solutionGenerator.setCipher(cipher);
 		solutionEvaluator.setCipher(cipher);
-	}
-
-	@Test
-	public void testGenerateSolution() {
-		@SuppressWarnings("unused")
-		Solution solution = solutionGenerator.generateSolution();
-
-		solution = solutionGenerator.generateSolution();
 	}
 
 	@Test

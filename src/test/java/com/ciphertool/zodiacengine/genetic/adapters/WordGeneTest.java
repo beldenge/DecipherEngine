@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.genetic.adapters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,12 @@ public class WordGeneTest {
 		solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
+	}
+
+	@Test
+	public void getNullPlaintextSequences() {
+		// solutionChromosome should have been initialized in the @Before method
+		assertNotNull(solutionChromosome.getPlaintextCharacters());
 	}
 
 	@Test

@@ -44,7 +44,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	private List<Gene> genes = new ArrayList<Gene>();
 
 	@Transient
-	private Double fitness;
+	private Double fitness = 0.0;
 
 	@Transient
 	private int age = 0;

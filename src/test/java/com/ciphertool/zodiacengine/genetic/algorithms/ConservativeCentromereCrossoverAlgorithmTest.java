@@ -1,6 +1,7 @@
 package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
@@ -62,6 +63,10 @@ public class ConservativeCentromereCrossoverAlgorithmTest extends GeneticAlgorit
 	@Test
 	public void testCrossover() {
 		List<Chromosome> children = crossoverAlgorithm.crossover(knownSolution, dummySolution);
+
+		assertFalse(children.get(0).equals(children.get(1)));
+		assertEquals(children.get(0).actualSize(), dummySolution.actualSize());
+		assertEquals(children.get(1).actualSize(), knownSolution.actualSize());
 
 		log.info(children);
 	}

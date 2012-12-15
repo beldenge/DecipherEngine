@@ -24,20 +24,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class PlaintextSequenceTest {
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(PlaintextSequenceTest.class);
 
+	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
+
+	@Before
+	public void resetSolutionChromosome() {
+		solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+	}
+
 	@Test
 	public void testClonePlaintextSequence() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
@@ -68,8 +75,6 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testShiftLeft() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
@@ -83,8 +88,6 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testShiftRight() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 

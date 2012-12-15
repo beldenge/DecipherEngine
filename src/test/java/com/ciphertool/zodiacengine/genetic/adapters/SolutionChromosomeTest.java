@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
@@ -36,19 +37,28 @@ import com.ciphertool.zodiacengine.entities.SolutionId;
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
 
+	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 	private static Cipher cipher = new Cipher("zodiac", 24, 17);
+
+	@Before
+	public void resetSolutionChromosome() {
+		solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+	}
 
 	@Test
 	public void testGetNullPlaintextCharacters() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
+		// solutionChromosome should have been initialized in the @Before method
 		assertNotNull(solutionChromosome.getPlaintextCharacters());
 	}
 
 	@Test
-	public void testActualSize() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+	public void testGetNullGenes() {
+		// solutionChromosome should have been initialized in the @Before method
+		assertNotNull(solutionChromosome.getGenes());
+	}
 
+	@Test
+	public void testActualSize() {
 		assertEquals(solutionChromosome.actualSize().intValue(), 0);
 
 		Word word = new Word(new WordId("smile", 'N'));
@@ -66,21 +76,14 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testTargetSize() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
-
-		Cipher cipher = new Cipher();
-
-		solutionChromosome.setCipher(cipher);
-
-		cipher.setColumns(5);
-		cipher.setRows(5);
+		solutionChromosome.getCipher().setColumns(5);
+		solutionChromosome.getCipher().setRows(5);
 
 		assertEquals(solutionChromosome.targetSize().intValue(), 25);
 	}
 
 	@Test
 	public void testAddGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
@@ -128,7 +131,6 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testCloneSolutionChromosome() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		solutionChromosome.setId(new SolutionId());
 		solutionChromosome.setFitness(0.0);
 		solutionChromosome.setCipher(new Cipher());
@@ -214,7 +216,6 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testInsertGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
@@ -269,7 +270,6 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
@@ -331,7 +331,6 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testReplaceGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
@@ -390,7 +389,6 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveGeneOnClonedSolution() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());

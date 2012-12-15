@@ -27,87 +27,77 @@ import static org.junit.Assert.fail;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.Population;
-import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.ConservativeCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.LiberalCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.util.ChromosomeHelper;
 import com.ciphertool.genetics.util.FitnessEvaluator;
-import com.ciphertool.zodiacengine.dao.CipherDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextId;
+import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
 
-public class CrossoverAlgorithmTest {
+public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static Logger log = Logger.getLogger(CrossoverAlgorithmTest.class);
 
-	private static ApplicationContext context;
-	private static CrossoverAlgorithm crossoverAlgorithm;
-	private static Population population;
+	private static FitnessEvaluator fitnessEvaluator;
+	private static SolutionChromosome dummySolution;
 
 	@BeforeClass
 	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-genetic-test.xml");
-		log.info("Spring context created successfully!");
+		fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		GeneticAlgorithm geneticAlgorithm = (GeneticAlgorithm) context.getBean("geneticAlgorithm");
+		dummySolution = knownSolution.clone();
 
-		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+		dummySolution.getGenes().get(0).insertSequence(
+				0,
+				new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
+						.getGenes().get(0)));
 
-		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context
-				.getBean("defaultFitnessEvaluator");
-
-		crossoverAlgorithm = (CrossoverAlgorithm) context.getBean("defaultCrossoverAlgorithm");
-
-		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
-				.getBean("defaultMutationAlgorithm");
-
-		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context
-				.getBean("defaultSelectionAlgorithm");
-
-		Cipher cipher = cipherDao.findByCipherName("zodiac340");
-		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-				100, -1, 50, 0.9, 0.001, 0.05, fitnessEvaluator, crossoverAlgorithm,
-				mutationAlgorithm, selectionAlgorithm);
-
-		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
-
-		population = (Population) context.getBean("population");
-
-		population.populateIndividuals(100);
-		population.evaluateFitness(null);
-	}
-
-	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage
-	 * collected and subsequent unit tests may encounter an out of memory
-	 * exception
-	 */
-	@AfterClass
-	public static void cleanUp() {
-		((ClassPathXmlApplicationContext) context).close();
-		crossoverAlgorithm = null;
-		population = null;
-		context = null;
+		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
+			plaintext.setValue("*");
+		}
 	}
 
 	@Test
-	public void testCrossover() {
-		Chromosome mom = population.spinObjectRouletteWheel();
+	public void testLiberalCrossoverAlgorithm() {
+		LiberalCrossoverAlgorithm crossoverAlgorithm = new LiberalCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+		crossoverAlgorithm.setChromosomeHelper(new ChromosomeHelper());
+
+		validateCrossoverAlgorithm(crossoverAlgorithm);
+	}
+
+	@Test
+	public void testConservativeCrossoverAlgorithm() {
+		ConservativeCrossoverAlgorithm crossoverAlgorithm = new ConservativeCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+
+		validateCrossoverAlgorithm(crossoverAlgorithm);
+	}
+
+	@Test
+	public void testLowestCommonGroupCrossoverAlgorithm() {
+		LowestCommonGroupCrossoverAlgorithm crossoverAlgorithm = new LowestCommonGroupCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+
+		validateCrossoverAlgorithm(crossoverAlgorithm);
+	}
+
+	private void validateCrossoverAlgorithm(CrossoverAlgorithm crossoverAlgorithm) {
+		Chromosome mom = knownSolution;
 		log.info("Mom: " + mom);
 
-		Chromosome dad = population.spinObjectRouletteWheel();
+		Chromosome dad = dummySolution;
 		log.info("Dad: " + dad);
 
 		List<Chromosome> children = crossoverAlgorithm.crossover(mom, dad);
@@ -115,49 +105,54 @@ public class CrossoverAlgorithmTest {
 		assertNotNull(children);
 		assertNotNull(children.get(0));
 
-		Chromosome firstChild = children.get(0);
+		for (Chromosome child : children) {
+			validateChild(child);
 
-		int genesBefore = firstChild.getGenes().size();
+			/*
+			 * For LowestCommonGroupCrossoverAlgorithm and
+			 * ConservativeCrossoverAlgorithm only
+			 */
+			if (crossoverAlgorithm instanceof LowestCommonGroupCrossoverAlgorithm
+					|| crossoverAlgorithm instanceof ConservativeCrossoverAlgorithm) {
+				validatePlaintextSequences(child, mom, dad);
+			}
+		}
+	}
 
-		log.info("Child: " + firstChild);
+	private void validateChild(Chromosome child) {
+		log.info("Child: " + child);
 
 		int count = 0;
-		for (Gene gene : firstChild.getGenes()) {
+		for (Gene gene : child.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(((SolutionChromosome) firstChild).getPlaintextCharacters().get(count) == gene
+				assertTrue(((SolutionChromosome) child).getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
-				assertEquals(((SolutionChromosome) firstChild).getPlaintextCharacters().get(count)
+				assertEquals(((SolutionChromosome) child).getPlaintextCharacters().get(count)
 						.getId().getCiphertextId(), count);
 
 				count++;
 			}
 		}
 
-		assertEquals(firstChild.actualSize().intValue(), ((SolutionChromosome) firstChild)
+		assertEquals(child.actualSize().intValue(), ((SolutionChromosome) child)
 				.getPlaintextCharacters().size());
 
-		log.info("Solution size: "
-				+ ((SolutionChromosome) firstChild).getPlaintextCharacters().size());
+		log.info("Solution size: " + ((SolutionChromosome) child).getPlaintextCharacters().size());
+	}
 
-		assertEquals(genesBefore, firstChild.getGenes().size());
-
-		/*
-		 * For LowestCommonGroupCrossoverAlgorithm and
-		 * ConservativeCrossoverAlgorithm only
-		 */
-		if (crossoverAlgorithm instanceof LowestCommonGroupCrossoverAlgorithm
-				|| crossoverAlgorithm instanceof ConservativeCrossoverAlgorithm) {
-			for (Plaintext plaintext : ((SolutionChromosome) firstChild).getPlaintextCharacters()) {
-				if ((!plaintext.getValue().equals(
-						((SolutionChromosome) mom).getPlaintextCharacters().get(
-								plaintext.getId().getCiphertextId()).getValue()))
-						&& (!plaintext.getValue().equals(
-								((SolutionChromosome) dad).getPlaintextCharacters().get(
-										plaintext.getId().getCiphertextId()).getValue()))) {
-					fail("Plaintext value from child does not match Plaintext from either parent: "
-							+ plaintext);
-				}
+	private void validatePlaintextSequences(Chromosome firstChild, Chromosome mom, Chromosome dad) {
+		for (Plaintext plaintext : ((SolutionChromosome) firstChild).getPlaintextCharacters()) {
+			if (((((SolutionChromosome) mom).actualSize() > plaintext.getId().getCiphertextId()) && !plaintext
+					.getValue().equals(
+							((SolutionChromosome) mom).getPlaintextCharacters().get(
+									plaintext.getId().getCiphertextId()).getValue()))
+					&& ((((SolutionChromosome) dad).actualSize() > plaintext.getId()
+							.getCiphertextId()) && !plaintext.getValue().equals(
+							((SolutionChromosome) dad).getPlaintextCharacters().get(
+									plaintext.getId().getCiphertextId()).getValue()))) {
+				fail("Plaintext value from child does not match Plaintext from either parent: "
+						+ plaintext);
 			}
 		}
 	}

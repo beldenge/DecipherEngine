@@ -19,61 +19,64 @@
 
 package com.ciphertool.zodiacengine.util;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.zodiacengine.dao.CipherDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.entities.IncrementalSolution;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 
-public class SolutionEvaluatorTest {
+public class SolutionEvaluatorTest extends ZodiacTestBase {
 
 	private static Logger log = Logger.getLogger(SolutionEvaluatorTest.class);
-	private static ApplicationContext context;
-	private static ZodiacSolutionGenerator solutionGenerator;
-	private static SolutionEvaluator solutionEvaluator;
+	private static final int ZODIAC_SOLUTION_MAX_FITNESS = 354;
 
-	@BeforeClass
-	public static void setUp() {
-		context = new ClassPathXmlApplicationContext("beans-zodiac.xml");
-		log.info("Spring context created successfully!");
+	@Test
+	public void testZodiacSolutionEvaluator() {
+		ZodiacSolutionEvaluator fitnessEvaluator = new ZodiacSolutionEvaluator();
+		fitnessEvaluator.setCipher(zodiac408);
+		fitnessEvaluator.setAdjacencyThreshold(Integer.MAX_VALUE);
+		fitnessEvaluator.setTotalMatchThreshold(Integer.MAX_VALUE);
+		fitnessEvaluator.setUniqueMatchThreshold(Integer.MAX_VALUE);
 
-		CipherDao cipherDao = (CipherDao) context.getBean("cipherDao");
+		int fitness = fitnessEvaluator.determineConfidenceLevel(knownSolution);
 
-		Cipher cipher = cipherDao.findByCipherName("zodiac340");
+		log.info(knownSolution);
+		log.info("ZodiacSolutionEvaluator Fitness: " + fitness);
 
-		solutionGenerator = (ZodiacSolutionGenerator) context.getBean("solutionGenerator");
-		solutionEvaluator = (SolutionEvaluator) context.getBean("solutionEvaluator");
-
-		solutionGenerator.setCipher(cipher);
-		solutionEvaluator.setCipher(cipher);
+		assertEquals(fitness, ZODIAC_SOLUTION_MAX_FITNESS);
 	}
 
 	@Test
-	public void testValidateSolution() {
+	public void testIncrementalSolutionEvaluator() {
+		IncrementalSolutionEvaluator fitnessEvaluator = new IncrementalSolutionEvaluator();
+		fitnessEvaluator.setCipher(zodiac408);
 
-		long start = System.currentTimeMillis();
-		Solution solution = solutionGenerator.generateSolution();
-		log.info("Took " + (System.currentTimeMillis() - start) + "ms to generate solution.");
+		IncrementalSolution incrementalSolution = new IncrementalSolution(zodiac408, 0, 0, 0);
+		for (Plaintext plaintext : knownSolution.getPlaintextCharacters()) {
+			incrementalSolution.addPlaintext(plaintext);
+		}
+		incrementalSolution.setUncommittedIndex(zodiac408.getCiphertextCharacters().size() + 1);
 
-		start = System.currentTimeMillis();
-		solutionEvaluator.determineConfidenceLevel(solution);
-		log.info("Took " + (System.currentTimeMillis() - start)
-				+ "ms to determine confidence level.");
+		int fitness = fitnessEvaluator.determineConfidenceLevel(incrementalSolution);
+
+		log.info(incrementalSolution);
+		log.info("IncrementalSolutionEvaluator Fitness: " + fitness);
+
+		assertEquals(fitness, ZODIAC_SOLUTION_MAX_FITNESS);
 	}
 
-	/**
-	 * Without setting these to null, the humongous wordMap will not be garbage
-	 * collected and subsequent unit tests may encounter an out of memory
-	 * exception
-	 */
-	@AfterClass
-	public static void cleanUp() {
-		((ClassPathXmlApplicationContext) context).close();
-		context = null;
+	@Test
+	public void testZodiacSolutionPredicateEvaluator() {
+		ZodiacSolutionPredicateEvaluator fitnessEvaluator = new ZodiacSolutionPredicateEvaluator();
+		fitnessEvaluator.setCipher(zodiac408);
+
+		int fitness = fitnessEvaluator.determineConfidenceLevel(knownSolution);
+
+		log.info(knownSolution);
+		log.info("ZodiacSolutionPredicateEvaluator Fitness: " + fitness);
+
+		assertEquals(fitness, ZODIAC_SOLUTION_MAX_FITNESS);
 	}
 }
