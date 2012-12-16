@@ -49,6 +49,7 @@ import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitne
 import com.ciphertool.zodiacengine.genetic.util.SolutionBreeder;
 
 public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
+	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(BasicGeneticAlgorithmTest.class);
 
 	private static Population population = new Population();

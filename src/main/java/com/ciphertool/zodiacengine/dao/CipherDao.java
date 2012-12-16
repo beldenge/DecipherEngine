@@ -51,7 +51,8 @@ public class CipherDao {
 	public List<Cipher> findAll() {
 		Session session = sessionFactory.getCurrentSession();
 
-		List<Cipher> ciphers = (List<Cipher>) session.createQuery("from Cipher").list();
+		@SuppressWarnings("unchecked")
+		List<Cipher> ciphers = session.createQuery("from Cipher").list();
 
 		return ciphers;
 	}
