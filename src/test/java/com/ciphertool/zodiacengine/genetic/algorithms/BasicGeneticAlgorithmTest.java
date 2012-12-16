@@ -42,7 +42,10 @@ import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorit
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
+import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
@@ -59,7 +62,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static final int POPULATION_SIZE = 10;
 	private static final double SURVIVAL_RATE = 0.9;
 	private static final double MUTATION_RATE = 0.1;
-	private static final double CROSSOVER_RATE = 0.2;
+	private static final double CROSSOVER_RATE = 1.0;
 	private static final int LIFESPAN = -1;
 	private static final int MAX_GENERATIONS = 50;
 	private static final int MAX_THREADS = 4;
@@ -103,6 +106,8 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	@Before
 	public void repopulate() {
+		population.clearIndividuals();
+
 		when(solutionBreederMock.breed()).thenReturn(knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
@@ -132,17 +137,51 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		geneticAlgorithm.mutate();
 
 		int numEqualIndividuals = 0;
-		for (int i = 0; i < population.getIndividuals().size(); i++) {
+		for (int i = 0; i < population.size(); i++) {
 			if (clonedIndividuals.get(i).equals(population.getIndividuals().get(i))) {
 				numEqualIndividuals++;
 			}
 		}
 
+		assertEquals(population.size(), POPULATION_SIZE);
 		assertEquals(numEqualIndividuals, POPULATION_SIZE - 1);
 	}
 
 	@Test
 	public void testCrossover() {
+		SolutionChromosome dummySolution = knownSolution.clone();
 
+		dummySolution.getGenes().get(0).insertSequence(
+				0,
+				new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
+						.getGenes().get(0)));
+
+		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
+			plaintext.setValue("*");
+		}
+
+		population.clearIndividuals();
+		population.addIndividual(knownSolution);
+		population.addIndividual(dummySolution);
+
+		List<SolutionChromosome> clonedIndividuals = new ArrayList<SolutionChromosome>();
+
+		for (Chromosome individual : population.getIndividuals()) {
+			clonedIndividuals.add((SolutionChromosome) individual.clone());
+		}
+
+		geneticAlgorithm.crossover();
+
+		int numEqualIndividuals = 0;
+		for (Chromosome individual : population.getIndividuals()) {
+			for (int i = 0; i < clonedIndividuals.size(); i++) {
+				if (clonedIndividuals.get(i).equals(individual)) {
+					numEqualIndividuals++;
+				}
+			}
+		}
+
+		assertEquals(numEqualIndividuals, clonedIndividuals.size());
+		assertEquals(population.size(), clonedIndividuals.size() + 2);
 	}
 }
