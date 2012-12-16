@@ -34,7 +34,7 @@ import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
-import com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator;
+import com.ciphertool.zodiacengine.genetic.util.SolutionBreeder;
 
 public class PopulationTest extends GeneticAlgorithmTestBase {
 	@SuppressWarnings("unused")
@@ -44,10 +44,9 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@BeforeClass
 	public static void setUp() {
-		SolutionChromosomeGenerator solutionChromosomeGeneratorMock = mock(SolutionChromosomeGenerator.class);
-		when(solutionChromosomeGeneratorMock.generateChromosome())
-				.thenReturn(knownSolution.clone());
-		population.setChromosomeGenerator(solutionChromosomeGeneratorMock);
+		SolutionBreeder solutionBreederMock = mock(SolutionBreeder.class);
+		when(solutionBreederMock.breed()).thenReturn(knownSolution.clone());
+		population.setBreeder(solutionBreederMock);
 
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
 		taskExecutor.setCorePoolSize(4);
@@ -66,7 +65,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@Test
 	public void testPopulateIndividuals() {
-		population.populateIndividuals(populationSize);
+		population.breed(populationSize);
 
 		assertEquals(population.size(), populationSize);
 
@@ -79,7 +78,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 	@Test
 	public void testSpinObjectRouletteWheel() {
 		// Just in case a previous test modified the population
-		population.populateIndividuals(populationSize);
+		population.breed(populationSize);
 		population.evaluateFitness(null);
 
 		Chromosome chromosome = population.spinObjectRouletteWheel();
@@ -90,7 +89,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 	@Test
 	public void testSpinIndexRouletteWheel() {
 		// Just in case a previous test modified the population
-		population.populateIndividuals(populationSize);
+		population.breed(populationSize);
 		population.evaluateFitness(null);
 
 		int winningNumber = -1;

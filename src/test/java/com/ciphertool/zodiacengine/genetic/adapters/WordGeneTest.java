@@ -334,8 +334,11 @@ public class WordGeneTest {
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
 
+		String valueBefore = ((PlaintextSequence) wordGene.getSequences().get(ciphertextId))
+				.getValue();
 		wordGene.replaceSequence(ciphertextId, plaintextSequence);
 		assertTrue(solutionChromosome.isDirty());
+		assertFalse(valueBefore.equals(plaintextSequence.getValue()));
 
 		assertEquals(wordGene.size(), geneSizeBefore);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore);

@@ -190,7 +190,8 @@ public class WordGene implements Gene {
 
 		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
 
-		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
+		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
+				((PlaintextSequence) sequence));
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current

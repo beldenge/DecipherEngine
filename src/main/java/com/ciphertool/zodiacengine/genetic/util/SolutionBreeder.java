@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.genetics.util.ChromosomeGenerator;
+import com.ciphertool.genetics.util.Breeder;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -35,7 +35,7 @@ import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
-public class SolutionChromosomeGenerator implements ChromosomeGenerator {
+public class SolutionBreeder implements Breeder {
 	private Cipher cipher;
 	private WordListDao wordListDao;
 	private Logger log = Logger.getLogger(getClass());
@@ -43,11 +43,11 @@ public class SolutionChromosomeGenerator implements ChromosomeGenerator {
 	/**
 	 * Default no-args constructor
 	 */
-	public SolutionChromosomeGenerator() {
+	public SolutionBreeder() {
 	}
 
 	@Override
-	public Chromosome generateChromosome() {
+	public Chromosome breed() {
 		// Set confidence levels to lowest possible
 		SolutionChromosome solution = new SolutionChromosome(cipher, 0, 0, 0);
 

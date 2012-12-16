@@ -75,8 +75,8 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator"
-		id="chromosomeGenerator">
+		class="com.ciphertool.zodiacengine.genetic.util.SolutionBreeder"
+		id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
@@ -214,7 +214,7 @@
 		id="defaultFitnessComparator" />
 
 	<bean class="com.ciphertool.genetics.Population" id="population">
-		<property name="chromosomeGenerator" ref="chromosomeGenerator" />
+		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />

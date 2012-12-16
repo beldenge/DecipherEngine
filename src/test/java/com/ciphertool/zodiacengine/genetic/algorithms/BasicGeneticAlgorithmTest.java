@@ -20,11 +20,14 @@
 package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -37,24 +40,29 @@ import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
+import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
-import com.ciphertool.zodiacengine.genetic.util.SolutionChromosomeGenerator;
+import com.ciphertool.zodiacengine.genetic.util.SolutionBreeder;
 
 public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static Logger log = Logger.getLogger(BasicGeneticAlgorithmTest.class);
 
 	private static Population population = new Population();
 	private static GeneticAlgorithm geneticAlgorithm;
+	private static SolutionBreeder solutionBreederMock;
+
 	private static final int POPULATION_SIZE = 10;
 	private static final double SURVIVAL_RATE = 0.9;
-	private static final double MUTATION_RATE = 0.001;
-	private static final double CROSSOVER_RATE = 0.05;
+	private static final double MUTATION_RATE = 0.1;
+	private static final double CROSSOVER_RATE = 0.2;
 	private static final int LIFESPAN = -1;
 	private static final int MAX_GENERATIONS = 50;
+	private static final int MAX_THREADS = 4;
+	private static final int THREAD_EXECUTOR_QUEUE_CAPACITY = 100;
 
 	@BeforeClass
 	public static void setUp() {
@@ -74,42 +82,66 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 				CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
 				selectionAlgorithm);
 
-		SolutionChromosomeGenerator solutionChromosomeGeneratorMock = mock(SolutionChromosomeGenerator.class);
-		when(solutionChromosomeGeneratorMock.generateChromosome())
-				.thenReturn(knownSolution.clone());
-		population.setChromosomeGenerator(solutionChromosomeGeneratorMock);
+		solutionBreederMock = mock(SolutionBreeder.class);
+		population.setBreeder(solutionBreederMock);
 
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setCorePoolSize(4);
-		taskExecutor.setMaxPoolSize(4);
-		taskExecutor.setQueueCapacity(100);
+		taskExecutor.setCorePoolSize(MAX_THREADS);
+		taskExecutor.setMaxPoolSize(MAX_THREADS);
+		taskExecutor.setQueueCapacity(THREAD_EXECUTOR_QUEUE_CAPACITY);
 		taskExecutor.setKeepAliveSeconds(1);
 		taskExecutor.setAllowCoreThreadTimeOut(true);
 		taskExecutor.initialize();
 
 		population.setTaskExecutor(taskExecutor);
-		population.populateIndividuals(10);
-		population.evaluateFitness(null);
 
 		geneticAlgorithm = new BasicGeneticAlgorithm();
 		geneticAlgorithm.setPopulation(population);
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
 	}
 
+	@Before
+	public void repopulate() {
+		when(solutionBreederMock.breed()).thenReturn(knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone());
+
+		population.breed(POPULATION_SIZE);
+		population.evaluateFitness(null);
+	}
+
 	@Test
 	public void testSelect() {
-		((BasicGeneticAlgorithm) geneticAlgorithm).getStrategy().setSurvivalRate(0.9);
-		((BasicGeneticAlgorithm) geneticAlgorithm).getStrategy().setPopulationSize(10);
-
-		SolutionChromosome bestChromosome = (SolutionChromosome) population.getBestFitIndividual();
-		log.info("Best fit individual before: " + bestChromosome);
+		assertEquals(population.size(), POPULATION_SIZE);
 
 		geneticAlgorithm.select();
 
-		assertEquals(population.size(), 9);
+		assertEquals(population.size(), POPULATION_SIZE - 1);
+	}
 
-		log.info("Best fit individual after: "
-				+ ((SolutionChromosome) population.getBestFitIndividual()));
-		assertTrue(bestChromosome == (SolutionChromosome) population.getBestFitIndividual());
+	@Test
+	public void testMutate() {
+		List<SolutionChromosome> clonedIndividuals = new ArrayList<SolutionChromosome>();
+
+		for (Chromosome individual : population.getIndividuals()) {
+			clonedIndividuals.add((SolutionChromosome) individual.clone());
+		}
+
+		geneticAlgorithm.mutate();
+
+		int numEqualIndividuals = 0;
+		for (int i = 0; i < population.getIndividuals().size(); i++) {
+			if (clonedIndividuals.get(i).equals(population.getIndividuals().get(i))) {
+				numEqualIndividuals++;
+			}
+		}
+
+		assertEquals(numEqualIndividuals, POPULATION_SIZE - 1);
+	}
+
+	@Test
+	public void testCrossover() {
+
 	}
 }
