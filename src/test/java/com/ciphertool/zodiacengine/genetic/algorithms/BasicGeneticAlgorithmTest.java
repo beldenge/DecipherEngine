@@ -64,18 +64,18 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(BasicGeneticAlgorithmTest.class);
 
-	private static Population population = new Population();
-	private static GeneticAlgorithm geneticAlgorithm;
-	private static SolutionBreeder solutionBreederMock = mock(SolutionBreeder.class);;
+	protected static Population population = new Population();
+	protected static GeneticAlgorithm geneticAlgorithm;
+	protected static SolutionBreeder solutionBreederMock = mock(SolutionBreeder.class);;
 
-	private static final int POPULATION_SIZE = 10;
-	private static final double SURVIVAL_RATE = 0.9;
-	private static final double MUTATION_RATE = 0.1;
-	private static final double CROSSOVER_RATE = 1.0;
-	private static final int LIFESPAN = -1;
-	private static final int MAX_GENERATIONS = 2;
-	private static final int MAX_THREADS = 4;
-	private static final int THREAD_EXECUTOR_QUEUE_CAPACITY = 100;
+	protected static final int POPULATION_SIZE = 10;
+	protected static final double SURVIVAL_RATE = 0.9;
+	protected static final double MUTATION_RATE = 0.1;
+	protected static final double CROSSOVER_RATE = 1.0;
+	protected static final int LIFESPAN = -1;
+	protected static final int MAX_GENERATIONS = 2;
+	protected static final int MAX_THREADS = 4;
+	protected static final int THREAD_EXECUTOR_QUEUE_CAPACITY = 100;
 
 	@BeforeClass
 	public static void setUp() {

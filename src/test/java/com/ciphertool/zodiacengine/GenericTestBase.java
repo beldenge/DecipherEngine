@@ -542,7 +542,14 @@ public class GenericTestBase {
 	protected static Object invokeMethod(final Object instance, final String method,
 			final Class<?>[] params, final Object[] args) throws InvocationTargetException {
 		try {
-			Method m = instance.getClass().getDeclaredMethod(method, params);
+			Method m;
+
+			try {
+				m = instance.getClass().getDeclaredMethod(method, params);
+			} catch (NoSuchMethodException e) {
+				m = instance.getClass().getMethod(method, params);
+			}
+
 			m.setAccessible(true); // in case the method is private
 			return m.invoke(instance, args);
 		} catch (IllegalArgumentException e) {
