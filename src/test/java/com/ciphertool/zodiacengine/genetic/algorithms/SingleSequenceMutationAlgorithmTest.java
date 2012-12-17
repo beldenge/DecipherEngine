@@ -21,7 +21,6 @@ package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,125 +31,42 @@ import org.junit.Test;
 
 import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm;
 import com.ciphertool.genetics.dao.SequenceDao;
-import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.GenericTestBase;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
-import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
 
-public class SingleSequenceMutationAlgorithmTest extends GenericTestBase {
+public class SingleSequenceMutationAlgorithmTest extends MutationAlgorithmTestBase {
 	private static Logger log = Logger.getLogger(SingleSequenceMutationAlgorithmTest.class);
-	private static SingleSequenceMutationAlgorithm mutationAlgorithm = new SingleSequenceMutationAlgorithm();
 	private static Word word = new Word(new WordId("smile", 'N'));
 	private static int beginCiphertextIndex = 0;
-	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
 	@BeforeClass
 	public static void setUp() {
+		mutationAlgorithm = new SingleSequenceMutationAlgorithm();
 		SequenceDao sequenceDao = new PlaintextSequenceDao();
-		mutationAlgorithm.setSequenceDao(sequenceDao);
+		((SingleSequenceMutationAlgorithm) mutationAlgorithm).setSequenceDao(sequenceDao);
 	}
 
 	@Test
 	public void testMutateGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
-
-		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene1);
-
-		Word word2 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene2);
-
-		Class<?>[] params = { Chromosome.class, int.class };
-		Object[] args = { solutionChromosome, 0 };
-		try {
-			invokeMethod(mutationAlgorithm, "mutateGene", params, args);
-		} catch (InvocationTargetException e) {
-			fail(e.getMessage());
-		}
-
-		assertFalse(wordGene1.getWordString().equals(word1.getId().getWord()));
-
-		assertEquals(wordGene2.getWordString(), word2.getId().getWord());
-
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
-
-		log.info("Gene 1: " + ((WordGene) solutionChromosome.getGenes().get(0)).getWordString());
-		log.info("Gene 2: " + ((WordGene) solutionChromosome.getGenes().get(1)).getWordString());
+		super.testMutateGene();
 	}
 
 	@Test
 	public void testMutateInvalidGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
-
-		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene1);
-
-		Word word2 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene2);
-
-		Class<?>[] params = { Chromosome.class, int.class };
-		Object[] args = { solutionChromosome, 5 };
-		try {
-			invokeMethod(mutationAlgorithm, "mutateGene", params, args);
-		} catch (InvocationTargetException e) {
-			fail(e.getMessage());
-		}
-
-		assertEquals(wordGene1.getWordString(), word1.getId().getWord());
-
-		assertEquals(wordGene2.getWordString(), word2.getId().getWord());
+		super.testMutateInvalidGene();
 	}
 
 	@Test
 	public void testMutateRandomGene() {
-		SolutionChromosome solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
-
-		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene1);
-
-		Word word2 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
-		solutionChromosome.addGene(wordGene2);
-
-		Class<?>[] params = { Chromosome.class };
-		Object[] args = { solutionChromosome };
-		try {
-			invokeMethod(mutationAlgorithm, "mutateRandomGene", params, args);
-		} catch (InvocationTargetException e) {
-			fail(e.getMessage());
-		}
-
-		assertFalse(wordGene1.getWordString().equals(word1.getId().getWord())
-				&& wordGene2.getWordString().equals(word2.getId().getWord()));
-
-		/*
-		 * Only one gene should be changed.
-		 */
-		assertTrue(wordGene1.getWordString().equals(word1.getId().getWord())
-				|| wordGene2.getWordString().equals(word2.getId().getWord()));
-
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
-
-		log.info("Gene 1: " + ((WordGene) solutionChromosome.getGenes().get(0)).getWordString());
-		log.info("Gene 2: " + ((WordGene) solutionChromosome.getGenes().get(1)).getWordString());
+		super.testMutateRandomGene();
 	}
 
 	@Test
 	public void testMutateSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 
@@ -173,7 +89,6 @@ public class SingleSequenceMutationAlgorithmTest extends GenericTestBase {
 
 	@Test
 	public void testMutateInvalidSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 
@@ -194,7 +109,6 @@ public class SingleSequenceMutationAlgorithmTest extends GenericTestBase {
 
 	@Test
 	public void testMutateRandomSequence() {
-		solutionChromosome = new SolutionChromosome();
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 		solutionChromosome.addGene(wordGene);
 

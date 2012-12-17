@@ -31,9 +31,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.genetics.algorithms.crossover.ConservativeCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.ConservativeUnevaluatedCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LiberalCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.LiberalUnevaluatedCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupUnevaluatedCrossoverAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.ChromosomeHelper;
@@ -74,7 +77,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
 		crossoverAlgorithm.setChromosomeHelper(new ChromosomeHelper());
 
-		validateCrossoverAlgorithm(crossoverAlgorithm);
+		validateCrossoverAlgorithm(crossoverAlgorithm, false);
 	}
 
 	@Test
@@ -82,7 +85,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		ConservativeCrossoverAlgorithm crossoverAlgorithm = new ConservativeCrossoverAlgorithm();
 		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
 
-		validateCrossoverAlgorithm(crossoverAlgorithm);
+		validateCrossoverAlgorithm(crossoverAlgorithm, true);
 	}
 
 	@Test
@@ -90,10 +93,36 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		LowestCommonGroupCrossoverAlgorithm crossoverAlgorithm = new LowestCommonGroupCrossoverAlgorithm();
 		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
 
-		validateCrossoverAlgorithm(crossoverAlgorithm);
+		validateCrossoverAlgorithm(crossoverAlgorithm, true);
 	}
 
-	private void validateCrossoverAlgorithm(CrossoverAlgorithm crossoverAlgorithm) {
+	@Test
+	public void testLiberalUnevaluatedCrossoverAlgorithm() {
+		LiberalUnevaluatedCrossoverAlgorithm crossoverAlgorithm = new LiberalUnevaluatedCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+		crossoverAlgorithm.setChromosomeHelper(new ChromosomeHelper());
+
+		validateCrossoverAlgorithm(crossoverAlgorithm, false);
+	}
+
+	@Test
+	public void testConservativeUnevaluatedCrossoverAlgorithm() {
+		ConservativeUnevaluatedCrossoverAlgorithm crossoverAlgorithm = new ConservativeUnevaluatedCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+
+		validateCrossoverAlgorithm(crossoverAlgorithm, true);
+	}
+
+	@Test
+	public void testLowestCommonGroupUnevaluatedCrossoverAlgorithm() {
+		LowestCommonGroupUnevaluatedCrossoverAlgorithm crossoverAlgorithm = new LowestCommonGroupUnevaluatedCrossoverAlgorithm();
+		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
+
+		validateCrossoverAlgorithm(crossoverAlgorithm, true);
+	}
+
+	private void validateCrossoverAlgorithm(CrossoverAlgorithm crossoverAlgorithm,
+			boolean validatePlaintextSequences) {
 		Chromosome mom = knownSolution;
 		log.info("Mom: " + mom);
 
@@ -109,11 +138,9 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 			validateChild(child);
 
 			/*
-			 * For LowestCommonGroupCrossoverAlgorithm and
-			 * ConservativeCrossoverAlgorithm only
+			 * Only for certain implementations
 			 */
-			if (crossoverAlgorithm instanceof LowestCommonGroupCrossoverAlgorithm
-					|| crossoverAlgorithm instanceof ConservativeCrossoverAlgorithm) {
+			if (validatePlaintextSequences) {
 				validatePlaintextSequences(child, mom, dad);
 			}
 		}
