@@ -511,10 +511,9 @@ public class GenericTestBase {
 	 * @param val
 	 *            the value to set the field to
 	 */
-	protected static void setObject(final Object instance, final Class<?> c, final String field,
-			final Object val) {
+	protected static void setObject(final Object instance, final String field, final Object val) {
 		try {
-			Field f = c.getDeclaredField(field);
+			Field f = instance.getClass().getDeclaredField(field);
 			f.setAccessible(true); // in case the property is private
 			f.set(instance, val);
 		} catch (NoSuchFieldException e) {

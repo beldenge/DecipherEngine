@@ -20,9 +20,16 @@
 package com.ciphertool.zodiacengine.genetic.algorithms;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
@@ -40,6 +48,7 @@ import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
+import com.ciphertool.genetics.dao.ExecutionStatisticsDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Plaintext;
@@ -57,14 +66,14 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	private static Population population = new Population();
 	private static GeneticAlgorithm geneticAlgorithm;
-	private static SolutionBreeder solutionBreederMock;
+	private static SolutionBreeder solutionBreederMock = mock(SolutionBreeder.class);;
 
 	private static final int POPULATION_SIZE = 10;
 	private static final double SURVIVAL_RATE = 0.9;
 	private static final double MUTATION_RATE = 0.1;
 	private static final double CROSSOVER_RATE = 1.0;
 	private static final int LIFESPAN = -1;
-	private static final int MAX_GENERATIONS = 50;
+	private static final int MAX_GENERATIONS = 2;
 	private static final int MAX_THREADS = 4;
 	private static final int THREAD_EXECUTOR_QUEUE_CAPACITY = 100;
 
@@ -86,7 +95,6 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 				CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
 				selectionAlgorithm);
 
-		solutionBreederMock = mock(SolutionBreeder.class);
 		population.setBreeder(solutionBreederMock);
 
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -102,6 +110,10 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		geneticAlgorithm = new BasicGeneticAlgorithm();
 		geneticAlgorithm.setPopulation(population);
 		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
+
+		ExecutionStatisticsDao executionStatisticsDaoMock = mock(ExecutionStatisticsDao.class);
+		((BasicGeneticAlgorithm) geneticAlgorithm)
+				.setExecutionStatisticsDao(executionStatisticsDaoMock);
 	}
 
 	@Before
@@ -111,10 +123,44 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		when(solutionBreederMock.breed()).thenReturn(knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
-				knownSolution.clone(), knownSolution.clone());
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
+				knownSolution.clone(), knownSolution.clone(), knownSolution.clone());
 
 		population.breed(POPULATION_SIZE);
 		population.evaluateFitness(null);
+	}
+
+	@Test
+	public void testSpawnInitialPopulation() {
+		List<Chromosome> individualsBefore = new ArrayList<Chromosome>();
+		int originalSize = population.size();
+		for (int i = 0; i < originalSize; i++) {
+			((SolutionChromosome) population.getIndividuals().get(0)).getId().setSolutionId(i);
+			individualsBefore.add(population.removeIndividual(0));
+		}
+
+		assertEquals(population.size(), 0);
+		assertEquals(geneticAlgorithm.getPopulation().size(), 0);
+
+		try {
+			invokeMethod(geneticAlgorithm, "spawnInitialPopulation", null, null);
+		} catch (InvocationTargetException e) {
+			fail(e.getMessage());
+		}
+
+		assertEquals(population.size(), POPULATION_SIZE);
+
+		for (Chromosome individual : population.getIndividuals()) {
+			// Make sure each individual has been evaluated
+			assertTrue(individual.getFitness() > 0.0);
+
+			// Make sure each individual is new
+			for (Chromosome individualBefore : individualsBefore) {
+				assertFalse(individual == individualBefore);
+			}
+		}
 	}
 
 	@Test
@@ -174,14 +220,33 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 		int numEqualIndividuals = 0;
 		for (Chromosome individual : population.getIndividuals()) {
-			for (int i = 0; i < clonedIndividuals.size(); i++) {
-				if (clonedIndividuals.get(i).equals(individual)) {
-					numEqualIndividuals++;
-				}
+			if (clonedIndividuals.contains(individual)) {
+				numEqualIndividuals++;
 			}
 		}
 
 		assertEquals(numEqualIndividuals, clonedIndividuals.size());
 		assertEquals(population.size(), clonedIndividuals.size() + 2);
+	}
+
+	@Test
+	public void testEvolve() {
+		GeneticAlgorithm geneticAlgorithmSpy = spy(geneticAlgorithm);
+		geneticAlgorithmSpy.evolve();
+
+		/*
+		 * Make sure the loop executes only twice and that all pertinent methods
+		 * are called
+		 */
+		InOrder inOrder = inOrder(geneticAlgorithmSpy);
+		inOrder.verify(geneticAlgorithmSpy, times(1)).select();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).select();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate();
+		inOrder.verify(geneticAlgorithmSpy, times(0)).select();
+		inOrder.verify(geneticAlgorithmSpy, times(0)).crossover();
+		inOrder.verify(geneticAlgorithmSpy, times(0)).mutate();
 	}
 }

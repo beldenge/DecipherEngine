@@ -228,6 +228,8 @@ public class WordGeneTest {
 						.getCiphertextId(), count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
+						.getPlaintextCharacters().get(count).getValue());
 
 				count++;
 			}
