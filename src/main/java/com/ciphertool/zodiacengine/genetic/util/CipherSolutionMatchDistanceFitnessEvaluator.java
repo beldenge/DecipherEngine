@@ -40,6 +40,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int ACCEPTABLE_DISTANCE = 3;
+	private static final double MATCH_DISTANCE_BONUS = 0.25;
 
 	/**
 	 * Default no-args constructor
@@ -225,7 +226,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 				 * identical words greater than an acceptable distance.
 				 */
 				if ((position - index) > ACCEPTABLE_DISTANCE) {
-					extraPoints += 0.25;
+					extraPoints += MATCH_DISTANCE_BONUS;
 				}
 
 				index = position;
@@ -236,7 +237,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 			 * the end of the solution.
 			 */
 			if ((numberOfGenes - index) > ACCEPTABLE_DISTANCE) {
-				extraPoints += 0.25;
+				extraPoints += MATCH_DISTANCE_BONUS;
 			}
 		}
 
