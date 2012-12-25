@@ -40,6 +40,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import com.ciphertool.genetics.annotations.Dirty;
+
 @Entity
 @Table(name = "solution")
 @AssociationOverrides(@AssociationOverride(name = "id.solutionSet", joinColumns = @JoinColumn(name = "solution_set_id")))
@@ -156,29 +158,25 @@ public class Solution implements Serializable {
 		return Collections.unmodifiableList(this.plaintextCharacters);
 	}
 
+	@Dirty
 	public void addPlaintext(Plaintext plaintext) {
-		needsEvaluation = true;
-
 		plaintext.getId().setSolution(this);
 
 		this.plaintextCharacters.add(plaintext);
 	}
 
+	@Dirty
 	public void insertPlaintext(int index, Plaintext plaintext) {
-		needsEvaluation = true;
-
 		this.plaintextCharacters.add(index, plaintext);
 	}
 
+	@Dirty
 	public void removePlaintext(Plaintext plaintext) {
-		needsEvaluation = true;
-
 		this.plaintextCharacters.remove(plaintext);
 	}
 
+	@Dirty
 	public void resetPlaintextCharacters() {
-		needsEvaluation = true;
-
 		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 

@@ -27,6 +27,8 @@ import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.annotations.Clean;
+import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -86,10 +88,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * )
 	 */
 	@Override
+	@Clean
 	public void setFitness(Double fitness) {
 		this.fitness = fitness;
-
-		needsEvaluation = false;
 	}
 
 	/*
@@ -140,9 +141,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * .zodiacengine.genetic.Gene)
 	 */
 	@Override
+	@Dirty
 	public void addGene(Gene gene) {
-		needsEvaluation = true;
-
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -199,7 +199,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 			copyChromosome = (SolutionChromosome) super.clone();
 		} catch (CloneNotSupportedException cnse) {
 			log.error(
-					"Caught CloneNoteSupportedException while attempting to clone SolutionChromosome.",
+					"Caught CloneNotSupportedException while attempting to clone SolutionChromosome.",
 					cnse);
 		}
 
@@ -228,9 +228,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * com.ciphertool.zodiacengine.genetic.Gene)
 	 */
 	@Override
+	@Dirty
 	public void insertGene(int index, Gene gene) {
-		needsEvaluation = true;
-
 		if (gene == null) {
 			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
 
@@ -286,9 +285,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#removeGene(int)
 	 */
 	@Override
+	@Dirty
 	public Gene removeGene(int index) {
-		needsEvaluation = true;
-
 		if (this.genes == null) {
 			log.warn("Attempted to remove a Gene from SolutionChromosome at index " + index
 					+ ", but the List of Genes is null. " + this);
@@ -350,9 +348,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @see com.ciphertool.genetics.entities.Chromosome#resetGenes()
 	 */
 	@Override
+	@Dirty
 	public void resetGenes() {
-		needsEvaluation = true;
-
 		this.genes = new ArrayList<Gene>();
 	}
 

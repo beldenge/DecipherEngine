@@ -27,6 +27,8 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import com.ciphertool.genetics.annotations.Dirty;
+
 @Entity
 @Table(name = "plaintext")
 @AssociationOverrides(@AssociationOverride(name = "id.solution", joinColumns = {
@@ -63,9 +65,8 @@ public class Plaintext {
 		return value;
 	}
 
+	@Dirty
 	public void setValue(String value) {
-		this.id.getSolution().setNeedsEvaluation(true);
-
 		this.value = value;
 	}
 

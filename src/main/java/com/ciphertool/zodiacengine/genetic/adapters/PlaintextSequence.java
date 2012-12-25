@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.genetic.adapters;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
@@ -57,7 +58,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 			copySequence = (PlaintextSequence) super.clone();
 		} catch (CloneNotSupportedException cnse) {
 			log.error(
-					"Caught CloneNoteSupportedException while attempting to clone PlaintextSequence.",
+					"Caught CloneNotSupportedException while attempting to clone PlaintextSequence.",
 					cnse);
 		}
 
@@ -84,9 +85,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * 
 	 * @param places
 	 */
+	@Dirty
 	public void shiftRight(int places) {
-		this.gene.getChromosome().setDirty(true);
-
 		this.id.setCiphertextId(this.id.getCiphertextId() + places);
 	}
 
@@ -96,9 +96,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * 
 	 * @param places
 	 */
+	@Dirty
 	public void shiftLeft(int places) {
-		this.gene.getChromosome().setDirty(true);
-
 		this.id.setCiphertextId(this.id.getCiphertextId() - places);
 	}
 
@@ -125,9 +124,8 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 * @see com.ciphertool.genetics.entities.Sequence#setValue(java.lang.Object)
 	 */
 	@Override
+	@Dirty
 	public void setValue(Object obj) {
-		this.gene.getChromosome().setDirty(true);
-
 		this.value = (String) obj;
 	}
 }

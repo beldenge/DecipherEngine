@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
@@ -65,8 +66,7 @@ public class WordGene implements Gene {
 		try {
 			copyGene = (WordGene) super.clone();
 		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNoteSupportedException while attempting to clone WordGene.",
-					cnse);
+			log.error("Caught CloneNotSupportedException while attempting to clone WordGene.", cnse);
 		}
 
 		/*
@@ -132,9 +132,8 @@ public class WordGene implements Gene {
 	 * @see com.ciphertool.genetics.entities.Gene#resetSequences()
 	 */
 	@Override
+	@Dirty
 	public void resetSequences() {
-		this.chromosome.setDirty(true);
-
 		this.sequences = new ArrayList<Sequence>();
 	}
 
@@ -145,9 +144,8 @@ public class WordGene implements Gene {
 	 * zodiacengine.genetic.Sequence)
 	 */
 	@Override
+	@Dirty
 	public void addSequence(Sequence sequence) {
-		this.chromosome.setDirty(true);
-
 		this.sequences.add(sequence);
 
 		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
@@ -176,9 +174,8 @@ public class WordGene implements Gene {
 	 * the Chromosome.
 	 */
 	@Override
+	@Dirty
 	public void insertSequence(int index, Sequence sequence) {
-		this.chromosome.setDirty(true);
-
 		if (sequence == null) {
 			log.warn("Attempted to insert a Sequence into WordGene, but the supplied Sequence was null.  Cannot continue. "
 					+ this);
@@ -218,9 +215,8 @@ public class WordGene implements Gene {
 	 * the Chromosome.
 	 */
 	@Override
+	@Dirty
 	public void removeSequence(Sequence sequence) {
-		this.chromosome.setDirty(true);
-
 		if (sequence == null) {
 			log.warn("Attempted to remove a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
 					+ this);
