@@ -66,16 +66,12 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	public void stop() {
-		List<Chromosome> bestFitIndividuals = geneticAlgorithm.getBestFitIndividuals();
-
 		/*
 		 * Print out summary information
 		 */
 		log.info("Total running time was " + (System.currentTimeMillis() - start) + "ms.");
-		log.info("Best " + bestFitIndividuals.size() + " solutions in ascending order: ");
-		for (Chromosome bestFitIndividual : bestFitIndividuals) {
-			log.info(bestFitIndividual);
-		}
+
+		this.geneticAlgorithm.getPopulation().printAscending();
 
 		persistPopulation();
 	}

@@ -112,11 +112,6 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 	}
 
 	@Test
-	public void testGetBestFitIndividual() {
-		assertNotNull(population.getBestFitIndividual());
-	}
-
-	@Test
 	public void testSpinObjectRouletteWheel() {
 		population.evaluateFitness(null);
 

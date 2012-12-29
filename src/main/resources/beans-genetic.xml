@@ -281,7 +281,6 @@
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
-		<property name="finalSurvivorCount" value="${genetic.algorithm.finalSurvivorCount}" />
 		<property name="crossoverAlgorithm" ref="defaultCrossoverAlgorithm" />
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="selectionAlgorithm" ref="defaultSelectionAlgorithm" />
