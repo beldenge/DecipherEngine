@@ -39,9 +39,9 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		AbstractSolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-	private static final double UNIQUE_WORD_BONUS = 0.75;
-	private static final double DOUBLE_MATCH_BONUS = 0.5;
-	private static final double TRIPLE_MATCH_BONUS = 0.25;
+	private static final double UNIQUE_WORD_BONUS = 0.005;
+	private static final double DOUBLE_MATCH_BONUS = 0.0025;
+	private static final double TRIPLE_MATCH_BONUS = 0.00125;
 
 	/**
 	 * Default no-args constructor
@@ -166,8 +166,9 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		if (log.isDebugEnabled()) {
-			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
+		int subTotal = 0;
+		for (int i = 1; i <= total; i++) {
+			subTotal += i;
 		}
 
 		/*
@@ -177,8 +178,12 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
 		double uniquenessFactor = determineUniquenessFactor(solution, lastSequenceToCheck);
 
-		double fitness = ((double) (total)) + uniquenessFactor;
+		double fitness = ((double) (subTotal)) * (1.0 + uniquenessFactor);
 		solution.setFitness(fitness);
+
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
+		}
 
 		return fitness;
 	}

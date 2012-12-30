@@ -203,8 +203,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
-
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {
 			totalDifference += Math.abs(expectedLetterFrequencies.get(letter)
@@ -218,6 +216,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		fitness = fitness * frequencyReductionFactor;
 
 		solution.setFitness(fitness);
+
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
+		}
 
 		return fitness;
 	}

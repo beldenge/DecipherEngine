@@ -51,6 +51,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Transient
 	private int age = 0;
 
+	@Transient
+	private int numberOfChildren = 0;
+
 	public SolutionChromosome() {
 		super();
 	}
@@ -121,6 +124,37 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public void increaseAge() {
 		this.age++;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#getNumberOfChildren()
+	 */
+	@Override
+	public int getNumberOfChildren() {
+		return numberOfChildren;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Chromosome#setNumberOfChildren(int)
+	 */
+	@Override
+	public void setNumberOfChildren(int numberOfChildren) {
+		this.numberOfChildren = numberOfChildren;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.genetics.entities.Chromosome#increaseNumberOfChildren()
+	 */
+	@Override
+	public void increaseNumberOfChildren() {
+		this.numberOfChildren++;
 	}
 
 	/*
@@ -207,6 +241,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		copyChromosome.resetGenes();
 		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
+		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.needsEvaluation = true;
 
 		Gene nextGene = null;
@@ -385,9 +420,9 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
-				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", totalMatches="
-				+ totalMatches + ", unique matches=" + uniqueMatches + ", adjacent matches="
-				+ adjacentMatchCount + "]\n");
+				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
+				+ numberOfChildren + ", totalMatches=" + totalMatches + ", unique matches="
+				+ uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
 
 		if (this.cipher != null) {
 			Plaintext nextPlaintext = null;

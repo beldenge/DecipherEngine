@@ -165,10 +165,6 @@ public class CipherSolutionMagicWordFitnessEvaluator extends AbstractSolutionTru
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		if (log.isDebugEnabled()) {
-			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
-		}
-
 		solution.setFitness((double) total);
 
 		/*
@@ -184,6 +180,10 @@ public class CipherSolutionMagicWordFitnessEvaluator extends AbstractSolutionTru
 		}
 		if (containsMagicWord(solution, "because")) {
 			total *= MAGIC_WORD_FACTOR;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		}
 
 		return (double) total;

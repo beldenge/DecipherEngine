@@ -40,7 +40,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int ACCEPTABLE_DISTANCE = 3;
-	private static final double MATCH_DISTANCE_BONUS = 0.25;
+	private static final double MATCH_DISTANCE_BONUS = 0.005;
 
 	/**
 	 * Default no-args constructor
@@ -165,8 +165,9 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		if (log.isDebugEnabled()) {
-			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
+		int subTotal = 0;
+		for (int i = 1; i <= total; i++) {
+			subTotal += i;
 		}
 
 		/*
@@ -176,8 +177,12 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
 		double matchDistanceFactor = determineMatchDistanceFactor(solution, lastSequenceToCheck);
 
-		double fitness = ((double) (total)) + matchDistanceFactor;
+		double fitness = ((double) (subTotal)) * (1.0 + matchDistanceFactor);
 		solution.setFitness(fitness);
+
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
+		}
 
 		return fitness;
 	}
