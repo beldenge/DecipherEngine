@@ -113,6 +113,17 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.gui.controller.CipherSolutionController#
+	 * isServiceThreadActive()
+	 */
+	@Override
+	public boolean isServiceThreadActive() {
+		return cipherSolutionService.isRunning();
+	}
+
 	private FitnessEvaluator getFitnessEvaluator(String fitnessEvaluatorName) {
 		FitnessEvaluator fitnessEvaluator = null;
 

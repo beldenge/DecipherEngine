@@ -27,4 +27,6 @@ public interface CipherSolutionController {
 			boolean compareToKnownSolution);
 
 	public void stopServiceThread();
+
+	public boolean isServiceThreadActive();
 }

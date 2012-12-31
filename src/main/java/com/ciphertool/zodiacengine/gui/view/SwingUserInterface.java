@@ -23,6 +23,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -37,6 +39,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
@@ -49,6 +52,9 @@ import com.ciphertool.zodiacengine.gui.controller.CipherSolutionController;
 
 public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final long serialVersionUID = -7682403631152076457L;
+
+	private Logger log = Logger.getLogger(getClass());
+	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
 
 	private String windowTitle;
 	private int windowWidth;
@@ -116,11 +122,51 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	public SwingUserInterface() {
 	}
 
+	private WindowAdapter getWindowClosingListener() {
+		return new WindowAdapter() {
+			public void windowClosing(WindowEvent windowEvent) {
+				/*
+				 * Run in a separate thread so the window closes, but the
+				 * process remains alive until we are finished handling the
+				 * windowClosing event.
+				 */
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						/*
+						 * In case the program was terminated abruptly, try to
+						 * stop the service as normal so that the post-execution
+						 * tasks are performed.
+						 */
+						if (cipherSolutionController.isServiceThreadActive()) {
+							cipherSolutionController.stopServiceThread();
+
+							/*
+							 * Keep waiting for the program to finish
+							 * post-execution tasks.
+							 */
+							try {
+								while (cipherSolutionController.isServiceThreadActive()) {
+									Thread.sleep(PROGRAM_EXIT_SLEEP_MILLIS);
+								}
+							} catch (InterruptedException e) {
+								log.error(
+										"Caught InterruptedException while waiting for service thread to complete after window close event.  Unable to continue.",
+										e);
+							}
+						}
+
+					}
+				});
+			}
+		};
+	}
+
 	public void init() {
+		this.addWindowListener(getWindowClosingListener());
 		this.setTitle(windowTitle);
 		this.setSize(windowWidth, windowHeight);
 		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
 		JPanel containerPanel = new JPanel();
 		getContentPane().add(containerPanel);
