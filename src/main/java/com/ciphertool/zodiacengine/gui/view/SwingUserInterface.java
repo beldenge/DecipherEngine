@@ -266,8 +266,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
 			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
 		}
-		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY
-				.name());
+		fitnessEvaluatorComboBox
+				.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_MATCH_DISTANCE.name());
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		mainPanel.add(fitnessEvaluatorNameLabel);
@@ -288,7 +288,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
 			mutationAlgorithmComboBox.addItem(mutationAlgorithmType.name());
 		}
-		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.SINGLE_SEQUENCE.name());
+		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.CONSERVATIVE.name());
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		mainPanel.add(mutationAlgorithmNameLabel);
