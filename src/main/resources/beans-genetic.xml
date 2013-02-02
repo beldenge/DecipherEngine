@@ -85,6 +85,10 @@
 		id="cipherSolutionFitnessEvaluator" />
 
 	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMultipleFitnessEvaluator"
+		id="cipherSolutionMultipleFitnessEvaluator" />
+
+	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionUniqueWordFitnessEvaluator"
 		id="cipherSolutionUniqueWordFitnessEvaluator" />
 		
@@ -99,6 +103,10 @@
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator"
 		id="cipherSolutionKnownSolutionFitnessEvaluator" />
+
+	<bean
+		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionExponentialFitnessEvaluator"
+		id="cipherSolutionKnownSolutionExponentialFitnessEvaluator" />
 		
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMagicWordFitnessEvaluator"
@@ -251,6 +259,10 @@
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
+	
+	<bean
+		class="com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupUnevaluatedCrossoverAlgorithm"
+		id="lowestCommonGroupUnevaluatedCrossoverAlgorithm" />
 	
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.ConservativeCentromereCrossoverAlgorithm"

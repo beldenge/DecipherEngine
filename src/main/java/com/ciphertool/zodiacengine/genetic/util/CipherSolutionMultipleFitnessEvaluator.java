@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2012 George Belden
  * 
  * This file is part of ZodiacEngine.
@@ -32,20 +32,19 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 import com.ciphertool.zodiacengine.util.AbstractSolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionMatchDistanceFitnessEvaluator extends
-		AbstractSolutionTruncatedEvaluatorBase implements FitnessEvaluator {
+public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTruncatedEvaluatorBase
+		implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-	private static final int ACCEPTABLE_DISTANCE = 3;
-	private static final double MATCH_DISTANCE_BONUS = 0.005;
+
+	private static final int UNIQUE_MATCH_MULTIPLIER = 5;
 
 	/**
 	 * Default no-args constructor
 	 */
-	public CipherSolutionMatchDistanceFitnessEvaluator() {
+	public CipherSolutionMultipleFitnessEvaluator() {
 	}
 
 	/*
@@ -165,14 +164,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		/*
-		 * We don't care to evaluate past the last row since it is likely to be
-		 * filler.
-		 */
-		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
-		double matchDistanceFactor = determineMatchDistanceFactor(solution, lastSequenceToCheck);
+		double fitness = (totalUnique * UNIQUE_MATCH_MULTIPLIER) + total;
 
-		double fitness = ((double) (total)) * (1.0 + matchDistanceFactor);
 		solution.setFitness(fitness);
 
 		if (log.isDebugEnabled()) {
@@ -180,68 +173,6 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 		}
 
 		return fitness;
-	}
-
-	/**
-	 * This awards extra points towards fitness due to sufficient gaps among
-	 * identical words. The beginning and end of the cipher are used as
-	 * endpoints for gap checking regardless of the existence of another match.
-	 * 
-	 * @param solution
-	 *            the solution to evaluate
-	 * @param lastSequenceToCheck
-	 *            the sequence for which we don't want to evaluate further than
-	 * @return the extra points awarded
-	 */
-	private static double determineMatchDistanceFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
-		int numberOfGenes = solution.getGenes().size();
-		Map<String, List<Integer>> genePositionMap = new HashMap<String, List<Integer>>();
-
-		String nextWord = null;
-		for (int x = 0; x < numberOfGenes; x++) {
-			if (((WordGene) solution.getGenes().get(x)).getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
-				nextWord = ((WordGene) solution.getGenes().get(x)).getWordString().toLowerCase();
-
-				if (!genePositionMap.containsKey(nextWord)) {
-					genePositionMap.put(nextWord, new ArrayList<Integer>());
-				}
-
-				genePositionMap.get(nextWord).add(x);
-			}
-		}
-
-		double extraPoints = 0;
-
-		/*
-		 * We don't care about the Strings themselves anymore. Just their
-		 * positions.
-		 */
-		for (List<Integer> positionList : genePositionMap.values()) {
-			int index = 0;
-
-			for (Integer position : positionList) {
-				/*
-				 * Give extra points towards the fitness for each gap between
-				 * identical words greater than an acceptable distance.
-				 */
-				if ((position - index) > ACCEPTABLE_DISTANCE) {
-					extraPoints += MATCH_DISTANCE_BONUS;
-				}
-
-				index = position;
-			}
-
-			/*
-			 * Check if there is an acceptable distance between this word and
-			 * the end of the solution.
-			 */
-			if ((numberOfGenes - index) > ACCEPTABLE_DISTANCE) {
-				extraPoints += MATCH_DISTANCE_BONUS;
-			}
-		}
-
-		return extraPoints;
 	}
 
 	/*

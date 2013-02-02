@@ -89,15 +89,15 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final int POPULATION_MAX = 100000;
 	private static final int POPULATION_STEP = 100;
 	private double survivalInitial;
-	private static final double SURVIVAL_MIN = 0.001;
+	private static final double SURVIVAL_MIN = 0.0;
 	private static final double SURVIVAL_MAX = 1.0;
 	private static final double SURVIVAL_STEP = 0.01;
 	private double mutationInitial;
-	private static final double MUTATION_MIN = 0.0001;
+	private static final double MUTATION_MIN = 0.0;
 	private static final double MUTATION_MAX = 1;
 	private static final double MUTATION_STEP = 0.001;
 	private double crossoverInitial;
-	private static final double CROSSOVER_MIN = 0.001;
+	private static final double CROSSOVER_MIN = 0.0;
 	private static final double CROSSOVER_MAX = 1.0;
 	private static final double CROSSOVER_STEP = 0.01;
 

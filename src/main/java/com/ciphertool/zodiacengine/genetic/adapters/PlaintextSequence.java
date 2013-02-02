@@ -61,6 +61,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 					"Caught CloneNotSupportedException while attempting to clone PlaintextSequence.",
 					cnse);
 		}
+		copySequence.setHasMatch(false);
 
 		copySequence.setId(new PlaintextId());
 

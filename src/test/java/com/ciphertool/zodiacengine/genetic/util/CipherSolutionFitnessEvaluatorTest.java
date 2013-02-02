@@ -205,6 +205,21 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 	}
 
 	@Test
+	public void testCipherSolutionMultipleFitnessEvaluator() {
+		CipherSolutionMultipleFitnessEvaluator fitnessEvaluator = new CipherSolutionMultipleFitnessEvaluator();
+		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		assertTrue(knownSolution.isDirty());
+		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertFalse(knownSolution.isDirty());
+
+		log.info(knownSolution);
+		log.info("CipherSolutionMultipleFitnessEvaluator Fitness: " + fitness);
+
+		assertEquals(fitness, new Double(602.0));
+	}
+
+	@Test
 	public void testCipherSolutionTruncatedFitnessEvaluator() {
 		CipherSolutionTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionTruncatedFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
