@@ -61,10 +61,12 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 
 		dummySolution = knownSolution.clone();
 
-		dummySolution.getGenes().get(0).insertSequence(
-				0,
-				new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
-						.getGenes().get(0)));
+		for (int i = 0; i < 5; i++) {
+			dummySolution.getGenes().get(0).insertSequence(
+					0,
+					new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
+							.getGenes().get(0)));
+		}
 
 		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
 			plaintext.setValue("*");
@@ -116,7 +118,6 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	@Test
 	public void testLowestCommonGroupUnevaluatedCrossoverAlgorithm() {
 		LowestCommonGroupUnevaluatedCrossoverAlgorithm crossoverAlgorithm = new LowestCommonGroupUnevaluatedCrossoverAlgorithm();
-		crossoverAlgorithm.setFitnessEvaluator(fitnessEvaluator);
 
 		validateCrossoverAlgorithm(crossoverAlgorithm, true);
 	}
@@ -178,8 +179,19 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 							.getCiphertextId()) && !plaintext.getValue().equals(
 							((SolutionChromosome) dad).getPlaintextCharacters().get(
 									plaintext.getId().getCiphertextId()).getValue()))) {
-				fail("Plaintext value from child does not match Plaintext from either parent: "
-						+ plaintext);
+				StringBuilder sb = new StringBuilder();
+				sb.append("Plaintext value from child does not match Plaintext from either parent: "
+						+ plaintext.toString());
+				sb.append("\nMom plaintext: "
+						+ ((SolutionChromosome) mom).getPlaintextCharacters().get(
+								plaintext.getId().getCiphertextId()));
+				sb.append("\nDad plaintext: "
+						+ ((SolutionChromosome) dad).getPlaintextCharacters().get(
+								plaintext.getId().getCiphertextId()));
+				sb.append("\nMom: " + ((SolutionChromosome) mom).toString());
+				sb.append("\nDad: " + ((SolutionChromosome) dad).toString());
+				sb.append("\nChild: " + ((SolutionChromosome) firstChild).toString());
+				fail(sb.toString());
 			}
 		}
 	}

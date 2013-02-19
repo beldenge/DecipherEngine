@@ -228,9 +228,11 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 			for (Integer position : positionList) {
 				/*
 				 * Give extra points towards the fitness for each gap between
-				 * identical words greater than an acceptable distance.
+				 * identical words greater than an acceptable distance. If index
+				 * is zero, then this is the first word, so there is nothing to
+				 * compare with yet.
 				 */
-				if ((position - index) > ACCEPTABLE_DISTANCE) {
+				if (index > 0 && (position - index) > ACCEPTABLE_DISTANCE) {
 					extraPoints += MATCH_DISTANCE_BONUS;
 				}
 
@@ -238,12 +240,11 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 			}
 
 			/*
-			 * Check if there is an acceptable distance between this word and
-			 * the end of the solution.
+			 * No need to check if there is an acceptable distance between this
+			 * word and the end of the solution. It's meaningless as the whole
+			 * point of this evaluator is to check the distance of words among
+			 * each other.
 			 */
-			if ((numberOfGenes - index) > ACCEPTABLE_DISTANCE) {
-				extraPoints += MATCH_DISTANCE_BONUS;
-			}
 		}
 
 		return extraPoints;

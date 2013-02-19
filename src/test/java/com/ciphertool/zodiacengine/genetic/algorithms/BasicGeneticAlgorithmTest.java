@@ -52,9 +52,7 @@ import com.ciphertool.genetics.dao.ExecutionStatisticsDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
@@ -195,20 +193,20 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	@Test
 	public void testCrossover() {
-		SolutionChromosome dummySolution = knownSolution.clone();
+		SolutionChromosome dummySolution1 = knownSolution.clone();
+		SolutionChromosome dummySolution2 = knownSolution.clone();
 
-		dummySolution.getGenes().get(0).insertSequence(
-				0,
-				new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
-						.getGenes().get(0)));
+		for (Plaintext plaintext : dummySolution1.getPlaintextCharacters()) {
+			plaintext.setValue("a");
+		}
 
-		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
-			plaintext.setValue("*");
+		for (Plaintext plaintext : dummySolution2.getPlaintextCharacters()) {
+			plaintext.setValue("b");
 		}
 
 		population.clearIndividuals();
-		population.addIndividual(knownSolution);
-		population.addIndividual(dummySolution);
+		population.addIndividual(dummySolution1);
+		population.addIndividual(dummySolution2);
 
 		List<SolutionChromosome> clonedIndividuals = new ArrayList<SolutionChromosome>();
 

@@ -259,9 +259,7 @@ public class Solution implements Serializable {
 			return false;
 		}
 		Solution other = (Solution) obj;
-		if (adjacentMatchCount != other.adjacentMatchCount) {
-			return false;
-		}
+
 		if (cipher == null) {
 			if (other.cipher != null) {
 				return false;
@@ -275,12 +273,6 @@ public class Solution implements Serializable {
 				return false;
 			}
 		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		if (totalMatches != other.totalMatches) {
-			return false;
-		}
-		if (uniqueMatches != other.uniqueMatches) {
 			return false;
 		}
 

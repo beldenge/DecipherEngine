@@ -52,12 +52,6 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	public void start() throws InterruptedException {
 		start = System.currentTimeMillis();
 
-		geneticAlgorithm.spawnInitialPopulation();
-
-		log.info("Took " + (System.currentTimeMillis() - start)
-				+ "ms to spawn initial population of size "
-				+ geneticAlgorithm.getPopulation().size());
-
 		geneticAlgorithm.evolve();
 	}
 
@@ -120,6 +114,13 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		log.info("Persisting the entire population to database.");
 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
+
+		if (individuals == null || individuals.size() == 0) {
+			log.info("No population to persist to database.  Returning.");
+
+			return;
+		}
+
 		String cipherName = ((SolutionChromosome) individuals.get(0)).getCipher().getName();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String formattedDate = sdf.format(new Date());

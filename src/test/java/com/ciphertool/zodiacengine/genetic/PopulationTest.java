@@ -20,7 +20,6 @@
 package com.ciphertool.zodiacengine.genetic;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -109,15 +108,6 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 			assertEquals(individual.actualSize().intValue(), ((Solution) individual)
 					.getPlaintextCharacters().size());
 		}
-	}
-
-	@Test
-	public void testSpinObjectRouletteWheel() {
-		population.evaluateFitness(null);
-
-		Chromosome chromosome = population.spinObjectRouletteWheel();
-
-		assertNotNull(chromosome);
 	}
 
 	@Test

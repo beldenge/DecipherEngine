@@ -205,6 +205,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		SpinnerModel generationsModel = new SpinnerNumberModel(generationsInitial, GENERATIONS_MIN,
 				GENERATIONS_MAX, GENERATIONS_STEP);
 		generationsSpinner = new JSpinner(generationsModel);
+		generationsSpinner.setEnabled(false);
 		JLabel generationsLabel = new JLabel(generationsText);
 		generationsLabel.setLabelFor(generationsSpinner);
 
@@ -213,6 +214,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 		runContinuouslyCheckBox = new JCheckBox(continuousText);
 		runContinuouslyCheckBox.addActionListener(getRunContinuouslyCheckBoxActionListener());
+		runContinuouslyCheckBox.setSelected(true);
 
 		mainPanel.add(new JLabel());
 		mainPanel.add(runContinuouslyCheckBox);

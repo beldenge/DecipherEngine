@@ -46,12 +46,6 @@ public class GeneticCipherSolutionEngine {
 
 		long start = System.currentTimeMillis();
 
-		geneticAlgorithm.spawnInitialPopulation();
-
-		log.info("Took " + (System.currentTimeMillis() - start)
-				+ "ms to spawn initial population of size "
-				+ geneticAlgorithm.getPopulation().size());
-
 		geneticAlgorithm.evolve();
 
 		/*
