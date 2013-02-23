@@ -47,6 +47,7 @@
 		<property name="mutationAlgorithmDefault" ref="defaultMutationAlgorithm" />
 		<property name="selectionAlgorithmDefault" ref="defaultSelectionAlgorithm" />
 		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
+		<property name="selectorDefault" ref="defaultSelector" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
@@ -220,13 +221,20 @@
 
 	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator"
 		id="defaultFitnessComparator" />
-
+	
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.AlphaSelector" id="alphaSelector" />
+		
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="defaultSelector" />
+	
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
+		<property name="selector" ref="defaultSelector" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"

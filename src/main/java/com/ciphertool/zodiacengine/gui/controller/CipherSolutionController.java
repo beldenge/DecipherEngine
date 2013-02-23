@@ -23,7 +23,7 @@ public interface CipherSolutionController {
 	public void startServiceThread(String cipherName, int populationSize, int lifespan,
 			int numGenerations, double survivalRate, double mutationRate, double crossoverRate,
 			String fitnessEvaluatorName, String crossoverAlgorithmName,
-			String mutationAlgorithmName, String selectionAlgorithmName,
+			String mutationAlgorithmName, String selectionAlgorithmName, String selectorName,
 			boolean compareToKnownSolution);
 
 	public void stopServiceThread();

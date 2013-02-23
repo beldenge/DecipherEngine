@@ -32,6 +32,8 @@ import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
+import com.ciphertool.genetics.algorithms.selection.modes.Selector;
+import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -49,6 +51,7 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	private MutationAlgorithm mutationAlgorithmDefault;
 	private SelectionAlgorithm selectionAlgorithmDefault;
 	private FitnessEvaluator knownSolutionFitnessEvaluator;
+	private Selector selectorDefault;
 
 	@Override
 	public void startServiceThread(final String cipherName, final int populationSize,
@@ -56,7 +59,7 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 			final double mutationRate, final double crossoverRate,
 			final String fitnessEvaluatorName, final String crossoverAlgorithmName,
 			final String mutationAlgorithmName, final String selectionAlgorithmName,
-			final boolean compareToKnownSolution) {
+			final String selectorName, final boolean compareToKnownSolution) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
@@ -76,18 +79,21 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 					SelectionAlgorithm selectionAlgorithm = getSelectionAlgorithm(selectionAlgorithmName);
 					log.info("SelectionAlgorithm implementation: " + selectionAlgorithm.getClass());
 
+					Selector selector = getSelector(selectorName);
+					log.info("Selector implementation: " + selector.getClass());
+
 					GeneticAlgorithmStrategy geneticAlgorithmStrategy;
 					if (knownSolutionFitnessEvaluator != null) {
 						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
 								populationSize, lifespan, numGenerations, survivalRate,
 								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-								mutationAlgorithm, selectionAlgorithm,
+								mutationAlgorithm, selectionAlgorithm, selector,
 								knownSolutionFitnessEvaluator, compareToKnownSolution);
 					} else {
 						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
 								populationSize, lifespan, numGenerations, survivalRate,
 								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-								mutationAlgorithm, selectionAlgorithm);
+								mutationAlgorithm, selectionAlgorithm, selector);
 					}
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
@@ -176,6 +182,18 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 		return selectionAlgorithm;
 	}
 
+	private Selector getSelector(String selectorName) {
+		Selector selector = null;
+
+		try {
+			selector = (Selector) context.getBean(SelectorType.valueOf(selectorName).getType());
+		} catch (IllegalArgumentException iae) {
+			selector = selectorDefault;
+		}
+
+		return selector;
+	}
+
 	/**
 	 * @param cipherSolutionService
 	 *            the cipherSolutionService to set
@@ -233,6 +251,15 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	@Required
 	public void setSelectionAlgorithmDefault(SelectionAlgorithm selectionAlgorithmDefault) {
 		this.selectionAlgorithmDefault = selectionAlgorithmDefault;
+	}
+
+	/**
+	 * @param selectorDefault
+	 *            the selectorDefault to set
+	 */
+	@Required
+	public void setSelectorDefault(Selector selectorDefault) {
+		this.selectorDefault = selectorDefault;
 	}
 
 	/**

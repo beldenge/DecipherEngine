@@ -35,6 +35,7 @@ import org.junit.Test;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.MaximizationFitnessComparator;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
@@ -55,6 +56,8 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@BeforeClass
 	public static void setUp() {
+		population.setSelector(new RouletteSelector());
+
 		population.setBreeder(solutionBreederMock);
 
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -111,12 +114,12 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 	}
 
 	@Test
-	public void testSpinIndexRouletteWheel() {
+	public void testSelectIndividual() {
 		population.evaluateFitness(null);
 
 		int winningNumber = -1;
 
-		winningNumber = population.spinIndexRouletteWheel();
+		winningNumber = population.selectIndex();
 
 		assertTrue(winningNumber > -1);
 	}
@@ -164,34 +167,6 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		Double originalTotalFitness = population.getTotalFitness();
 
 		population.removeIndividual(POPULATION_SIZE);
-		assertEquals(population.size(), POPULATION_SIZE);
-
-		for (Chromosome individual : population.getIndividuals()) {
-			assertNotSame(individual, dummySolution);
-		}
-
-		assertTrue(population.getTotalFitness() < originalTotalFitness);
-		assertEquals(population.getTotalFitness(), (Double) (originalTotalFitness - dummySolution
-				.getFitness()));
-	}
-
-	@Test
-	public void testRemoveEquals() {
-		population.addIndividual(dummySolution);
-		assertEquals(population.size(), POPULATION_SIZE + 1);
-
-		boolean foundDummy = false;
-		for (Chromosome individual : population.getIndividuals()) {
-			if (individual.equals(dummySolution)) {
-				foundDummy = true;
-			}
-		}
-
-		assertTrue(foundDummy);
-
-		Double originalTotalFitness = population.getTotalFitness();
-
-		population.removeIndividual(dummySolution);
 		assertEquals(population.size(), POPULATION_SIZE);
 
 		for (Chromosome individual : population.getIndividuals()) {
