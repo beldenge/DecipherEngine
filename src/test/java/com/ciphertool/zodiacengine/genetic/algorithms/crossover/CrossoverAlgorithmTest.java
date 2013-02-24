@@ -17,7 +17,7 @@
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.genetic.algorithms;
+package com.ciphertool.zodiacengine.genetic.algorithms.crossover;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

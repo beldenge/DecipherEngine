@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic.algorithms;
+package com.ciphertool.zodiacengine.genetic.algorithms.crossover;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

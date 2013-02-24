@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.genetic.algorithms;
+package com.ciphertool.zodiacengine.genetic.algorithms.mutation;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;

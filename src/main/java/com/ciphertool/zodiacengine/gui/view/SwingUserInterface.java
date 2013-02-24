@@ -586,6 +586,13 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	 */
 	@Required
 	public void setSurvivalInitial(double survivalInitial) {
+		if (survivalInitial < 0.0 || survivalInitial > 1.0) {
+			throw new IllegalArgumentException(
+					"Tried to set a survivalInitial of "
+							+ survivalInitial
+							+ ", but SwingUserInterface requires a survivalInitial between 0.0 and 1.0 inclusive.");
+		}
+
 		this.survivalInitial = survivalInitial;
 	}
 
@@ -595,6 +602,13 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	 */
 	@Required
 	public void setMutationInitial(double mutationInitial) {
+		if (mutationInitial < 0.0 || mutationInitial > 1.0) {
+			throw new IllegalArgumentException(
+					"Tried to set a mutationInitial of "
+							+ mutationInitial
+							+ ", but SwingUserInterface requires a mutationInitial between 0.0 and 1.0 inclusive.");
+		}
+
 		this.mutationInitial = mutationInitial;
 	}
 
@@ -604,6 +618,13 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	 */
 	@Required
 	public void setCrossoverInitial(double crossoverInitial) {
+		if (crossoverInitial < 0.0 || crossoverInitial > 1.0) {
+			throw new IllegalArgumentException(
+					"Tried to set a crossoverInitial of "
+							+ crossoverInitial
+							+ ", but SwingUserInterface requires a crossoverInitial between 0.0 and 1.0 inclusive.");
+		}
+
 		this.crossoverInitial = crossoverInitial;
 	}
 }

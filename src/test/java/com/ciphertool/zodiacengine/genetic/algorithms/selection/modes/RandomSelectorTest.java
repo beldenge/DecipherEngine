@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License along with
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
-package com.ciphertool.zodiacengine.genetic;
+package com.ciphertool.zodiacengine.genetic.algorithms.selection.modes;
 
 import static org.junit.Assert.assertTrue;
 
@@ -25,17 +25,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.genetics.Population;
-import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
+import com.ciphertool.genetics.algorithms.selection.modes.RandomSelector;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
-public class RouletteTest {
-	private static Logger log = Logger.getLogger(RouletteTest.class);
+public class RandomSelectorTest {
+	private static Logger log = Logger.getLogger(RandomSelectorTest.class);
 
 	private static Population population = new Population();
 
 	@BeforeClass
 	public static void setUp() {
-		population.setSelector(new RouletteSelector());
+		population.setSelector(new RandomSelector());
 
 		SolutionChromosome solution1 = new SolutionChromosome();
 		solution1.setFitness(1.0);

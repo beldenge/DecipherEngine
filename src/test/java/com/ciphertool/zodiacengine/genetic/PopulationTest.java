@@ -37,7 +37,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.util.MaximizationFitnessComparator;
+import com.ciphertool.genetics.util.AscendingFitnessComparator;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
@@ -75,7 +75,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		population.setFitnessEvaluator(cipherSolutionKnownSolutionFitnessEvaluator);
 
 		population.setLifespan(LIFESPAN);
-		population.setFitnessComparator(new MaximizationFitnessComparator());
+		population.setFitnessComparator(new AscendingFitnessComparator());
 
 		dummySolution = knownSolution.clone();
 		dummySolution.getGenes().get(0).insertSequence(

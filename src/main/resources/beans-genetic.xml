@@ -219,14 +219,18 @@
 		<property name="averageWordLength" value="${language.english.averageWordLength}" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.util.MaximizationFitnessComparator"
+	<bean class="com.ciphertool.genetics.util.AscendingFitnessComparator"
 		id="defaultFitnessComparator" />
 	
-	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector" />
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector">
+		<property name="selectionAccuracy" value="${genetic.algorithm.tournament.selectionAccuracy}" />
+	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.AlphaSelector" id="alphaSelector" />
 		
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="defaultSelector" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RandomSelector" id="randomSelector" />
 	
 	<bean class="com.ciphertool.genetics.Population" id="population">
 		<property name="breeder" ref="breeder" />
@@ -297,6 +301,11 @@
 	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />
 	
 	<bean class="com.ciphertool.genetics.algorithms.selection.TruncationSelectionAlgorithm" id="truncationSelectionAlgorithm" />
+	
+	<bean class="com.ciphertool.genetics.algorithms.selection.TournamentSelectionAlgorithm" id="tournamentSelectionAlgorithm">
+		<property name="groupSize" value="${genetic.algorithm.tournament.groupSize}" />
+		<property name="tournamentSelector" ref="tournamentSelector" />
+	</bean>
 
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
