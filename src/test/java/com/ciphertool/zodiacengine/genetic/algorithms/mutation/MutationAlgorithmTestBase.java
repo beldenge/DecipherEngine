@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -90,8 +92,8 @@ public class MutationAlgorithmTestBase extends GenericTestBase {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
 
-		Class<?>[] params = { Chromosome.class };
-		Object[] args = { solutionChromosome };
+		Class<?>[] params = { Chromosome.class, List.class };
+		Object[] args = { solutionChromosome, new ArrayList<Integer>() };
 		try {
 			invokeMethod(mutationAlgorithm, "mutateRandomGene", params, args);
 		} catch (InvocationTargetException e) {

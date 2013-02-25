@@ -9,10 +9,13 @@ import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm
 public class ConservativeMutationAlgorithmTest extends MutationAlgorithmTestBase {
 	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(ConservativeMutationAlgorithmTest.class);
+	private final static int MAX_MUTATIONS = 5;
 
 	@BeforeClass
 	public static void setUp() {
 		mutationAlgorithm = new ConservativeMutationAlgorithm();
+		((ConservativeMutationAlgorithm) mutationAlgorithm)
+				.setMaxMutationsPerChromosome(MAX_MUTATIONS);
 		((ConservativeMutationAlgorithm) mutationAlgorithm)
 				.setGeneListDao(new WordGeneListDaoMock());
 	}

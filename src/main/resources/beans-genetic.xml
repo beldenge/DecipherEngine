@@ -287,15 +287,18 @@
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="sequenceDao" ref="sequenceDao"/>
+		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.LiberalMutationAlgorithm" id="liberalMutationAlgorithm">
 		<property name="geneListDao" ref="geneListDao" />
 		<property name="chromosomeHelper" ref="chromosomeHelper" />
+		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm">
 		<property name="geneListDao" ref="geneListDao" />
+		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
@@ -19,11 +21,13 @@ import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class LiberalMutationAlgorithmTest extends MutationAlgorithmTestBase {
 	private static Logger log = Logger.getLogger(LiberalMutationAlgorithmTest.class);
+	private final static int MAX_MUTATIONS = 5;
 
 	@BeforeClass
 	public static void setUp() {
 		mutationAlgorithm = new LiberalMutationAlgorithm();
 		((LiberalMutationAlgorithm) mutationAlgorithm).setGeneListDao(new WordGeneListDaoMock());
+		((LiberalMutationAlgorithm) mutationAlgorithm).setMaxMutationsPerChromosome(MAX_MUTATIONS);
 
 		ChromosomeHelper chromosomeHelper = new ChromosomeHelper();
 		chromosomeHelper.setGeneListDao(new WordGeneListDaoMock());
@@ -50,8 +54,8 @@ public class LiberalMutationAlgorithmTest extends MutationAlgorithmTestBase {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
 		solutionChromosome.addGene(wordGene2);
 
-		Class<?>[] params = { Chromosome.class };
-		Object[] args = { solutionChromosome };
+		Class<?>[] params = { Chromosome.class, List.class };
+		Object[] args = { solutionChromosome, new ArrayList<Integer>() };
 		try {
 			invokeMethod(mutationAlgorithm, "mutateRandomGene", params, args);
 		} catch (InvocationTargetException e) {

@@ -42,10 +42,14 @@ public class SingleSequenceMutationAlgorithmTest extends MutationAlgorithmTestBa
 	private static Logger log = Logger.getLogger(SingleSequenceMutationAlgorithmTest.class);
 	private static Word word = new Word(new WordId("smile", 'N'));
 	private static int beginCiphertextIndex = 0;
+	private final static int MAX_MUTATIONS = 5;
 
 	@BeforeClass
 	public static void setUp() {
 		mutationAlgorithm = new SingleSequenceMutationAlgorithm();
+		((SingleSequenceMutationAlgorithm) mutationAlgorithm)
+				.setMaxMutationsPerChromosome(MAX_MUTATIONS);
+
 		SequenceDao sequenceDao = new PlaintextSequenceDao();
 		((SingleSequenceMutationAlgorithm) mutationAlgorithm).setSequenceDao(sequenceDao);
 	}
