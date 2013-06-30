@@ -37,6 +37,8 @@ import com.ciphertool.genetics.algorithms.crossover.LiberalCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LiberalUnevaluatedCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupUnevaluatedCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.ChromosomeHelper;
@@ -46,6 +48,7 @@ import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.algorithms.mutation.WordGeneListDaoMock;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
 
 public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
@@ -53,6 +56,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	private static FitnessEvaluator fitnessEvaluator;
 	private static SolutionChromosome dummySolution;
+	private static final int MAX_MUTATIONS = 5;
 
 	@BeforeClass
 	public static void setUp() {
@@ -124,6 +128,14 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	private void validateCrossoverAlgorithm(CrossoverAlgorithm crossoverAlgorithm,
 			boolean validatePlaintextSequences) {
+		MutationAlgorithm mutationAlgorithm = new ConservativeMutationAlgorithm();
+		((ConservativeMutationAlgorithm) mutationAlgorithm)
+				.setMaxMutationsPerChromosome(MAX_MUTATIONS);
+		((ConservativeMutationAlgorithm) mutationAlgorithm)
+				.setGeneListDao(new WordGeneListDaoMock());
+
+		crossoverAlgorithm.setMutationAlgorithm(mutationAlgorithm);
+
 		Chromosome mom = knownSolution;
 		log.info("Mom: " + mom);
 
@@ -178,9 +190,10 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 					&& ((((SolutionChromosome) dad).actualSize() > plaintext.getId()
 							.getCiphertextId()) && !plaintext.getValue().equals(
 							((SolutionChromosome) dad).getPlaintextCharacters().get(
-									plaintext.getId().getCiphertextId()).getValue()))) {
+									plaintext.getId().getCiphertextId()).getValue()))
+					&& !plaintext.getValue().equals("$")) {
 				StringBuilder sb = new StringBuilder();
-				sb.append("Plaintext value from child does not match Plaintext from either parent: "
+				sb.append("Plaintext value from child does not match Plaintext from either parent, nor from any mutation: "
 						+ plaintext.toString());
 				sb.append("\nMom plaintext: "
 						+ ((SolutionChromosome) mom).getPlaintextCharacters().get(

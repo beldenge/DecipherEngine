@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -183,17 +184,18 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 			clonedIndividuals.add((SolutionChromosome) individual.clone());
 		}
 
-		geneticAlgorithm.mutate();
+		geneticAlgorithm.mutate(population.size());
+		population.resetEligibility();
 
 		int numEqualIndividuals = 0;
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < clonedIndividuals.size(); i++) {
 			if (clonedIndividuals.get(i).equals(population.getIndividuals().get(i))) {
 				numEqualIndividuals++;
 			}
 		}
 
-		assertEquals(population.size(), POPULATION_SIZE);
-		assertEquals(numEqualIndividuals, POPULATION_SIZE - 1);
+		assertEquals(population.size(), POPULATION_SIZE + 1);
+		assertEquals(numEqualIndividuals, POPULATION_SIZE);
 	}
 
 	@Test
@@ -219,7 +221,8 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 			clonedIndividuals.add((SolutionChromosome) individual.clone());
 		}
 
-		geneticAlgorithm.crossover();
+		geneticAlgorithm.crossover(population.size());
+		population.resetEligibility();
 
 		int numEqualIndividuals = 0;
 		for (Chromosome individual : population.getIndividuals()) {
@@ -229,7 +232,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		}
 
 		assertEquals(numEqualIndividuals, clonedIndividuals.size());
-		assertEquals(population.size(), clonedIndividuals.size() + 2);
+		assertEquals(population.size(), clonedIndividuals.size() + 1);
 	}
 
 	@Test
@@ -243,13 +246,13 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		 */
 		InOrder inOrder = inOrder(geneticAlgorithmSpy);
 		inOrder.verify(geneticAlgorithmSpy, times(1)).select();
-		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover();
-		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover(anyInt());
+		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate(anyInt());
 		inOrder.verify(geneticAlgorithmSpy, times(1)).select();
-		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover();
-		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate();
+		inOrder.verify(geneticAlgorithmSpy, times(1)).crossover(anyInt());
+		inOrder.verify(geneticAlgorithmSpy, times(1)).mutate(anyInt());
 		inOrder.verify(geneticAlgorithmSpy, times(0)).select();
-		inOrder.verify(geneticAlgorithmSpy, times(0)).crossover();
-		inOrder.verify(geneticAlgorithmSpy, times(0)).mutate();
+		inOrder.verify(geneticAlgorithmSpy, times(0)).crossover(anyInt());
+		inOrder.verify(geneticAlgorithmSpy, times(0)).mutate(anyInt());
 	}
 }

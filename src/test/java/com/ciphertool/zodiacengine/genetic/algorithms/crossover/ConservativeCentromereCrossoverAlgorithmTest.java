@@ -1,7 +1,6 @@
 package com.ciphertool.zodiacengine.genetic.algorithms.crossover;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
@@ -13,20 +12,31 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.genetics.algorithms.crossover.ConservativeCentromereCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.algorithms.mutation.WordGeneListDaoMock;
 
 public class ConservativeCentromereCrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static ConservativeCentromereCrossoverAlgorithm crossoverAlgorithm = new ConservativeCentromereCrossoverAlgorithm();
 	private static SolutionChromosome dummySolution;
 	private Logger log = Logger.getLogger(getClass());
+	private static final int MAX_MUTATIONS = 5;
 
 	@BeforeClass
 	public static void setUp() {
+		MutationAlgorithm mutationAlgorithm = new ConservativeMutationAlgorithm();
+		((ConservativeMutationAlgorithm) mutationAlgorithm)
+				.setMaxMutationsPerChromosome(MAX_MUTATIONS);
+		((ConservativeMutationAlgorithm) mutationAlgorithm)
+				.setGeneListDao(new WordGeneListDaoMock());
+
+		crossoverAlgorithm.setMutationAlgorithm(mutationAlgorithm);
 		dummySolution = knownSolution.clone();
 
 		dummySolution.getGenes().get(0).insertSequence(
@@ -64,9 +74,8 @@ public class ConservativeCentromereCrossoverAlgorithmTest extends GeneticAlgorit
 	public void testCrossover() {
 		List<Chromosome> children = crossoverAlgorithm.crossover(knownSolution, dummySolution);
 
-		assertFalse(children.get(0).equals(children.get(1)));
+		assertEquals(children.size(), 1);
 		assertEquals(children.get(0).actualSize(), dummySolution.actualSize());
-		assertEquals(children.get(1).actualSize(), knownSolution.actualSize());
 
 		log.info(children);
 	}

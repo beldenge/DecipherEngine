@@ -256,31 +256,34 @@
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="geneListDao" ref="geneListDao" />
 		<property name="chromosomeHelper" ref="chromosomeHelper" />
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
 	
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.ConservativeCrossoverAlgorithm"
 		id="conservativeCrossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="geneListDao" ref="geneListDao" />
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
 
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm"
 		id="defaultCrossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="geneListDao" ref="geneListDao" />
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
 	
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupUnevaluatedCrossoverAlgorithm"
-		id="lowestCommonGroupUnevaluatedCrossoverAlgorithm" />
+		id="lowestCommonGroupUnevaluatedCrossoverAlgorithm">
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
+	</bean>
 	
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.ConservativeCentromereCrossoverAlgorithm"
 		id="conservativeCentromereCrossoverAlgorithm">
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="geneListDao" ref="geneListDao" />
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao" id="sequenceDao" />
