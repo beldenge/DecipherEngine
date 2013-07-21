@@ -39,9 +39,7 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		AbstractSolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-	private static final double UNIQUE_WORD_BONUS = 0.005;
-	private static final double DOUBLE_MATCH_BONUS = 0.0025;
-	private static final double TRIPLE_MATCH_BONUS = 0.00125;
+	private static final double MATCH_THRESHOLD = 0.0;
 
 	/**
 	 * Default no-args constructor
@@ -138,9 +136,14 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 
 			/*
 			 * Add the Plaintext matches on this Ciphertext character to the
-			 * overall confidence value, represented by total
+			 * overall confidence value, represented by total. Each successive
+			 * match gives increasingly more points to the fitness value.
 			 */
-			total += maxMatches;
+			int subtotal = 0;
+			for (int i = 1; i <= maxMatches; i++) {
+				subtotal += i;
+			}
+			total += subtotal;
 
 			/*
 			 * Increment the unique matches by converting a boolean to an int
@@ -166,11 +169,6 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 
 		solution.setAdjacentMatchCount(adjacentMatchCount);
 
-		int subTotal = 0;
-		for (int i = 1; i <= total; i++) {
-			subTotal += i;
-		}
-
 		/*
 		 * We don't care to evaluate past the last row since it is likely to be
 		 * filler.
@@ -178,7 +176,15 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
 		double uniquenessFactor = determineUniquenessFactor(solution, lastSequenceToCheck);
 
-		double fitness = ((double) (subTotal)) * (1.0 + uniquenessFactor);
+		double fitness = ((double) (total)) - uniquenessFactor;
+
+		/*
+		 * if fitness is less than zero, we will get
+		 * ArrayIndexOutOfBoundsException, and if it is equal to zero, then that
+		 * could mess up selector methods.
+		 */
+		fitness = fitness > 0 ? fitness : 1;
+
 		solution.setFitness(fitness);
 
 		if (log.isDebugEnabled()) {
@@ -207,9 +213,20 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		/*
 		 * Count the number of occurrences of each word and stick it in a map.
 		 */
+		WordGene nextWordGene;
 		for (int x = 0; x < numberOfGenes; x++) {
-			if (((WordGene) solution.getGenes().get(x)).getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
-				nextWord = ((WordGene) solution.getGenes().get(x)).getWordString().toLowerCase();
+			nextWordGene = (WordGene) solution.getGenes().get(x);
+			if (nextWordGene.getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
+				if (nextWordGene.countMatches() == 0) {
+					/*
+					 * We only want to consider this for duplication if it
+					 * contains plaintext matches. Otherwise it's not affecting
+					 * anything.
+					 */
+					continue;
+				}
+
+				nextWord = nextWordGene.getWordString().toLowerCase();
 
 				if (!geneOccurrenceMap.containsKey(nextWord)) {
 					geneOccurrenceMap.put(nextWord, 0);
@@ -219,27 +236,25 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 			}
 		}
 
-		double extraPoints = 0;
+		double penalty = 0;
 
 		/*
 		 * We don't care about the Strings themselves anymore. Just their
 		 * numbers of occurrences.
 		 */
 		for (Integer numOccurrences : geneOccurrenceMap.values()) {
-			if (numOccurrences == 1) {
-				extraPoints += UNIQUE_WORD_BONUS;
-			} else if (numOccurrences == 2) {
-				extraPoints += DOUBLE_MATCH_BONUS;
-			} else if (numOccurrences == 3) {
-				extraPoints += TRIPLE_MATCH_BONUS;
-			}
+			int pointsToSubtract = 1;
 			/*
-			 * No points are awarded if the word exists more than three times in
-			 * the cipher.
+			 * For each successive occurrence over the threshold, add
+			 * increasingly more points to the penalty.
 			 */
+			for (int i = numOccurrences; i > MATCH_THRESHOLD; i--) {
+				penalty += pointsToSubtract;
+				pointsToSubtract++;
+			}
 		}
 
-		return extraPoints;
+		return penalty;
 	}
 
 	/*

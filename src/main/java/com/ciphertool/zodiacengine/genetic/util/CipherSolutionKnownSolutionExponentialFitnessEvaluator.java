@@ -402,7 +402,9 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}
 
-		return fitness;
+		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
+
+		return proximityToKnownSolution;
 	}
 
 	/*

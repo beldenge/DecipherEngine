@@ -311,6 +311,18 @@ public class WordGene implements Gene {
 		return sb.toString();
 	}
 
+	public int countMatches() {
+		int count = 0;
+
+		for (Sequence sequenceToCheck : this.sequences) {
+			if (((PlaintextSequence) sequenceToCheck).getHasMatch()) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

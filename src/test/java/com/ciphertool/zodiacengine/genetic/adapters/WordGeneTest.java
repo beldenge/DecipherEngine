@@ -359,4 +359,14 @@ public class WordGeneTest {
 					.getSequences().get(i));
 		}
 	}
+
+	@Test
+	public void testCountMatches() {
+		Word newWord = new Word(new WordId("smile", 'N'));
+		WordGene wordGeneToTest = new WordGene(newWord, null, 0);
+		((PlaintextSequence) wordGeneToTest.getSequences().get(1)).setHasMatch(true);
+		((PlaintextSequence) wordGeneToTest.getSequences().get(2)).setHasMatch(true);
+
+		assertEquals(2, wordGeneToTest.countMatches());
+	}
 }
