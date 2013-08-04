@@ -53,6 +53,9 @@ public class Cipher implements Serializable {
 	@Column(name = "rows")
 	private int rows;
 
+	@Column(name = "has_solution")
+	private boolean hasKnownSolution;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.cipher", cascade = CascadeType.ALL)
 	private List<Ciphertext> ciphertextCharacters = new ArrayList<Ciphertext>();
 
@@ -115,6 +118,13 @@ public class Cipher implements Serializable {
 
 	public int length() {
 		return rows * columns;
+	}
+
+	/**
+	 * @return the hasKnownSolution
+	 */
+	public boolean hasKnownSolution() {
+		return hasKnownSolution;
 	}
 
 	/*

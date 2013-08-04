@@ -138,6 +138,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JLabel statusLabel;
 	private JCheckBox compareToKnownSolutionCheckBox;
 
+	private Map<String, Cipher> cipherMap;
+
 	private StrategyBuilder strategyBuilder;
 
 	public SwingUserInterface() {
@@ -240,15 +242,21 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		containerPanel.add(mainPanel, BorderLayout.CENTER);
 
 		List<Cipher> ciphers = cipherDao.findAll();
+		cipherMap = new HashMap<String, Cipher>();
 		cipherComboBox = new JComboBox<String>();
+		String cipherName;
 		for (Cipher cipher : ciphers) {
-			cipherComboBox.addItem(cipher.getName());
+			cipherName = cipher.getName();
+			cipherMap.put(cipherName, cipher);
+
+			cipherComboBox.addItem(cipherName);
 
 			if (cipher.getName().equals(defaultCipher)) {
-				cipherComboBox.setSelectedItem(cipher.getName());
+				cipherComboBox.setSelectedItem(cipherName);
 			}
 		}
 		JLabel cipherNameLabel = new JLabel(cipherNameText);
+		cipherComboBox.addActionListener(getCipherComboBoxActionListener());
 
 		constraints.weightx = 1.0;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
@@ -473,6 +481,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(compareToKnownSolutionCheckBox, constraints);
 		mainPanel.add(compareToKnownSolutionCheckBox);
+		compareToKnownSolutionCheckBox.setEnabled(isCompareToKnownSolutionCheckBoxEnabled());
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -545,6 +554,23 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				statusLabel.setText(statusNotRunning);
 			}
 		};
+	}
+
+	public ActionListener getCipherComboBoxActionListener() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				compareToKnownSolutionCheckBox
+						.setEnabled(isCompareToKnownSolutionCheckBoxEnabled());
+			}
+		};
+	}
+
+	private boolean isCompareToKnownSolutionCheckBoxEnabled() {
+		if (cipherMap.get(cipherComboBox.getSelectedItem()).hasKnownSolution()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
