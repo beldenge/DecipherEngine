@@ -35,7 +35,7 @@ public class ForcedWordGeneListDao implements GeneListDao {
 
 	private WordListDao wordListDao;
 
-	private static int MAX_FIND_ATTEMPTS = 10000;
+	private static final int MAX_FIND_ATTEMPTS = 10000;
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome, int beginIndex) {
