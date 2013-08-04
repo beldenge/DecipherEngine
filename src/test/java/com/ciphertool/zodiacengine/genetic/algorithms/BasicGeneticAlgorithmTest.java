@@ -72,6 +72,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	protected static final int POPULATION_SIZE = 10;
 	protected static final double SURVIVAL_RATE = 0.9;
 	protected static final double MUTATION_RATE = 0.1;
+	protected static final int MAX_MUTATIONS_PER_INDIVIDUAL = 5;
 	protected static final double CROSSOVER_RATE = 1.0;
 	protected static final int LIFESPAN = -1;
 	protected static final int MAX_GENERATIONS = 2;
@@ -95,8 +96,8 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(zodiac408,
 				POPULATION_SIZE, LIFESPAN, MAX_GENERATIONS, SURVIVAL_RATE, MUTATION_RATE,
-				CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
-				selectionAlgorithm, selector);
+				MAX_MUTATIONS_PER_INDIVIDUAL, CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm,
+				mutationAlgorithm, selectionAlgorithm, selector);
 
 		population.setBreeder(solutionBreederMock);
 		population.setSelector(selector);

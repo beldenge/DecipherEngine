@@ -28,7 +28,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,6 +48,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
@@ -52,6 +56,8 @@ import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;
+import com.ciphertool.zodiacengine.gui.common.ParameterConstants;
+import com.ciphertool.zodiacengine.gui.common.StrategyBuilder;
 import com.ciphertool.zodiacengine.gui.controller.CipherSolutionController;
 
 public class SwingUserInterface extends JFrame implements UserInterface {
@@ -71,6 +77,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String lifespanText = "Individual Lifespan: ";
 	private String survivalRateText = "Survival Rate: ";
 	private String mutationRateText = "Mutation Rate: ";
+	private String maxMutationsPerIndividualText = "Max Mutations Per Each: ";
 	private String crossoverRateText = "Crossover Rate: ";
 	private String continuousText = "Run until user stops";
 	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
@@ -101,6 +108,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private static final double MUTATION_MIN = 0.0;
 	private static final double MUTATION_MAX = 1;
 	private static final double MUTATION_STEP = 0.001;
+	private int maxMutationsPerIndividualInitial;
+	private static final int MAX_MUTATION_MIN = 1;
+	private static final int MAX_MUTATION_MAX = 100;
+	private static final int MAX_MUTATION_STEP = 1;
 	private double crossoverInitial;
 	private static final double CROSSOVER_MIN = 0.0;
 	private static final double CROSSOVER_MAX = 1.0;
@@ -108,6 +119,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 	private CipherSolutionController cipherSolutionController;
 	private CipherDao cipherDao;
+	private String defaultCipher;
 
 	private JComboBox<String> cipherComboBox;
 	private JComboBox<String> fitnessEvaluatorComboBox;
@@ -121,9 +133,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JSpinner lifespanSpinner;
 	private JSpinner survivalRateSpinner;
 	private JSpinner mutationRateSpinner;
+	private JSpinner maxMutationsPerIndividualSpinner;
 	private JSpinner crossoverRateSpinner;
 	private JLabel statusLabel;
 	private JCheckBox compareToKnownSolutionCheckBox;
+
+	private StrategyBuilder strategyBuilder;
 
 	public SwingUserInterface() {
 	}
@@ -228,6 +243,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		cipherComboBox = new JComboBox<String>();
 		for (Cipher cipher : ciphers) {
 			cipherComboBox.addItem(cipher.getName());
+
+			if (cipher.getName().equals(defaultCipher)) {
+				cipherComboBox.setSelectedItem(cipher.getName());
+			}
 		}
 		JLabel cipherNameLabel = new JLabel(cipherNameText);
 
@@ -329,6 +348,22 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(mutationRateSpinner, constraints);
 		mainPanel.add(mutationRateSpinner);
+
+		SpinnerModel maxMutationsPerIndividualModel = new SpinnerNumberModel(
+				maxMutationsPerIndividualInitial, MAX_MUTATION_MIN, MAX_MUTATION_MAX,
+				MAX_MUTATION_STEP);
+		maxMutationsPerIndividualSpinner = new JSpinner(maxMutationsPerIndividualModel);
+		JLabel maxMutationsPerIndividualLabel = new JLabel(maxMutationsPerIndividualText);
+		maxMutationsPerIndividualLabel.setLabelFor(maxMutationsPerIndividualSpinner);
+
+		constraints.weightx = 1.0;
+		constraints.gridwidth = GridBagConstraints.RELATIVE;
+		gridBagLayout.setConstraints(maxMutationsPerIndividualLabel, constraints);
+		mainPanel.add(maxMutationsPerIndividualLabel);
+		constraints.weightx = 2.0;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(maxMutationsPerIndividualSpinner, constraints);
+		mainPanel.add(maxMutationsPerIndividualSpinner);
 
 		SpinnerModel crossoverRateModel = new SpinnerNumberModel(crossoverInitial, CROSSOVER_MIN,
 				CROSSOVER_MAX, CROSSOVER_STEP);
@@ -470,17 +505,34 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 					generations = -1;
 				}
 
-				cipherSolutionController.startServiceThread((String) cipherComboBox
-						.getSelectedItem(), (Integer) populationSpinner.getValue(),
-						(Integer) lifespanSpinner.getValue(), generations,
-						(Double) survivalRateSpinner.getValue(), (Double) mutationRateSpinner
-								.getValue(), (Double) crossoverRateSpinner.getValue(),
-						(String) fitnessEvaluatorComboBox.getSelectedItem(),
-						(String) crossoverAlgorithmComboBox.getSelectedItem(),
-						(String) mutationAlgorithmComboBox.getSelectedItem(),
-						(String) selectionAlgorithmComboBox.getSelectedItem(),
-						(String) selectorComboBox.getSelectedItem(), compareToKnownSolutionCheckBox
-								.isSelected());
+				Map<String, Object> parameters = new HashMap<String, Object>();
+
+				parameters.put(ParameterConstants.CIPHER_NAME, cipherComboBox.getSelectedItem());
+				parameters.put(ParameterConstants.POPULATION_SIZE, populationSpinner.getValue());
+				parameters.put(ParameterConstants.LIFESPAN, lifespanSpinner.getValue());
+				parameters.put(ParameterConstants.NUMBER_OF_GENERATIONS, generations);
+				parameters.put(ParameterConstants.SURVIVAL_RATE, survivalRateSpinner.getValue());
+				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
+				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL,
+						maxMutationsPerIndividualSpinner.getValue());
+				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
+				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox
+						.getSelectedItem());
+				parameters.put(ParameterConstants.CROSSOVER_ALGORITHM, crossoverAlgorithmComboBox
+						.getSelectedItem());
+				parameters.put(ParameterConstants.MUTATION_ALGORITHM, mutationAlgorithmComboBox
+						.getSelectedItem());
+				parameters.put(ParameterConstants.SELECTION_ALGORITHM, selectionAlgorithmComboBox
+						.getSelectedItem());
+				parameters.put(ParameterConstants.SELECTOR_METHOD, selectorComboBox
+						.getSelectedItem());
+				parameters.put(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION,
+						compareToKnownSolutionCheckBox.isSelected());
+
+				GeneticAlgorithmStrategy geneticAlgorithmStrategy = strategyBuilder
+						.buildStrategy(Collections.unmodifiableMap(parameters));
+
+				cipherSolutionController.startServiceThread(geneticAlgorithmStrategy);
 			}
 		};
 	}
@@ -568,6 +620,12 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	 */
 	@Required
 	public void setPopulationInitial(int populationInitial) {
+		if (populationInitial <= 0) {
+			throw new IllegalArgumentException("Tried to set a populationInitial of "
+					+ populationInitial
+					+ ", but SwingUserInterface requires a populationInitial greater than 0.");
+		}
+
 		this.populationInitial = populationInitial;
 	}
 
@@ -613,6 +671,21 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	}
 
 	/**
+	 * @param maxMutationsPerIndividualInitial
+	 *            the maxMutationsPerIndividualInitial to set
+	 */
+	public void setMaxMutationsPerIndividualInitial(int maxMutationsPerIndividualInitial) {
+		if (maxMutationsPerIndividualInitial <= 0) {
+			throw new IllegalArgumentException(
+					"Tried to set a maxMutationsPerIndividualInitial of "
+							+ maxMutationsPerIndividualInitial
+							+ ", but SwingUserInterface requires a maxMutationsPerIndividualInitial greater than 0.");
+		}
+
+		this.maxMutationsPerIndividualInitial = maxMutationsPerIndividualInitial;
+	}
+
+	/**
 	 * @param crossoverInitial
 	 *            the crossoverInitial to set
 	 */
@@ -626,5 +699,23 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		}
 
 		this.crossoverInitial = crossoverInitial;
+	}
+
+	/**
+	 * @param defaultCipher
+	 *            the defaultCipher to set
+	 */
+	@Required
+	public void setDefaultCipher(String defaultCipher) {
+		this.defaultCipher = defaultCipher;
+	}
+
+	/**
+	 * @param strategyBuilder
+	 *            the strategyBuilder to set
+	 */
+	@Required
+	public void setStrategyBuilder(StrategyBuilder strategyBuilder) {
+		this.strategyBuilder = strategyBuilder;
 	}
 }

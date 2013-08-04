@@ -20,80 +20,25 @@
 package com.ciphertool.zodiacengine.gui.controller;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
-import com.ciphertool.genetics.algorithms.selection.modes.Selector;
-import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
-import com.ciphertool.genetics.util.FitnessEvaluator;
-import com.ciphertool.zodiacengine.dao.CipherDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.genetic.util.FitnessEvaluatorType;
 import com.ciphertool.zodiacengine.gui.service.CipherSolutionService;
 
-public class ZodiacCipherSolutionController implements CipherSolutionController,
-		ApplicationContextAware {
+public class ZodiacCipherSolutionController implements CipherSolutionController {
 	private Logger log = Logger.getLogger(getClass());
-	private ApplicationContext context;
 	private CipherSolutionService cipherSolutionService;
-	private CipherDao cipherDao;
-	private FitnessEvaluator fitnessEvaluatorDefault;
-	private CrossoverAlgorithm crossoverAlgorithmDefault;
-	private MutationAlgorithm mutationAlgorithmDefault;
-	private SelectionAlgorithm selectionAlgorithmDefault;
-	private FitnessEvaluator knownSolutionFitnessEvaluator;
-	private Selector selectorDefault;
 
 	@Override
-	public void startServiceThread(final String cipherName, final int populationSize,
-			final int lifespan, final int numGenerations, final double survivalRate,
-			final double mutationRate, final double crossoverRate,
-			final String fitnessEvaluatorName, final String crossoverAlgorithmName,
-			final String mutationAlgorithmName, final String selectionAlgorithmName,
-			final String selectorName, final boolean compareToKnownSolution) {
+	public void startServiceThread(final GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
-					Cipher cipher = cipherDao.findByCipherName(cipherName);
-
-					FitnessEvaluator fitnessEvaluator = getFitnessEvaluator(fitnessEvaluatorName);
-					log.info("FitnessEvaluator implementation: " + fitnessEvaluator.getClass());
-
-					CrossoverAlgorithm crossoverAlgorithm = getCrossoverAlgorithm(crossoverAlgorithmName);
-					log.info("CrossoverAlgorithm implementation: " + crossoverAlgorithm.getClass());
-
-					MutationAlgorithm mutationAlgorithm = getMutationAlgorithm(mutationAlgorithmName);
-					log.info("MutationAlgorithm implementation: " + mutationAlgorithm.getClass());
-
-					SelectionAlgorithm selectionAlgorithm = getSelectionAlgorithm(selectionAlgorithmName);
-					log.info("SelectionAlgorithm implementation: " + selectionAlgorithm.getClass());
-
-					Selector selector = getSelector(selectorName);
-					log.info("Selector implementation: " + selector.getClass());
-
-					GeneticAlgorithmStrategy geneticAlgorithmStrategy;
-					if (knownSolutionFitnessEvaluator != null) {
-						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-								populationSize, lifespan, numGenerations, survivalRate,
-								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-								mutationAlgorithm, selectionAlgorithm, selector,
-								knownSolutionFitnessEvaluator, compareToKnownSolution);
-					} else {
-						geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher,
-								populationSize, lifespan, numGenerations, survivalRate,
-								mutationRate, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-								mutationAlgorithm, selectionAlgorithm, selector);
+					if (geneticAlgorithmStrategy == null) {
+						throw new IllegalArgumentException(
+								"The geneticAlgorithmStrategy cannot be null.");
 					}
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy);
@@ -130,70 +75,6 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 		return cipherSolutionService.isRunning();
 	}
 
-	private FitnessEvaluator getFitnessEvaluator(String fitnessEvaluatorName) {
-		FitnessEvaluator fitnessEvaluator = null;
-
-		try {
-			fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType.valueOf(
-					fitnessEvaluatorName).getType());
-		} catch (IllegalArgumentException iae) {
-			fitnessEvaluator = fitnessEvaluatorDefault;
-		}
-
-		return fitnessEvaluator;
-	}
-
-	private CrossoverAlgorithm getCrossoverAlgorithm(String crossoverAlgorithmName) {
-		CrossoverAlgorithm crossoverAlgorithm = null;
-
-		try {
-			crossoverAlgorithm = (CrossoverAlgorithm) context.getBean(CrossoverAlgorithmType
-					.valueOf(crossoverAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			crossoverAlgorithm = crossoverAlgorithmDefault;
-		}
-
-		return crossoverAlgorithm;
-	}
-
-	private MutationAlgorithm getMutationAlgorithm(String mutationAlgorithmName) {
-		MutationAlgorithm mutationAlgorithm = null;
-
-		try {
-			mutationAlgorithm = (MutationAlgorithm) context.getBean(MutationAlgorithmType.valueOf(
-					mutationAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			mutationAlgorithm = mutationAlgorithmDefault;
-		}
-
-		return mutationAlgorithm;
-	}
-
-	private SelectionAlgorithm getSelectionAlgorithm(String selectionAlgorithmName) {
-		SelectionAlgorithm selectionAlgorithm = null;
-
-		try {
-			selectionAlgorithm = (SelectionAlgorithm) context.getBean(SelectionAlgorithmType
-					.valueOf(selectionAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			selectionAlgorithm = selectionAlgorithmDefault;
-		}
-
-		return selectionAlgorithm;
-	}
-
-	private Selector getSelector(String selectorName) {
-		Selector selector = null;
-
-		try {
-			selector = (Selector) context.getBean(SelectorType.valueOf(selectorName).getType());
-		} catch (IllegalArgumentException iae) {
-			selector = selectorDefault;
-		}
-
-		return selector;
-	}
-
 	/**
 	 * @param cipherSolutionService
 	 *            the cipherSolutionService to set
@@ -201,75 +82,5 @@ public class ZodiacCipherSolutionController implements CipherSolutionController,
 	@Required
 	public void setCipherSolutionService(CipherSolutionService cipherSolutionService) {
 		this.cipherSolutionService = cipherSolutionService;
-	}
-
-	/**
-	 * @param cipherDao
-	 *            the cipherDao to set
-	 */
-	@Required
-	public void setCipherDao(CipherDao cipherDao) {
-		this.cipherDao = cipherDao;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext context) throws BeansException {
-		this.context = context;
-	}
-
-	/**
-	 * @param fitnessEvaluatorDefault
-	 *            the fitnessEvaluatorDefault to set
-	 */
-	@Required
-	public void setFitnessEvaluatorDefault(FitnessEvaluator fitnessEvaluatorDefault) {
-		this.fitnessEvaluatorDefault = fitnessEvaluatorDefault;
-	}
-
-	/**
-	 * @param crossoverAlgorithmDefault
-	 *            the crossoverAlgorithmDefault to set
-	 */
-	@Required
-	public void setCrossoverAlgorithmDefault(CrossoverAlgorithm crossoverAlgorithmDefault) {
-		this.crossoverAlgorithmDefault = crossoverAlgorithmDefault;
-	}
-
-	/**
-	 * @param mutationAlgorithmDefault
-	 *            the mutationAlgorithmDefault to set
-	 */
-	@Required
-	public void setMutationAlgorithmDefault(MutationAlgorithm mutationAlgorithmDefault) {
-		this.mutationAlgorithmDefault = mutationAlgorithmDefault;
-	}
-
-	/**
-	 * @param selectionAlgorithmDefault
-	 *            the selectionAlgorithmDefault to set
-	 */
-	@Required
-	public void setSelectionAlgorithmDefault(SelectionAlgorithm selectionAlgorithmDefault) {
-		this.selectionAlgorithmDefault = selectionAlgorithmDefault;
-	}
-
-	/**
-	 * @param selectorDefault
-	 *            the selectorDefault to set
-	 */
-	@Required
-	public void setSelectorDefault(Selector selectorDefault) {
-		this.selectorDefault = selectorDefault;
-	}
-
-	/**
-	 * This is NOT required. We will not always know the solution. In fact, that
-	 * should be the rare case.
-	 * 
-	 * @param knownSolutionFitnessEvaluator
-	 *            the knownSolutionFitnessEvaluator to set
-	 */
-	public void setKnownSolutionFitnessEvaluator(FitnessEvaluator knownSolutionFitnessEvaluator) {
-		this.knownSolutionFitnessEvaluator = knownSolutionFitnessEvaluator;
 	}
 }

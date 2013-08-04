@@ -26,16 +26,16 @@ import com.ciphertool.genetics.dao.GeneListDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
-import com.ciphertool.sentencebuilder.dao.WordMapDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
-public class WordGeneListDao implements GeneListDao {
+public class ForcedWordGeneListDao implements GeneListDao {
 	private Logger log = Logger.getLogger(getClass());
 
 	private WordListDao wordListDao;
-	private WordMapDao wordMapDao;
+
+	private static int MAX_FIND_ATTEMPTS = 10000;
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome, int beginIndex) {
@@ -56,12 +56,28 @@ public class WordGeneListDao implements GeneListDao {
 			return null;
 		}
 
-		Word word = wordMapDao.findRandomWordByLength(length);
+		Word word = null;
 
-		if (word == null) {
-			throw new IllegalArgumentException("Attempted to find a word of length " + length
-					+ " which was not found.");
-		}
+		/*
+		 * Keep trying until we find a word with the right length. Or return
+		 * null if we reach the max attempts. Otherwise there is a chance of
+		 * infinite loop if a length of inordinate size is provided.
+		 */
+		int attempts = 0;
+		do {
+			word = wordListDao.findRandomWord();
+
+			attempts++;
+
+			if (attempts >= MAX_FIND_ATTEMPTS) {
+				if (log.isDebugEnabled()) {
+					log.debug("Unable to find random gene of length " + length + " after "
+							+ attempts + " attempts.  Returning null.");
+				}
+
+				return null;
+			}
+		} while (word.getId().getWord().length() != length);
 
 		Gene gene = new WordGene(word, (SolutionChromosome) chromosome, beginIndex);
 
@@ -75,14 +91,5 @@ public class WordGeneListDao implements GeneListDao {
 	@Required
 	public void setWordListDao(WordListDao wordListDao) {
 		this.wordListDao = wordListDao;
-	}
-
-	/**
-	 * @param wordMapDao
-	 *            the wordMapDao to set
-	 */
-	@Required
-	public void setWordMapDao(WordMapDao wordMapDao) {
-		this.wordMapDao = wordMapDao;
 	}
 }
