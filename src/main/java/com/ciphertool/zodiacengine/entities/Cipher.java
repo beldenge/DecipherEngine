@@ -127,6 +127,21 @@ public class Cipher implements Serializable {
 		return hasKnownSolution;
 	}
 
+	/**
+	 * @return the hasKnownSolution
+	 */
+	public boolean getHasKnownSolution() {
+		return hasKnownSolution;
+	}
+
+	/**
+	 * @param hasKnownSolution
+	 *            the hasKnownSolution to set
+	 */
+	public void setHasKnownSolution(boolean hasKnownSolution) {
+		this.hasKnownSolution = hasKnownSolution;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -194,6 +209,7 @@ public class Cipher implements Serializable {
 	@Override
 	public String toString() {
 		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns + ", rows=" + rows
-				+ ", ciphertextCharacters=" + ciphertextCharacters + "]";
+				+ ", hasKnownSolution=" + hasKnownSolution + ", ciphertextCharacters="
+				+ ciphertextCharacters + "]";
 	}
 }

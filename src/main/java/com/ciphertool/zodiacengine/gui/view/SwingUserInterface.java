@@ -77,7 +77,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String lifespanText = "Individual Lifespan: ";
 	private String survivalRateText = "Survival Rate: ";
 	private String mutationRateText = "Mutation Rate: ";
-	private String maxMutationsPerIndividualText = "Max Mutations Per Each: ";
+	private String maxMutationsPerIndividualText = "Max Mutations Each: ";
 	private String crossoverRateText = "Crossover Rate: ";
 	private String continuousText = "Run until user stops";
 	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
