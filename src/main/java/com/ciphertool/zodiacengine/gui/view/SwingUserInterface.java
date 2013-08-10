@@ -66,11 +66,15 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private Logger log = Logger.getLogger(getClass());
 	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
 
+	private static boolean inDebugMode;
+
 	private String windowTitle;
 	private int windowWidth;
 	private int windowHeight;
 	private String cipherNameText = "Cipher: ";
 	private String startButtonText = "Start";
+	private String debugButtonText = "Debug";
+	private String continueButtonText = "Continue";
 	private String stopButtonText = "Stop";
 	private String generationsText = "Generations: ";
 	private String populationText = "Population Size: ";
@@ -121,6 +125,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private CipherDao cipherDao;
 	private String defaultCipher;
 
+	private JButton startButton;
+	private JButton debugButton;
+	private JButton continueButton;
+	private JButton stopButton;
 	private JComboBox<String> cipherComboBox;
 	private JComboBox<String> fitnessEvaluatorComboBox;
 	private JComboBox<String> crossoverAlgorithmComboBox;
@@ -161,7 +169,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 						 * tasks are performed.
 						 */
 						if (cipherSolutionController.isServiceThreadActive()) {
-							cipherSolutionController.stopServiceThread();
+							cipherSolutionController
+									.stopServiceThread(SwingUserInterface.inDebugMode);
 
 							/*
 							 * Keep waiting for the program to finish
@@ -211,15 +220,27 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		buttonPanel.setLayout(gridLayout);
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		JButton startButton = new JButton(startButtonText);
-		startButton.addActionListener(getStartButtonActionListener());
+		startButton = new JButton(startButtonText);
+		startButton.addActionListener(getStartButtonActionListener(false));
 
 		buttonPanel.add(startButton);
 
-		JButton stopButton = new JButton(stopButtonText);
+		debugButton = new JButton(debugButtonText);
+		debugButton.addActionListener(getStartButtonActionListener(true));
+
+		buttonPanel.add(debugButton);
+
+		continueButton = new JButton(continueButtonText);
+		continueButton.addActionListener(getContinueButtonActionListener());
+
+		buttonPanel.add(continueButton);
+		continueButton.setEnabled(false);
+
+		stopButton = new JButton(stopButtonText);
 		stopButton.addActionListener(getStopButtonActionListener());
 
 		buttonPanel.add(stopButton);
+		stopButton.setEnabled(false);
 
 		JPanel statusPanel = new JPanel();
 		bottomPanel.add(statusPanel, BorderLayout.SOUTH);
@@ -392,8 +413,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
 			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
 		}
-		fitnessEvaluatorComboBox
-				.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_MATCH_DISTANCE.name());
+		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD
+				.name());
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = 1.0;
@@ -458,7 +479,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (SelectorType selectorType : SelectorType.values()) {
 			selectorComboBox.addItem(selectorType.name());
 		}
-		selectorComboBox.setSelectedItem(SelectorType.ROULETTE.name());
+		selectorComboBox.setSelectedItem(SelectorType.TOURNAMENT.name());
 		JLabel selectorNameLabel = new JLabel(selectorNameText);
 
 		constraints.weightx = 1.0;
@@ -503,10 +524,16 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		};
 	}
 
-	public ActionListener getStartButtonActionListener() {
+	public ActionListener getStartButtonActionListener(final boolean debugMode) {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				SwingUserInterface.inDebugMode = debugMode;
+
 				statusLabel.setText(statusRunning);
+				startButton.setEnabled(false);
+				continueButton.setEnabled(debugMode);
+				debugButton.setEnabled(false);
+				stopButton.setEnabled(true);
 
 				int generations = (Integer) generationsSpinner.getValue();
 
@@ -541,7 +568,30 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				GeneticAlgorithmStrategy geneticAlgorithmStrategy = strategyBuilder
 						.buildStrategy(Collections.unmodifiableMap(parameters));
 
-				cipherSolutionController.startServiceThread(geneticAlgorithmStrategy);
+				GenericCallback uiCallback = new GenericCallback() {
+
+					@Override
+					public void doCallback() {
+						statusLabel.setText(statusNotRunning);
+						stopButton.setEnabled(false);
+						continueButton.setEnabled(false);
+						startButton.setEnabled(true);
+						debugButton.setEnabled(true);
+					}
+				};
+
+				cipherSolutionController.startServiceThread(geneticAlgorithmStrategy, uiCallback,
+						debugMode);
+			}
+		};
+	}
+
+	public ActionListener getContinueButtonActionListener() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				cipherSolutionController.continueServiceThread();
+
+				statusLabel.setText(statusRunning);
 			}
 		};
 	}
@@ -549,9 +599,13 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	public ActionListener getStopButtonActionListener() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				cipherSolutionController.stopServiceThread();
+				cipherSolutionController.stopServiceThread(SwingUserInterface.inDebugMode);
 
 				statusLabel.setText(statusNotRunning);
+				stopButton.setEnabled(false);
+				continueButton.setEnabled(false);
+				startButton.setEnabled(true);
+				debugButton.setEnabled(true);
 			}
 		};
 	}

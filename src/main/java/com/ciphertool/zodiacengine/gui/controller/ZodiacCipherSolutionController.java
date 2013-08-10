@@ -24,13 +24,15 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.zodiacengine.gui.service.CipherSolutionService;
+import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
 public class ZodiacCipherSolutionController implements CipherSolutionController {
 	private Logger log = Logger.getLogger(getClass());
 	private CipherSolutionService cipherSolutionService;
 
 	@Override
-	public void startServiceThread(final GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
+	public void startServiceThread(final GeneticAlgorithmStrategy geneticAlgorithmStrategy,
+			final GenericCallback uiCallback, final boolean debugMode) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {
@@ -41,7 +43,7 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 								"The geneticAlgorithmStrategy cannot be null.");
 					}
 
-					cipherSolutionService.begin(geneticAlgorithmStrategy);
+					cipherSolutionService.begin(geneticAlgorithmStrategy, uiCallback, debugMode);
 				}
 			});
 
@@ -50,11 +52,26 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 	}
 
 	@Override
-	public void stopServiceThread() {
+	public void stopServiceThread(final boolean inDebugMode) {
 		if (cipherSolutionService.isRunning()) {
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
-					cipherSolutionService.endImmediately();
+					cipherSolutionService.endImmediately(inDebugMode);
+				}
+			});
+
+			serviceThread.start();
+		} else {
+			log.info("Cipher solution service is already stopped.  Nothing to do.");
+		}
+	}
+
+	@Override
+	public void continueServiceThread() {
+		if (cipherSolutionService.isRunning()) {
+			Thread serviceThread = new Thread(new Runnable() {
+				public void run() {
+					cipherSolutionService.resume();
 				}
 			});
 

@@ -150,7 +150,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		assertEquals(geneticAlgorithm.getPopulation().size(), 0);
 
 		try {
-			invokeMethod(geneticAlgorithm, "spawnInitialPopulation", null, null);
+			invokeMethod(geneticAlgorithm, "initialize", null, null);
 		} catch (InvocationTargetException e) {
 			fail(e.getMessage());
 		}
@@ -239,7 +239,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	@Test
 	public void testEvolve() {
 		GeneticAlgorithm geneticAlgorithmSpy = spy(geneticAlgorithm);
-		geneticAlgorithmSpy.evolve();
+		geneticAlgorithmSpy.evolveAutonomously();
 
 		/*
 		 * Make sure the loop executes only twice and that all pertinent methods

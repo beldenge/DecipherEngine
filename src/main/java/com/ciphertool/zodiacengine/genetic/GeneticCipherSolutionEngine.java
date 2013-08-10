@@ -46,7 +46,7 @@ public class GeneticCipherSolutionEngine {
 
 		long start = System.currentTimeMillis();
 
-		geneticAlgorithm.evolve();
+		geneticAlgorithm.evolveAutonomously();
 
 		/*
 		 * Print out summary information

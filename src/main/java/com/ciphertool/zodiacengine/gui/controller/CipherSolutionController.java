@@ -20,11 +20,19 @@
 package com.ciphertool.zodiacengine.gui.controller;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
 public interface CipherSolutionController {
-	public void startServiceThread(GeneticAlgorithmStrategy geneticAlgorithmStrategy);
+	public void startServiceThread(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
+			GenericCallback uiCallback, boolean debugMode);
 
-	public void stopServiceThread();
+	/**
+	 * @param inDebugMode
+	 *            whether we are currently in debug mode
+	 */
+	public void stopServiceThread(boolean inDebugMode);
+
+	public void continueServiceThread();
 
 	public boolean isServiceThreadActive();
 }
