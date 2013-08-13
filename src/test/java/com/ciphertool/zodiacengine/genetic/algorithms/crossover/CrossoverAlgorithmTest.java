@@ -141,6 +141,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		((ConservativeMutationAlgorithm) mutationAlgorithm).setGeneListDao(wordGeneListDao);
 
 		crossoverAlgorithm.setMutationAlgorithm(mutationAlgorithm);
+		crossoverAlgorithm.setMutateDuringCrossover(true);
 
 		Chromosome mom = knownSolution;
 		log.info("Mom: " + mom);

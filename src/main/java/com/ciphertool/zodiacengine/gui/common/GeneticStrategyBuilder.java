@@ -96,6 +96,9 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Double crossoverRate = getCrossoverRate(parameters);
 		log.info("Crossover rate: " + crossoverRate);
 
+		Boolean mutateDuringCrossover = getMutateDuringCrossover(parameters);
+		log.info("Mutate during crossover: " + mutateDuringCrossover);
+
 		Boolean compareToKnownSolution = getCompareToKnown(parameters);
 		log.info("Compare to known solution: " + compareToKnownSolution);
 
@@ -110,14 +113,15 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		if (knownSolutionFitnessEvaluator != null) {
 			geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher, populationSize,
 					lifespan, numGenerations, survivalRate, mutationRate,
-					maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-					mutationAlgorithm, selectionAlgorithm, selector, knownSolutionFitnessEvaluator,
-					compareToKnownSolution);
+					maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover,
+					fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
+					selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
 		} else {
 			geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher, populationSize,
 					lifespan, numGenerations, survivalRate, mutationRate,
-					maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-					mutationAlgorithm, selectionAlgorithm, selector);
+					maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover,
+					fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
+					selector);
 		}
 
 		return geneticAlgorithmStrategy;
@@ -377,6 +381,22 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		}
 
 		return (Double) crossoverRate;
+	}
+
+	private Boolean getMutateDuringCrossover(Map<String, Object> parameters) {
+		Object mutateDuringCrossover = parameters.get(ParameterConstants.MUTATE_DURING_CROSSOVER);
+
+		if (mutateDuringCrossover == null) {
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.MUTATE_DURING_CROSSOVER + " cannot be null.");
+		}
+
+		if (!(mutateDuringCrossover instanceof Boolean)) {
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.MUTATE_DURING_CROSSOVER + " must be of type Boolean.");
+		}
+
+		return (Boolean) mutateDuringCrossover;
 	}
 
 	private Boolean getCompareToKnown(Map<String, Object> parameters) {

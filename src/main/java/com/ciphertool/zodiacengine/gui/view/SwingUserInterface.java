@@ -65,6 +65,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
+	private static final double LAYOUT_LABEL_WEIGHT = 1.0;
+	private static final double LAYOUT_INPUT_WEIGHT = 2.0;
 
 	private static boolean inDebugMode;
 
@@ -83,6 +85,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private String mutationRateText = "Mutation Rate: ";
 	private String maxMutationsPerIndividualText = "Max Mutations Each: ";
 	private String crossoverRateText = "Crossover Rate: ";
+	private String mutateDuringCrossoverText = "Mutate during crossover";
 	private String continuousText = "Run until user stops";
 	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
 	private String crossoverAlgorithmNameText = "Crossover Algorithm: ";
@@ -143,6 +146,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JSpinner mutationRateSpinner;
 	private JSpinner maxMutationsPerIndividualSpinner;
 	private JSpinner crossoverRateSpinner;
+	private JCheckBox mutateDuringCrossoverCheckBox;
 	private JLabel statusLabel;
 	private JCheckBox compareToKnownSolutionCheckBox;
 
@@ -279,15 +283,55 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		JLabel cipherNameLabel = new JLabel(cipherNameText);
 		cipherComboBox.addActionListener(getCipherComboBoxActionListener());
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(cipherNameLabel, constraints);
 		mainPanel.add(cipherNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(cipherComboBox, constraints);
 		mainPanel.add(cipherComboBox);
 
+		appendGenerationsSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendRunContinuouslyCheckBox(gridBagLayout, constraints, mainPanel);
+
+		appendPopulationSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendLifespanSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendSurvivalRateSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendMutationRateSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendMaxMutationsPerIndividualSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendCrossoverRateSpinner(gridBagLayout, constraints, mainPanel);
+
+		appendMutateDuringCrossoverCheckBox(gridBagLayout, constraints, mainPanel);
+
+		appendFitnessEvaluatorComboBox(gridBagLayout, constraints, mainPanel);
+
+		appendCrossoverAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
+
+		appendMutationAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
+
+		appendSelectionAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
+
+		appendSelectorComboBox(gridBagLayout, constraints, mainPanel);
+
+		appendCompareToKnownSolutionCheckBox(gridBagLayout, constraints, mainPanel);
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				setVisible(true);
+				toFront();
+			}
+		});
+	}
+
+	private void appendGenerationsSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel generationsModel = new SpinnerNumberModel(generationsInitial, GENERATIONS_MIN,
 				GENERATIONS_MAX, GENERATIONS_STEP);
 		generationsSpinner = new JSpinner(generationsModel);
@@ -295,89 +339,107 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		JLabel generationsLabel = new JLabel(generationsText);
 		generationsLabel.setLabelFor(generationsSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(generationsLabel, constraints);
 		mainPanel.add(generationsLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(generationsSpinner, constraints);
 		mainPanel.add(generationsSpinner);
+	}
 
+	private void appendRunContinuouslyCheckBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		runContinuouslyCheckBox = new JCheckBox(continuousText);
 		runContinuouslyCheckBox.addActionListener(getRunContinuouslyCheckBoxActionListener());
 		runContinuouslyCheckBox.setSelected(true);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		JLabel dummyJLabel = new JLabel();
 		gridBagLayout.setConstraints(dummyJLabel, constraints);
 		mainPanel.add(dummyJLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(runContinuouslyCheckBox, constraints);
 		mainPanel.add(runContinuouslyCheckBox);
+	}
 
+	private void appendPopulationSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel populationModel = new SpinnerNumberModel(populationInitial, POPULATION_MIN,
 				POPULATION_MAX, POPULATION_STEP);
 		populationSpinner = new JSpinner(populationModel);
 		JLabel populationLabel = new JLabel(populationText);
 		populationLabel.setLabelFor(populationSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(populationLabel, constraints);
 		mainPanel.add(populationLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(populationSpinner, constraints);
 		mainPanel.add(populationSpinner);
+	}
 
+	private void appendLifespanSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints,
+			JPanel mainPanel) {
 		SpinnerModel lifespanModel = new SpinnerNumberModel(lifespanInitial, LIFESPAN_MIN,
 				LIFESPAN_MAX, LIFESPAN_STEP);
 		lifespanSpinner = new JSpinner(lifespanModel);
 		JLabel lifespanLabel = new JLabel(lifespanText);
 		lifespanLabel.setLabelFor(lifespanSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(lifespanLabel, constraints);
 		mainPanel.add(lifespanLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(lifespanSpinner, constraints);
 		mainPanel.add(lifespanSpinner);
+	}
 
+	private void appendSurvivalRateSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel survivalRateModel = new SpinnerNumberModel(survivalInitial, SURVIVAL_MIN,
 				SURVIVAL_MAX, SURVIVAL_STEP);
 		survivalRateSpinner = new JSpinner(survivalRateModel);
 		JLabel survivalRateLabel = new JLabel(survivalRateText);
 		survivalRateLabel.setLabelFor(survivalRateSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(survivalRateLabel, constraints);
 		mainPanel.add(survivalRateLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(survivalRateSpinner, constraints);
 		mainPanel.add(survivalRateSpinner);
+	}
 
+	private void appendMutationRateSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel mutationRateModel = new SpinnerNumberModel(mutationInitial, MUTATION_MIN,
 				MUTATION_MAX, MUTATION_STEP);
 		mutationRateSpinner = new JSpinner(mutationRateModel);
 		JLabel mutationRateLabel = new JLabel(mutationRateText);
 		mutationRateLabel.setLabelFor(mutationRateSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(mutationRateLabel, constraints);
 		mainPanel.add(mutationRateLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(mutationRateSpinner, constraints);
 		mainPanel.add(mutationRateSpinner);
+	}
 
+	private void appendMaxMutationsPerIndividualSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel maxMutationsPerIndividualModel = new SpinnerNumberModel(
 				maxMutationsPerIndividualInitial, MAX_MUTATION_MIN, MAX_MUTATION_MAX,
 				MAX_MUTATION_STEP);
@@ -385,30 +447,52 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		JLabel maxMutationsPerIndividualLabel = new JLabel(maxMutationsPerIndividualText);
 		maxMutationsPerIndividualLabel.setLabelFor(maxMutationsPerIndividualSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(maxMutationsPerIndividualLabel, constraints);
 		mainPanel.add(maxMutationsPerIndividualLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(maxMutationsPerIndividualSpinner, constraints);
 		mainPanel.add(maxMutationsPerIndividualSpinner);
+	}
 
+	private void appendCrossoverRateSpinner(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel crossoverRateModel = new SpinnerNumberModel(crossoverInitial, CROSSOVER_MIN,
 				CROSSOVER_MAX, CROSSOVER_STEP);
 		crossoverRateSpinner = new JSpinner(crossoverRateModel);
 		JLabel crossoverRateLabel = new JLabel(crossoverRateText);
 		crossoverRateLabel.setLabelFor(crossoverRateSpinner);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(crossoverRateLabel, constraints);
 		mainPanel.add(crossoverRateLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(crossoverRateSpinner, constraints);
 		mainPanel.add(crossoverRateSpinner);
+	}
 
+	private void appendMutateDuringCrossoverCheckBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
+		mutateDuringCrossoverCheckBox = new JCheckBox(mutateDuringCrossoverText);
+		mutateDuringCrossoverCheckBox.setSelected(true);
+
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
+		constraints.gridwidth = GridBagConstraints.RELATIVE;
+		JLabel dummyJLabel = new JLabel();
+		gridBagLayout.setConstraints(dummyJLabel, constraints);
+		mainPanel.add(dummyJLabel);
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(mutateDuringCrossoverCheckBox, constraints);
+		mainPanel.add(mutateDuringCrossoverCheckBox);
+	}
+
+	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		fitnessEvaluatorComboBox = new JComboBox<String>();
 		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
 			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
@@ -417,15 +501,18 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				.name());
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(fitnessEvaluatorNameLabel, constraints);
 		mainPanel.add(fitnessEvaluatorNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(fitnessEvaluatorComboBox, constraints);
 		mainPanel.add(fitnessEvaluatorComboBox);
+	}
 
+	private void appendCrossoverAlgorithmComboBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		crossoverAlgorithmComboBox = new JComboBox<String>();
 		for (CrossoverAlgorithmType crossoverAlgorithmType : CrossoverAlgorithmType.values()) {
 			crossoverAlgorithmComboBox.addItem(crossoverAlgorithmType.name());
@@ -434,14 +521,18 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				.name());
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(crossoverAlgorithmNameLabel, constraints);
 		mainPanel.add(crossoverAlgorithmNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(crossoverAlgorithmComboBox, constraints);
 		mainPanel.add(crossoverAlgorithmComboBox);
+	}
+
+	private void appendMutationAlgorithmComboBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 
 		mutationAlgorithmComboBox = new JComboBox<String>();
 		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
@@ -450,15 +541,18 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.CONSERVATIVE.name());
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(mutationAlgorithmNameLabel, constraints);
 		mainPanel.add(mutationAlgorithmNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(mutationAlgorithmComboBox, constraints);
 		mainPanel.add(mutationAlgorithmComboBox);
+	}
 
+	private void appendSelectionAlgorithmComboBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		selectionAlgorithmComboBox = new JComboBox<String>();
 		for (SelectionAlgorithmType selectionAlgorithmType : SelectionAlgorithmType.values()) {
 			selectionAlgorithmComboBox.addItem(selectionAlgorithmType.name());
@@ -466,15 +560,18 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		selectionAlgorithmComboBox.setSelectedItem(SelectionAlgorithmType.PROBABILISTIC.name());
 		JLabel selectionAlgorithmNameLabel = new JLabel(selectionAlgorithmNameText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(selectionAlgorithmNameLabel, constraints);
 		mainPanel.add(selectionAlgorithmNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(selectionAlgorithmComboBox, constraints);
 		mainPanel.add(selectionAlgorithmComboBox);
+	}
 
+	private void appendSelectorComboBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		selectorComboBox = new JComboBox<String>();
 		for (SelectorType selectorType : SelectorType.values()) {
 			selectorComboBox.addItem(selectorType.name());
@@ -482,34 +579,33 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		selectorComboBox.setSelectedItem(SelectorType.TOURNAMENT.name());
 		JLabel selectorNameLabel = new JLabel(selectorNameText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
 		gridBagLayout.setConstraints(selectorNameLabel, constraints);
 		mainPanel.add(selectorNameLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(selectorComboBox, constraints);
 		mainPanel.add(selectorComboBox);
+	}
 
+	private void appendCompareToKnownSolutionCheckBox(GridBagLayout gridBagLayout,
+			GridBagConstraints constraints, JPanel mainPanel) {
 		compareToKnownSolutionCheckBox = new JCheckBox(compareToKnownSolutionText);
 
-		constraints.weightx = 1.0;
+		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		dummyJLabel = new JLabel();
+		JLabel dummyJLabel = new JLabel();
 		gridBagLayout.setConstraints(dummyJLabel, constraints);
 		mainPanel.add(dummyJLabel);
-		constraints.weightx = 2.0;
+		constraints.weightx = LAYOUT_INPUT_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(compareToKnownSolutionCheckBox, constraints);
 		mainPanel.add(compareToKnownSolutionCheckBox);
-		compareToKnownSolutionCheckBox.setEnabled(isCompareToKnownSolutionCheckBoxEnabled());
 
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				setVisible(true);
-				toFront();
-			}
-		});
+		boolean isSolutionKnown = doesSelectedCipherHaveKnownSolution();
+		compareToKnownSolutionCheckBox.setEnabled(isSolutionKnown);
+		compareToKnownSolutionCheckBox.setSelected(isSolutionKnown);
 	}
 
 	public ActionListener getRunContinuouslyCheckBoxActionListener() {
@@ -552,6 +648,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL,
 						maxMutationsPerIndividualSpinner.getValue());
 				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
+				parameters.put(ParameterConstants.MUTATE_DURING_CROSSOVER,
+						mutateDuringCrossoverCheckBox.isSelected());
 				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox
 						.getSelectedItem());
 				parameters.put(ParameterConstants.CROSSOVER_ALGORITHM, crossoverAlgorithmComboBox
@@ -613,13 +711,14 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	public ActionListener getCipherComboBoxActionListener() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				compareToKnownSolutionCheckBox
-						.setEnabled(isCompareToKnownSolutionCheckBoxEnabled());
+				boolean isSolutionKnown = doesSelectedCipherHaveKnownSolution();
+				compareToKnownSolutionCheckBox.setEnabled(isSolutionKnown);
+				compareToKnownSolutionCheckBox.setSelected(isSolutionKnown);
 			}
 		};
 	}
 
-	private boolean isCompareToKnownSolutionCheckBoxEnabled() {
+	private boolean doesSelectedCipherHaveKnownSolution() {
 		if (cipherMap.get(cipherComboBox.getSelectedItem()).hasKnownSolution()) {
 			return true;
 		} else {

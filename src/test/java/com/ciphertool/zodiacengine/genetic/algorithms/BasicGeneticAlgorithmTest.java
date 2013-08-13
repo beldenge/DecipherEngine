@@ -78,6 +78,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 	protected static final int MAX_GENERATIONS = 2;
 	protected static final int MAX_THREADS = 4;
 	protected static final int THREAD_EXECUTOR_QUEUE_CAPACITY = 100;
+	protected static final boolean MUTATE_DURING_CROSSOVER = true;
 
 	@BeforeClass
 	public static void setUp() {
@@ -96,8 +97,9 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 
 		GeneticAlgorithmStrategy geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(zodiac408,
 				POPULATION_SIZE, LIFESPAN, MAX_GENERATIONS, SURVIVAL_RATE, MUTATION_RATE,
-				MAX_MUTATIONS_PER_INDIVIDUAL, CROSSOVER_RATE, fitnessEvaluator, crossoverAlgorithm,
-				mutationAlgorithm, selectionAlgorithm, selector);
+				MAX_MUTATIONS_PER_INDIVIDUAL, CROSSOVER_RATE, MUTATE_DURING_CROSSOVER,
+				fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
+				selector);
 
 		population.setBreeder(solutionBreederMock);
 		population.setSelector(selector);
