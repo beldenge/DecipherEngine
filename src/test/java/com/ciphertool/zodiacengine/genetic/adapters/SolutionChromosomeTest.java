@@ -295,9 +295,11 @@ public class SolutionChromosomeTest {
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
+		assertEquals(wordGene2.size(), 5);
 
 		solutionChromosome.removeGene(1);
 		assertTrue(solutionChromosome.isDirty());
+		assertEquals(wordGene2.size(), 0);
 
 		assertEquals(solutionChromosome.getGenes().size(), 2);
 

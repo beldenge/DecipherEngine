@@ -48,7 +48,9 @@ import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 import com.ciphertool.zodiacengine.genetic.algorithms.mutation.WordGeneListDaoMock;
+import com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
 
 public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
@@ -57,6 +59,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	private static FitnessEvaluator fitnessEvaluator;
 	private static SolutionChromosome dummySolution;
 	private static final int MAX_MUTATIONS = 5;
+	private static WordGeneListDao wordGeneListDao = new WordGeneListDaoMock();
 
 	@BeforeClass
 	public static void setUp() {
@@ -65,6 +68,10 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 
 		dummySolution = knownSolution.clone();
 
+		/*
+		 * Increase the size of an arbitrary Gene so that the indices between
+		 * the dummy and known solutions are offset.
+		 */
 		for (int i = 0; i < 5; i++) {
 			dummySolution.getGenes().get(0).insertSequence(
 					0,
@@ -131,10 +138,10 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		MutationAlgorithm mutationAlgorithm = new ConservativeMutationAlgorithm();
 		((ConservativeMutationAlgorithm) mutationAlgorithm)
 				.setMaxMutationsPerChromosome(MAX_MUTATIONS);
-		((ConservativeMutationAlgorithm) mutationAlgorithm)
-				.setGeneListDao(new WordGeneListDaoMock());
+		((ConservativeMutationAlgorithm) mutationAlgorithm).setGeneListDao(wordGeneListDao);
 
 		crossoverAlgorithm.setMutationAlgorithm(mutationAlgorithm);
+		crossoverAlgorithm.setMutateDuringCrossover(true);
 
 		Chromosome mom = knownSolution;
 		log.info("Mom: " + mom);
@@ -183,15 +190,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 
 	private void validatePlaintextSequences(Chromosome firstChild, Chromosome mom, Chromosome dad) {
 		for (Plaintext plaintext : ((SolutionChromosome) firstChild).getPlaintextCharacters()) {
-			if (((((SolutionChromosome) mom).actualSize() > plaintext.getId().getCiphertextId()) && !plaintext
-					.getValue().equals(
-							((SolutionChromosome) mom).getPlaintextCharacters().get(
-									plaintext.getId().getCiphertextId()).getValue()))
-					&& ((((SolutionChromosome) dad).actualSize() > plaintext.getId()
-							.getCiphertextId()) && !plaintext.getValue().equals(
-							((SolutionChromosome) dad).getPlaintextCharacters().get(
-									plaintext.getId().getCiphertextId()).getValue()))
-					&& !plaintext.getValue().equals("$")) {
+			if (!isPlaintextValid(plaintext, mom, dad)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Plaintext value from child does not match Plaintext from either parent, nor from any mutation: "
 						+ plaintext.toString());
@@ -207,5 +206,47 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 				fail(sb.toString());
 			}
 		}
+	}
+
+	private static boolean isPlaintextValid(Plaintext plaintext, Chromosome mom, Chromosome dad) {
+		if (!(((SolutionChromosome) mom).actualSize() > plaintext.getId().getCiphertextId())) {
+			return true;
+		}
+
+		if (plaintext.getValue().equals(
+				((SolutionChromosome) mom).getPlaintextCharacters().get(
+						plaintext.getId().getCiphertextId()).getValue())) {
+			return true;
+		}
+
+		if (!(((SolutionChromosome) dad).actualSize() > plaintext.getId().getCiphertextId())) {
+			return true;
+		}
+
+		if (plaintext.getValue().equals(
+				((SolutionChromosome) dad).getPlaintextCharacters().get(
+						plaintext.getId().getCiphertextId()).getValue())) {
+			return true;
+		}
+
+		if (plaintext.getValue().equals("$")) {
+			return true;
+		}
+
+		/*
+		 * Finally compare the word from the DAO mock against the word
+		 * comprising this plaintext's gene.
+		 */
+		String geneWordString = ((WordGene) ((PlaintextSequence) plaintext).getGene())
+				.getWordString();
+
+		String mockWordString = ((WordGene) wordGeneListDao.findRandomGeneOfLength(null, 0,
+				geneWordString.length())).getWordString();
+
+		if (geneWordString.equals(mockWordString)) {
+			return true;
+		}
+
+		return false;
 	}
 }

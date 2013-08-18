@@ -35,6 +35,7 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionId;
 import com.ciphertool.zodiacengine.entities.SolutionSet;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
 public class GeneticCipherSolutionService extends AbstractCipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());
@@ -45,18 +46,81 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	private String[] commandsAfter;
 	private long start;
 
-	/**
-	 * @param args
-	 * @throws InterruptedException
-	 */
-	public void start() throws InterruptedException {
+	public void start(GenericCallback uiCallback, boolean debugMode) {
 		start = System.currentTimeMillis();
 
-		geneticAlgorithm.evolve();
+		if (debugMode) {
+			runAlgorithmStepwise();
+		} else {
+			runAlgorithmAutonomously(uiCallback);
+		}
 	}
 
-	public void endImmediately() {
-		geneticAlgorithm.requestStop();
+	/**
+	 * In this method we ALWAYS want to execute the inherited end() method
+	 * 
+	 * @param teardownCallback
+	 */
+	private void runAlgorithmAutonomously(GenericCallback uiCallback) {
+		try {
+			geneticAlgorithm.evolveAutonomously();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
+		} finally {
+			end();
+			uiCallback.doCallback();
+		}
+	}
+
+	/**
+	 * In this method we only want to execute the inherited end() method if an
+	 * exception is caught
+	 * 
+	 * @param teardownCallback
+	 */
+	private void runAlgorithmStepwise() {
+		try {
+			geneticAlgorithm.initialize();
+
+			/*
+			 * Print the population every generation since this is debug mode.
+			 */
+			this.geneticAlgorithm.getPopulation().printAscending();
+
+			geneticAlgorithm.proceedWithNextGeneration();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
+
+			end();
+		}
+	}
+
+	public void endImmediately(boolean inDebugMode) {
+		if (inDebugMode) {
+			end();
+		} else {
+			geneticAlgorithm.requestStop();
+		}
+	}
+
+	protected void proceed() {
+		try {
+			/*
+			 * Print the population every generation since this is debug mode,
+			 * and print beforehand since it will all be printed again at the
+			 * finish.
+			 */
+			this.geneticAlgorithm.getPopulation().printAscending();
+
+			geneticAlgorithm.proceedWithNextGeneration();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
+
+			end();
+		}
 	}
 
 	public void stop() {

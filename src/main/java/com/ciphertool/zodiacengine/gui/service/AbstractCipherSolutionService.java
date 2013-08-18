@@ -22,30 +22,22 @@ package com.ciphertool.zodiacengine.gui.service;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
 public abstract class AbstractCipherSolutionService implements CipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());
 	private boolean running = false;
 
 	@Override
-	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
+			GenericCallback uiCallback, boolean debugMode) {
 		toggleRunning();
 		setUp(geneticAlgorithmStrategy);
 
-		try {
-			start();
-		} catch (InterruptedException e) {
-			log.warn("Caught InterruptedException while running cipher solution service.  "
-					+ "Cannot continue.  Performing tear-down tasks.", e);
-		} catch (Throwable t) {
-			log.error("Caught Throwable while running cipher solution service.  "
-					+ "Cannot continue.  Performing tear-down tasks.", t);
-		} finally {
-			end();
-		}
+		start(uiCallback, debugMode);
 	}
 
-	private void end() {
+	protected void end() {
 		try {
 			stop();
 		} catch (Throwable t) {
@@ -59,7 +51,12 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 	}
 
 	@Override
-	public abstract void endImmediately();
+	public void resume() {
+		proceed();
+	}
+
+	@Override
+	public abstract void endImmediately(boolean inDebugMode);
 
 	@Override
 	public synchronized boolean isRunning() {
@@ -70,7 +67,9 @@ public abstract class AbstractCipherSolutionService implements CipherSolutionSer
 		running = !running;
 	}
 
-	protected abstract void start() throws InterruptedException;
+	protected abstract void proceed();
+
+	protected abstract void start(GenericCallback uiCallback, boolean debugMode);
 
 	protected abstract void stop();
 

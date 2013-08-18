@@ -37,10 +37,7 @@
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
 
-	<bean
-		class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
-		id="cipherSolutionController">
-		<property name="cipherSolutionService" ref="cipherSolutionService" />
+	<bean class="com.ciphertool.zodiacengine.gui.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
 		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
@@ -48,6 +45,12 @@
 		<property name="selectionAlgorithmDefault" ref="defaultSelectionAlgorithm" />
 		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
 		<property name="selectorDefault" ref="defaultSelector" />
+	</bean>
+
+	<bean
+		class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
+		id="cipherSolutionController">
+		<property name="cipherSolutionService" ref="cipherSolutionService" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
@@ -63,8 +66,11 @@
 		<property name="lifespanInitial" value="${genetic.algorithm.lifespan}" />
 		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
+		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />
 		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
+		<property name="defaultCipher" value="${cipher.name}" />
+		<property name="strategyBuilder" ref="strategyBuilder" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
@@ -91,7 +97,7 @@
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionUniqueWordFitnessEvaluator"
-		id="cipherSolutionUniqueWordFitnessEvaluator" />
+		id="defaultFitnessEvaluator" />
 		
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMatchDistanceFitnessEvaluator"
@@ -115,7 +121,7 @@
 
 	<bean
 		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
-		id="defaultFitnessEvaluator">
+		id="cipherSolutionFrequencyFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -241,7 +247,16 @@
 		<property name="selector" ref="defaultSelector" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.dao.WordGeneListDao"
+	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
+	<!-- <bean class="com.ciphertool.sentencebuilder.dao.BasicWordMapDao"
+		id="wordMapDao">
+		<constructor-arg index="0"
+			type="com.ciphertool.sentencebuilder.dao.WordDao">
+			<ref bean="wordDao" />
+		</constructor-arg>
+	</bean> -->
+
+	<bean class="com.ciphertool.zodiacengine.genetic.dao.ForcedWordGeneListDao"
 		id="geneListDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
@@ -290,18 +305,19 @@
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="sequenceDao" ref="sequenceDao"/>
-		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.LiberalMutationAlgorithm" id="liberalMutationAlgorithm">
 		<property name="geneListDao" ref="geneListDao" />
 		<property name="chromosomeHelper" ref="chromosomeHelper" />
-		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm">
 		<property name="geneListDao" ref="geneListDao" />
-		<property name="maxMutationsPerChromosome" value="${genetic.algorithm.maxMutationsPerChromosome}" />
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.algorithms.mutation.GroupMutationAlgorithm" id="groupMutationAlgorithm">
+		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />
@@ -316,9 +332,6 @@
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
 		id="geneticAlgorithm">
-		<property name="crossoverAlgorithm" ref="defaultCrossoverAlgorithm" />
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-		<property name="selectionAlgorithm" ref="defaultSelectionAlgorithm" />
 		<property name="population" ref="population" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />

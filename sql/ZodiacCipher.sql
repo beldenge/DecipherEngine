@@ -47,6 +47,7 @@ CREATE TABLE cipher
   "name" character varying NOT NULL,
   "rows" integer NOT NULL DEFAULT 0,
   columns integer NOT NULL DEFAULT 0,
+  has_solution boolean,
   CONSTRAINT pk_cipher_id PRIMARY KEY (id ),
   CONSTRAINT unique_name UNIQUE (name )
 )
@@ -56,9 +57,9 @@ WITH (
 ALTER TABLE cipher
   OWNER TO postgres;
 
-INSERT INTO "cipher"(id, "name", "rows", columns) VALUES
-(1, 'zodiac340', 20, 17),
-(2, 'zodiac408', 24, 17);	   
+INSERT INTO "cipher"(id, "name", "rows", columns, has_solution) VALUES
+(1, 'zodiac340', 20, 17, false),
+(2, 'zodiac408', 24, 17, true);	   
 
 
 -- Table: ciphertext

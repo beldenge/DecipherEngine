@@ -16,23 +16,13 @@
  * You should have received a copy of the GNU General Public License along with
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ package com.ciphertool.zodiacengine.gui.common;
 
-package com.ciphertool.zodiacengine.gui.service;
+import java.util.Map;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
-public interface CipherSolutionService {
-	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
-			GenericCallback uiCallback, boolean debugMode);
-
-	/**
-	 * @param inDebugMode
-	 *            whether we are currently in debug mode
-	 */
-	public void endImmediately(boolean inDebugMode);
-
-	public void resume();
-
-	public boolean isRunning();
+public interface StrategyBuilder {
+	public GeneticAlgorithmStrategy buildStrategy(Map<String, Object> parameters);
 }
