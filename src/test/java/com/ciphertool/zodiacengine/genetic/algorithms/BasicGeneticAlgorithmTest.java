@@ -31,6 +31,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +145,8 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		List<Chromosome> individualsBefore = new ArrayList<Chromosome>();
 		int originalSize = population.size();
 		for (int i = 0; i < originalSize; i++) {
-			((SolutionChromosome) population.getIndividuals().get(0)).getId().setSolutionId(i);
+			((SolutionChromosome) population.getIndividuals().get(0)).setId(new BigInteger(String
+					.valueOf(i)));
 			individualsBefore.add(population.removeIndividual(0));
 		}
 

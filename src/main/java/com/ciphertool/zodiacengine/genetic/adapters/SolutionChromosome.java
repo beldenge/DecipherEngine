@@ -19,30 +19,51 @@
 
 package com.ciphertool.zodiacengine.genetic.adapters;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.Transient;
-
 import org.apache.log4j.Logger;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.entities.SolutionId;
+import com.ciphertool.zodiacengine.genetic.iterators.PlaintextIterator;
 
-public class SolutionChromosome extends Solution implements Chromosome {
+@Document(collection = "solutions")
+public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequence> {
 
 	private static Logger log = Logger.getLogger(SolutionChromosome.class);
 
-	private static final long serialVersionUID = -8636317309324068652L;
+	@Id
+	protected BigInteger id;
+
+	@Indexed
+	protected Integer solutionSetId;
+
+	protected int totalMatches;
+
+	protected int uniqueMatches;
+
+	protected int adjacentMatches;
+
+	protected BigInteger cipherId;
+
+	private Date createdDate;
 
 	@Transient
+	protected boolean needsEvaluation = true;
+
 	private List<Gene> genes = new ArrayList<Gene>();
 
 	@Transient
@@ -54,8 +75,11 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Transient
 	private int numberOfChildren = 0;
 
+	private int rows;
+
+	private int columns;
+
 	public SolutionChromosome() {
-		super();
 	}
 
 	/**
@@ -68,112 +92,178 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	 * @param adjacentMatches
 	 *            the adjacentMatches to set
 	 */
-	public SolutionChromosome(Cipher cipher, int totalMatches, int uniqueMatches,
-			int adjacentMatches) {
-		super(cipher, totalMatches, uniqueMatches, adjacentMatches);
+	public SolutionChromosome(BigInteger cipherId, int totalMatches, int uniqueMatches,
+			int adjacentMatches, int rows, int columns) {
+		this.cipherId = cipherId;
+		this.totalMatches = totalMatches;
+		this.uniqueMatches = uniqueMatches;
+		this.adjacentMatches = adjacentMatches;
+
+		this.rows = rows;
+		this.columns = columns;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#getFitness()
+	/**
+	 * @return the id
 	 */
+	public BigInteger getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(BigInteger id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the solutionSetId
+	 */
+	public Integer getSolutionSetId() {
+		return solutionSetId;
+	}
+
+	/**
+	 * @param solutionSetId
+	 *            the solutionSetId to set
+	 */
+	public void setSolutionSetId(Integer solutionSetId) {
+		this.solutionSetId = solutionSetId;
+	}
+
+	/**
+	 * @return
+	 */
+	public int getTotalMatches() {
+		return totalMatches;
+	}
+
+	/**
+	 * @param totalMatches
+	 */
+	public void setTotalMatches(int totalMatches) {
+		this.totalMatches = totalMatches;
+	}
+
+	/**
+	 * @return the uniqueMatches
+	 */
+	public int getUniqueMatches() {
+		return uniqueMatches;
+	}
+
+	/**
+	 * @param uniqueMatches
+	 *            the uniqueMatches to set
+	 */
+	public void setUniqueMatches(int uniqueMatches) {
+		this.uniqueMatches = uniqueMatches;
+	}
+
+	/**
+	 * @return the adjacentMatchCount
+	 */
+	public int getAdjacentMatchCount() {
+		return adjacentMatches;
+	}
+
+	/**
+	 * @param adjacentMatchCount
+	 *            the adjacentMatchCount to set
+	 */
+	public void setAdjacentMatchCount(int adjacentMatchCount) {
+		this.adjacentMatches = adjacentMatchCount;
+	}
+
+	public BigInteger getCipherId() {
+		return cipherId;
+	}
+
+	public void setCipherId(BigInteger cipherId) {
+		this.cipherId = cipherId;
+	}
+
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * This should only be called for purposes of hydrating the entity. The
+	 * createdDate should never be modified.
+	 * 
+	 * @param createdDate
+	 *            the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	/**
+	 * @return the needsEvaluation
+	 */
+	public boolean isNeedsEvaluation() {
+		return needsEvaluation;
+	}
+
+	/**
+	 * @param needsEvaluation
+	 *            the needsEvaluation to set
+	 */
+	public void setNeedsEvaluation(boolean needsEvaluation) {
+		this.needsEvaluation = needsEvaluation;
+	}
+
 	@Override
 	public Double getFitness() {
 		return fitness;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.genetic.Chromosome#setFitness(java.lang.Integer
-	 * )
-	 */
 	@Override
 	@Clean
 	public void setFitness(Double fitness) {
 		this.fitness = fitness;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#getAge()
-	 */
 	@Override
 	public int getAge() {
 		return age;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#setAge(int)
-	 */
 	@Override
 	public void setAge(int age) {
 		this.age = age;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#increaseAge(int)
-	 */
 	@Override
 	public void increaseAge() {
 		this.age++;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#getNumberOfChildren()
-	 */
 	@Override
 	public int getNumberOfChildren() {
 		return numberOfChildren;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#setNumberOfChildren(int)
-	 */
 	@Override
 	public void setNumberOfChildren(int numberOfChildren) {
 		this.numberOfChildren = numberOfChildren;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.genetics.entities.Chromosome#increaseNumberOfChildren()
-	 */
 	@Override
 	public void increaseNumberOfChildren() {
 		this.numberOfChildren++;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#getGenes()
-	 */
 	@Override
 	public List<Gene> getGenes() {
 		return Collections.unmodifiableList(genes);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.genetic.Chromosome#addGene(com.ciphertool
-	 * .zodiacengine.genetic.Gene)
-	 */
 	@Override
 	@Dirty
 	public void addGene(Gene gene) {
@@ -183,48 +273,34 @@ public class SolutionChromosome extends Solution implements Chromosome {
 			return;
 		}
 
+		int beginIndex = this.getPlaintextCharacters().size();
+
 		this.genes.add(gene);
 		gene.setChromosome(this);
-
-		int beginIndex = this.plaintextCharacters.size();
 
 		PlaintextSequence plaintextSequence = null;
 		for (int i = 0; i < gene.size(); i++) {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
 
-			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
-
 			plaintextSequence.setHasMatch(false);
-
-			plaintextSequence.getId().setSolution(this);
 
 			/*
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.getId().setCiphertextId(beginIndex + i);
+			plaintextSequence.setPlaintextId(beginIndex + i);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#size()
-	 */
 	@Override
 	public Integer actualSize() {
-		return this.plaintextCharacters.size();
+		return this.getPlaintextCharacters().size();
 	}
 
 	public Integer targetSize() {
-		return this.cipher.length();
+		return this.rows * this.columns;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public SolutionChromosome clone() {
 		SolutionChromosome copyChromosome = null;
@@ -237,9 +313,8 @@ public class SolutionChromosome extends Solution implements Chromosome {
 					cnse);
 		}
 
-		copyChromosome.setId(new SolutionId());
+		copyChromosome.setId(null);
 		copyChromosome.resetGenes();
-		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.needsEvaluation = true;
@@ -256,12 +331,6 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		return copyChromosome;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#insertGene(int,
-	 * com.ciphertool.zodiacengine.genetic.Gene)
-	 */
 	@Override
 	@Dirty
 	public void insertGene(int index, Gene gene) {
@@ -283,42 +352,34 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		 */
 		if (index > 0) {
 			beginIndex = ((PlaintextSequence) this.genes.get(index - 1).getSequences().get(
-					this.genes.get(index - 1).size() - 1)).getId().getCiphertextId() + 1;
+					this.genes.get(index - 1).size() - 1)).getPlaintextId() + 1;
 		}
 
-		int actualSize = this.plaintextCharacters.size();
+		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
+		int actualSize = plaintextCharacters.size();
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftRight(gene.size());
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(gene.size());
 		}
 
 		PlaintextSequence plaintextSequence = null;
 		for (int i = 0; i < gene.size(); i++) {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
 
-			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
-
 			plaintextSequence.setHasMatch(false);
-
-			plaintextSequence.getId().setSolution(this);
 
 			/*
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.getId().setCiphertextId(beginIndex + i);
+			plaintextSequence.setPlaintextId(beginIndex + i);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#removeGene(int)
-	 */
 	@Override
 	@Dirty
 	public Gene removeGene(int index) {
@@ -336,30 +397,40 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		 * Gene's greatest Sequence ID.
 		 */
 		int beginIndex = ((PlaintextSequence) geneToRemove.getSequences().get(
-				geneToRemove.getSequences().size() - 1)).getId().getCiphertextId() + 1;
+				geneToRemove.getSequences().size() - 1)).getPlaintextId() + 1;
 
-		int actualSize = this.plaintextCharacters.size();
+		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
+		int actualSize = plaintextCharacters.size();
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
-		}
-
-		/*
-		 * We loop across the indices backwards since, if starting from the
-		 * beginning, they should decrement each time an element is removed.
-		 */
-		for (int i = geneToRemove.size() - 1; i >= 0; i--) {
-			plaintextCharacters.remove(geneToRemove.getSequences().get(i).getSequenceId()
-					.intValue());
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
 		}
 
 		geneToRemove.resetSequences();
 
 		return this.genes.remove(index);
+	}
+
+	/**
+	 * Loops over all the Genes associated with this Chromosome and adds their
+	 * Sequences to a List.
+	 * 
+	 * @return the List of PlaintextSequences
+	 */
+	public List<PlaintextSequence> getPlaintextCharacters() {
+		List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
+
+		for (Gene gene : this.genes) {
+			for (Sequence sequence : gene.getSequences()) {
+				plaintextCharacters.add((PlaintextSequence) sequence);
+			}
+		}
+
+		return plaintextCharacters;
 	}
 
 	/*
@@ -377,35 +448,119 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		this.insertGene(index, newGene);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#resetGenes()
-	 */
 	@Override
 	@Dirty
 	public void resetGenes() {
 		this.genes = new ArrayList<Gene>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#isDirty()
-	 */
 	@Override
 	public boolean isDirty() {
 		return needsEvaluation;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Chromosome#setDirty(boolean)
-	 */
 	@Override
 	public void setDirty(boolean isDirty) {
 		this.needsEvaluation = isDirty;
+	}
+
+	/**
+	 * @param rows
+	 *            the rows to set
+	 */
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	/**
+	 * @param columns
+	 *            the columns to set
+	 */
+	public void setColumns(int columns) {
+		this.columns = columns;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 * We must not use the Plaintext characters else we may run into a stack
+	 * overflow. It shouldn't be necessary anyway since the id makes the
+	 * solution unique.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + adjacentMatches;
+		result = prime * result + ((cipherId == null) ? 0 : cipherId.hashCode());
+		result = prime * result + id.hashCode();
+		result = prime * result + solutionSetId.hashCode();
+		result = prime * result + totalMatches;
+		result = prime * result + uniqueMatches;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		SolutionChromosome other = (SolutionChromosome) obj;
+
+		if (cipherId == null) {
+			if (other.cipherId != null) {
+				return false;
+			}
+		} else if (!cipherId.equals(other.cipherId)) {
+			return false;
+		}
+
+		if (solutionSetId == null) {
+			if (other.solutionSetId != null) {
+				return false;
+			}
+		} else if (!solutionSetId.equals(other.solutionSetId)) {
+			return false;
+		}
+
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
+			return false;
+		}
+
+		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
+		List<PlaintextSequence> otherPlaintextCharacters = other.getPlaintextCharacters();
+
+		if (plaintextCharacters == null) {
+			if (otherPlaintextCharacters != null) {
+				return false;
+			}
+		} else if (otherPlaintextCharacters == null) {
+			return false;
+		} else {
+			if (plaintextCharacters.size() != otherPlaintextCharacters.size()) {
+				return false;
+			}
+
+			for (int i = 0; i < plaintextCharacters.size(); i++) {
+				if (!plaintextCharacters.get(i).equals(otherPlaintextCharacters.get(i))) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/*
@@ -419,14 +574,15 @@ public class SolutionChromosome extends Solution implements Chromosome {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness="
 				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
-				+ numberOfChildren + ", totalMatches=" + totalMatches + ", unique matches="
-				+ uniqueMatches + ", adjacent matches=" + adjacentMatchCount + "]\n");
+				+ numberOfChildren + ", totalMatches=" + totalMatches + ", uniqueMatches="
+				+ uniqueMatches + ", adjacentMatches=" + adjacentMatches + "]\n");
 
-		if (this.cipher != null) {
+		if (this.cipherId != null) {
 			Plaintext nextPlaintext = null;
-			for (int i = 0; i < this.plaintextCharacters.size(); i++) {
+			List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
+			for (int i = 0; i < plaintextCharacters.size(); i++) {
 
 				nextPlaintext = plaintextCharacters.get(i);
 
@@ -445,7 +601,7 @@ public class SolutionChromosome extends Solution implements Chromosome {
 				 * Print a newline if we are at the end of the row. Add 1 to the
 				 * index so the modulus function doesn't break.
 				 */
-				if (((i + 1) % cipher.getColumns()) == 0) {
+				if (((i + 1) % this.columns) == 0) {
 					sb.append("\n");
 				} else {
 					sb.append(" ");
@@ -454,5 +610,10 @@ public class SolutionChromosome extends Solution implements Chromosome {
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public Iterator<PlaintextSequence> iterator() {
+		return new PlaintextIterator(this.genes);
 	}
 }

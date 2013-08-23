@@ -44,7 +44,6 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.ChromosomeHelper;
 import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
@@ -73,10 +72,8 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		 * the dummy and known solutions are offset.
 		 */
 		for (int i = 0; i < 5; i++) {
-			dummySolution.getGenes().get(0).insertSequence(
-					0,
-					new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
-							.getGenes().get(0)));
+			dummySolution.getGenes().get(0).insertSequence(0,
+					new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
 		}
 
 		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
@@ -176,7 +173,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 						.getSequences().get(j));
 
 				assertEquals(((SolutionChromosome) child).getPlaintextCharacters().get(count)
-						.getId().getCiphertextId(), count);
+						.getPlaintextId().intValue(), count);
 
 				count++;
 			}
@@ -196,10 +193,10 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 						+ plaintext.toString());
 				sb.append("\nMom plaintext: "
 						+ ((SolutionChromosome) mom).getPlaintextCharacters().get(
-								plaintext.getId().getCiphertextId()));
+								plaintext.getPlaintextId()));
 				sb.append("\nDad plaintext: "
 						+ ((SolutionChromosome) dad).getPlaintextCharacters().get(
-								plaintext.getId().getCiphertextId()));
+								plaintext.getPlaintextId()));
 				sb.append("\nMom: " + ((SolutionChromosome) mom).toString());
 				sb.append("\nDad: " + ((SolutionChromosome) dad).toString());
 				sb.append("\nChild: " + ((SolutionChromosome) firstChild).toString());
@@ -209,23 +206,23 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	}
 
 	private static boolean isPlaintextValid(Plaintext plaintext, Chromosome mom, Chromosome dad) {
-		if (!(((SolutionChromosome) mom).actualSize() > plaintext.getId().getCiphertextId())) {
+		if (!(((SolutionChromosome) mom).actualSize() > plaintext.getPlaintextId())) {
 			return true;
 		}
 
 		if (plaintext.getValue().equals(
-				((SolutionChromosome) mom).getPlaintextCharacters().get(
-						plaintext.getId().getCiphertextId()).getValue())) {
+				((SolutionChromosome) mom).getPlaintextCharacters().get(plaintext.getPlaintextId())
+						.getValue())) {
 			return true;
 		}
 
-		if (!(((SolutionChromosome) dad).actualSize() > plaintext.getId().getCiphertextId())) {
+		if (!(((SolutionChromosome) dad).actualSize() > plaintext.getPlaintextId())) {
 			return true;
 		}
 
 		if (plaintext.getValue().equals(
-				((SolutionChromosome) dad).getPlaintextCharacters().get(
-						plaintext.getId().getCiphertextId()).getValue())) {
+				((SolutionChromosome) dad).getPlaintextCharacters().get(plaintext.getPlaintextId())
+						.getValue())) {
 			return true;
 		}
 

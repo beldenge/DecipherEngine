@@ -27,11 +27,11 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class ZodiacSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
@@ -53,15 +53,12 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 	 *         convertSentencesToPlaintext(List<Sentence>)
 	 */
 	@Override
-	public Solution generateSolution() {
-		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher, 0, 0, 0);
-
+	public SolutionChromosome generateSolution() {
 		/*
-		 * TODO: May want to remove this setCipher since it should be lazy
-		 * loaded somehow, but it doesn't cause any performance degradation.
+		 * Set confidence levels to lowest possible
 		 */
-		solution.setCipher(cipher);
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher
+				.getRows(), cipher.getColumns());
 
 		convertSentencesToPlaintext(solution, getSentences());
 
@@ -82,7 +79,8 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		return sentenceList;
 	}
 
-	private void convertSentencesToPlaintext(Solution solution, List<Sentence> sentenceList) {
+	private void convertSentencesToPlaintext(SolutionChromosome solution,
+			List<Sentence> sentenceList) {
 		StringBuilder rawText = new StringBuilder();
 		for (Sentence sentence : sentenceList) {
 			for (Word w : sentence.getWords()) {
@@ -91,58 +89,21 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		}
 		char[] chars = new char[cipherLength];
 		rawText.getChars(0, cipherLength, chars, 0);
-		int id = 1;
-		Plaintext pt;
+		int id = 0;
+
 		for (char c : chars) {
 			/*
 			 * It is very important to convert to lowercase here, since map
 			 * lookups within the evaluator are case-sensitive.
 			 */
-			pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c).toLowerCase());
-			solution.addPlaintext(pt);
+			WordGene gene = new WordGene(
+					new Word(new WordId(String.valueOf(c).toLowerCase(), '*')), solution, id);
+
+			solution.addGene(gene);
 			id++;
 		}
 	}
 
-	/*
-	 * This method just tests if it is any faster to call the getChars on each
-	 * word individually rather than on the entire sentence list
-	 * 
-	 * From preliminary tests, it seems like this is about twice as fast as the
-	 * old version when running single threaded, but when running multithreaded,
-	 * it's about twice as slow...
-	 * 
-	 * This might be due to the fact that it is actually more CPU intensive but
-	 * less memory intensive
-	 */
-	@SuppressWarnings("unused")
-	private static void convertSentencesToPlaintextLowMemory(Solution solution,
-			List<Sentence> sentenceList) {
-		char[] chars;
-		Plaintext pt;
-		int id = 1;
-		StringBuilder rawText = new StringBuilder();
-		for (Sentence sentence : sentenceList) {
-			for (Word w : sentence.getWords()) {
-				rawText.append(w.getId().getWord());
-				chars = new char[rawText.length()];
-				rawText.getChars(0, rawText.length(), chars, 0);
-				for (char c : chars) {
-					pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c));
-					solution.addPlaintext(pt);
-					id++;
-				}
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

@@ -31,7 +31,6 @@ import com.ciphertool.genetics.util.Breeder;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
@@ -49,9 +48,8 @@ public class SolutionBreeder implements Breeder {
 	@Override
 	public Chromosome breed() {
 		// Set confidence levels to lowest possible
-		SolutionChromosome solution = new SolutionChromosome(cipher, 0, 0, 0);
-
-		solution.setCipher(cipher);
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher
+				.getRows(), cipher.getColumns());
 
 		List<Gene> wordGenes = getWordGenes(solution);
 
@@ -66,7 +64,7 @@ public class SolutionBreeder implements Breeder {
 		return (Chromosome) solution;
 	}
 
-	private List<Gene> getWordGenes(Solution solution) {
+	private List<Gene> getWordGenes(SolutionChromosome solutionChromosome) {
 		List<Gene> geneList = new ArrayList<Gene>();
 		Word nextWord;
 		WordGene nextGene;
@@ -76,7 +74,7 @@ public class SolutionBreeder implements Breeder {
 		do {
 			nextWord = wordListDao.findRandomWord();
 
-			nextGene = new WordGene(nextWord, (SolutionChromosome) solution, length);
+			nextGene = new WordGene(nextWord, (SolutionChromosome) solutionChromosome, length);
 
 			length += nextGene.size();
 
@@ -95,13 +93,6 @@ public class SolutionBreeder implements Breeder {
 		return geneList;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.genetics.util.ChromosomeGenerator#setGeneticStructure(
-	 * java.lang.Object)
-	 */
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;

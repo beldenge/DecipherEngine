@@ -21,9 +21,10 @@ package com.ciphertool.zodiacengine.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,33 +33,26 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 
 @Component
 public class CipherDao {
-	private SessionFactory sessionFactory;
-	private static final String separator = ":";
-	private static final String nameParameter = "name";
+	private MongoOperations mongoOperations;
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Cipher findByCipherName(String name) {
-		Session session = sessionFactory.getCurrentSession();
+		Query selectByNameQuery = new Query(Criteria.where("name").is(name));
 
-		Cipher cipher = (Cipher) session.createQuery(
-				"from Cipher where name = " + separator + nameParameter).setParameter(
-				nameParameter, name).uniqueResult();
+		Cipher cipher = mongoOperations.findOne(selectByNameQuery, Cipher.class);
 
 		return cipher;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Cipher> findAll() {
-		Session session = sessionFactory.getCurrentSession();
-
-		@SuppressWarnings("unchecked")
-		List<Cipher> ciphers = session.createQuery("from Cipher").list();
+		List<Cipher> ciphers = mongoOperations.findAll(Cipher.class);
 
 		return ciphers;
 	}
 
 	@Required
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	public void setMongoTemplate(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
 }

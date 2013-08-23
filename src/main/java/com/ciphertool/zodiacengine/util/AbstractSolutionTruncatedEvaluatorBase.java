@@ -26,7 +26,7 @@ import java.util.List;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public abstract class AbstractSolutionTruncatedEvaluatorBase {
 	protected Cipher cipher;
@@ -46,9 +46,10 @@ public abstract class AbstractSolutionTruncatedEvaluatorBase {
 		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (ct.getId().getCiphertextId() >= lastRowBegin) {
+			if (ct.getCiphertextId() >= lastRowBegin) {
 				/*
-				 * If this is the last row of the cipher, just exit the loop
+				 * If this is the last row of the cipher, just exit the loop,
+				 * because for the Zodiac 408 Cipher the last row is garbage.
 				 */
 				break;
 			}
@@ -61,8 +62,8 @@ public abstract class AbstractSolutionTruncatedEvaluatorBase {
 		return ciphertextKey;
 	}
 
-	protected void clearHasMatchValues(Solution solution) {
-		for (Plaintext plaintext : solution.getPlaintextCharacters()) {
+	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
+		for (Plaintext plaintext : solutionChromosome.getPlaintextCharacters()) {
 			plaintext.setHasMatch(false);
 		}
 	}

@@ -30,7 +30,6 @@ import org.junit.Test;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class PlaintextSequenceTest {
 	@SuppressWarnings("unused")
@@ -40,7 +39,8 @@ public class PlaintextSequenceTest {
 
 	@Before
 	public void resetSolutionChromosome() {
-		solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		Cipher cipher = new Cipher();
+		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, 0, 0);
 	}
 
 	@Test
@@ -48,22 +48,13 @@ public class PlaintextSequenceTest {
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, 0), "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(0, "g", wordGene);
 
 		PlaintextSequence clonedPlaintextSequence = plaintextSequence.clone();
 
-		assertFalse(plaintextSequence.getId() == clonedPlaintextSequence.getId());
-
-		/*
-		 * The Solution should not be cloned.
-		 */
-		assertTrue(clonedPlaintextSequence.getId().getSolution() == null);
-		clonedPlaintextSequence.getId().setSolution(solutionChromosome);
-
 		assertFalse(plaintextSequence == clonedPlaintextSequence);
 
-		assertEquals(plaintextSequence.getId(), clonedPlaintextSequence.getId());
+		assertEquals(plaintextSequence.getPlaintextId(), clonedPlaintextSequence.getPlaintextId());
 		assertEquals(plaintextSequence, clonedPlaintextSequence);
 
 		/*
@@ -78,12 +69,11 @@ public class PlaintextSequenceTest {
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, 5), "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
 		plaintextSequence.shiftLeft(2);
 
-		assertEquals(plaintextSequence.getId().getCiphertextId(), 3);
+		assertEquals(plaintextSequence.getPlaintextId(), new Integer(3));
 	}
 
 	@Test
@@ -91,11 +81,10 @@ public class PlaintextSequenceTest {
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, 5), "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
 		plaintextSequence.shiftRight(2);
 
-		assertEquals(plaintextSequence.getId().getCiphertextId(), 7);
+		assertEquals(plaintextSequence.getPlaintextId(), new Integer(7));
 	}
 }

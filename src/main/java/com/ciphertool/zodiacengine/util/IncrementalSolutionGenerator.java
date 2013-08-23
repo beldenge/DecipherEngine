@@ -27,12 +27,12 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.IncrementalSolution;
-import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.entities.IncrementalSolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class IncrementalSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
@@ -48,22 +48,12 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	public IncrementalSolutionGenerator() {
 	}
 
-	/**
-	 * @return
-	 * 
-	 *         Generates a solution
-	 */
 	@Override
-	public Solution generateSolution() {
+	public SolutionChromosome generateSolution() {
 		// Set confidence levels to lowest possible
-		IncrementalSolution solution = new IncrementalSolution(cipher, 0, 0, 0);
+		IncrementalSolutionChromosome solution = new IncrementalSolutionChromosome(cipher, 0, 0, 0);
 
-		/*
-		 * TODO: May want to remove this setCipher since it should be lazy
-		 * loaded somehow, but it doesn't cause any performance degradation.
-		 */
-		solution.setCipher(cipher);
-
+		solution.setCipherId(cipher.getId());
 		solution.setCommittedIndex(0);
 		solution.setUncommittedIndex(0);
 
@@ -95,7 +85,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	 * 
 	 * @param incrementalSolution
 	 */
-	private void appendNextBestSentence(IncrementalSolution incrementalSolution) {
+	private void appendNextBestSentence(IncrementalSolutionChromosome incrementalSolution) {
 		Sentence nextSentence = null;
 
 		for (long i = 0; i < improvementAttempts; i++) {
@@ -114,9 +104,9 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	 * @param sentence
 	 * @return
 	 */
-	private void compareSentenceToSolution(IncrementalSolution incrementalSolution,
+	private void compareSentenceToSolution(IncrementalSolutionChromosome incrementalSolution,
 			Sentence sentence) {
-		List<Plaintext> candidatePlaintextList = new ArrayList<Plaintext>();
+		List<WordGene> candidateGeneList = new ArrayList<WordGene>();
 
 		StringBuilder rawText = new StringBuilder();
 
@@ -132,7 +122,6 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 
 		int newIndex = incrementalSolution.getCommittedIndex();
 
-		Plaintext pt = null;
 		for (char c : chars) {
 			/*
 			 * Don't add the plaintext character if the index has surpassed the
@@ -142,26 +131,19 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 			 * lookups within the evaluator are case-sensitive.
 			 */
 			if (newIndex <= cipherLength) {
-				pt = new Plaintext(new PlaintextId(incrementalSolution, newIndex), String
-						.valueOf(c).toLowerCase());
+				WordGene gene = new WordGene(new Word(new WordId(String.valueOf(c).toLowerCase(),
+						'*')), incrementalSolution, newIndex);
 
-				candidatePlaintextList.add(pt);
+				candidateGeneList.add(gene);
 
 				newIndex++;
 			}
 		}
 
 		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(
-				incrementalSolution, candidatePlaintextList);
+				incrementalSolution, candidateGeneList);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

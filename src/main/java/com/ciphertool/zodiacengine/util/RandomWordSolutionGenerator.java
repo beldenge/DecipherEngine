@@ -27,10 +27,10 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class RandomWordSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
@@ -44,13 +44,12 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 	}
 
 	@Override
-	public Solution generateSolution() {
-		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher, 0, 0, 0);
-
-		// TODO: may want to remove this setCipher since it should be lazy
-		// loaded somehow
-		solution.setCipher(cipher);
+	public SolutionChromosome generateSolution() {
+		/*
+		 * Set confidence levels to lowest possible
+		 */
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher
+				.getRows(), cipher.getColumns());
 
 		List<Word> words = getWords(solution);
 
@@ -61,7 +60,7 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 		return solution;
 	}
 
-	private List<Word> getWords(Solution solution) {
+	private List<Word> getWords(SolutionChromosome solution) {
 		List<Word> wordList = new ArrayList<Word>();
 		Word nextWord;
 		int length = 0;
@@ -83,29 +82,23 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 		return wordList;
 	}
 
-	public void convertWordsToPlaintext(Solution solution, List<Word> wordList) {
+	public void convertWordsToPlaintext(SolutionChromosome solution, List<Word> wordList) {
 		StringBuffer rawText = new StringBuffer();
 		for (Word w : wordList) {
 			rawText.append(w.getId().getWord());
 		}
 		char[] chars = new char[cipher.length()];
 		rawText.getChars(0, cipher.length(), chars, 0);
-		int id = 1;
-		Plaintext pt;
+		Integer id = 0;
+
 		for (char c : chars) {
-			pt = new Plaintext(new PlaintextId(solution, id), String.valueOf(c));
-			solution.addPlaintext(pt);
+			WordGene gene = new WordGene(new Word(new WordId(String.valueOf(c), '*')), solution, id);
+
+			solution.addGene(gene);
 			id++;
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

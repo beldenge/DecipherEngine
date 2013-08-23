@@ -2,9 +2,9 @@ package com.ciphertool.zodiacengine.entities;
 
 import javax.persistence.Transient;
 
-public class IncrementalSolution extends Solution {
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
-	private static final long serialVersionUID = 596464950445184226L;
+public class IncrementalSolutionChromosome extends SolutionChromosome {
 
 	@Transient
 	private transient int committedIndex;
@@ -12,9 +12,12 @@ public class IncrementalSolution extends Solution {
 	@Transient
 	private transient int uncommittedIndex;
 
-	public IncrementalSolution(Cipher cipher, int totalMatches, int uniqueMatches,
+	public IncrementalSolutionChromosome(Cipher cipher, int totalMatches, int uniqueMatches,
 			int adjacentMatches) {
-		super(cipher, totalMatches, uniqueMatches, adjacentMatches);
+		this.cipherId = cipher != null ? cipher.getId() : null;
+		this.totalMatches = totalMatches;
+		this.uniqueMatches = uniqueMatches;
+		this.adjacentMatches = adjacentMatches;
 	}
 
 	/**

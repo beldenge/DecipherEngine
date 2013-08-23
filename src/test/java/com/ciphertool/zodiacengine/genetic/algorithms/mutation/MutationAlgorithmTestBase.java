@@ -28,7 +28,8 @@ public class MutationAlgorithmTestBase extends GenericTestBase {
 
 	@Before
 	public void resetSolutionChromosome() {
-		solutionChromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		solutionChromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0,
+				zodiac408.getRows(), zodiac408.getColumns());
 	}
 
 	public void testMutateGene() {

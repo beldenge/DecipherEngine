@@ -35,7 +35,6 @@ public class PlaintextPredicate implements Predicate {
 	@Override
 	public boolean evaluate(Object p) {
 		Plaintext plaintext = (Plaintext) p;
-		return (plaintext.getId().getCiphertextId() == this.ciphertext.getId()
-				.getCiphertextId());
+		return (plaintext.getPlaintextId().equals(this.ciphertext.getCiphertextId()));
 	}
 }

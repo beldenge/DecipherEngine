@@ -158,7 +158,7 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		int numCharsToEvaluate = zodiac408.getColumns() * (zodiac408.getRows() - 1);
 
 		for (Plaintext plaintext : knownSolution.getPlaintextCharacters()) {
-			if (plaintext.getId().getCiphertextId() < numCharsToEvaluate) {
+			if (plaintext.getPlaintextId() < numCharsToEvaluate) {
 				char plaintextChar = plaintext.getValue().charAt(0);
 				knownSolutionLetterTotals.put(plaintextChar, knownSolutionLetterTotals
 						.get(plaintextChar) + 1);

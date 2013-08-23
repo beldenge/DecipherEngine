@@ -20,16 +20,16 @@
 package com.ciphertool.zodiacengine.util;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public interface SolutionGenerator {
 
 	/**
 	 * Generates a Solution to the cipher
 	 * 
-	 * @return the Solution
+	 * @return the SolutionChromosome
 	 */
-	public Solution generateSolution();
+	public SolutionChromosome generateSolution();
 
 	/**
 	 * @param cipher

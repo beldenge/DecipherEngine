@@ -20,7 +20,7 @@
 package com.ciphertool.zodiacengine.util;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public interface SolutionEvaluator {
 
@@ -29,9 +29,10 @@ public interface SolutionEvaluator {
 	 * where the higher the number, the higher the confidence
 	 * 
 	 * @param solution
+	 *            the SolutionChromosome
 	 * @return the confidence level
 	 */
-	public int determineConfidenceLevel(Solution solution);
+	public int determineConfidenceLevel(SolutionChromosome solution);
 
 	/**
 	 * @param cipher

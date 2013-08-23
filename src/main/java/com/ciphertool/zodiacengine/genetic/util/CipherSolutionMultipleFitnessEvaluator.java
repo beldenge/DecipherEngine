@@ -31,6 +31,7 @@ import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.AbstractSolutionTruncatedEvaluatorBase;
 
@@ -72,7 +73,7 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*
@@ -99,7 +100,7 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
+				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 
 				currentValue = plaintext.getValue().toLowerCase();
 
@@ -152,10 +153,10 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -175,13 +176,6 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 		return fitness;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.genetics.util.FitnessEvaluator#setGeneticStructure(java
-	 * .lang.Object)
-	 */
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;

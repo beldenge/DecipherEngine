@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -55,7 +55,7 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 	 * character with the most matches (or if there's a tie, then flip a coin).
 	 */
 	@Override
-	public int determineConfidenceLevel(Solution solution) {
+	public int determineConfidenceLevel(SolutionChromosome solution) {
 		clearHasMatchValues(solution);
 
 		Plaintext plaintext = null;
@@ -145,13 +145,6 @@ public class ZodiacSolutionPredicateEvaluator extends AbstractSolutionEvaluatorB
 		return total;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

@@ -23,11 +23,13 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+
 public class SolutionTest {
 
 	@Test
 	public void testGetNullPlaintextCharacters() {
-		Solution solution = new Solution();
+		SolutionChromosome solution = new SolutionChromosome();
 
 		assertNotNull(solution.getPlaintextCharacters());
 	}

@@ -20,50 +20,34 @@
 package com.ciphertool.zodiacengine.entities;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "cipher")
+@Document(collection = "ciphers")
 public class Cipher implements Serializable {
 	private static final long serialVersionUID = 3417112220260206089L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+	private BigInteger id;
 
-	@Column(name = "name")
+	@Indexed
 	private String name;
 
-	@Column(name = "columns")
 	private int columns;
 
-	@Column(name = "rows")
 	private int rows;
 
-	@Column(name = "has_solution")
 	private boolean hasKnownSolution;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "id.cipher", cascade = CascadeType.ALL)
 	private List<Ciphertext> ciphertextCharacters = new ArrayList<Ciphertext>();
 
 	public Cipher() {
-	}
-
-	public Cipher(Integer id) {
-		this.id = id;
 	}
 
 	public Cipher(String name, int rows, int columns) {
@@ -72,11 +56,11 @@ public class Cipher implements Serializable {
 		this.columns = columns;
 	}
 
-	public Integer getId() {
+	public BigInteger getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(BigInteger id) {
 		this.id = id;
 	}
 

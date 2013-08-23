@@ -19,6 +19,7 @@
 
 package com.ciphertool.zodiacengine;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
 import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
@@ -120,9 +121,15 @@ public class CipherSolutionEngine {
 		long uniqueMatchSum = 0;
 		long adjacentMatchSum = 0;
 
-		Solution solutionMostMatches = new Solution(cipher, 0, 0, 0);
-		Solution solutionMostUnique = new Solution(cipher, 0, 0, 0);
-		Solution solutionMostAdjacent = new Solution(cipher, 0, 0, 0);
+		BigInteger cipherId = cipher.getId();
+		int rows = cipher.getRows();
+		int columns = cipher.getColumns();
+		SolutionChromosome solutionMostMatches = new SolutionChromosome(cipherId, 0, 0, 0, rows,
+				columns);
+		SolutionChromosome solutionMostUnique = new SolutionChromosome(cipherId, 0, 0, 0, rows,
+				columns);
+		SolutionChromosome solutionMostAdjacent = new SolutionChromosome(cipherId, 0, 0, 0, rows,
+				columns);
 
 		/*
 		 * Sum up all data from all CipherDtos passed to the threads

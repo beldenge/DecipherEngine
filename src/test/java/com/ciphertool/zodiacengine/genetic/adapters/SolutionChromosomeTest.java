@@ -32,7 +32,6 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.SolutionId;
 
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
@@ -42,7 +41,9 @@ public class SolutionChromosomeTest {
 
 	@Before
 	public void resetSolutionChromosome() {
-		solutionChromosome = new SolutionChromosome(new Cipher(), 0, 0, 0);
+		Cipher cipher = new Cipher();
+		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(),
+				cipher.getColumns());
 	}
 
 	@Test
@@ -76,8 +77,8 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testTargetSize() {
-		solutionChromosome.getCipher().setColumns(5);
-		solutionChromosome.getCipher().setRows(5);
+		solutionChromosome.setColumns(5);
+		solutionChromosome.setRows(5);
 
 		assertEquals(solutionChromosome.targetSize().intValue(), 25);
 	}
@@ -87,7 +88,7 @@ public class SolutionChromosomeTest {
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
-		solutionChromosome.setCipher(new Cipher());
+		solutionChromosome.setCipherId(null);
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -109,17 +110,17 @@ public class SolutionChromosomeTest {
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2
 				.getId().getWord());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
 				count++;
 			}
@@ -131,9 +132,9 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testCloneSolutionChromosome() {
-		solutionChromosome.setId(new SolutionId());
+		solutionChromosome.setSolutionSetId(null);
 		solutionChromosome.setFitness(0.0);
-		solutionChromosome.setCipher(new Cipher());
+		solutionChromosome.setCipherId(null);
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -153,7 +154,7 @@ public class SolutionChromosomeTest {
 		 * Make sure the Ciphers reference the same memory address since that
 		 * Object is not cloned.
 		 */
-		assertTrue(solutionChromosome.getCipher() == clonedSolutionChromosome.getCipher());
+		assertTrue(solutionChromosome.getCipherId() == clonedSolutionChromosome.getCipherId());
 
 		/*
 		 * Make sure the Chromosomes reference different memory addresses.
@@ -200,14 +201,14 @@ public class SolutionChromosomeTest {
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : clonedSolutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertTrue(clonedSolutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
-				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
 				count++;
 			}
@@ -219,7 +220,7 @@ public class SolutionChromosomeTest {
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipherId(cipher.getId());
 
 		Word word3 = new Word(new WordId("belden", 'N'));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
@@ -248,17 +249,17 @@ public class SolutionChromosomeTest {
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(2)).getWordString(), word3
 				.getId().getWord());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
 				count++;
 			}
@@ -273,7 +274,7 @@ public class SolutionChromosomeTest {
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipherId(cipher.getId());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -311,17 +312,17 @@ public class SolutionChromosomeTest {
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word3
 				.getId().getWord());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count), gene
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
 				count++;
 			}
@@ -336,7 +337,7 @@ public class SolutionChromosomeTest {
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipherId(cipher.getId());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -371,15 +372,15 @@ public class SolutionChromosomeTest {
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2
 				.getId().getWord());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
 				count++;
 			}
@@ -394,7 +395,7 @@ public class SolutionChromosomeTest {
 		assertTrue(solutionChromosome.isDirty());
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isDirty());
-		solutionChromosome.setCipher(cipher);
+		solutionChromosome.setCipherId(cipher.getId());
 
 		Word word1 = new Word(new WordId("george", 'N'));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
@@ -430,15 +431,15 @@ public class SolutionChromosomeTest {
 		assertEquals(((WordGene) clonedSolutionChromosome.getGenes().get(0)).getWordString(), word1
 				.getId().getWord());
 
-		int count = 0;
+		Integer count = 0;
 		for (Gene gene : clonedSolutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
 				assertTrue(clonedSolutionChromosome.getPlaintextCharacters().get(count) == gene
 						.getSequences().get(j));
 
 				log.info(clonedSolutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId(), count);
 
 				count++;
 			}

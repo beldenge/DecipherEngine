@@ -21,11 +21,12 @@ package com.ciphertool.zodiacengine.util;
 
 import org.apache.log4j.Logger;
 
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
@@ -42,13 +43,12 @@ public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	 * passing the result to convertSentencesToPlaintext(List<Sentence>)
 	 */
 	@Override
-	public Solution generateSolution() {
-		// Set confidence levels to lowest possible
-		Solution solution = new Solution(cipher, 0, 0, 0);
-
-		// TODO: may want to remove this setCipher since it should be lazy
-		// loaded somehow
-		solution.setCipher(cipher);
+	public SolutionChromosome generateSolution() {
+		/*
+		 * Set confidence levels to lowest possible
+		 */
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher
+				.getRows(), cipher.getColumns());
 
 		getCharacters(solution);
 
@@ -57,29 +57,22 @@ public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 		return solution;
 	}
 
-	public void getCharacters(Solution solution) {
-		Plaintext nextPlaintext;
+	public void getCharacters(SolutionChromosome solution) {
 		int id = 0;
 		char randomChar;
 
 		do {
-			id++;
-
 			randomChar = LetterUtils.getRandomLetter();
 
-			nextPlaintext = new Plaintext(new PlaintextId(solution, id), String.valueOf(randomChar));
+			WordGene gene = new WordGene(new Word(new WordId(String.valueOf(randomChar), '*')),
+					solution, id);
 
-			solution.addPlaintext(nextPlaintext);
+			solution.addGene(gene);
+
+			id++;
 		} while (id < cipher.length());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionGenerator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

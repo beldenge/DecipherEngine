@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package com.ciphertool.zodiacengine.genetic.algorithms.mutation;
+
+package com.ciphertool.zodiacengine.genetic.algorithms.mutation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,8 +43,8 @@ import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
-	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(GroupMutationAlgorithmTest.class);
+
 	private final static int MAX_MUTATIONS = 5;
 
 	@BeforeClass
@@ -236,7 +236,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testRevertGenes() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		List<Gene> genes = new ArrayList<Gene>();
 		int beginIndex = 2;
 
@@ -278,7 +279,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testRemoveGenes() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		int beginIndex = 3;
 		int numGenes = 2;
 
@@ -332,7 +334,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testInsertRandomGenes() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		int beginIndex = 3;
 		int beginningSequenceIndex = 13;
 		int sequencesRemoved = 14;
@@ -381,7 +384,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testMutateGeneGroup() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		int beginIndex = 1;
 		int numGenes = 2;
 
@@ -427,7 +431,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testExceedsChromosomeSize() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		int proposedEndIndex = 2;
 
 		Word word1 = new Word(new WordId("george", 'N'));
@@ -453,7 +458,8 @@ public class GroupMutationAlgorithmTest extends MutationAlgorithmTestBase {
 
 	@Test
 	public void testDoesNotExceedChromosomeSize() {
-		Chromosome chromosome = new SolutionChromosome(zodiac408, 0, 0, 0);
+		Chromosome chromosome = new SolutionChromosome(zodiac408.getId(), 0, 0, 0, zodiac408
+				.getRows(), zodiac408.getColumns());
 		int proposedEndIndex = 1;
 
 		Word word1 = new Word(new WordId("george", 'N'));

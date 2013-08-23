@@ -23,23 +23,13 @@ import com.ciphertool.genetics.dao.SequenceDao;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
-import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class PlaintextSequenceDao implements SequenceDao {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.dao.SequenceDao#findRandomSequence()
-	 */
 	@Override
 	public Sequence findRandomSequence(Gene gene, int sequenceIndex) {
-		PlaintextId plaintextId = new PlaintextId((SolutionChromosome) gene.getChromosome(),
-				sequenceIndex);
-
-		Sequence sequence = new PlaintextSequence(plaintextId, String.valueOf(LetterUtils
+		Sequence sequence = new PlaintextSequence(sequenceIndex, String.valueOf(LetterUtils
 				.getRandomLetter()), gene);
 
 		return sequence;

@@ -19,39 +19,26 @@
 
 package com.ciphertool.zodiacengine.entities;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "ciphertext")
-@AssociationOverrides(@AssociationOverride(name = "id.cipher", joinColumns = @JoinColumn(name = "cipher_id")))
 public class Ciphertext {
 
-	@EmbeddedId
-	private CiphertextId id;
+	private Integer ciphertextId;
 
-	@Column(name = "value")
 	private String value;
 
 	public Ciphertext() {
 	}
 
-	public Ciphertext(CiphertextId id, String value) {
-		this.id = id;
+	public Ciphertext(Integer ciphertextId, String value) {
+		this.ciphertextId = ciphertextId;
 		this.value = value;
 	}
 
-	public CiphertextId getId() {
-		return id;
+	public Integer getCiphertextId() {
+		return ciphertextId;
 	}
 
-	public void setId(CiphertextId id) {
-		this.id = id;
+	public void setCiphertextId(Integer ciphertextId) {
+		this.ciphertextId = ciphertextId;
 	}
 
 	public String getValue() {
@@ -66,7 +53,7 @@ public class Ciphertext {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ciphertextId == null) ? 0 : ciphertextId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -86,11 +73,11 @@ public class Ciphertext {
 		}
 
 		Ciphertext other = (Ciphertext) obj;
-		if (id == null) {
-			if (other.id != null) {
+		if (ciphertextId == null) {
+			if (other.ciphertextId != null) {
 				return false;
 			}
-		} else if (!id.equals(other.id)) {
+		} else if (!ciphertextId.equals(other.ciphertextId)) {
 			return false;
 		}
 
@@ -107,7 +94,6 @@ public class Ciphertext {
 
 	@Override
 	public String toString() {
-		return "Ciphertext [value=" + value + ", id=" + id + "]";
+		return "Ciphertext [value=" + value + ", ciphertextId=" + ciphertextId + "]";
 	}
-
 }

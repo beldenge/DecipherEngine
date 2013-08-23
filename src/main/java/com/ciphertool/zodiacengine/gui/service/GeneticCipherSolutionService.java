@@ -20,8 +20,6 @@
 package com.ciphertool.zodiacengine.gui.service;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,10 +28,7 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.zodiacengine.dao.SolutionSetDao;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.SolutionId;
-import com.ciphertool.zodiacengine.entities.SolutionSet;
+import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.gui.view.GenericCallback;
 
@@ -41,9 +36,9 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	private Logger log = Logger.getLogger(getClass());
 
 	private GeneticAlgorithm geneticAlgorithm;
-	private SolutionSetDao solutionSetDao;
 	private String[] commandsBefore;
 	private String[] commandsAfter;
+	private SolutionDao solutionDao;
 	private long start;
 
 	public void start(GenericCallback uiCallback, boolean debugMode) {
@@ -185,26 +180,16 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 			return;
 		}
 
-		String cipherName = ((SolutionChromosome) individuals.get(0)).getCipher().getName();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		String formattedDate = sdf.format(new Date());
-
-		SolutionSet solutionSet = new SolutionSet();
-		solutionSet.setName(cipherName + "_" + formattedDate);
-		solutionSet.setCipher((Cipher) geneticAlgorithm.getStrategy().getGeneticStructure());
-
-		int nextId = 0;
-		for (Chromosome individual : individuals) {
-			solutionSet.addSolution((SolutionChromosome) individual);
-
-			nextId++;
-			SolutionId solutionId = new SolutionId(solutionSet, nextId);
-			((SolutionChromosome) individual).setId(solutionId);
-		}
+		int solutionSetId = (int) System.currentTimeMillis();
 
 		long startInsert = System.currentTimeMillis();
 
-		solutionSetDao.insert(solutionSet);
+		for (Chromosome individual : individuals) {
+			// Set the solution set ID as the current timestamp
+			((SolutionChromosome) individual).setSolutionSetId(solutionSetId);
+
+			solutionDao.insert((SolutionChromosome) individual);
+		}
 
 		log.info("Took " + (System.currentTimeMillis() - startInsert)
 				+ "ms to persist population to database.");
@@ -238,11 +223,11 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	}
 
 	/**
-	 * @param solutionSetDao
-	 *            the solutionSetDao to set
+	 * @param solutionDao
+	 *            the solutionDao to set
 	 */
 	@Required
-	public void setSolutionSetDao(SolutionSetDao solutionSetDao) {
-		this.solutionSetDao = solutionSetDao;
+	public void setSolutionDao(SolutionDao solutionDao) {
+		this.solutionDao = solutionDao;
 	}
 }

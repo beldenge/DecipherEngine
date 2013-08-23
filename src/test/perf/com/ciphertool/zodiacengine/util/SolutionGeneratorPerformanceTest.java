@@ -31,7 +31,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class SolutionGeneratorPerformanceTest {
 
@@ -60,7 +60,7 @@ public class SolutionGeneratorPerformanceTest {
 	public void testGeneratorPerformance() {
 		int i = 0;
 
-		List<Solution> solutions = new ArrayList<Solution>();
+		List<SolutionChromosome> solutions = new ArrayList<SolutionChromosome>();
 
 		long start;
 
@@ -77,7 +77,7 @@ public class SolutionGeneratorPerformanceTest {
 
 			start = System.currentTimeMillis();
 
-			for (Solution solution : solutions) {
+			for (SolutionChromosome solution : solutions) {
 				// find the confidence level for the solution
 				solutionEvaluator.determineConfidenceLevel(solution);
 			}
@@ -89,7 +89,7 @@ public class SolutionGeneratorPerformanceTest {
 
 			start = System.currentTimeMillis();
 
-			Solution solution;
+			SolutionChromosome solution;
 			for (i = 0; i < 1000; i++) {
 				// find the confidence level for the solution
 				solution = solutionGenerator.generateSolution();

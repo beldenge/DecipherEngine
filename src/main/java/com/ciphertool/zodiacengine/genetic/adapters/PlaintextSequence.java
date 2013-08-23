@@ -20,21 +20,23 @@
 package com.ciphertool.zodiacengine.genetic.adapters;
 
 import org.apache.log4j.Logger;
+import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class PlaintextSequence extends Plaintext implements Sequence {
 	private static Logger log = Logger.getLogger(WordGene.class);
+
+	@Transient
 	private Gene gene;
 
 	public PlaintextSequence() {
 	}
 
-	public PlaintextSequence(PlaintextId plaintextId, String value, Gene gene) {
+	public PlaintextSequence(Integer plaintextId, String value, Gene gene) {
 		super(plaintextId, value);
 
 		this.gene = gene;
@@ -63,14 +65,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 		}
 		copySequence.setHasMatch(false);
 
-		copySequence.setId(new PlaintextId());
-
-		copySequence.id.setCiphertextId(this.id.getCiphertextId());
-
-		/*
-		 * The Solution must be set at a higher level.
-		 */
-		copySequence.id.setSolution(null);
+		copySequence.setPlaintextId(this.plaintextId.intValue());
 
 		/*
 		 * The Gene must bet set at a higher level.
@@ -88,7 +83,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	@Dirty
 	public void shiftRight(int places) {
-		this.id.setCiphertextId(this.id.getCiphertextId() + places);
+		this.plaintextId = this.plaintextId + places;
 	}
 
 	/**
@@ -99,12 +94,12 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	@Dirty
 	public void shiftLeft(int places) {
-		this.id.setCiphertextId(this.id.getCiphertextId() - places);
+		this.plaintextId = this.plaintextId - places;
 	}
 
 	@Override
 	public Integer getSequenceId() {
-		return this.id.getCiphertextId();
+		return this.plaintextId;
 	}
 
 	/*
@@ -119,11 +114,6 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 		return this.value;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Sequence#setValue(java.lang.Object)
-	 */
 	@Override
 	@Dirty
 	public void setValue(Object obj) {

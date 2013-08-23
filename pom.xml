@@ -4,7 +4,7 @@
 	<groupId>com.ciphertool.zodiacengine</groupId>
 	<artifactId>ZodiacEngine</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>ZodiacEngine</name>
 	<url>http://www.ciphertool.com</url>
 	<properties>
@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>com.ciphertool.genetics</groupId>
 			<artifactId>ZodiacGenetics</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -187,7 +187,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -199,43 +199,43 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-asm</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.1.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>3.1.2.RELEASE</version>
+			<version>3.2.4.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -261,5 +261,15 @@
 			<version>1.9.5</version>
   			<scope>test</scope>
   		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.11.2</version>
+		</dependency>
+  		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.2.3.RELEASE</version>
+		</dependency>
 	</dependencies>
 </project>

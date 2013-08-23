@@ -39,6 +39,10 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends
 
 	static {
 		knownSolution = new SolutionChromosome();
+
+		knownSolution.setRows(24);
+		knownSolution.setColumns(17);
+
 		/*
 		 * PartOfSpeech is not used by the evaluator, so set it to something
 		 * arbitrary
@@ -401,13 +405,6 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends
 		return proximityToKnownSolution;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.genetics.util.FitnessEvaluator#setGeneticStructure(java
-	 * .lang.Object)
-	 */
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;

@@ -31,13 +31,16 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class ZodiacSolutionMerger implements SolutionMerger {
 	private static Logger log = Logger.getLogger(ZodiacSolutionMerger.class);
@@ -63,9 +66,9 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 	}
 
 	@Override
-	public Solution mergeSolutions() {
-		Solution bestFitSolution = null;
-		List<Solution> solutions = new ArrayList<Solution>();
+	public SolutionChromosome mergeSolutions() {
+		SolutionChromosome bestFitSolution = null;
+		List<SolutionChromosome> solutions = new ArrayList<SolutionChromosome>();
 		solutions.addAll(solutionDao.findByCipherName(cipherName));
 		this.cipher = cipherDao.findByCipherName(cipherName);
 
@@ -86,56 +89,62 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 		 * Initialize the map
 		 */
 		for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
-			if (plaintextHistogramMap.containsKey(ciphertext.getId().getCiphertextId())) {
+			if (plaintextHistogramMap.containsKey(ciphertext.getCiphertextId())) {
 				log.warn("Found duplicate ciphertext key in cipher.  This should not be possible.  Returning null.");
 
 				return null;
 			}
 
-			plaintextHistogramMap.put(ciphertext.getId().getCiphertextId(),
+			plaintextHistogramMap.put(ciphertext.getCiphertextId(),
 					new HashMap<String, List<Plaintext>>());
 		}
 
-		for (Solution solution : solutions) {
-			if (solution.getPlaintextCharacters().size() != cipherLength) {
+		for (SolutionChromosome solution : solutions) {
+			List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+			if (plaintextCharacters.size() != cipherLength) {
 				log.warn("Cipher has " + cipherLength + " characters, but found solution with "
-						+ solution.getPlaintextCharacters().size()
+						+ plaintextCharacters.size()
 						+ " characters.  This should not be possible. Returning null.");
 
 				return null;
 			}
 
-			for (Plaintext plaintext : solution.getPlaintextCharacters()) {
-				if (!plaintextHistogramMap.containsKey(plaintext.getId().getCiphertextId())) {
+			for (Plaintext plaintext : plaintextCharacters) {
+				if (!plaintextHistogramMap.containsKey(plaintext.getPlaintextId())) {
 					log.warn("Encountered plaintextId which does not match any ciphertext character.  This should not be possible.  Returning null.");
 
 					return null;
 				}
 
-				if (!plaintextHistogramMap.get(plaintext.getId().getCiphertextId()).containsKey(
+				if (!plaintextHistogramMap.get(plaintext.getPlaintextId()).containsKey(
 						plaintext.getValue())) {
-					plaintextHistogramMap.get(plaintext.getId().getCiphertextId()).put(
-							plaintext.getValue(), new ArrayList<Plaintext>());
+					plaintextHistogramMap.get(plaintext.getPlaintextId()).put(plaintext.getValue(),
+							new ArrayList<Plaintext>());
 				}
 
-				plaintextHistogramMap.get(plaintext.getId().getCiphertextId()).get(
-						plaintext.getValue()).add(plaintext);
+				plaintextHistogramMap.get(plaintext.getPlaintextId()).get(plaintext.getValue())
+						.add(plaintext);
 			}
 		}
 
-		bestFitSolution = new Solution(cipher, 0, 0, 0);
-		bestFitSolution.setCipher(cipher);
+		bestFitSolution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(), cipher
+				.getColumns());
 
-		for (int ciphertextId = 1; ciphertextId <= cipherLength; ciphertextId++) {
-			log.info("ciphertextId: " + ciphertextId);
+		for (int ciphertextId = 0; ciphertextId < cipherLength; ciphertextId++) {
+			if (log.isDebugEnabled()) {
+				log.debug("ciphertextId: " + ciphertextId);
+			}
+
 			String bestMatch = "";
 			int mostMatches = 0;
 
 			for (String plaintextCharacter : plaintextHistogramMap.get(ciphertextId).keySet()) {
 				Map<String, List<Plaintext>> plaintextMap = plaintextHistogramMap.get(ciphertextId);
 
-				log.info("Plaintext character : " + plaintextCharacter + ", count: "
-						+ plaintextMap.get(plaintextCharacter).size());
+				if (log.isDebugEnabled()) {
+					log.debug("Plaintext character : " + plaintextCharacter + ", count: "
+							+ plaintextMap.get(plaintextCharacter).size());
+				}
 
 				if (plaintextMap.get(plaintextCharacter).size() > mostMatches) {
 					bestMatch = plaintextCharacter;
@@ -143,8 +152,10 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 				}
 			}
 
-			bestFitSolution.addPlaintext(new Plaintext(new PlaintextId(bestFitSolution,
-					ciphertextId), bestMatch));
+			WordGene gene = new WordGene(new Word(new WordId(bestMatch, '*')), bestFitSolution,
+					ciphertextId);
+
+			bestFitSolution.addGene(gene);
 		}
 
 		solutionEvaluator.determineConfidenceLevel(bestFitSolution);

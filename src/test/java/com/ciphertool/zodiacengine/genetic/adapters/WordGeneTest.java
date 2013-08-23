@@ -32,8 +32,6 @@ import org.junit.Test;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.SolutionId;
 
 public class WordGeneTest {
 	private static Logger log = Logger.getLogger(WordGeneTest.class);
@@ -44,7 +42,7 @@ public class WordGeneTest {
 
 	@BeforeClass
 	public static void setUp() {
-		solutionChromosome.setId(new SolutionId());
+		solutionChromosome.setSolutionSetId(null);
 		assertTrue(solutionChromosome.isDirty());
 	}
 
@@ -127,8 +125,7 @@ public class WordGeneTest {
 
 		int ciphertextId = wordGene.size();
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, ciphertextId), "y", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(ciphertextId, "y", wordGene);
 		assertFalse(solutionChromosome.isDirty());
 
 		int geneSizeBefore = wordGene.size();
@@ -162,8 +159,8 @@ public class WordGeneTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId().intValue(), count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
 
@@ -179,8 +176,7 @@ public class WordGeneTest {
 
 		int ciphertextId = 0;
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, ciphertextId), "h", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(ciphertextId, "h", wordGene);
 
 		int geneSizeBefore = wordGene.size();
 
@@ -224,8 +220,8 @@ public class WordGeneTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId().intValue(), count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
 				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
@@ -296,8 +292,8 @@ public class WordGeneTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getId()
-						.getCiphertextId(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
+						.getPlaintextId().intValue(), count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
 
@@ -320,8 +316,7 @@ public class WordGeneTest {
 
 		int ciphertextId = 0;
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-				solutionChromosome, ciphertextId), "h", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(ciphertextId, "h", wordGene);
 
 		int geneSizeBefore = wordGene.size();
 
@@ -352,8 +347,8 @@ public class WordGeneTest {
 
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
 			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getId()
-					.getCiphertextId(), i);
+			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getPlaintextId()
+					.intValue(), i);
 
 			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
 					.getSequences().get(i));

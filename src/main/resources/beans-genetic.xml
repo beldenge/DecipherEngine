@@ -9,17 +9,28 @@
 	have received a copy of the GNU General Public License along with ZodiacEngine. 
 	If not, see <http://www.gnu.org/licenses/>. -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        		http://www.springframework.org/schema/context
        		http://www.springframework.org/schema/context/spring-context-3.0.xsd
        		http://www.springframework.org/schema/tx 
-     		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+     		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     		http://www.springframework.org/schema/data/mongo
+            http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
 	<context:annotation-config />
 	<tx:annotation-driven />
+	
+	<mongo:mongo host="${mongodb.host}" port="${mongodb.port}" />
+	<mongo:db-factory dbname="${mongodb.database}" />
+ 
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
 
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -32,7 +43,7 @@
 		class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
 		id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
-		<property name="solutionSetDao" ref="solutionSetDao" />
+		<property name="solutionDao" ref="solutionDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
@@ -341,24 +352,12 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.dao.CiphertextDao" id="ciphertextDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean class="com.ciphertool.zodiacengine.dao.PlaintextDao" id="plaintextDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<bean class="com.ciphertool.zodiacengine.dao.SolutionSetDao" id="solutionSetDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
@@ -391,11 +390,6 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.ciphertool.zodiacengine.entities.Cipher</value>
-				<value>com.ciphertool.zodiacengine.entities.Ciphertext</value>
-				<value>com.ciphertool.zodiacengine.entities.SolutionSet</value>
-				<value>com.ciphertool.zodiacengine.entities.Solution</value>
-				<value>com.ciphertool.zodiacengine.entities.Plaintext</value>
 				<value>com.ciphertool.sentencebuilder.entities.Word</value>
 				<value>com.ciphertool.genetics.entities.ExecutionStatistics</value>
 				<value>com.ciphertool.genetics.entities.GenerationStatistics</value>

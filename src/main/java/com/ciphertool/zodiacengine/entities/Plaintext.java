@@ -19,46 +19,30 @@
 
 package com.ciphertool.zodiacengine.entities;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
 import com.ciphertool.genetics.annotations.Dirty;
 
-@Entity
-@Table(name = "plaintext")
-@AssociationOverrides(@AssociationOverride(name = "id.solution", joinColumns = {
-		@JoinColumn(name = "solution_id", referencedColumnName = "solution_id"),
-		@JoinColumn(name = "solution_set_id", referencedColumnName = "solution_set_id") }))
 public class Plaintext {
 
-	@EmbeddedId
-	protected PlaintextId id;
+	protected Integer plaintextId;
 
-	@Column(name = "value")
 	protected String value;
 
-	@Column(name = "has_match")
 	protected boolean hasMatch;
 
 	public Plaintext() {
 	}
 
-	public Plaintext(PlaintextId plaintextId, String value) {
-		this.id = plaintextId;
+	public Plaintext(Integer plaintextId, String value) {
+		this.plaintextId = plaintextId;
 		this.value = value;
 	}
 
-	public PlaintextId getId() {
-		return id;
+	public Integer getPlaintextId() {
+		return plaintextId;
 	}
 
-	public void setId(PlaintextId id) {
-		this.id = id;
+	public void setPlaintextId(Integer plaintextId) {
+		this.plaintextId = plaintextId;
 	}
 
 	public String getValue() {
@@ -83,7 +67,7 @@ public class Plaintext {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (hasMatch ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((plaintextId == null) ? 0 : plaintextId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -103,7 +87,7 @@ public class Plaintext {
 		 * We are not checking for null plaintextId because it should never
 		 * happen and we want an exception to be thrown if so.
 		 */
-		if (!id.equals(other.id)) {
+		if (!plaintextId.equals(other.plaintextId)) {
 			return false;
 		}
 
@@ -120,6 +104,6 @@ public class Plaintext {
 
 	@Override
 	public String toString() {
-		return "Plaintext [id=" + id + ", value=" + value + ", hasMatch=" + hasMatch + "]";
+		return "Plaintext [id=" + plaintextId + ", value=" + value + ", hasMatch=" + hasMatch + "]";
 	}
 }

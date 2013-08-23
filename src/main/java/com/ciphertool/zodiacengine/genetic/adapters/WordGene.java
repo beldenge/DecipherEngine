@@ -24,18 +24,24 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
 
 public class WordGene implements Gene {
 	private static Logger log = Logger.getLogger(WordGene.class);
+
+	@Transient
 	private Chromosome chromosome;
+
 	private List<Sequence> sequences = new ArrayList<Sequence>();
+
+	public WordGene() {
+	}
 
 	/**
 	 * @param wordId
@@ -46,19 +52,13 @@ public class WordGene implements Gene {
 		int wordLength = word.getId().getWord().length();
 
 		for (int i = 0; i < wordLength; i++) {
-			PlaintextSequence plaintextSequence = new PlaintextSequence(new PlaintextId(
-					solutionChromosome, beginCiphertextId + i), String.valueOf(
-					word.getId().getWord().charAt(i)).toLowerCase(), this);
+			PlaintextSequence plaintextSequence = new PlaintextSequence(beginCiphertextId + i,
+					String.valueOf(word.getId().getWord().charAt(i)).toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#clone()
-	 */
 	@Override
 	public WordGene clone() {
 		WordGene copyGene = null;
@@ -97,11 +97,6 @@ public class WordGene implements Gene {
 		return copyGene;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#size()
-	 */
 	@Override
 	public int size() {
 		return this.sequences.size();
@@ -137,26 +132,10 @@ public class WordGene implements Gene {
 		this.sequences = new ArrayList<Sequence>();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#addSequence(com.ciphertool.
-	 * zodiacengine.genetic.Sequence)
-	 */
 	@Override
 	@Dirty
 	public void addSequence(Sequence sequence) {
 		this.sequences.add(sequence);
-
-		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
-
-		/*
-		 * It is possible for the Chromosome to be null if this Gene is being
-		 * cloned.
-		 */
-		if (chromosome != null) {
-			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
-		}
 	}
 
 	/*
@@ -185,19 +164,16 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
-		((PlaintextSequence) sequence).getId().setSolution((SolutionChromosome) chromosome);
-
-		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
-				((PlaintextSequence) sequence));
-
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		int chromosomeSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+				.getPlaintextCharacters();
+
+		int chromosomeSize = plaintextCharacters.size();
 		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
-			((PlaintextSequence) ((SolutionChromosome) this.chromosome).getPlaintextCharacters()
-					.get(i)).shiftRight(1);
+			plaintextCharacters.get(i).shiftRight(1);
 		}
 	}
 
@@ -224,18 +200,18 @@ public class WordGene implements Gene {
 			return;
 		}
 
-		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
-
 		this.sequences.remove(sequence);
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		int chromosomeSize = ((SolutionChromosome) this.chromosome).getPlaintextCharacters().size();
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+				.getPlaintextCharacters();
+
+		int chromosomeSize = plaintextCharacters.size();
 		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
-			((PlaintextSequence) ((SolutionChromosome) this.chromosome).getPlaintextCharacters()
-					.get(i)).shiftLeft(1);
+			plaintextCharacters.get(i).shiftLeft(1);
 		}
 	}
 
@@ -254,11 +230,6 @@ public class WordGene implements Gene {
 		this.insertSequence(index, newSequence);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -323,11 +294,6 @@ public class WordGene implements Gene {
 		return count;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "WordGene [sequences=" + sequences + "]";

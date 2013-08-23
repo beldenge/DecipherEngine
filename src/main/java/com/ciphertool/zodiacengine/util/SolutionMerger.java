@@ -19,7 +19,7 @@
 
 package com.ciphertool.zodiacengine.util;
 
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public interface SolutionMerger {
 
@@ -30,5 +30,5 @@ public interface SolutionMerger {
 	 *         "best fit" solution based on plaintext similarities among
 	 *         solutions.
 	 */
-	public Solution mergeSolutions();
+	public SolutionChromosome mergeSolutions();
 }

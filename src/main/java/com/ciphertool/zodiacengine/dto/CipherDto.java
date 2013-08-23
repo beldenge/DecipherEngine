@@ -19,17 +19,19 @@
 
 package com.ciphertool.zodiacengine.dto;
 
+import java.math.BigInteger;
+
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class CipherDto {
 	private long totalMatchSum;
 	private long numSolutions;
 	private long uniqueMatchSum;
 	private long adjacentMatchSum;
-	private Solution solutionMostMatches;
-	private Solution solutionMostUnique;
-	private Solution solutionMostAdjacent;
+	private SolutionChromosome solutionMostMatches;
+	private SolutionChromosome solutionMostUnique;
+	private SolutionChromosome solutionMostAdjacent;
 	private String threadName;
 
 	/**
@@ -46,9 +48,12 @@ public class CipherDto {
 		/*
 		 * We set "dummy" Solutions with the lowest possible confidence values
 		 */
-		this.solutionMostMatches = new Solution(cipher, 0, 0, 0);
-		this.solutionMostUnique = new Solution(cipher, 0, 0, 0);
-		this.solutionMostAdjacent = new Solution(cipher, 0, 0, 0);
+		BigInteger cipherId = cipher.getId();
+		int rows = cipher.getRows();
+		int columns = cipher.getColumns();
+		this.solutionMostMatches = new SolutionChromosome(cipherId, 0, 0, 0, rows, columns);
+		this.solutionMostUnique = new SolutionChromosome(cipherId, 0, 0, 0, rows, columns);
+		this.solutionMostAdjacent = new SolutionChromosome(cipherId, 0, 0, 0, rows, columns);
 	}
 
 	/**
@@ -120,7 +125,7 @@ public class CipherDto {
 	/**
 	 * @return the solutionMostMatches
 	 */
-	public Solution getSolutionMostMatches() {
+	public SolutionChromosome getSolutionMostMatches() {
 		return solutionMostMatches;
 	}
 
@@ -128,14 +133,14 @@ public class CipherDto {
 	 * @param solutionMostMatches
 	 *            the solutionMostMatches to set
 	 */
-	public void setSolutionMostMatches(Solution solutionMostMatches) {
+	public void setSolutionMostMatches(SolutionChromosome solutionMostMatches) {
 		this.solutionMostMatches = solutionMostMatches;
 	}
 
 	/**
 	 * @return the solutionMostUnique
 	 */
-	public Solution getSolutionMostUnique() {
+	public SolutionChromosome getSolutionMostUnique() {
 		return solutionMostUnique;
 	}
 
@@ -143,14 +148,14 @@ public class CipherDto {
 	 * @param solutionMostUnique
 	 *            the solutionMostUnique to set
 	 */
-	public void setSolutionMostUnique(Solution solutionMostUnique) {
+	public void setSolutionMostUnique(SolutionChromosome solutionMostUnique) {
 		this.solutionMostUnique = solutionMostUnique;
 	}
 
 	/**
 	 * @return the solutionMostAdjacent
 	 */
-	public Solution getSolutionMostAdjacent() {
+	public SolutionChromosome getSolutionMostAdjacent() {
 		return solutionMostAdjacent;
 	}
 
@@ -158,7 +163,7 @@ public class CipherDto {
 	 * @param solutionMostAdjacent
 	 *            the solutionMostAdjacent to set
 	 */
-	public void setSolutionMostAdjacent(Solution solutionMostAdjacent) {
+	public void setSolutionMostAdjacent(SolutionChromosome solutionMostAdjacent) {
 		this.solutionMostAdjacent = solutionMostAdjacent;
 	}
 

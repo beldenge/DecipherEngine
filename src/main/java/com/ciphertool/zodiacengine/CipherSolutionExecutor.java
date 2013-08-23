@@ -32,8 +32,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dto.CipherDto;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.enumerations.ApplicationDurationType;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
 import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
@@ -149,9 +149,9 @@ public class CipherSolutionExecutor {
 		while (!executor.isTerminated()) {
 		}
 
-		Solution solutionMostMatches = cipherDto.getSolutionMostMatches();
-		Solution solutionMostUnique = cipherDto.getSolutionMostUnique();
-		Solution solutionMostAdjacent = cipherDto.getSolutionMostAdjacent();
+		SolutionChromosome solutionMostMatches = cipherDto.getSolutionMostMatches();
+		SolutionChromosome solutionMostUnique = cipherDto.getSolutionMostUnique();
+		SolutionChromosome solutionMostAdjacent = cipherDto.getSolutionMostAdjacent();
 
 		/*
 		 * Print out summary information

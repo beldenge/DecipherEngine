@@ -38,8 +38,6 @@ import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.AscendingFitnessComparator;
-import com.ciphertool.zodiacengine.entities.PlaintextId;
-import com.ciphertool.zodiacengine.entities.Solution;
 import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator;
@@ -78,10 +76,8 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		population.setFitnessComparator(new AscendingFitnessComparator());
 
 		dummySolution = knownSolution.clone();
-		dummySolution.getGenes().get(0).insertSequence(
-				0,
-				new PlaintextSequence(new PlaintextId(dummySolution, 0), "i", dummySolution
-						.getGenes().get(0)));
+		dummySolution.getGenes().get(0).insertSequence(0,
+				new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
 	}
 
 	@Before
@@ -108,7 +104,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		assertEquals(population.size(), POPULATION_SIZE);
 
 		for (Chromosome individual : population.getIndividuals()) {
-			assertEquals(individual.actualSize().intValue(), ((Solution) individual)
+			assertEquals(individual.actualSize().intValue(), ((SolutionChromosome) individual)
 					.getPlaintextCharacters().size());
 		}
 	}

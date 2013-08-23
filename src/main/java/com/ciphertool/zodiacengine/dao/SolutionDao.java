@@ -21,52 +21,54 @@ package com.ciphertool.zodiacengine.dao;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ciphertool.zodiacengine.entities.Solution;
-import com.ciphertool.zodiacengine.entities.SolutionId;
+import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class SolutionDao {
-	private SessionFactory sessionFactory;
-	private static final String separator = ":";
-	private static final String solutionIdParameter = "solutionId";
-	private static final String nameParameter = "name";
+	private MongoOperations mongoOperations;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean insert(Solution solution) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(solution);
+	public boolean insert(SolutionChromosome solutionChromosome) {
+		mongoOperations.insert(solutionChromosome);
+
 		return true;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public Solution findBySolutionId(SolutionId solutionId) {
-		Session session = sessionFactory.getCurrentSession();
-		Solution solution = (Solution) session.createQuery(
-				"from Solution where id = " + separator + solutionIdParameter).setParameter(
-				solutionIdParameter, solutionId).uniqueResult();
+	public SolutionChromosome findBySolutionId(Integer solutionId) {
+		Query selectByIdQuery = new Query(Criteria.where("id").is(solutionId));
 
-		return solution;
+		SolutionChromosome solutionChromosome = mongoOperations.findOne(selectByIdQuery,
+				SolutionChromosome.class);
+
+		return solutionChromosome;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public List<Solution> findByCipherName(String cipherName) {
-		Session session = sessionFactory.getCurrentSession();
-		@SuppressWarnings("unchecked")
-		List<Solution> solutions = (List<Solution>) session.createQuery(
-				"from Solution where cipherId = (select c.id from Cipher c where c.name = "
-						+ separator + nameParameter + ")").setParameter(nameParameter, cipherName)
-				.list();
+	public List<SolutionChromosome> findByCipherName(String cipherName) {
+		// First find the Cipher by name
+		Query selectByCipherNameQuery = new Query(Criteria.where("name").is(cipherName));
+
+		Cipher cipher = mongoOperations.findOne(selectByCipherNameQuery, Cipher.class);
+
+		// Then find the Solutions that correspond to this Cipher
+		Query selectByCipherIdQuery = new Query(Criteria.where("cipherId").is(cipher.getId()));
+
+		List<SolutionChromosome> solutions = mongoOperations.find(selectByCipherIdQuery,
+				SolutionChromosome.class);
 
 		return solutions;
 	}
 
 	@Required
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	public void setMongoTemplate(MongoOperations mongoOperations) {
+		this.mongoOperations = mongoOperations;
 	}
 }

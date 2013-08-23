@@ -31,7 +31,8 @@ import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -63,7 +64,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 	 * wins).
 	 */
 	@Override
-	public int determineConfidenceLevel(Solution solution) {
+	public int determineConfidenceLevel(SolutionChromosome solution) {
 		clearHasMatchValues(solution);
 
 		Plaintext plaintext = null;
@@ -73,7 +74,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*
@@ -100,7 +101,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 				 * and or subtracting one from the id. It does come with a
 				 * performance hit though.
 				 */
-				plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
+				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 
 				currentValue = plaintext.getValue().toLowerCase();
 
@@ -153,10 +154,10 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -184,13 +185,6 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		return total;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#setCipher(com.ciphertool
-	 * .zodiacengine.entities.Cipher)
-	 */
 	@Override
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;

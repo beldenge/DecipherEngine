@@ -32,6 +32,7 @@ import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 
@@ -79,7 +80,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		boolean uniqueMatch = false;
 		String currentValue = null;
 		Character currentCharacter = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
+		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
 		Double currentFrequency = 0.0;
@@ -118,10 +119,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 				 * performance hit though.
 				 */
 				try {
-					plaintext = plaintextCharacters.get(ciphertextIndice.getId().getCiphertextId());
+					plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 				} catch (IndexOutOfBoundsException ioobe) {
 					log.error("Caught IndexOutOfBoundsException for index "
-							+ (ciphertextIndice.getId().getCiphertextId()) + " and size "
+							+ (ciphertextIndice.getCiphertextId()) + " and size "
 							+ plaintextCharacters.size() + " while evaluating Chromosome: "
 							+ chromosome, ioobe);
 				}
@@ -191,10 +192,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				countAdjacent = true;
 			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getId().getCiphertextId()).getHasMatch()) {
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;
@@ -224,13 +225,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		return fitness;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.ciphertool.genetics.util.FitnessEvaluator#setGeneticStructure(java
-	 * .lang.Object)
-	 */
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;

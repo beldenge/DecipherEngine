@@ -20,7 +20,7 @@
 package com.ciphertool.zodiacengine;
 
 import com.ciphertool.zodiacengine.dto.CipherDto;
-import com.ciphertool.zodiacengine.entities.Solution;
+import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.SolutionEvaluator;
 import com.ciphertool.zodiacengine.util.SolutionGenerator;
 
@@ -42,7 +42,7 @@ public class CipherSolutionSynchronizedRunnable implements Runnable {
 	}
 
 	public void run() {
-		Solution solution = null;
+		SolutionChromosome solution = null;
 		int totalMatches = 0;
 		int uniqueMatches = 0;
 		int adjacentMatches = 0;
