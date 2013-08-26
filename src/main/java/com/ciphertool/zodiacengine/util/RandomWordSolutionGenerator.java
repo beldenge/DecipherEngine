@@ -27,10 +27,9 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class RandomWordSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
@@ -89,12 +88,11 @@ public class RandomWordSolutionGenerator implements SolutionGenerator {
 		}
 		char[] chars = new char[cipher.length()];
 		rawText.getChars(0, cipher.length(), chars, 0);
-		Integer id = 0;
-
+		int id = 1;
+		Plaintext pt;
 		for (char c : chars) {
-			WordGene gene = new WordGene(new Word(new WordId(String.valueOf(c), '*')), solution, id);
-
-			solution.addGene(gene);
+			pt = new Plaintext(id, String.valueOf(c));
+			solution.addPlaintext(pt);
 			id++;
 		}
 	}

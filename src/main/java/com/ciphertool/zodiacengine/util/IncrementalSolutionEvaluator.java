@@ -30,9 +30,7 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.IncrementalSolutionChromosome;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
 		SolutionEvaluator {
@@ -58,7 +56,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<PlaintextSequence> plaintextCharacters = incrementalSolution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = incrementalSolution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*
@@ -177,14 +175,15 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 * @return
 	 */
 	public int comparePlaintextToSolution(IncrementalSolutionChromosome incrementalSolution,
-			List<WordGene> geneList) {
-		WordGene gene = null;
+			List<Plaintext> plaintextList) {
+		Plaintext plaintext = null;
 		int totalMismatches = 0;
 		int ciphertextCharacterCount = 0;
 		int maxMatches = 0;
 		String currentValue = null;
-		Map<String, List<WordGene>> geneMatchMap;
-		int uncommittedIndex = (incrementalSolution.getCommittedIndex() + geneList.size());
+		List<Plaintext> plaintextCharacters = incrementalSolution.getPlaintextCharacters();
+		Map<String, List<Plaintext>> plaintextMatchMap;
+		int uncommittedIndex = (incrementalSolution.getCommittedIndex() + plaintextList.size());
 
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -192,7 +191,7 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 		for (List<Ciphertext> ciphertextIndices : ciphertextKey.values()) {
 			maxMatches = 0;
 			ciphertextCharacterCount = 0;
-			geneMatchMap = new HashMap<String, List<WordGene>>();
+			plaintextMatchMap = new HashMap<String, List<Plaintext>>();
 
 			/*
 			 * Now iterate for each occurrence of the current Ciphertext
@@ -221,27 +220,26 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 					 */
 					if (ciphertextIndice.getCiphertextId() + 1 <= incrementalSolution
 							.getCommittedIndex()) {
-						gene = (WordGene) incrementalSolution.getGenes().get(
-								ciphertextIndice.getCiphertextId());
+						plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 					}
 					/*
 					 * Otherwise, set the plaintext from the new list to compare
 					 */
 					else {
-						gene = geneList.get(ciphertextIndice.getCiphertextId()
+						plaintext = plaintextList.get(ciphertextIndice.getCiphertextId()
 								- incrementalSolution.getCommittedIndex());
 					}
 
-					currentValue = (String) gene.getSequences().get(0).getValue();
+					currentValue = plaintext.getValue();
 
-					if (!geneMatchMap.containsKey(currentValue)) {
-						geneMatchMap.put(currentValue, new ArrayList<WordGene>());
+					if (!plaintextMatchMap.containsKey(currentValue)) {
+						plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
 					}
 
-					geneMatchMap.get(currentValue).add(gene);
+					plaintextMatchMap.get(currentValue).add(plaintext);
 
-					if (geneMatchMap.get(currentValue).size() > maxMatches) {
-						maxMatches = geneMatchMap.get(currentValue).size();
+					if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
+						maxMatches = plaintextMatchMap.get(currentValue).size();
 					}
 				}
 			}
@@ -282,14 +280,15 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 					.getUncommittedIndex(); i++) {
 				// we always have to remove the last element in the list since
 				// the index decrements each time
-				incrementalSolution.getGenes().remove(incrementalSolution.getGenes().size() - 1);
+				incrementalSolution.getPlaintextCharacters().remove(
+						incrementalSolution.getPlaintextCharacters().size() - 1);
 			}
 			/*
 			 * Then add all the Plaintext characters from the new, better match
 			 */
 			for (int j = incrementalSolution.getCommittedIndex(); j < uncommittedIndex; j++) {
-				incrementalSolution.addGene(geneList.get(j
-						- incrementalSolution.getCommittedIndex()));
+				incrementalSolution.getPlaintextCharacters().add(
+						plaintextList.get(j - incrementalSolution.getCommittedIndex()));
 			}
 
 			incrementalSolution.setUncommittedIndex(uncommittedIndex);

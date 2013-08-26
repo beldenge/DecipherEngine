@@ -32,7 +32,6 @@ import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.util.AbstractSolutionEvaluatorBase;
 
@@ -80,7 +79,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 		boolean uniqueMatch = false;
 		String currentValue = null;
 		Character currentCharacter = null;
-		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
 		Double currentFrequency = 0.0;

@@ -21,12 +21,10 @@ package com.ciphertool.zodiacengine.util;
 
 import org.apache.log4j.Logger;
 
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	private Cipher cipher;
@@ -58,18 +56,18 @@ public class RandomCharacterSolutionGenerator implements SolutionGenerator {
 	}
 
 	public void getCharacters(SolutionChromosome solution) {
+		Plaintext nextPlaintext;
 		int id = 0;
 		char randomChar;
 
 		do {
+			id++;
+
 			randomChar = LetterUtils.getRandomLetter();
 
-			WordGene gene = new WordGene(new Word(new WordId(String.valueOf(randomChar), '*')),
-					solution, id);
+			nextPlaintext = new Plaintext(id, String.valueOf(randomChar));
 
-			solution.addGene(gene);
-
-			id++;
+			solution.addPlaintext(nextPlaintext);
 		} while (id < cipher.length());
 	}
 

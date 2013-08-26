@@ -24,8 +24,8 @@ import static org.junit.Assert.assertEquals;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.IncrementalSolutionChromosome;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 
 public class SolutionEvaluatorTest extends ZodiacTestBase {
 
@@ -55,8 +55,8 @@ public class SolutionEvaluatorTest extends ZodiacTestBase {
 
 		IncrementalSolutionChromosome incrementalSolution = new IncrementalSolutionChromosome(
 				zodiac408, 0, 0, 0);
-		for (Gene gene : knownSolution.getGenes()) {
-			incrementalSolution.addGene(gene);
+		for (Plaintext plaintext : knownSolution.getPlaintextCharacters()) {
+			incrementalSolution.addPlaintext(plaintext);
 		}
 		incrementalSolution.setUncommittedIndex(zodiac408.getCiphertextCharacters().size() + 1);
 

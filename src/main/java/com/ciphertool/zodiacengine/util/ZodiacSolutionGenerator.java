@@ -30,6 +30,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
 import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
@@ -89,17 +90,15 @@ public class ZodiacSolutionGenerator implements SolutionGenerator {
 		}
 		char[] chars = new char[cipherLength];
 		rawText.getChars(0, cipherLength, chars, 0);
-		int id = 0;
-
+		int id = 1;
+		Plaintext pt;
 		for (char c : chars) {
 			/*
 			 * It is very important to convert to lowercase here, since map
 			 * lookups within the evaluator are case-sensitive.
 			 */
-			WordGene gene = new WordGene(
-					new Word(new WordId(String.valueOf(c).toLowerCase(), '*')), solution, id);
-
-			solution.addGene(gene);
+			pt = new Plaintext(id, String.valueOf(c).toLowerCase());
+			solution.addPlaintext(pt);
 			id++;
 		}
 	}

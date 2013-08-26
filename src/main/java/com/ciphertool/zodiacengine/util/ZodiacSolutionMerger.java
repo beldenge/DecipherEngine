@@ -31,16 +31,12 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class ZodiacSolutionMerger implements SolutionMerger {
 	private static Logger log = Logger.getLogger(ZodiacSolutionMerger.class);
@@ -100,7 +96,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 		}
 
 		for (SolutionChromosome solution : solutions) {
-			List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+			List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 			if (plaintextCharacters.size() != cipherLength) {
 				log.warn("Cipher has " + cipherLength + " characters, but found solution with "
 						+ plaintextCharacters.size()
@@ -152,10 +148,7 @@ public class ZodiacSolutionMerger implements SolutionMerger {
 				}
 			}
 
-			WordGene gene = new WordGene(new Word(new WordId(bestMatch, '*')), bestFitSolution,
-					ciphertextId);
-
-			bestFitSolution.addGene(gene);
+			bestFitSolution.addPlaintext(new Plaintext(ciphertextId, bestMatch));
 		}
 
 		solutionEvaluator.determineConfidenceLevel(bestFitSolution);

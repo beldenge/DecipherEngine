@@ -27,12 +27,11 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.sentencebuilder.beans.Sentence;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.util.SentenceHelper;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.IncrementalSolutionChromosome;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
-import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 
 public class IncrementalSolutionGenerator implements SolutionGenerator {
 	private SentenceHelper sentenceHelper;
@@ -106,7 +105,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 	 */
 	private void compareSentenceToSolution(IncrementalSolutionChromosome incrementalSolution,
 			Sentence sentence) {
-		List<WordGene> candidateGeneList = new ArrayList<WordGene>();
+		List<Plaintext> candidatePlaintextList = new ArrayList<Plaintext>();
 
 		StringBuilder rawText = new StringBuilder();
 
@@ -122,6 +121,7 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 
 		int newIndex = incrementalSolution.getCommittedIndex();
 
+		Plaintext pt = null;
 		for (char c : chars) {
 			/*
 			 * Don't add the plaintext character if the index has surpassed the
@@ -131,17 +131,16 @@ public class IncrementalSolutionGenerator implements SolutionGenerator {
 			 * lookups within the evaluator are case-sensitive.
 			 */
 			if (newIndex <= cipherLength) {
-				WordGene gene = new WordGene(new Word(new WordId(String.valueOf(c).toLowerCase(),
-						'*')), incrementalSolution, newIndex);
+				pt = new Plaintext(newIndex, String.valueOf(c).toLowerCase());
 
-				candidateGeneList.add(gene);
+				candidatePlaintextList.add(pt);
 
 				newIndex++;
 			}
 		}
 
 		((IncrementalSolutionEvaluator) solutionEvaluator).comparePlaintextToSolution(
-				incrementalSolution, candidateGeneList);
+				incrementalSolution, candidatePlaintextList);
 	}
 
 	@Override

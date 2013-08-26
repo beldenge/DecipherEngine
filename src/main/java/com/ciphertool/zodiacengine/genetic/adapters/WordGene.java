@@ -31,6 +31,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.zodiacengine.entities.Plaintext;
 
 public class WordGene implements Gene {
 	private static Logger log = Logger.getLogger(WordGene.class);
@@ -136,6 +137,14 @@ public class WordGene implements Gene {
 	@Dirty
 	public void addSequence(Sequence sequence) {
 		this.sequences.add(sequence);
+
+		/*
+		 * It is possible for the Chromosome to be null if this Gene is being
+		 * cloned.
+		 */
+		if (chromosome != null) {
+			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
+		}
 	}
 
 	/*
@@ -164,16 +173,19 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
+		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
+				((PlaintextSequence) sequence));
+
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+		List<Plaintext> plaintextCharacters = ((SolutionChromosome) this.chromosome)
 				.getPlaintextCharacters();
 
 		int chromosomeSize = plaintextCharacters.size();
 		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
-			plaintextCharacters.get(i).shiftRight(1);
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(1);
 		}
 	}
 
@@ -200,18 +212,20 @@ public class WordGene implements Gene {
 			return;
 		}
 
+		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
+
 		this.sequences.remove(sequence);
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+		List<Plaintext> plaintextCharacters = ((SolutionChromosome) this.chromosome)
 				.getPlaintextCharacters();
 
 		int chromosomeSize = plaintextCharacters.size();
 		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
-			plaintextCharacters.get(i).shiftLeft(1);
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(1);
 		}
 	}
 

@@ -32,7 +32,6 @@ import com.ciphertool.genetics.util.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 import com.ciphertool.zodiacengine.genetic.adapters.WordGene;
 import com.ciphertool.zodiacengine.util.AbstractSolutionTruncatedEvaluatorBase;
@@ -78,7 +77,7 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*

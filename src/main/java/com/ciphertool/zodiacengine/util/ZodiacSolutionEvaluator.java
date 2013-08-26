@@ -31,7 +31,6 @@ import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.adapters.PlaintextSequence;
 import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase implements
@@ -74,7 +73,7 @@ public class ZodiacSolutionEvaluator extends AbstractSolutionEvaluatorBase imple
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
 		Map<String, List<Plaintext>> plaintextMatchMap;
 
 		/*

@@ -36,7 +36,6 @@ import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.genetic.iterators.PlaintextIterator;
 
@@ -51,20 +50,27 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 	@Indexed
 	protected Integer solutionSetId;
 
+	protected BigInteger cipherId;
+
+	private Date createdDate;
+
+	private List<Gene> genes = new ArrayList<Gene>();
+
+	@Transient
+	protected List<Plaintext> plaintextCharacters = new ArrayList<Plaintext>();
+
+	private int rows;
+
+	private int columns;
+
 	protected int totalMatches;
 
 	protected int uniqueMatches;
 
 	protected int adjacentMatches;
 
-	protected BigInteger cipherId;
-
-	private Date createdDate;
-
 	@Transient
 	protected boolean needsEvaluation = true;
-
-	private List<Gene> genes = new ArrayList<Gene>();
 
 	@Transient
 	private Double fitness = 0.0;
@@ -74,10 +80,6 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 
 	@Transient
 	private int numberOfChildren = 0;
-
-	private int rows;
-
-	private int columns;
 
 	public SolutionChromosome() {
 	}
@@ -91,6 +93,10 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 	 *            the uniqueMatches to set
 	 * @param adjacentMatches
 	 *            the adjacentMatches to set
+	 * @param rows
+	 *            the rows to set
+	 * @param columns
+	 *            the columns to set
 	 */
 	public SolutionChromosome(BigInteger cipherId, int totalMatches, int uniqueMatches,
 			int adjacentMatches, int rows, int columns) {
@@ -134,7 +140,7 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 	}
 
 	/**
-	 * @return
+	 * @return the totalMatches
 	 */
 	public int getTotalMatches() {
 		return totalMatches;
@@ -142,6 +148,7 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 
 	/**
 	 * @param totalMatches
+	 *            the totalMatches to set
 	 */
 	public void setTotalMatches(int totalMatches) {
 		this.totalMatches = totalMatches;
@@ -177,10 +184,17 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 		this.adjacentMatches = adjacentMatchCount;
 	}
 
+	/**
+	 * @return the cipherId
+	 */
 	public BigInteger getCipherId() {
 		return cipherId;
 	}
 
+	/**
+	 * @param cipherId
+	 *            the cipherId to set
+	 */
 	public void setCipherId(BigInteger cipherId) {
 		this.cipherId = cipherId;
 	}
@@ -282,6 +296,8 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 		for (int i = 0; i < gene.size(); i++) {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
 
+			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
+
 			plaintextSequence.setHasMatch(false);
 
 			/*
@@ -294,7 +310,7 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 
 	@Override
 	public Integer actualSize() {
-		return this.getPlaintextCharacters().size();
+		return this.plaintextCharacters.size();
 	}
 
 	public Integer targetSize() {
@@ -315,6 +331,7 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 
 		copyChromosome.setId(null);
 		copyChromosome.resetGenes();
+		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.needsEvaluation = true;
@@ -355,20 +372,21 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 					this.genes.get(index - 1).size() - 1)).getPlaintextId() + 1;
 		}
 
-		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
-		int actualSize = plaintextCharacters.size();
+		int actualSize = this.plaintextCharacters.size();
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(gene.size());
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftRight(gene.size());
 		}
 
 		PlaintextSequence plaintextSequence = null;
 		for (int i = 0; i < gene.size(); i++) {
 			plaintextSequence = (PlaintextSequence) gene.getSequences().get(i);
+
+			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
 
 			plaintextSequence.setHasMatch(false);
 
@@ -399,15 +417,23 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 		int beginIndex = ((PlaintextSequence) geneToRemove.getSequences().get(
 				geneToRemove.getSequences().size() - 1)).getPlaintextId() + 1;
 
-		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
-		int actualSize = plaintextCharacters.size();
+		int actualSize = this.plaintextCharacters.size();
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(geneToRemove.size());
+		}
+
+		/*
+		 * We loop across the indices backwards since, if starting from the
+		 * beginning, they should decrement each time an element is removed.
+		 */
+		for (int i = geneToRemove.size() - 1; i >= 0; i--) {
+			plaintextCharacters.remove(geneToRemove.getSequences().get(i).getSequenceId()
+					.intValue());
 		}
 
 		geneToRemove.resetSequences();
@@ -415,22 +441,28 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 		return this.genes.remove(index);
 	}
 
-	/**
-	 * Loops over all the Genes associated with this Chromosome and adds their
-	 * Sequences to a List.
-	 * 
-	 * @return the List of PlaintextSequences
-	 */
-	public List<PlaintextSequence> getPlaintextCharacters() {
-		List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
+	public List<Plaintext> getPlaintextCharacters() {
+		return Collections.unmodifiableList(this.plaintextCharacters);
+	}
 
-		for (Gene gene : this.genes) {
-			for (Sequence sequence : gene.getSequences()) {
-				plaintextCharacters.add((PlaintextSequence) sequence);
-			}
-		}
+	@Dirty
+	public void addPlaintext(Plaintext plaintext) {
+		this.plaintextCharacters.add(plaintext);
+	}
 
-		return plaintextCharacters;
+	@Dirty
+	public void insertPlaintext(int index, Plaintext plaintext) {
+		this.plaintextCharacters.add(index, plaintext);
+	}
+
+	@Dirty
+	public void removePlaintext(Plaintext plaintext) {
+		this.plaintextCharacters.remove(plaintext);
+	}
+
+	@Dirty
+	public void resetPlaintextCharacters() {
+		this.plaintextCharacters = new ArrayList<Plaintext>();
 	}
 
 	/*
@@ -539,22 +571,19 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 			return false;
 		}
 
-		List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
-		List<PlaintextSequence> otherPlaintextCharacters = other.getPlaintextCharacters();
-
-		if (plaintextCharacters == null) {
-			if (otherPlaintextCharacters != null) {
+		if (this.plaintextCharacters == null) {
+			if (other.plaintextCharacters != null) {
 				return false;
 			}
-		} else if (otherPlaintextCharacters == null) {
+		} else if (other.plaintextCharacters == null) {
 			return false;
 		} else {
-			if (plaintextCharacters.size() != otherPlaintextCharacters.size()) {
+			if (this.plaintextCharacters.size() != other.plaintextCharacters.size()) {
 				return false;
 			}
 
-			for (int i = 0; i < plaintextCharacters.size(); i++) {
-				if (!plaintextCharacters.get(i).equals(otherPlaintextCharacters.get(i))) {
+			for (int i = 0; i < this.plaintextCharacters.size(); i++) {
+				if (!this.plaintextCharacters.get(i).equals(other.plaintextCharacters.get(i))) {
 					return false;
 				}
 			}
@@ -581,10 +610,10 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 
 		if (this.cipherId != null) {
 			Plaintext nextPlaintext = null;
-			List<PlaintextSequence> plaintextCharacters = this.getPlaintextCharacters();
-			for (int i = 0; i < plaintextCharacters.size(); i++) {
+			int actualSize = this.plaintextCharacters.size();
+			for (int i = 0; i < actualSize; i++) {
 
-				nextPlaintext = plaintextCharacters.get(i);
+				nextPlaintext = this.plaintextCharacters.get(i);
 
 				// subtract 1 since the get method begins with 0
 				if (nextPlaintext.getHasMatch()) {
