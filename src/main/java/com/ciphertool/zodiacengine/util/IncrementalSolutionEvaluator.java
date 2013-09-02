@@ -171,8 +171,10 @@ public class IncrementalSolutionEvaluator extends AbstractSolutionEvaluatorBase 
 	 * replaces the Plaintext if it results in a better Solution.
 	 * 
 	 * @param incrementalSolution
-	 * @param geneList
-	 * @return
+	 *            the incremental solution
+	 * @param plaintextList
+	 *            the List of plaintext characters
+	 * @return the number of mismatches
 	 */
 	public int comparePlaintextToSolution(IncrementalSolutionChromosome incrementalSolution,
 			List<Plaintext> plaintextList) {

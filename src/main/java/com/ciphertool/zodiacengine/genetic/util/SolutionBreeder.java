@@ -74,7 +74,7 @@ public class SolutionBreeder implements Breeder {
 		do {
 			nextWord = wordListDao.findRandomWord();
 
-			nextGene = new WordGene(nextWord, (SolutionChromosome) solutionChromosome, length);
+			nextGene = new WordGene(nextWord, solutionChromosome, length);
 
 			length += nextGene.size();
 

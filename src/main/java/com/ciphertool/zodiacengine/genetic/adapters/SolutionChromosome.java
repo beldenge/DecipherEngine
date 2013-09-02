@@ -23,7 +23,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -37,10 +36,9 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.Plaintext;
-import com.ciphertool.zodiacengine.genetic.iterators.PlaintextIterator;
 
 @Document(collection = "solutions")
-public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequence> {
+public class SolutionChromosome implements Chromosome {
 
 	private static Logger log = Logger.getLogger(SolutionChromosome.class);
 
@@ -639,10 +637,5 @@ public class SolutionChromosome implements Chromosome, Iterable<PlaintextSequenc
 		}
 
 		return sb.toString();
-	}
-
-	@Override
-	public Iterator<PlaintextSequence> iterator() {
-		return new PlaintextIterator(this.genes);
 	}
 }
