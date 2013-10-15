@@ -472,6 +472,7 @@ public class SolutionChromosome implements Chromosome {
 	 * com.ciphertool.zodiacengine.genetic.Gene)
 	 */
 	@Override
+	@Dirty
 	public void replaceGene(int index, Gene newGene) {
 		this.removeGene(index);
 
