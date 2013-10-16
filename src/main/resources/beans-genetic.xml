@@ -40,7 +40,7 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.gui.service.GeneticCipherSolutionService"
+		class="com.ciphertool.zodiacengine.service.GeneticCipherSolutionService"
 		id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 		<property name="solutionDao" ref="solutionDao" />
@@ -48,7 +48,7 @@
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.gui.common.GeneticStrategyBuilder" id="strategyBuilder">
+	<bean class="com.ciphertool.zodiacengine.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
 		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
@@ -59,12 +59,12 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.gui.controller.ZodiacCipherSolutionController"
+		class="com.ciphertool.zodiacengine.controller.ZodiacCipherSolutionController"
 		id="cipherSolutionController">
 		<property name="cipherSolutionService" ref="cipherSolutionService" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.gui.view.SwingUserInterface"
+	<bean class="com.ciphertool.zodiacengine.view.SwingUserInterface"
 		id="userInterface" init-method="init">
 		<property name="windowTitle" value="${ui.window.title}" />
 		<property name="windowWidth" value="${ui.window.width}" />
@@ -93,45 +93,45 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.SolutionBreeder"
+		class="com.ciphertool.zodiacengine.SolutionBreeder"
 		id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator"
 		id="cipherSolutionFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMultipleFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMultipleFitnessEvaluator"
 		id="cipherSolutionMultipleFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionUniqueWordFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator"
 		id="defaultFitnessEvaluator" />
 		
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMatchDistanceFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMatchDistanceFitnessEvaluator"
 		id="cipherSolutionMatchDistanceFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionTruncatedFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionTruncatedFitnessEvaluator"
 		id="cipherSolutionTruncatedFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator"
 		id="cipherSolutionKnownSolutionFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionKnownSolutionExponentialFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionExponentialFitnessEvaluator"
 		id="cipherSolutionKnownSolutionExponentialFitnessEvaluator" />
 		
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionMagicWordFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMagicWordFitnessEvaluator"
 		id="cipherSolutionMagicWordFitnessEvaluator" />
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator"
 		id="cipherSolutionFrequencyFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -166,7 +166,7 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyTruncatedFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyTruncatedFitnessEvaluator"
 		id="frequencyTruncatedFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -201,7 +201,7 @@
 	</bean>
 
 	<bean
-		class="com.ciphertool.zodiacengine.genetic.util.CipherSolutionFrequencyLengthFitnessEvaluator"
+		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator"
 		id="cipherSolutionFrequencyLengthFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -236,7 +236,7 @@
 		<property name="averageWordLength" value="${language.english.averageWordLength}" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.util.AscendingFitnessComparator"
+	<bean class="com.ciphertool.genetics.util.fitness.AscendingFitnessComparator"
 		id="defaultFitnessComparator" />
 	
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector">
@@ -267,7 +267,7 @@
 		</constructor-arg>
 	</bean> -->
 
-	<bean class="com.ciphertool.zodiacengine.genetic.dao.ForcedWordGeneListDao"
+	<bean class="com.ciphertool.zodiacengine.dao.ForcedWordGeneListDao"
 		id="geneListDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
@@ -312,7 +312,7 @@
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.genetic.dao.PlaintextSequenceDao" id="sequenceDao" />
+	<bean class="com.ciphertool.zodiacengine.dao.PlaintextSequenceDao" id="sequenceDao" />
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="sequenceDao" ref="sequenceDao"/>
@@ -391,8 +391,8 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.ciphertool.sentencebuilder.entities.Word</value>
-				<value>com.ciphertool.genetics.entities.ExecutionStatistics</value>
-				<value>com.ciphertool.genetics.entities.GenerationStatistics</value>
+				<value>com.ciphertool.genetics.entities.statistics.ExecutionStatistics</value>
+				<value>com.ciphertool.genetics.entities.statistics.GenerationStatistics</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

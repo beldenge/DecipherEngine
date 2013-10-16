@@ -2,7 +2,6 @@ package com.ciphertool.zodiacengine.entities;
 
 import javax.persistence.Transient;
 
-import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
 
 public class IncrementalSolutionChromosome extends SolutionChromosome {
 

@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.genetic.adapters.SolutionChromosome;
+import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public class SolutionDao {
 	private MongoOperations mongoOperations;
