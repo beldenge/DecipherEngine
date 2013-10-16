@@ -39,6 +39,6 @@ public class ZodiacEngineBootstrapper {
 	protected static void initializeContext() {
 		log.info("Starting Spring application context");
 
-		context = new ClassPathXmlApplicationContext("beans-genetic.xml");
+		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 	}
 }
