@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -32,10 +33,18 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public class SolutionDao {
+	private static Logger log = Logger.getLogger(SolutionDao.class);
+
 	private MongoOperations mongoOperations;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(SolutionChromosome solutionChromosome) {
+		if (solutionChromosome == null) {
+			log.warn("Attempted to insert null solution.  Returning.");
+
+			return false;
+		}
+
 		mongoOperations.insert(solutionChromosome);
 
 		return true;
@@ -43,6 +52,12 @@ public class SolutionDao {
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public SolutionChromosome findBySolutionId(Integer solutionId) {
+		if (solutionId == null) {
+			log.warn("Attempted to find solution by null ID.  Returning null.");
+
+			return null;
+		}
+
 		Query selectByIdQuery = new Query(Criteria.where("id").is(solutionId));
 
 		SolutionChromosome solutionChromosome = mongoOperations.findOne(selectByIdQuery,
@@ -53,6 +68,12 @@ public class SolutionDao {
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<SolutionChromosome> findByCipherName(String cipherName) {
+		if (cipherName == null || cipherName.isEmpty()) {
+			log.warn("Attempted to find solution by cipher name with null or empty cipherName.  Returning null.");
+
+			return null;
+		}
+
 		// First find the Cipher by name
 		Query selectByCipherNameQuery = new Query(Criteria.where("name").is(cipherName));
 

@@ -40,8 +40,8 @@ public class CipherDao {
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Cipher findByCipherName(String name) {
-		if (name == null) {
-			log.warn("Attempted to find cipher with null name.  Returning null.");
+		if (name == null || name.isEmpty()) {
+			log.warn("Attempted to find cipher with null or empty name.  Returning null.");
 
 			return null;
 		}

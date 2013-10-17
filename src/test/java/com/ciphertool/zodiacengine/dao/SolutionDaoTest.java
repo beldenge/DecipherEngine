@@ -1,0 +1,125 @@
+package com.ciphertool.zodiacengine.dao;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
+
+import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.SolutionChromosome;
+
+public class SolutionDaoTest {
+	private static SolutionDao solutionDao;
+	private static MongoOperations mongoTemplateMock;
+
+	@BeforeClass
+	public static void setUp() {
+		solutionDao = new SolutionDao();
+		mongoTemplateMock = mock(MongoOperations.class);
+
+		solutionDao.setMongoTemplate(mongoTemplateMock);
+	}
+
+	@Before
+	public void resetMocks() {
+		reset(mongoTemplateMock);
+	}
+
+	@Test
+	public void testFindBySolutionId() {
+		SolutionChromosome solutionToReturn = new SolutionChromosome();
+		when(mongoTemplateMock.findOne(any(Query.class), eq(SolutionChromosome.class))).thenReturn(
+				solutionToReturn);
+
+		int arbitraryInteger = 1;
+		SolutionChromosome solutionReturned = solutionDao.findBySolutionId(arbitraryInteger);
+
+		assertSame(solutionToReturn, solutionReturned);
+	}
+
+	@Test
+	public void testFindBySolutionIdNull() {
+		SolutionChromosome solutionReturned = solutionDao.findBySolutionId(null);
+
+		assertNull(solutionReturned);
+	}
+
+	@Test
+	public void testFindByCipherName() {
+		List<SolutionChromosome> solutionsToReturn = new ArrayList<SolutionChromosome>();
+		SolutionChromosome solution1 = new SolutionChromosome(new BigInteger("1"), 0, 0, 0, 5, 5);
+		solutionsToReturn.add(solution1);
+		SolutionChromosome solution2 = new SolutionChromosome(new BigInteger("1"), 1, 1, 1, 10, 10);
+		solutionsToReturn.add(solution2);
+
+		Cipher dummyCipherToReturn = new Cipher();
+		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(
+				dummyCipherToReturn);
+
+		when(mongoTemplateMock.find(any(Query.class), eq(SolutionChromosome.class))).thenReturn(
+				solutionsToReturn);
+
+		List<SolutionChromosome> solutionsReturned = solutionDao
+				.findByCipherName("arbitraryCipherName");
+
+		verify(mongoTemplateMock, times(1)).findOne(any(Query.class), eq(Cipher.class));
+		assertEquals(solutionsToReturn, solutionsReturned);
+	}
+
+	@Test
+	public void testFindByCipherNameNull() {
+		List<SolutionChromosome> solutionsReturned = solutionDao.findByCipherName(null);
+
+		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
+		verify(mongoTemplateMock, never()).find(any(Query.class), eq(SolutionChromosome.class));
+		assertNull(solutionsReturned);
+	}
+
+	@Test
+	public void testFindByCipherNameEmpty() {
+		List<SolutionChromosome> solutionsReturned = solutionDao.findByCipherName("");
+
+		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
+		verify(mongoTemplateMock, never()).find(any(Query.class), eq(SolutionChromosome.class));
+		assertNull(solutionsReturned);
+	}
+
+	@Test
+	public void testInsert() {
+		SolutionChromosome solutionToInsert = new SolutionChromosome(new BigInteger("1"), 1, 1, 1,
+				10, 10);
+
+		boolean result = solutionDao.insert(solutionToInsert);
+
+		verify(mongoTemplateMock, times(1)).insert(same(solutionToInsert));
+		assertTrue(result);
+	}
+
+	@Test
+	public void testInsertNull() {
+		boolean result = solutionDao.insert(null);
+
+		verify(mongoTemplateMock, never()).insert(any(SolutionChromosome.class));
+		assertFalse(result);
+	}
+}

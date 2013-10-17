@@ -25,7 +25,9 @@ import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class CipherDaoTest {
 
 	@Test
 	public void testFindByCipherName() {
-		Cipher cipherToReturn = new Cipher();
+		Cipher cipherToReturn = new Cipher("fiveByFive", 5, 5);
 		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(
 				cipherToReturn);
 
@@ -71,6 +73,15 @@ public class CipherDaoTest {
 	public void testFindByCipherNameNull() {
 		Cipher cipherReturned = cipherDao.findByCipherName(null);
 
+		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
+		assertNull(cipherReturned);
+	}
+
+	@Test
+	public void testFindByCipherNameEmpty() {
+		Cipher cipherReturned = cipherDao.findByCipherName("");
+
+		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
 		assertNull(cipherReturned);
 	}
 
