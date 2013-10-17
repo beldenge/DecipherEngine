@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 George Belden
+ * Copyright 2013 George Belden
  * 
  * This file is part of ZodiacEngine.
  * 
@@ -21,6 +21,7 @@ package com.ciphertool.zodiacengine.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,10 +34,18 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 
 @Component
 public class CipherDao {
+	private static Logger log = Logger.getLogger(CipherDao.class);
+
 	private MongoOperations mongoOperations;
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Cipher findByCipherName(String name) {
+		if (name == null) {
+			log.warn("Attempted to find cipher with null name.  Returning null.");
+
+			return null;
+		}
+
 		Query selectByNameQuery = new Query(Criteria.where("name").is(name));
 
 		Cipher cipher = mongoOperations.findOne(selectByNameQuery, Cipher.class);

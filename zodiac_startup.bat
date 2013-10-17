@@ -1,3 +1,22 @@
+rem
+rem Copyright 2013 George Belden
+rem 
+rem This file is part of ZodiacEngine.
+rem 
+rem ZodiacEngine is free software: you can redistribute it and/or modify it under
+rem the terms of the GNU General Public License as published by the Free Software
+rem Foundation, either version 3 of the License, or (at your option) any later
+rem version.
+rem 
+rem ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT
+rem ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+rem FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+rem details.
+rem 
+rem You should have received a copy of the GNU General Public License along with
+rem ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+rem
+
 set APP_DIR=C:\deploy
 set CONFIG_DIR=%APP_DIR%\config
 set LIB_DIR=%APP_DIR%\lib
