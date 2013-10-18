@@ -35,7 +35,6 @@ import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
-import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.mocks.WordGeneListDaoMock;
@@ -60,7 +59,7 @@ public class ConservativeCentromereCrossoverAlgorithmTest extends GeneticAlgorit
 		dummySolution.getGenes().get(0).insertSequence(0,
 				new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
 
-		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : dummySolution.getPlaintextCharacters()) {
 			plaintext.setValue("*");
 		}
 	}

@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
-import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;
@@ -185,8 +185,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		int numCharsToEvaluate = zodiac408.getColumns() * (zodiac408.getRows() - 1);
 
-		for (Plaintext plaintext : knownSolution.getPlaintextCharacters()) {
-			if (plaintext.getPlaintextId() < numCharsToEvaluate) {
+		for (PlaintextSequence plaintext : knownSolution.getPlaintextCharacters()) {
+			if (plaintext.getSequenceId() < numCharsToEvaluate) {
 				char plaintextChar = plaintext.getValue().charAt(0);
 				knownSolutionLetterTotals.put(plaintextChar, knownSolutionLetterTotals
 						.get(plaintextChar) + 1);

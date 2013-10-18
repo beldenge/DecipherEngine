@@ -31,9 +31,6 @@ import org.junit.Test;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
-import com.ciphertool.zodiacengine.entities.WordGene;
 
 public class SolutionChromosomeTest {
 	private static Logger log = Logger.getLogger(SolutionChromosomeTest.class);
@@ -119,8 +116,9 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+				assertEquals(
+						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
+						count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
@@ -210,7 +208,7 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+						.getSequenceId(), count);
 
 				count++;
 			}
@@ -258,8 +256,9 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+				assertEquals(
+						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
+						count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
@@ -321,8 +320,9 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+				assertEquals(
+						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
+						count);
 
 				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
 
@@ -381,8 +381,9 @@ public class SolutionChromosomeTest {
 						.getSequences().get(j));
 
 				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+				assertEquals(
+						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
+						count);
 
 				count++;
 			}
@@ -441,7 +442,7 @@ public class SolutionChromosomeTest {
 
 				log.info(clonedSolutionChromosome.getPlaintextCharacters().get(count));
 				assertEquals(clonedSolutionChromosome.getPlaintextCharacters().get(count)
-						.getPlaintextId(), count);
+						.getSequenceId(), count);
 
 				count++;
 			}

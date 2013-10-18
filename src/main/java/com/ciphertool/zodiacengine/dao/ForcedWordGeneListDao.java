@@ -39,6 +39,12 @@ public class ForcedWordGeneListDao implements GeneListDao {
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome, int beginIndex) {
+		if (chromosome == null) {
+			log.warn("Attempted to find random gene while specifying null chromosome.  Unable to continue, thus returning null.");
+
+			return null;
+		}
+
 		Word word = wordListDao.findRandomWord();
 
 		Gene gene = new WordGene(word, (SolutionChromosome) chromosome, beginIndex);
@@ -48,6 +54,12 @@ public class ForcedWordGeneListDao implements GeneListDao {
 
 	@Override
 	public Gene findRandomGeneOfLength(Chromosome chromosome, int beginIndex, int length) {
+		if (chromosome == null) {
+			log.warn("Attempted to find random gene while specifying null chromosome.  Unable to continue, thus returning null.");
+
+			return null;
+		}
+
 		if (length < 1) {
 			log.warn("Unable to find random gene of length "
 					+ length

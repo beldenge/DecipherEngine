@@ -57,7 +57,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.SolutionBreeder;
 import com.ciphertool.zodiacengine.dao.PlaintextSequenceDao;
-import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator;
 
@@ -207,11 +207,11 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		SolutionChromosome dummySolution1 = knownSolution.clone();
 		SolutionChromosome dummySolution2 = knownSolution.clone();
 
-		for (Plaintext plaintext : dummySolution1.getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : dummySolution1.getPlaintextCharacters()) {
 			plaintext.setValue("a");
 		}
 
-		for (Plaintext plaintext : dummySolution2.getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : dummySolution2.getPlaintextCharacters()) {
 			plaintext.setValue("b");
 		}
 

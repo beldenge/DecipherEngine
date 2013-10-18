@@ -29,10 +29,6 @@ import org.junit.Test;
 
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.PlaintextSequence;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
-import com.ciphertool.zodiacengine.entities.WordGene;
 
 public class PlaintextSequenceTest {
 	@SuppressWarnings("unused")
@@ -57,7 +53,7 @@ public class PlaintextSequenceTest {
 
 		assertFalse(plaintextSequence == clonedPlaintextSequence);
 
-		assertEquals(plaintextSequence.getPlaintextId(), clonedPlaintextSequence.getPlaintextId());
+		assertEquals(plaintextSequence.getSequenceId(), clonedPlaintextSequence.getSequenceId());
 		assertEquals(plaintextSequence, clonedPlaintextSequence);
 
 		/*
@@ -76,7 +72,7 @@ public class PlaintextSequenceTest {
 
 		plaintextSequence.shiftLeft(2);
 
-		assertEquals(plaintextSequence.getPlaintextId(), new Integer(3));
+		assertEquals(plaintextSequence.getSequenceId(), new Integer(3));
 	}
 
 	@Test
@@ -88,6 +84,6 @@ public class PlaintextSequenceTest {
 
 		plaintextSequence.shiftRight(2);
 
-		assertEquals(plaintextSequence.getPlaintextId(), new Integer(7));
+		assertEquals(plaintextSequence.getSequenceId(), new Integer(7));
 	}
 }

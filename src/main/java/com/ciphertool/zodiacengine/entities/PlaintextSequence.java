@@ -26,18 +26,24 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 
-public class PlaintextSequence extends Plaintext implements Sequence {
+public class PlaintextSequence implements Sequence {
 	private static Logger log = Logger.getLogger(WordGene.class);
 
 	@Transient
 	private Gene gene;
 
+	protected Integer sequenceId;
+
+	protected String value;
+
+	protected boolean hasMatch;
+
 	public PlaintextSequence() {
 	}
 
-	public PlaintextSequence(Integer plaintextId, String value, Gene gene) {
-		super(plaintextId, value);
-
+	public PlaintextSequence(Integer sequenceId, String value, Gene gene) {
+		this.sequenceId = sequenceId;
+		this.value = value;
 		this.gene = gene;
 	}
 
@@ -64,7 +70,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 		}
 		copySequence.setHasMatch(false);
 
-		copySequence.setPlaintextId(this.plaintextId.intValue());
+		copySequence.setSequenceId(this.sequenceId.intValue());
 
 		/*
 		 * The Gene must bet set at a higher level.
@@ -82,7 +88,7 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	@Dirty
 	public void shiftRight(int places) {
-		this.plaintextId = this.plaintextId + places;
+		this.sequenceId = this.sequenceId + places;
 	}
 
 	/**
@@ -93,21 +99,22 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	 */
 	@Dirty
 	public void shiftLeft(int places) {
-		this.plaintextId = this.plaintextId - places;
+		this.sequenceId = this.sequenceId - places;
 	}
 
 	@Override
 	public Integer getSequenceId() {
-		return this.plaintextId;
+		return this.sequenceId;
 	}
 
-	/*
-	 * This method actually overrides both the interface and the superclass.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.entities.Plaintext#getValue()
+	/**
+	 * @param sequenceId
+	 *            the sequenceId to set
 	 */
+	public void setSequenceId(Integer sequenceId) {
+		this.sequenceId = sequenceId;
+	}
+
 	@Override
 	public String getValue() {
 		return this.value;
@@ -117,5 +124,59 @@ public class PlaintextSequence extends Plaintext implements Sequence {
 	@Dirty
 	public void setValue(Object obj) {
 		this.value = (String) obj;
+	}
+
+	public boolean getHasMatch() {
+		return hasMatch;
+	}
+
+	public void setHasMatch(boolean hasMatch) {
+		this.hasMatch = hasMatch;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (hasMatch ? 1231 : 1237);
+		result = prime * result + ((sequenceId == null) ? 0 : sequenceId.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof PlaintextSequence)) {
+			return false;
+		}
+
+		PlaintextSequence other = (PlaintextSequence) obj;
+
+		/*
+		 * We are not checking for null sequenceId because it should never
+		 * happen and we want an exception to be thrown if so.
+		 */
+		if (!sequenceId.equals(other.sequenceId)) {
+			return false;
+		}
+
+		/*
+		 * We are not checking for null value because it should never happen and
+		 * we want an exception to be thrown if so.
+		 */
+		if (!value.equals(other.value)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "PlaintextSequence [sequenceId=" + sequenceId + ", value=" + value + ", hasMatch="
+				+ hasMatch + "]";
 	}
 }

@@ -19,6 +19,8 @@
 
 package com.ciphertool.zodiacengine.dao;
 
+import org.apache.log4j.Logger;
+
 import com.ciphertool.genetics.dao.SequenceDao;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
@@ -26,9 +28,16 @@ import com.ciphertool.sentencebuilder.util.LetterUtils;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 
 public class PlaintextSequenceDao implements SequenceDao {
+	private static Logger log = Logger.getLogger(PlaintextSequenceDao.class);
 
 	@Override
 	public Sequence findRandomSequence(Gene gene, int sequenceIndex) {
+		if (gene == null) {
+			log.warn("Attempted to find random sequence but the associated Gene is null.  Cannot continue, thus returning null.");
+
+			return null;
+		}
+
 		Sequence sequence = new PlaintextSequence(sequenceIndex, String.valueOf(LetterUtils
 				.getRandomLetter()), gene);
 

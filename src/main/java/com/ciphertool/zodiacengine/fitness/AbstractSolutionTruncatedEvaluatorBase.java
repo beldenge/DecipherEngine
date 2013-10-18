@@ -25,7 +25,7 @@ import java.util.List;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
-import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public abstract class AbstractSolutionTruncatedEvaluatorBase {
@@ -63,7 +63,7 @@ public abstract class AbstractSolutionTruncatedEvaluatorBase {
 	}
 
 	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
-		for (Plaintext plaintext : solutionChromosome.getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : solutionChromosome.getPlaintextCharacters()) {
 			plaintext.setHasMatch(false);
 		}
 	}

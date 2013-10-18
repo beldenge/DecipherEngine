@@ -45,7 +45,6 @@ import com.ciphertool.genetics.util.ChromosomeHelper;
 import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.dao.WordGeneListDao;
-import com.ciphertool.zodiacengine.entities.Plaintext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
@@ -76,7 +75,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 					new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
 		}
 
-		for (Plaintext plaintext : dummySolution.getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : dummySolution.getPlaintextCharacters()) {
 			plaintext.setValue("*");
 		}
 	}
@@ -173,7 +172,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 						.getSequences().get(j));
 
 				assertEquals(((SolutionChromosome) child).getPlaintextCharacters().get(count)
-						.getPlaintextId().intValue(), count);
+						.getSequenceId().intValue(), count);
 
 				count++;
 			}
@@ -186,17 +185,18 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 	}
 
 	private void validatePlaintextSequences(Chromosome firstChild, Chromosome mom, Chromosome dad) {
-		for (Plaintext plaintext : ((SolutionChromosome) firstChild).getPlaintextCharacters()) {
+		for (PlaintextSequence plaintext : ((SolutionChromosome) firstChild)
+				.getPlaintextCharacters()) {
 			if (!isPlaintextValid(plaintext, mom, dad)) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Plaintext value from child does not match Plaintext from either parent, nor from any mutation: "
 						+ plaintext.toString());
 				sb.append("\nMom plaintext: "
 						+ ((SolutionChromosome) mom).getPlaintextCharacters().get(
-								plaintext.getPlaintextId()));
+								plaintext.getSequenceId()));
 				sb.append("\nDad plaintext: "
 						+ ((SolutionChromosome) dad).getPlaintextCharacters().get(
-								plaintext.getPlaintextId()));
+								plaintext.getSequenceId()));
 				sb.append("\nMom: " + ((SolutionChromosome) mom).toString());
 				sb.append("\nDad: " + ((SolutionChromosome) dad).toString());
 				sb.append("\nChild: " + ((SolutionChromosome) firstChild).toString());
@@ -205,23 +205,24 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		}
 	}
 
-	private static boolean isPlaintextValid(Plaintext plaintext, Chromosome mom, Chromosome dad) {
-		if (!(((SolutionChromosome) mom).actualSize() > plaintext.getPlaintextId())) {
+	private static boolean isPlaintextValid(PlaintextSequence plaintext, Chromosome mom,
+			Chromosome dad) {
+		if (!(((SolutionChromosome) mom).actualSize() > plaintext.getSequenceId())) {
 			return true;
 		}
 
 		if (plaintext.getValue().equals(
-				((SolutionChromosome) mom).getPlaintextCharacters().get(plaintext.getPlaintextId())
+				((SolutionChromosome) mom).getPlaintextCharacters().get(plaintext.getSequenceId())
 						.getValue())) {
 			return true;
 		}
 
-		if (!(((SolutionChromosome) dad).actualSize() > plaintext.getPlaintextId())) {
+		if (!(((SolutionChromosome) dad).actualSize() > plaintext.getSequenceId())) {
 			return true;
 		}
 
 		if (plaintext.getValue().equals(
-				((SolutionChromosome) dad).getPlaintextCharacters().get(plaintext.getPlaintextId())
+				((SolutionChromosome) dad).getPlaintextCharacters().get(plaintext.getSequenceId())
 						.getValue())) {
 			return true;
 		}

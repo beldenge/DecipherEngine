@@ -31,7 +31,7 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
-import com.ciphertool.zodiacengine.entities.Plaintext;
+import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.AbstractSolutionTruncatedEvaluatorBase;
@@ -71,15 +71,15 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends
 		clearHasMatchValues((SolutionChromosome) chromosome);
 
 		SolutionChromosome solution = (SolutionChromosome) chromosome;
-		Plaintext plaintext = null;
+		PlaintextSequence plaintext = null;
 		int total = 0;
 		int totalUnique = 0;
 		int maxMatches = 0;
 		String bestMatch = null;
 		boolean uniqueMatch = false;
 		String currentValue = null;
-		List<Plaintext> plaintextCharacters = solution.getPlaintextCharacters();
-		Map<String, List<Plaintext>> plaintextMatchMap;
+		List<PlaintextSequence> plaintextCharacters = solution.getPlaintextCharacters();
+		Map<String, List<PlaintextSequence>> plaintextMatchMap;
 
 		/*
 		 * Iterate for each List of occurrences of the same Ciphertext
@@ -88,7 +88,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends
 			maxMatches = 0;
 			uniqueMatch = false;
 			bestMatch = null;
-			plaintextMatchMap = new HashMap<String, List<Plaintext>>();
+			plaintextMatchMap = new HashMap<String, List<PlaintextSequence>>();
 
 			/*
 			 * Now iterate for each occurrence of the current Ciphertext
@@ -110,7 +110,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends
 				currentValue = plaintext.getValue().toLowerCase();
 
 				if (!plaintextMatchMap.containsKey(currentValue)) {
-					plaintextMatchMap.put(currentValue, new ArrayList<Plaintext>());
+					plaintextMatchMap.put(currentValue, new ArrayList<PlaintextSequence>());
 				} else {
 					uniqueMatch = true;
 				}
@@ -135,7 +135,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends
 			 * matches is set.
 			 */
 			if (bestMatch != null) {
-				for (Plaintext pt : plaintextMatchMap.get(bestMatch)) {
+				for (PlaintextSequence pt : plaintextMatchMap.get(bestMatch)) {
 					pt.setHasMatch(true);
 				}
 			}

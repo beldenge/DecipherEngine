@@ -54,7 +54,7 @@ public class SolutionChromosome implements Chromosome {
 	private List<Gene> genes = new ArrayList<Gene>();
 
 	@Transient
-	protected List<Plaintext> plaintextCharacters = new ArrayList<Plaintext>();
+	protected List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
 
 	private int rows;
 
@@ -301,7 +301,7 @@ public class SolutionChromosome implements Chromosome {
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.setPlaintextId(beginIndex + i);
+			plaintextSequence.setSequenceId(beginIndex + i);
 		}
 	}
 
@@ -366,7 +366,7 @@ public class SolutionChromosome implements Chromosome {
 		 */
 		if (index > 0) {
 			beginIndex = ((PlaintextSequence) this.genes.get(index - 1).getSequences().get(
-					this.genes.get(index - 1).size() - 1)).getPlaintextId() + 1;
+					this.genes.get(index - 1).size() - 1)).getSequenceId() + 1;
 		}
 
 		int actualSize = this.plaintextCharacters.size();
@@ -391,7 +391,7 @@ public class SolutionChromosome implements Chromosome {
 			 * We additionally have to reset the ciphertextId since the current
 			 * ciphertextIds may no longer be accurate.
 			 */
-			plaintextSequence.setPlaintextId(beginIndex + i);
+			plaintextSequence.setSequenceId(beginIndex + i);
 		}
 	}
 
@@ -412,7 +412,7 @@ public class SolutionChromosome implements Chromosome {
 		 * Gene's greatest Sequence ID.
 		 */
 		int beginIndex = ((PlaintextSequence) geneToRemove.getSequences().get(
-				geneToRemove.getSequences().size() - 1)).getPlaintextId() + 1;
+				geneToRemove.getSequences().size() - 1)).getSequenceId() + 1;
 
 		int actualSize = this.plaintextCharacters.size();
 
@@ -438,28 +438,28 @@ public class SolutionChromosome implements Chromosome {
 		return this.genes.remove(index);
 	}
 
-	public List<Plaintext> getPlaintextCharacters() {
+	public List<PlaintextSequence> getPlaintextCharacters() {
 		return Collections.unmodifiableList(this.plaintextCharacters);
 	}
 
 	@Dirty
-	public void addPlaintext(Plaintext plaintext) {
+	public void addPlaintext(PlaintextSequence plaintext) {
 		this.plaintextCharacters.add(plaintext);
 	}
 
 	@Dirty
-	public void insertPlaintext(int index, Plaintext plaintext) {
+	public void insertPlaintext(int index, PlaintextSequence plaintext) {
 		this.plaintextCharacters.add(index, plaintext);
 	}
 
 	@Dirty
-	public void removePlaintext(Plaintext plaintext) {
+	public void removePlaintext(PlaintextSequence plaintext) {
 		this.plaintextCharacters.remove(plaintext);
 	}
 
 	@Dirty
 	public void resetPlaintextCharacters() {
-		this.plaintextCharacters = new ArrayList<Plaintext>();
+		this.plaintextCharacters = new ArrayList<PlaintextSequence>();
 	}
 
 	/*
@@ -607,7 +607,7 @@ public class SolutionChromosome implements Chromosome {
 				+ uniqueMatches + ", adjacentMatches=" + adjacentMatches + "]\n");
 
 		if (this.cipherId != null) {
-			Plaintext nextPlaintext = null;
+			PlaintextSequence nextPlaintext = null;
 			int actualSize = this.plaintextCharacters.size();
 			for (int i = 0; i < actualSize; i++) {
 

@@ -179,7 +179,7 @@ public class WordGene implements Gene {
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		List<Plaintext> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
 				.getPlaintextCharacters();
 
 		int chromosomeSize = plaintextCharacters.size();
@@ -219,7 +219,7 @@ public class WordGene implements Gene {
 		 * We additionally have to shift the ciphertextIds since the current
 		 * ciphertextIds will no longer be accurate.
 		 */
-		List<Plaintext> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
 				.getPlaintextCharacters();
 
 		int chromosomeSize = plaintextCharacters.size();
