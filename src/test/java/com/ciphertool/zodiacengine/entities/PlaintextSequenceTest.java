@@ -21,6 +21,10 @@ package com.ciphertool.zodiacengine.entities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.Logger;
@@ -43,24 +47,110 @@ public class PlaintextSequenceTest {
 	}
 
 	@Test
+	public void testConstructor() {
+		Integer sequenceIdToSet = new Integer(123);
+		String valueToSet = "valueToSet";
+		Word arbitraryWord = new Word(new WordId("arbitraryWord", 'N'));
+		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome, 5);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(sequenceIdToSet, valueToSet,
+				geneToSet);
+
+		assertSame(sequenceIdToSet, plaintextSequence.getSequenceId());
+		assertEquals(valueToSet, plaintextSequence.getValue());
+		assertSame(geneToSet, plaintextSequence.getGene());
+	}
+
+	@Test
+	public void testSetGene() {
+		Word arbitraryWord = new Word(new WordId("arbitraryWord", 'N'));
+		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome, 5);
+		PlaintextSequence plaintextSequence = new PlaintextSequence();
+		plaintextSequence.setGene(geneToSet);
+
+		assertSame(geneToSet, plaintextSequence.getGene());
+	}
+
+	@Test
+	public void testSetSequenceId() {
+		Integer sequenceIdToSet = new Integer(123);
+		PlaintextSequence plaintextSequence = new PlaintextSequence();
+		plaintextSequence.setSequenceId(sequenceIdToSet);
+
+		assertSame(sequenceIdToSet, plaintextSequence.getSequenceId());
+	}
+
+	@Test
+	public void testSetValue() {
+		String valueToSet = "valueToSet";
+		PlaintextSequence plaintextSequence = new PlaintextSequence();
+
+		// We have to set the Gene and Chromosome to satisfy the @Dirty aspect
+		WordGene geneToSet = new WordGene();
+		geneToSet.setChromosome(solutionChromosome);
+		plaintextSequence.setGene(geneToSet);
+
+		solutionChromosome.setNeedsEvaluation(false);
+
+		plaintextSequence.setValue(valueToSet);
+
+		assertTrue(solutionChromosome.isNeedsEvaluation());
+		assertEquals(valueToSet, plaintextSequence.getValue());
+	}
+
+	@Test
+	public void testHasMatch() {
+		PlaintextSequence plaintextSequence = new PlaintextSequence();
+		plaintextSequence.setHasMatch(true);
+
+		assertTrue(plaintextSequence.getHasMatch());
+	}
+
+	@Test
+	public void testEquals() {
+		Integer baseSequenceId = new Integer(123);
+		String baseValue = "baseValue";
+
+		PlaintextSequence base = new PlaintextSequence(baseSequenceId, baseValue, null);
+
+		PlaintextSequence plaintextSequenceEqualToBase = new PlaintextSequence(baseSequenceId,
+				baseValue, null);
+		assertEquals(base, plaintextSequenceEqualToBase);
+
+		PlaintextSequence plaintextSequenceWithDifferentSequenceId = new PlaintextSequence(321,
+				baseValue, null);
+		assertFalse(base.equals(plaintextSequenceWithDifferentSequenceId));
+
+		PlaintextSequence plaintextSequenceWithDifferentValue = new PlaintextSequence(
+				baseSequenceId, "differentWord", null);
+		assertFalse(base.equals(plaintextSequenceWithDifferentValue));
+
+		PlaintextSequence plaintextSequenceWithNullPropertiesA = new PlaintextSequence();
+		PlaintextSequence plaintextSequenceWithNullPropertiesB = new PlaintextSequence();
+		assertEquals(plaintextSequenceWithNullPropertiesA, plaintextSequenceWithNullPropertiesB);
+	}
+
+	@Test
 	public void testClonePlaintextSequence() {
 		Word word = new Word(new WordId("george", 'N'));
 		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(0, "g", wordGene);
+		plaintextSequence.setHasMatch(true);
 
 		PlaintextSequence clonedPlaintextSequence = plaintextSequence.clone();
 
-		assertFalse(plaintextSequence == clonedPlaintextSequence);
-
-		assertEquals(plaintextSequence.getSequenceId(), clonedPlaintextSequence.getSequenceId());
+		assertNotSame(plaintextSequence, clonedPlaintextSequence);
 		assertEquals(plaintextSequence, clonedPlaintextSequence);
+
+		// HasMatch should always start false
+		assertFalse(clonedPlaintextSequence.getHasMatch());
+		assertEquals(plaintextSequence.getSequenceId(), clonedPlaintextSequence.getSequenceId());
 
 		/*
 		 * The Gene should not be cloned.
 		 */
-		assertFalse(plaintextSequence.getGene() == null);
-		assertTrue(clonedPlaintextSequence.getGene() == null);
+		assertNotNull(plaintextSequence.getGene());
+		assertNull(clonedPlaintextSequence.getGene());
 	}
 
 	@Test
@@ -70,8 +160,11 @@ public class PlaintextSequenceTest {
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
+		solutionChromosome.setNeedsEvaluation(false);
+
 		plaintextSequence.shiftLeft(2);
 
+		assertTrue(solutionChromosome.isNeedsEvaluation());
 		assertEquals(plaintextSequence.getSequenceId(), new Integer(3));
 	}
 
@@ -82,8 +175,11 @@ public class PlaintextSequenceTest {
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
+		solutionChromosome.setNeedsEvaluation(false);
+
 		plaintextSequence.shiftRight(2);
 
+		assertTrue(solutionChromosome.isNeedsEvaluation());
 		assertEquals(plaintextSequence.getSequenceId(), new Integer(7));
 	}
 }

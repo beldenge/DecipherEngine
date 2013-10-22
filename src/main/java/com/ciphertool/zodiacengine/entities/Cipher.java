@@ -112,13 +112,6 @@ public class Cipher implements Serializable {
 	}
 
 	/**
-	 * @return the hasKnownSolution
-	 */
-	public boolean getHasKnownSolution() {
-		return hasKnownSolution;
-	}
-
-	/**
 	 * @param hasKnownSolution
 	 *            the hasKnownSolution to set
 	 */
@@ -126,35 +119,20 @@ public class Cipher implements Serializable {
 		this.hasKnownSolution = hasKnownSolution;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 * 
-	 * We must not use the Ciphertext characters else we may run into a stack
-	 * overflow. It shouldn't be necessary anyway since the id makes the cipher
-	 * unique.
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((ciphertextCharacters == null) ? 0 : ciphertextCharacters.hashCode());
 		result = prime * result + columns;
+		result = prime * result + (hasKnownSolution ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + rows;
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 * 
-	 * We must not check the Ciphertext characters else we may run into a stack
-	 * overflow. It shouldn't be necessary anyway since the id makes the cipher
-	 * unique.
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -167,7 +145,17 @@ public class Cipher implements Serializable {
 			return false;
 		}
 		Cipher other = (Cipher) obj;
+		if (ciphertextCharacters == null) {
+			if (other.ciphertextCharacters != null) {
+				return false;
+			}
+		} else if (!ciphertextCharacters.equals(other.ciphertextCharacters)) {
+			return false;
+		}
 		if (columns != other.columns) {
+			return false;
+		}
+		if (hasKnownSolution != other.hasKnownSolution) {
 			return false;
 		}
 		if (id == null) {

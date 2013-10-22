@@ -134,43 +134,57 @@ public class PlaintextSequence implements Sequence {
 		this.hasMatch = hasMatch;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 * We purposely do not hash the hasMatch property since it is set to false
+	 * for clones.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (hasMatch ? 1231 : 1237);
 		result = prime * result + ((sequenceId == null) ? 0 : sequenceId.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 * We purposely do not check the hasMatch property since it is set to false
+	 * for clones.
+	 */
 	@Override
 	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof PlaintextSequence)) {
+		if (getClass() != obj.getClass()) {
 			return false;
 		}
-
 		PlaintextSequence other = (PlaintextSequence) obj;
-
-		/*
-		 * We are not checking for null sequenceId because it should never
-		 * happen and we want an exception to be thrown if so.
-		 */
-		if (!sequenceId.equals(other.sequenceId)) {
+		if (sequenceId == null) {
+			if (other.sequenceId != null) {
+				return false;
+			}
+		} else if (!sequenceId.equals(other.sequenceId)) {
 			return false;
 		}
-
-		/*
-		 * We are not checking for null value because it should never happen and
-		 * we want an exception to be thrown if so.
-		 */
-		if (!value.equals(other.value)) {
+		if (value == null) {
+			if (other.value != null) {
+				return false;
+			}
+		} else if (!value.equals(other.value)) {
 			return false;
 		}
-
 		return true;
 	}
 

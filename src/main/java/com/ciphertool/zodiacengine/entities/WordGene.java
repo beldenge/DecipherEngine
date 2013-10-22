@@ -49,11 +49,25 @@ public class WordGene implements Gene {
 	public WordGene(Word word, SolutionChromosome solutionChromosome, int beginCiphertextId) {
 		this.chromosome = solutionChromosome;
 
-		int wordLength = word.getId().getWord().length();
+		if (word == null || word.getId() == null) {
+			log.error("Found null Word or WordId In full-args constructor.  Unable to construct WordGene.");
+
+			return;
+		}
+
+		String wordString = word.getId().getWord();
+
+		if (wordString == null) {
+			log.error("Found null String from WordId In full-args constructor.  Unable to construct WordGene.");
+
+			return;
+		}
+
+		int wordLength = wordString.length();
 
 		for (int i = 0; i < wordLength; i++) {
 			PlaintextSequence plaintextSequence = new PlaintextSequence(beginCiphertextId + i,
-					String.valueOf(word.getId().getWord().charAt(i)).toLowerCase(), this);
+					String.valueOf(wordString.charAt(i)).toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}
