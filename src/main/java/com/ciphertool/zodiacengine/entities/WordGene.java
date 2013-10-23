@@ -43,9 +43,6 @@ public class WordGene implements Gene {
 	public WordGene() {
 	}
 
-	/**
-	 * @param wordId
-	 */
 	public WordGene(Word word, SolutionChromosome solutionChromosome, int beginCiphertextId) {
 		this.chromosome = solutionChromosome;
 
@@ -71,6 +68,161 @@ public class WordGene implements Gene {
 
 			this.sequences.add(plaintextSequence);
 		}
+	}
+
+	@Override
+	public Chromosome getChromosome() {
+		return this.chromosome;
+	}
+
+	@Override
+	public void setChromosome(Chromosome chromosome) {
+		this.chromosome = chromosome;
+	}
+
+	@Override
+	public List<Sequence> getSequences() {
+		return Collections.unmodifiableList(this.sequences);
+	}
+
+	/*
+	 * This should only be called from cloning methods. Otherwise, resetting the
+	 * sequences of a Gene should also remove those sequences from the
+	 * Chromosome.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Gene#resetSequences()
+	 */
+	@Override
+	@Dirty
+	public void resetSequences() {
+		this.sequences = new ArrayList<Sequence>();
+	}
+
+	@Override
+	@Dirty
+	public void addSequence(Sequence sequence) {
+		if (sequence == null) {
+			log.warn("Attempted to add a Sequence to WordGene, but the supplied Sequence was null.  Cannot continue. "
+					+ this);
+
+			return;
+		}
+
+		sequence.setGene(this);
+
+		this.sequences.add(sequence);
+
+		/*
+		 * It is possible for the Chromosome to be null if this Gene is being
+		 * cloned.
+		 */
+		if (chromosome != null) {
+			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#insertSequence(int,
+	 * com.ciphertool.zodiacengine.genetic.Sequence)
+	 * 
+	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
+	 * relationship at the Chromosome level, so that Sequences within a Gene can
+	 * be managed independently of a Chromosome until they are actually added to
+	 * the Chromosome.
+	 */
+	@Override
+	@Dirty
+	public void insertSequence(int index, Sequence sequence) {
+		if (sequence == null) {
+			log.warn("Attempted to insert a Sequence into WordGene, but the supplied Sequence was null.  Cannot continue. "
+					+ this);
+
+			return;
+		}
+
+		sequence.setGene(this);
+
+		this.sequences.add(index, sequence);
+
+		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
+				((PlaintextSequence) sequence));
+
+		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+				.getPlaintextCharacters();
+
+		int chromosomeSize = plaintextCharacters.size();
+		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(1);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#removeSequence(int)
+	 * 
+	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
+	 * relationship at the Chromosome level, so that Sequences within a Gene can
+	 * be managed independently of a Chromosome until they are actually added to
+	 * the Chromosome.
+	 */
+	@Override
+	@Dirty
+	public void removeSequence(Sequence sequence) {
+		if (sequence == null) {
+			log.warn("Attempted to remove a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
+					+ this);
+
+			return;
+		}
+
+		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
+
+		this.sequences.remove(sequence);
+
+		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
+				.getPlaintextCharacters();
+
+		int chromosomeSize = plaintextCharacters.size();
+		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(1);
+		}
+	}
+
+	/*
+	 * This should just be a combination of the remove and insert methods.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#replaceSequence(int,
+	 * com.ciphertool.zodiacengine.genetic.Sequence)
+	 */
+	@Override
+	public void replaceSequence(int index, Sequence newSequence) {
+		if (newSequence == null) {
+			log.warn("Attempted to replace a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
+					+ this);
+
+			return;
+		}
+
+		newSequence.setGene(this);
+
+		this.removeSequence(this.sequences.get(index));
+
+		this.insertSequence(index, newSequence);
 	}
 
 	@Override
@@ -116,145 +268,26 @@ public class WordGene implements Gene {
 		return this.sequences.size();
 	}
 
-	@Override
-	public Chromosome getChromosome() {
-		return this.chromosome;
-	}
+	public String getWordString() {
+		StringBuilder sb = new StringBuilder();
 
-	@Override
-	public void setChromosome(Chromosome chromosome) {
-		this.chromosome = chromosome;
-	}
-
-	@Override
-	public List<Sequence> getSequences() {
-		return Collections.unmodifiableList(this.sequences);
-	}
-
-	/*
-	 * This should only be called from cloning methods. Otherwise, resetting the
-	 * sequences of a Gene should also remove those sequences from the
-	 * Chromosome.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Gene#resetSequences()
-	 */
-	@Override
-	@Dirty
-	public void resetSequences() {
-		this.sequences = new ArrayList<Sequence>();
-	}
-
-	@Override
-	@Dirty
-	public void addSequence(Sequence sequence) {
-		this.sequences.add(sequence);
-
-		/*
-		 * It is possible for the Chromosome to be null if this Gene is being
-		 * cloned.
-		 */
-		if (chromosome != null) {
-			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#insertSequence(int,
-	 * com.ciphertool.zodiacengine.genetic.Sequence)
-	 * 
-	 * It is necessary to shift the ciphertextIds at a higher level so that they
-	 * remain in order in the SolutionChromosome.
-	 * 
-	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
-	 * relationship at the Chromosome level, so that Sequences within a Gene can
-	 * be managed independently of a Chromosome until they are actually added to
-	 * the Chromosome.
-	 */
-	@Override
-	@Dirty
-	public void insertSequence(int index, Sequence sequence) {
-		if (sequence == null) {
-			log.warn("Attempted to insert a Sequence into WordGene, but the supplied Sequence was null.  Cannot continue. "
-					+ this);
-
-			return;
+		for (Sequence sequence : this.getSequences()) {
+			sb.append(((PlaintextSequence) sequence).getValue());
 		}
 
-		this.sequences.add(index, sequence);
-
-		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
-				((PlaintextSequence) sequence));
-
-		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
-		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
-				.getPlaintextCharacters();
-
-		int chromosomeSize = plaintextCharacters.size();
-		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(1);
-		}
+		return sb.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#removeSequence(int)
-	 * 
-	 * It is necessary to shift the ciphertextIds at a higher level so that they
-	 * remain in order in the SolutionChromosome.
-	 * 
-	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
-	 * relationship at the Chromosome level, so that Sequences within a Gene can
-	 * be managed independently of a Chromosome until they are actually added to
-	 * the Chromosome.
-	 */
-	@Override
-	@Dirty
-	public void removeSequence(Sequence sequence) {
-		if (sequence == null) {
-			log.warn("Attempted to remove a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
-					+ this);
+	public int countMatches() {
+		int count = 0;
 
-			return;
+		for (Sequence sequenceToCheck : this.sequences) {
+			if (((PlaintextSequence) sequenceToCheck).getHasMatch()) {
+				count++;
+			}
 		}
 
-		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
-
-		this.sequences.remove(sequence);
-
-		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
-		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
-				.getPlaintextCharacters();
-
-		int chromosomeSize = plaintextCharacters.size();
-		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(1);
-		}
-	}
-
-	/*
-	 * This should just be a combination of the remove and insert methods.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#replaceSequence(int,
-	 * com.ciphertool.zodiacengine.genetic.Sequence)
-	 */
-	@Override
-	public void replaceSequence(int index, Sequence newSequence) {
-		this.removeSequence(this.sequences.get(index));
-
-		this.insertSequence(index, newSequence);
+		return count;
 	}
 
 	@Override
@@ -267,12 +300,12 @@ public class WordGene implements Gene {
 	}
 
 	/*
-	 * We don't check the Chromosome here since it should be set at a higher
-	 * level.
-	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 * We don't check the Chromosome here since it should be set at a higher
+	 * level.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -299,28 +332,14 @@ public class WordGene implements Gene {
 		return true;
 	}
 
-	public String getWordString() {
-		StringBuilder sb = new StringBuilder();
-
-		for (Sequence sequence : this.getSequences()) {
-			sb.append(((PlaintextSequence) sequence).getValue());
-		}
-
-		return sb.toString();
-	}
-
-	public int countMatches() {
-		int count = 0;
-
-		for (Sequence sequenceToCheck : this.sequences) {
-			if (((PlaintextSequence) sequenceToCheck).getHasMatch()) {
-				count++;
-			}
-		}
-
-		return count;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 * 
+	 * We purposely do not print out the Chromosome because that could cause an
+	 * infinite loop.
+	 */
 	@Override
 	public String toString() {
 		return "WordGene [sequences=" + sequences + "]";

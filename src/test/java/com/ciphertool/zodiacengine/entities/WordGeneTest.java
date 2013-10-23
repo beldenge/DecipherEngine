@@ -22,7 +22,11 @@ package com.ciphertool.zodiacengine.entities;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -30,6 +34,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -54,68 +59,86 @@ public class WordGeneTest {
 	}
 
 	@Test
+	public void testConstructor() {
+		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+
+		assertFalse(solutionChromosome.isDirty());
+		assertEquals(solutionChromosome.actualSize(), new Integer(0));
+		assertSame(solutionChromosome, wordGene.getChromosome());
+		assertEquals(wordGene.size(), word.getId().getWord().length());
+
+		assertEquals("s", wordGene.getSequences().get(0).getValue());
+		assertEquals("m", wordGene.getSequences().get(1).getValue());
+		assertEquals("i", wordGene.getSequences().get(2).getValue());
+		assertEquals("l", wordGene.getSequences().get(3).getValue());
+		assertEquals("e", wordGene.getSequences().get(4).getValue());
+
+		assertEquals(new Integer(0), wordGene.getSequences().get(0).getSequenceId());
+		assertEquals(new Integer(1), wordGene.getSequences().get(1).getSequenceId());
+		assertEquals(new Integer(2), wordGene.getSequences().get(2).getSequenceId());
+		assertEquals(new Integer(3), wordGene.getSequences().get(3).getSequenceId());
+		assertEquals(new Integer(4), wordGene.getSequences().get(4).getSequenceId());
+	}
+
+	@Test
+	public void testConstructorNullWord() {
+		WordGene wordGene = new WordGene(null, solutionChromosome, beginCiphertextIndex);
+
+		assertFalse(solutionChromosome.isDirty());
+		assertEquals(solutionChromosome.actualSize(), new Integer(0));
+		assertSame(solutionChromosome, wordGene.getChromosome());
+		assertEquals(0, wordGene.size());
+	}
+
+	@Test
+	public void testConstructorNullWordId() {
+		Word wordWithNullId = new Word(null);
+		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome, beginCiphertextIndex);
+
+		assertFalse(solutionChromosome.isDirty());
+		assertEquals(solutionChromosome.actualSize(), new Integer(0));
+		assertSame(solutionChromosome, wordGene.getChromosome());
+		assertEquals(0, wordGene.size());
+	}
+
+	@Test
+	public void testConstructorNullWordString() {
+		Word wordWithNullId = new Word(new WordId(null, 'N'));
+		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome, beginCiphertextIndex);
+
+		assertFalse(solutionChromosome.isDirty());
+		assertEquals(solutionChromosome.actualSize(), new Integer(0));
+		assertSame(solutionChromosome, wordGene.getChromosome());
+		assertEquals(0, wordGene.size());
+	}
+
+	@Test
+	public void testSetChromosome() {
+		WordGene wordGene = new WordGene();
+		wordGene.setChromosome(solutionChromosome);
+
+		assertSame(solutionChromosome, wordGene.getChromosome());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testSequencesUnmodifiable() {
+		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+
+		List<Sequence> sequences = wordGene.getSequences();
+		sequences.remove(0); // should throw exception
+	}
+
+	@Test
 	public void getNullPlaintextSequences() {
 		// solutionChromosome should have been initialized in the @Before method
 		assertNotNull(solutionChromosome.getPlaintextCharacters());
 	}
 
 	@Test
-	public void testConstructor() {
+	public void testAddInvalidSequence() {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
-		assertFalse(solutionChromosome.isDirty());
 
-		assertEquals(solutionChromosome.actualSize(), new Integer(0));
-
-		assertTrue(solutionChromosome == wordGene.getChromosome());
-
-		assertEquals(wordGene.size(), word.getId().getWord().length());
-	}
-
-	@Test
-	public void testCloneWordGene() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
-		assertFalse(solutionChromosome.isDirty());
-
-		WordGene clonedWordGene = wordGene.clone();
-
-		/*
-		 * Make sure the WordGenes reference different memory addresses.
-		 */
-		assertFalse(wordGene == clonedWordGene);
-
-		/*
-		 * Make sure the content of the WordGenes are equal.
-		 */
-		assertEquals(wordGene, clonedWordGene);
-
-		/*
-		 * Make sure the Chromosomes reference different memory addresses even
-		 * though that Object is not cloned.
-		 */
-		assertFalse(wordGene.getChromosome() == clonedWordGene.getChromosome());
-
-		/*
-		 * Make sure the Sequences reference different memory addresses.
-		 */
-		for (int i = 0; i < wordGene.size(); i++) {
-			assertFalse(wordGene.getSequences().get(i) == clonedWordGene.getSequences().get(i));
-		}
-
-		/*
-		 * Make sure the content of the Sequences are equal.
-		 */
-		for (int i = 0; i < wordGene.size(); i++) {
-			assertEquals(wordGene.getSequences().get(i), clonedWordGene.getSequences().get(i));
-		}
-	}
-
-	@Test
-	public void testSize() {
-		Word george = new Word(new WordId("george", 'N'));
-
-		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
-
-		assertEquals(wordGene.size(), george.getId().getWord().length());
+		wordGene.addSequence(null);
 	}
 
 	@Test
@@ -150,23 +173,16 @@ public class WordGeneTest {
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());
 
-		assertTrue(solutionChromosome.getPlaintextCharacters().get(ciphertextId) == plaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), plaintextSequence);
 
-		int count = 0;
-		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
-						.getSequences().get(j));
+		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+	}
 
-				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
-						.intValue(), count);
+	@Test
+	public void testInsertInvalidSequence() {
+		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
-
-				count++;
-			}
-		}
+		wordGene.insertSequence(0, null);
 	}
 
 	@Test
@@ -200,36 +216,9 @@ public class WordGeneTest {
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());
 
-		assertTrue(solutionChromosome.getPlaintextCharacters().get(ciphertextId) == plaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), plaintextSequence);
 
-		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
-			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			/*
-			 * We don't test the ciphertextId since that should only be updated
-			 * when adding the Gene back to the SolutionChromosome.
-			 */
-
-			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
-					.getSequences().get(i));
-		}
-
-		int count = 0;
-		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
-						.getSequences().get(j));
-
-				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
-						.intValue(), count);
-
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
-				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
-						.getPlaintextCharacters().get(count).getValue());
-
-				count++;
-			}
-		}
+		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
 
 	}
 
@@ -274,32 +263,7 @@ public class WordGeneTest {
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(2)).getValue(), "l");
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(3)).getValue(), "e");
 
-		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
-			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-			/*
-			 * We don't test the ciphertextId since that should only be updated
-			 * when removing the Gene from the SolutionChromosome.
-			 */
-
-			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
-					.getSequences().get(i));
-		}
-
-		int count = 0;
-		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < gene.size(); j++) {
-				assertTrue(solutionChromosome.getPlaintextCharacters().get(count) == gene
-						.getSequences().get(j));
-
-				log.info(solutionChromosome.getPlaintextCharacters().get(count));
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
-						.intValue(), count);
-
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
-
-				count++;
-			}
-		}
+		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	@Test
@@ -343,16 +307,106 @@ public class WordGeneTest {
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());
 
-		assertTrue(solutionChromosome.getPlaintextCharacters().get(ciphertextId) == plaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), plaintextSequence);
 
+		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+	}
+
+	/**
+	 * Reusable method for validating Lists of Sequnces by looping through the
+	 * List of Sequences at the Chromosome level and also by individually
+	 * looping through the Genes.
+	 * 
+	 * @param solutionChromosome
+	 *            the SolutionChromosome to validate
+	 * @param wordGene
+	 *            the WordGene to validate
+	 */
+	private void validateByLoopThroughSequencesAndGenes(SolutionChromosome solutionChromosome,
+			WordGene wordGene) {
+		// Validate by looping through the Sequences
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
 			log.info(solutionChromosome.getPlaintextCharacters().get(i));
+
+			assertSame(solutionChromosome.getPlaintextCharacters().get(i), wordGene.getSequences()
+					.get(i));
+
 			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getSequenceId()
 					.intValue(), i);
-
-			assertTrue(solutionChromosome.getPlaintextCharacters().get(i) == wordGene
-					.getSequences().get(i));
 		}
+
+		// Validate by looping through the Genes
+		int count = 0;
+		for (Gene gene : solutionChromosome.getGenes()) {
+			for (int j = 0; j < gene.size(); j++) {
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), gene
+						.getSequences().get(j));
+
+				log.info(solutionChromosome.getPlaintextCharacters().get(count));
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
+						.intValue(), count);
+
+				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
+						.getPlaintextCharacters().get(count).getValue());
+
+				count++;
+			}
+		}
+	}
+
+	@Test
+	public void testCloneWordGene() {
+		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		assertFalse(solutionChromosome.isDirty());
+
+		WordGene clonedWordGene = wordGene.clone();
+
+		/*
+		 * Make sure the WordGenes reference different memory addresses.
+		 */
+		assertNotSame(wordGene, clonedWordGene);
+
+		/*
+		 * Make sure the content of the WordGenes are equal.
+		 */
+		assertEquals(wordGene, clonedWordGene);
+
+		/*
+		 * Make sure the Chromosomes reference different memory addresses even
+		 * though that Object is not cloned.
+		 */
+		assertNotSame(wordGene.getChromosome(), clonedWordGene.getChromosome());
+
+		/*
+		 * Make sure the Sequences reference different memory addresses.
+		 */
+		for (int i = 0; i < wordGene.size(); i++) {
+			assertNotSame(wordGene.getSequences().get(i), clonedWordGene.getSequences().get(i));
+		}
+
+		/*
+		 * Make sure the content of the Sequences are equal.
+		 */
+		for (int i = 0; i < wordGene.size(); i++) {
+			assertEquals(wordGene.getSequences().get(i), clonedWordGene.getSequences().get(i));
+		}
+	}
+
+	@Test
+	public void testSize() {
+		Word george = new Word(new WordId("george", 'N'));
+		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
+
+		assertEquals(6, wordGene.size());
+	}
+
+	@Test
+	public void testGetWordString() {
+		Word george = new Word(new WordId("george", 'N'));
+		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
+
+		assertEquals("george", wordGene.getWordString());
 	}
 
 	@Test
@@ -363,5 +417,38 @@ public class WordGeneTest {
 		((PlaintextSequence) wordGeneToTest.getSequences().get(2)).setHasMatch(true);
 
 		assertEquals(2, wordGeneToTest.countMatches());
+	}
+
+	@Test
+	public void testEquals() {
+		PlaintextSequence sequence1 = new PlaintextSequence(0, "a", null);
+		PlaintextSequence sequence2 = new PlaintextSequence(1, "b", null);
+		PlaintextSequence sequence3 = new PlaintextSequence(2, "c", null);
+
+		WordGene base = new WordGene();
+		base.setChromosome(solutionChromosome);
+		base.addSequence(sequence1.clone());
+		base.addSequence(sequence2.clone());
+		base.addSequence(sequence3.clone());
+
+		WordGene wordGeneEqualToBase = new WordGene();
+		wordGeneEqualToBase.setChromosome(solutionChromosome);
+		wordGeneEqualToBase.addSequence(sequence1.clone());
+		wordGeneEqualToBase.addSequence(sequence2.clone());
+		wordGeneEqualToBase.addSequence(sequence3.clone());
+
+		assertEquals(wordGeneEqualToBase, base);
+
+		WordGene wordGeneWithDifferentSequences = new WordGene();
+		wordGeneWithDifferentSequences.setChromosome(solutionChromosome);
+		wordGeneWithDifferentSequences.addSequence(sequence3.clone());
+		wordGeneWithDifferentSequences.addSequence(sequence2.clone());
+		wordGeneWithDifferentSequences.addSequence(sequence1.clone());
+
+		assertFalse(wordGeneWithDifferentSequences.equals(base));
+
+		WordGene wordGeneWithNullPropertiesA = new WordGene();
+		WordGene wordGeneWithNullPropertiesB = new WordGene();
+		assertEquals(wordGeneWithNullPropertiesA, wordGeneWithNullPropertiesB);
 	}
 }
