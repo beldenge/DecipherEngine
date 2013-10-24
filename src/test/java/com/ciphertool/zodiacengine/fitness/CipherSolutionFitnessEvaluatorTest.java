@@ -213,8 +213,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 	@Before
 	public void resetDirtiness() {
-		knownSolution.setNeedsEvaluation(true);
-		assertTrue(knownSolution.isDirty());
+		knownSolution.setEvaluationNeeded(true);
+		assertTrue(knownSolution.isEvaluationNeeded());
 	}
 
 	@Test
@@ -222,9 +222,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionFitnessEvaluator Fitness: " + fitness);
@@ -237,9 +237,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionMultipleFitnessEvaluator fitnessEvaluator = new CipherSolutionMultipleFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionMultipleFitnessEvaluator Fitness: " + fitness);
@@ -252,9 +252,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionTruncatedFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionTruncatedFitnessEvaluator Fitness: " + fitness);
@@ -267,9 +267,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionKnownSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionKnownSolutionFitnessEvaluator Fitness: " + fitness);
@@ -286,9 +286,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyFitnessEvaluator Fitness: " + fitness);
@@ -300,9 +300,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyTruncatedFitnessEvaluator Fitness: " + fitness);
@@ -315,9 +315,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 		fitnessEvaluator.setAverageWordLength(averageWordLength);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionFrequencyLengthFitnessEvaluator Fitness: " + fitness);
@@ -328,9 +328,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionMatchDistanceFitnessEvaluator fitnessEvaluator = new CipherSolutionMatchDistanceFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionMatchDistanceFitnessEvaluator Fitness: " + fitness);
@@ -341,9 +341,9 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		CipherSolutionUniqueWordFitnessEvaluator fitnessEvaluator = new CipherSolutionUniqueWordFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
-		assertTrue(knownSolution.isDirty());
+		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertFalse(knownSolution.isDirty());
+		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
 		log.info("CipherSolutionUniqueWordFitnessEvaluator Fitness: " + fitness);

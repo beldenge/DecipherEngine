@@ -100,9 +100,29 @@ public class WordGene implements Gene {
 		this.sequences = new ArrayList<Sequence>();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.ciphertool.genetics.entities.Gene#addSequence(com.ciphertool.genetics
+	 * .entities.Sequence)
+	 * 
+	 * Simple pass-through method allowing aspect orientation.
+	 */
 	@Override
 	@Dirty
 	public void addSequence(Sequence sequence) {
+		doAddSequence(sequence);
+	}
+
+	/**
+	 * Add a Sequence to this Gene. This allows other methods within this class
+	 * to bypass aspect orientation when adding sequences.
+	 * 
+	 * @param sequence
+	 *            the Sequence to add
+	 */
+	protected void doAddSequence(Sequence sequence) {
 		if (sequence == null) {
 			log.warn("Attempted to add a Sequence to WordGene, but the supplied Sequence was null.  Cannot continue. "
 					+ this);
@@ -210,6 +230,7 @@ public class WordGene implements Gene {
 	 * com.ciphertool.zodiacengine.genetic.Sequence)
 	 */
 	@Override
+	@Dirty
 	public void replaceSequence(int index, Sequence newSequence) {
 		if (newSequence == null) {
 			log.warn("Attempted to replace a Sequence from WordGene, but the supplied Sequence was null.  Cannot continue. "
@@ -237,18 +258,18 @@ public class WordGene implements Gene {
 
 		/*
 		 * The Chromosome should be set at a higher level, so we just set it to
-		 * a dummy Chromosome which should be overwritten.
+		 * null which should be overwritten.
 		 */
-		copyGene.chromosome = new SolutionChromosome();
+		copyGene.chromosome = null;
 
 		Sequence clonedSequence = null;
 
-		copyGene.resetSequences();
+		copyGene.sequences = new ArrayList<Sequence>();
 
 		for (Sequence sequenceToClone : this.sequences) {
 			clonedSequence = sequenceToClone.clone();
 
-			copyGene.addSequence(clonedSequence);
+			copyGene.doAddSequence(clonedSequence);
 
 			/*
 			 * We do NOT want to set the SolutionChromosome for the

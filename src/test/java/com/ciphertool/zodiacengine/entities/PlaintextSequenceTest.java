@@ -27,6 +27,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigInteger;
+
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +45,7 @@ public class PlaintextSequenceTest {
 	@Before
 	public void resetSolutionChromosome() {
 		Cipher cipher = new Cipher();
+		cipher.setId(new BigInteger("123"));
 		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, 0, 0);
 	}
 
@@ -89,11 +92,11 @@ public class PlaintextSequenceTest {
 		geneToSet.setChromosome(solutionChromosome);
 		plaintextSequence.setGene(geneToSet);
 
-		solutionChromosome.setNeedsEvaluation(false);
+		solutionChromosome.setEvaluationNeeded(false);
 
 		plaintextSequence.setValue(valueToSet);
 
-		assertTrue(solutionChromosome.isNeedsEvaluation());
+		assertTrue(solutionChromosome.isEvaluationNeeded());
 		assertEquals(valueToSet, plaintextSequence.getValue());
 	}
 
@@ -160,11 +163,11 @@ public class PlaintextSequenceTest {
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
-		solutionChromosome.setNeedsEvaluation(false);
+		solutionChromosome.setEvaluationNeeded(false);
 
 		plaintextSequence.shiftLeft(2);
 
-		assertTrue(solutionChromosome.isNeedsEvaluation());
+		assertTrue(solutionChromosome.isEvaluationNeeded());
 		assertEquals(plaintextSequence.getSequenceId(), new Integer(3));
 	}
 
@@ -175,11 +178,11 @@ public class PlaintextSequenceTest {
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
 
-		solutionChromosome.setNeedsEvaluation(false);
+		solutionChromosome.setEvaluationNeeded(false);
 
 		plaintextSequence.shiftRight(2);
 
-		assertTrue(solutionChromosome.isNeedsEvaluation());
+		assertTrue(solutionChromosome.isEvaluationNeeded());
 		assertEquals(plaintextSequence.getSequenceId(), new Integer(7));
 	}
 }

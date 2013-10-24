@@ -222,7 +222,13 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 		List<SolutionChromosome> clonedIndividuals = new ArrayList<SolutionChromosome>();
 
 		for (Chromosome individual : population.getIndividuals()) {
-			clonedIndividuals.add((SolutionChromosome) individual.clone());
+			SolutionChromosome cloneToAdd = (SolutionChromosome) individual.clone();
+			/*
+			 * The number of children is part of the equals() method now, so we
+			 * need to increase it here in anticipation of the crossover
+			 */
+			cloneToAdd.increaseNumberOfChildren();
+			clonedIndividuals.add(cloneToAdd);
 		}
 
 		geneticAlgorithm.crossover(population.size());

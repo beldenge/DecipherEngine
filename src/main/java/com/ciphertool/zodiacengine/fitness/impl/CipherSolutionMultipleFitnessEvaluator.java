@@ -162,7 +162,7 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		solution.setAdjacentMatches(adjacentMatchCount);
 
 		double fitness = (totalUnique * UNIQUE_MATCH_MULTIPLIER) + total;
 

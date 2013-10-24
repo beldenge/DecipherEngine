@@ -201,7 +201,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		solution.setAdjacentMatches(adjacentMatchCount);
 
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {

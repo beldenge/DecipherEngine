@@ -160,7 +160,7 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		solution.setAdjacentMatches(adjacentMatchCount);
 
 		solution.setFitness((double) total);
 

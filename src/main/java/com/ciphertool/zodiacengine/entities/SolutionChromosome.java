@@ -51,11 +51,6 @@ public class SolutionChromosome implements Chromosome {
 
 	private Date createdDate;
 
-	private List<Gene> genes = new ArrayList<Gene>();
-
-	@Transient
-	protected List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
-
 	private int rows;
 
 	private int columns;
@@ -67,7 +62,7 @@ public class SolutionChromosome implements Chromosome {
 	protected int adjacentMatches;
 
 	@Transient
-	protected boolean needsEvaluation = true;
+	protected boolean evaluationNeeded = true;
 
 	@Transient
 	private Double fitness = 0.0;
@@ -77,6 +72,11 @@ public class SolutionChromosome implements Chromosome {
 
 	@Transient
 	private int numberOfChildren = 0;
+
+	private List<Gene> genes = new ArrayList<Gene>();
+
+	@Transient
+	protected List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
 
 	public SolutionChromosome() {
 	}
@@ -97,6 +97,11 @@ public class SolutionChromosome implements Chromosome {
 	 */
 	public SolutionChromosome(BigInteger cipherId, int totalMatches, int uniqueMatches,
 			int adjacentMatches, int rows, int columns) {
+		if (cipherId == null) {
+			throw new IllegalArgumentException(
+					"Cannot construct SolutionChromosome with null cipherId.");
+		}
+
 		this.cipherId = cipherId;
 		this.totalMatches = totalMatches;
 		this.uniqueMatches = uniqueMatches;
@@ -137,51 +142,6 @@ public class SolutionChromosome implements Chromosome {
 	}
 
 	/**
-	 * @return the totalMatches
-	 */
-	public int getTotalMatches() {
-		return totalMatches;
-	}
-
-	/**
-	 * @param totalMatches
-	 *            the totalMatches to set
-	 */
-	public void setTotalMatches(int totalMatches) {
-		this.totalMatches = totalMatches;
-	}
-
-	/**
-	 * @return the uniqueMatches
-	 */
-	public int getUniqueMatches() {
-		return uniqueMatches;
-	}
-
-	/**
-	 * @param uniqueMatches
-	 *            the uniqueMatches to set
-	 */
-	public void setUniqueMatches(int uniqueMatches) {
-		this.uniqueMatches = uniqueMatches;
-	}
-
-	/**
-	 * @return the adjacentMatchCount
-	 */
-	public int getAdjacentMatchCount() {
-		return adjacentMatches;
-	}
-
-	/**
-	 * @param adjacentMatchCount
-	 *            the adjacentMatchCount to set
-	 */
-	public void setAdjacentMatchCount(int adjacentMatchCount) {
-		this.adjacentMatches = adjacentMatchCount;
-	}
-
-	/**
 	 * @return the cipherId
 	 */
 	public BigInteger getCipherId() {
@@ -215,18 +175,99 @@ public class SolutionChromosome implements Chromosome {
 	}
 
 	/**
-	 * @return the needsEvaluation
+	 * Should only be used by unit tests
+	 * 
+	 * @return the rows
 	 */
-	public boolean isNeedsEvaluation() {
-		return needsEvaluation;
+	protected int getRows() {
+		return rows;
 	}
 
 	/**
-	 * @param needsEvaluation
-	 *            the needsEvaluation to set
+	 * @param rows
+	 *            the rows to set
 	 */
-	public void setNeedsEvaluation(boolean needsEvaluation) {
-		this.needsEvaluation = needsEvaluation;
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	/**
+	 * Should only be used by unit tests
+	 * 
+	 * @return the columns
+	 */
+	protected int getColumns() {
+		return columns;
+	}
+
+	/**
+	 * @param columns
+	 *            the columns to set
+	 */
+	public void setColumns(int columns) {
+		this.columns = columns;
+	}
+
+	/**
+	 * @return the totalMatches
+	 */
+	public int getTotalMatches() {
+		return totalMatches;
+	}
+
+	/**
+	 * @param totalMatches
+	 *            the totalMatches to set
+	 */
+	public void setTotalMatches(int totalMatches) {
+		this.totalMatches = totalMatches;
+	}
+
+	/**
+	 * @return the uniqueMatches
+	 */
+	public int getUniqueMatches() {
+		return uniqueMatches;
+	}
+
+	/**
+	 * @param uniqueMatches
+	 *            the uniqueMatches to set
+	 */
+	public void setUniqueMatches(int uniqueMatches) {
+		this.uniqueMatches = uniqueMatches;
+	}
+
+	/**
+	 * @return the adjacentMatches
+	 */
+	public int getAdjacentMatches() {
+		return adjacentMatches;
+	}
+
+	/**
+	 * @param adjacentMatches
+	 *            the adjacentMatches to set
+	 */
+	public void setAdjacentMatches(int adjacentMatches) {
+		this.adjacentMatches = adjacentMatches;
+	}
+
+	/**
+	 * @return the evaluationNeeded
+	 */
+	@Override
+	public boolean isEvaluationNeeded() {
+		return evaluationNeeded;
+	}
+
+	/**
+	 * @param evaluationNeeded
+	 *            the evaluationNeeded to set
+	 */
+	@Override
+	public void setEvaluationNeeded(boolean evaluationNeeded) {
+		this.evaluationNeeded = evaluationNeeded;
 	}
 
 	@Override
@@ -303,46 +344,6 @@ public class SolutionChromosome implements Chromosome {
 			 */
 			plaintextSequence.setSequenceId(beginIndex + i);
 		}
-	}
-
-	@Override
-	public Integer actualSize() {
-		return this.plaintextCharacters.size();
-	}
-
-	public Integer targetSize() {
-		return this.rows * this.columns;
-	}
-
-	@Override
-	public SolutionChromosome clone() {
-		SolutionChromosome copyChromosome = null;
-
-		try {
-			copyChromosome = (SolutionChromosome) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error(
-					"Caught CloneNotSupportedException while attempting to clone SolutionChromosome.",
-					cnse);
-		}
-
-		copyChromosome.setId(null);
-		copyChromosome.resetGenes();
-		copyChromosome.resetPlaintextCharacters();
-		copyChromosome.setAge(0);
-		copyChromosome.setNumberOfChildren(0);
-		copyChromosome.needsEvaluation = true;
-
-		Gene nextGene = null;
-		for (Gene wordGene : this.genes) {
-			nextGene = wordGene.clone();
-
-			nextGene.setChromosome(copyChromosome);
-
-			copyChromosome.addGene(nextGene);
-		}
-
-		return copyChromosome;
 	}
 
 	@Override
@@ -438,6 +439,28 @@ public class SolutionChromosome implements Chromosome {
 		return this.genes.remove(index);
 	}
 
+	/*
+	 * This should just be a combination of the remove and insert methods.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#replaceGene(int,
+	 * com.ciphertool.zodiacengine.genetic.Gene)
+	 */
+	@Override
+	@Dirty
+	public void replaceGene(int index, Gene newGene) {
+		this.removeGene(index);
+
+		this.insertGene(index, newGene);
+	}
+
+	@Override
+	@Dirty
+	public void resetGenes() {
+		this.genes = new ArrayList<Gene>();
+	}
+
 	public List<PlaintextSequence> getPlaintextCharacters() {
 		return Collections.unmodifiableList(this.plaintextCharacters);
 	}
@@ -462,76 +485,72 @@ public class SolutionChromosome implements Chromosome {
 		this.plaintextCharacters = new ArrayList<PlaintextSequence>();
 	}
 
-	/*
-	 * This should just be a combination of the remove and insert methods.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#replaceGene(int,
-	 * com.ciphertool.zodiacengine.genetic.Gene)
-	 */
 	@Override
-	@Dirty
-	public void replaceGene(int index, Gene newGene) {
-		this.removeGene(index);
+	public Integer actualSize() {
+		return this.plaintextCharacters.size();
+	}
 
-		this.insertGene(index, newGene);
+	public Integer targetSize() {
+		return this.rows * this.columns;
 	}
 
 	@Override
-	@Dirty
-	public void resetGenes() {
-		this.genes = new ArrayList<Gene>();
-	}
+	public SolutionChromosome clone() {
+		SolutionChromosome copyChromosome = null;
 
-	@Override
-	public boolean isDirty() {
-		return needsEvaluation;
-	}
+		try {
+			copyChromosome = (SolutionChromosome) super.clone();
+		} catch (CloneNotSupportedException cnse) {
+			log.error(
+					"Caught CloneNotSupportedException while attempting to clone SolutionChromosome.",
+					cnse);
+		}
 
-	@Override
-	public void setDirty(boolean isDirty) {
-		this.needsEvaluation = isDirty;
-	}
+		copyChromosome.setId(null);
+		copyChromosome.resetGenes();
+		copyChromosome.resetPlaintextCharacters();
+		copyChromosome.setAge(0);
+		copyChromosome.setNumberOfChildren(0);
+		copyChromosome.evaluationNeeded = true;
 
-	/**
-	 * @param rows
-	 *            the rows to set
-	 */
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
+		Gene nextGene = null;
+		for (Gene wordGene : this.genes) {
+			nextGene = wordGene.clone();
 
-	/**
-	 * @param columns
-	 *            the columns to set
-	 */
-	public void setColumns(int columns) {
-		this.columns = columns;
+			nextGene.setChromosome(copyChromosome);
+
+			copyChromosome.addGene(nextGene);
+		}
+
+		return copyChromosome;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#hashCode()
-	 * 
-	 * We must not use the Plaintext characters else we may run into a stack
-	 * overflow. It shouldn't be necessary anyway since the id makes the
-	 * solution unique.
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + adjacentMatches;
+		result = prime * result + age;
 		result = prime * result + ((cipherId == null) ? 0 : cipherId.hashCode());
-		result = prime * result + id.hashCode();
-		result = prime * result + solutionSetId.hashCode();
-		result = prime * result + totalMatches;
-		result = prime * result + uniqueMatches;
+		result = prime * result + ((createdDate == null) ? 0 : createdDate.hashCode());
+		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + numberOfChildren;
+		result = prime * result
+				+ ((plaintextCharacters == null) ? 0 : plaintextCharacters.hashCode());
+		result = prime * result + ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -544,7 +563,9 @@ public class SolutionChromosome implements Chromosome {
 			return false;
 		}
 		SolutionChromosome other = (SolutionChromosome) obj;
-
+		if (age != other.age) {
+			return false;
+		}
 		if (cipherId == null) {
 			if (other.cipherId != null) {
 				return false;
@@ -552,15 +573,20 @@ public class SolutionChromosome implements Chromosome {
 		} else if (!cipherId.equals(other.cipherId)) {
 			return false;
 		}
-
-		if (solutionSetId == null) {
-			if (other.solutionSetId != null) {
+		if (createdDate == null) {
+			if (other.createdDate != null) {
 				return false;
 			}
-		} else if (!solutionSetId.equals(other.solutionSetId)) {
+		} else if (!createdDate.equals(other.createdDate)) {
 			return false;
 		}
-
+		if (genes == null) {
+			if (other.genes != null) {
+				return false;
+			}
+		} else if (!genes.equals(other.genes)) {
+			return false;
+		}
 		if (id == null) {
 			if (other.id != null) {
 				return false;
@@ -568,25 +594,23 @@ public class SolutionChromosome implements Chromosome {
 		} else if (!id.equals(other.id)) {
 			return false;
 		}
-
-		if (this.plaintextCharacters == null) {
+		if (numberOfChildren != other.numberOfChildren) {
+			return false;
+		}
+		if (plaintextCharacters == null) {
 			if (other.plaintextCharacters != null) {
 				return false;
 			}
-		} else if (other.plaintextCharacters == null) {
+		} else if (!plaintextCharacters.equals(other.plaintextCharacters)) {
 			return false;
-		} else {
-			if (this.plaintextCharacters.size() != other.plaintextCharacters.size()) {
+		}
+		if (solutionSetId == null) {
+			if (other.solutionSetId != null) {
 				return false;
 			}
-
-			for (int i = 0; i < this.plaintextCharacters.size(); i++) {
-				if (!this.plaintextCharacters.get(i).equals(other.plaintextCharacters.get(i))) {
-					return false;
-				}
-			}
+		} else if (!solutionSetId.equals(other.solutionSetId)) {
+			return false;
 		}
-
 		return true;
 	}
 
@@ -604,7 +628,8 @@ public class SolutionChromosome implements Chromosome {
 		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness="
 				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
 				+ numberOfChildren + ", totalMatches=" + totalMatches + ", uniqueMatches="
-				+ uniqueMatches + ", adjacentMatches=" + adjacentMatches + "]\n");
+				+ uniqueMatches + ", adjacentMatches=" + adjacentMatches + ", evaluationNeeded="
+				+ evaluationNeeded + "]\n");
 
 		if (this.cipherId != null) {
 			PlaintextSequence nextPlaintext = null;

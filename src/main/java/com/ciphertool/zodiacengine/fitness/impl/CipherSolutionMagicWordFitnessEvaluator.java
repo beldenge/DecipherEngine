@@ -163,7 +163,7 @@ public class CipherSolutionMagicWordFitnessEvaluator extends AbstractSolutionTru
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		solution.setAdjacentMatches(adjacentMatchCount);
 
 		solution.setFitness((double) total);
 

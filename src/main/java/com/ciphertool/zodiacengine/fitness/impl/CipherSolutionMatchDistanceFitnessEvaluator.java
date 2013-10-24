@@ -163,7 +163,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 			}
 		}
 
-		solution.setAdjacentMatchCount(adjacentMatchCount);
+		solution.setAdjacentMatches(adjacentMatchCount);
 
 		/*
 		 * We don't care to evaluate past the last row since it is likely to be
