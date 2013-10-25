@@ -29,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,9 +36,6 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class PlaintextSequenceTest {
-	@SuppressWarnings("unused")
-	private static Logger log = Logger.getLogger(PlaintextSequenceTest.class);
-
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
 	@Before

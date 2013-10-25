@@ -239,6 +239,15 @@ public class WordGene implements Gene {
 			return;
 		}
 
+		if (this.sequences == null || this.sequences.size() <= index) {
+			log.warn("Attempted to replace a Sequence from WordGene at index " + index
+					+ ", but the List of Sequences has max index of "
+					+ (this.sequences == null ? 0 : this.sequences.size()) + ".  Cannot continue."
+					+ this);
+
+			return;
+		}
+
 		newSequence.setGene(this);
 
 		this.removeSequence(this.sequences.get(index));

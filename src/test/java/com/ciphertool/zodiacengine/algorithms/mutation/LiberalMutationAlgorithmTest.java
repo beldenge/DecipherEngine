@@ -85,8 +85,10 @@ public class LiberalMutationAlgorithmTest extends MutationAlgorithmTestBase {
 		/*
 		 * At least one gene should be changed.
 		 */
-		assertFalse(wordGene1.getWordString().equals(word1.getId().getWord())
-				&& wordGene2.getWordString().equals(word2.getId().getWord()));
+		assertFalse(((WordGene) solutionChromosome.getGenes().get(0)).getWordString().equals(
+				word1.getId().getWord())
+				&& ((WordGene) solutionChromosome.getGenes().get(1)).getWordString().equals(
+						word2.getId().getWord()));
 
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
 				.getPlaintextCharacters().size());

@@ -29,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,8 +39,6 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class WordGeneTest {
-	private static Logger log = Logger.getLogger(WordGeneTest.class);
-
 	private static Word word = new Word(new WordId("smile", 'N'));
 	private static int beginCiphertextIndex = 0;
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
@@ -178,7 +175,7 @@ public class WordGeneTest {
 		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
 				newPlaintextSequence);
 
-		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	@Test
@@ -224,7 +221,7 @@ public class WordGeneTest {
 		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
 				newPlaintextSequence);
 
-		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	@Test
@@ -269,8 +266,7 @@ public class WordGeneTest {
 		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
 				newPlaintextSequence);
 
-		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
-
+		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	@Test
@@ -314,7 +310,7 @@ public class WordGeneTest {
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(2)).getValue(), "l");
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(3)).getValue(), "e");
 
-		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	@Test
@@ -322,6 +318,16 @@ public class WordGeneTest {
 		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
 
 		wordGene.replaceSequence(0, null);
+	}
+
+	@Test
+	public void testReplaceSequenceOutOfBounds() {
+		WordGene wordGeneOriginal = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGeneCloneToCompare = wordGeneOriginal.clone();
+
+		wordGeneOriginal.replaceSequence(5, null);
+
+		assertEquals(wordGeneCloneToCompare, wordGeneOriginal);
 	}
 
 	@Test
@@ -362,7 +368,7 @@ public class WordGeneTest {
 		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
 				newPlaintextSequence);
 
-		validateByLoopThroughSequencesAndGenes(solutionChromosome, wordGene);
+		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
 
 	/**
@@ -375,12 +381,9 @@ public class WordGeneTest {
 	 * @param wordGene
 	 *            the WordGene to validate
 	 */
-	private void validateByLoopThroughSequencesAndGenes(SolutionChromosome solutionChromosome,
-			WordGene wordGene) {
+	private void validateSequencesAndGenes(SolutionChromosome solutionChromosome, WordGene wordGene) {
 		// Validate by looping through the Sequences
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
-			log.info(solutionChromosome.getPlaintextCharacters().get(i));
-
 			assertSame(solutionChromosome.getPlaintextCharacters().get(i), wordGene.getSequences()
 					.get(i));
 
@@ -395,7 +398,6 @@ public class WordGeneTest {
 				assertSame(solutionChromosome.getPlaintextCharacters().get(count), gene
 						.getSequences().get(j));
 
-				log.info(solutionChromosome.getPlaintextCharacters().get(count));
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
 						.intValue(), count);
 
@@ -465,6 +467,13 @@ public class WordGeneTest {
 		 */
 		for (int i = 0; i < wordGene.size(); i++) {
 			assertEquals(wordGene.getSequences().get(i), clonedWordGene.getSequences().get(i));
+		}
+
+		/*
+		 * Make sure the Sequences all reference the cloned Gene.
+		 */
+		for (int i = 0; i < wordGene.size(); i++) {
+			assertSame(clonedWordGene, clonedWordGene.getSequences().get(i).getGene());
 		}
 	}
 
