@@ -50,12 +50,7 @@
 
 	<bean class="com.ciphertool.zodiacengine.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
-		<property name="fitnessEvaluatorDefault" ref="defaultFitnessEvaluator" />
-		<property name="crossoverAlgorithmDefault" ref="defaultCrossoverAlgorithm" />
-		<property name="mutationAlgorithmDefault" ref="defaultMutationAlgorithm" />
-		<property name="selectionAlgorithmDefault" ref="defaultSelectionAlgorithm" />
 		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
-		<property name="selectorDefault" ref="defaultSelector" />
 	</bean>
 
 	<bean

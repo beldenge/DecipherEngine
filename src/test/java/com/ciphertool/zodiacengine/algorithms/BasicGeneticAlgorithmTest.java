@@ -99,7 +99,7 @@ public class BasicGeneticAlgorithmTest extends GeneticAlgorithmTestBase {
 				POPULATION_SIZE, LIFESPAN, MAX_GENERATIONS, SURVIVAL_RATE, MUTATION_RATE,
 				MAX_MUTATIONS_PER_INDIVIDUAL, CROSSOVER_RATE, MUTATE_DURING_CROSSOVER,
 				fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
-				selector);
+				selector, null, false);
 
 		population.setBreeder(solutionBreederMock);
 		population.setSelector(selector);

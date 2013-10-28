@@ -24,6 +24,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -38,7 +39,6 @@ import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.util.fitness.AscendingFitnessComparator;
-import com.ciphertool.zodiacengine.SolutionBreeder;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
@@ -83,6 +83,8 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@Before
 	public void repopulate() {
+		population.clearIndividuals();
+		reset(solutionBreederMock);
 		when(solutionBreederMock.breed()).thenReturn(knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
 				knownSolution.clone(), knownSolution.clone(), knownSolution.clone(),
@@ -98,11 +100,11 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 	@Test
 	public void testPopulateIndividuals() {
 		population.clearIndividuals();
-		assertEquals(population.size(), 0);
+		assertEquals(0, population.size());
 
 		population.breed(POPULATION_SIZE);
 
-		assertEquals(population.size(), POPULATION_SIZE);
+		assertEquals(POPULATION_SIZE, population.size());
 
 		for (Chromosome individual : population.getIndividuals()) {
 			assertEquals(individual.actualSize().intValue(), ((SolutionChromosome) individual)
@@ -123,7 +125,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@Test
 	public void testIncreaseAge() {
-		assertEquals(population.size(), POPULATION_SIZE);
+		assertEquals(POPULATION_SIZE, population.size());
 
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			population.getIndividuals().get(i).setAge(i);
@@ -135,22 +137,23 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		 * The way we test this makes it work out so that the resulting
 		 * population size is equal to LIFESPAN. That's not typical behavior.
 		 */
-		assertEquals(population.size(), LIFESPAN);
+		assertEquals(LIFESPAN, population.size());
 
 		// Increase age again. One more Chromosome should age off.
 		population.increaseAge();
 
-		assertEquals(population.size(), LIFESPAN - 1);
+		assertEquals(LIFESPAN - 1, population.size());
 
 		for (int i = 0; i < population.size(); i++) {
 			assertEquals(population.getIndividuals().get(i).getAge(), i + 2);
 		}
+
 	}
 
 	@Test
 	public void testRemoveIndex() {
 		population.addIndividual(dummySolution);
-		assertEquals(population.size(), POPULATION_SIZE + 1);
+		assertEquals(POPULATION_SIZE + 1, population.size());
 
 		boolean foundDummy = false;
 		for (Chromosome individual : population.getIndividuals()) {
@@ -164,7 +167,7 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		Double originalTotalFitness = population.getTotalFitness();
 
 		population.removeIndividual(POPULATION_SIZE);
-		assertEquals(population.size(), POPULATION_SIZE);
+		assertEquals(POPULATION_SIZE, population.size());
 
 		for (Chromosome individual : population.getIndividuals()) {
 			assertNotSame(individual, dummySolution);
@@ -177,13 +180,13 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 	@Test
 	public void testAdd() {
-		assertEquals(population.size(), POPULATION_SIZE);
+		assertEquals(POPULATION_SIZE, population.size());
 		Double originalTotalFitness = population.getTotalFitness();
 
 		Chromosome individualToAdd = knownSolution.clone();
 		population.addIndividual(individualToAdd);
 
-		assertEquals(population.size(), POPULATION_SIZE + 1);
+		assertEquals(POPULATION_SIZE + 1, population.size());
 		assertTrue(population.getTotalFitness() > originalTotalFitness);
 		assertEquals(population.getTotalFitness(), (Double) (originalTotalFitness + individualToAdd
 				.getFitness()));
@@ -201,8 +204,8 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 
 		population.clearIndividuals();
 
-		assertEquals(population.getTotalFitness(), new Double(0.0));
-		assertEquals(population.size(), 0);
+		assertEquals(new Double(0.0), population.getTotalFitness());
+		assertEquals(0, population.size());
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
@@ -245,10 +248,10 @@ public class PopulationTest extends GeneticAlgorithmTestBase {
 		assertTrue(originalTotalFitness > 0.0);
 
 		setObject(population, "totalFitness", new Double(0.0));
-		assertEquals(population.getTotalFitness(), new Double(0.0));
+		assertEquals(new Double(0.0), population.getTotalFitness());
 
 		population.evaluateFitness(null);
 
-		assertEquals(population.getTotalFitness(), originalTotalFitness);
+		assertEquals(originalTotalFitness, population.getTotalFitness());
 	}
 }

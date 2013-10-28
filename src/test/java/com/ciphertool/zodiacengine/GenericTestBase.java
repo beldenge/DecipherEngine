@@ -34,6 +34,7 @@ public class GenericTestBase {
 
 	static {
 		zodiac408.setId(BigInteger.ZERO);
+		zodiac408.setHasKnownSolution(true);
 
 		zodiac408.addCiphertextCharacter(new Ciphertext(0, "tri"));
 		zodiac408.addCiphertextCharacter(new Ciphertext(1, "lrbox"));

@@ -44,13 +44,7 @@ import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;
 public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationContextAware {
 	private Logger log = Logger.getLogger(getClass());
 
-	private FitnessEvaluator fitnessEvaluatorDefault;
-	private CrossoverAlgorithm crossoverAlgorithmDefault;
-	private MutationAlgorithm mutationAlgorithmDefault;
-	private SelectionAlgorithm selectionAlgorithmDefault;
-	private Selector selectorDefault;
 	private CipherDao cipherDao;
-	private String cipherDefault;
 	private FitnessEvaluator knownSolutionFitnessEvaluator;
 
 	private ApplicationContext context;
@@ -102,33 +96,33 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Boolean compareToKnownSolution = getCompareToKnown(parameters);
 		log.info("Compare to known solution: " + compareToKnownSolution);
 
-		if (!cipher.hasKnownSolution() && compareToKnownSolution) {
-			throw new IllegalStateException(
-					"Cannot compare to known solution because this cipher does not have a known solution.  "
-							+ cipher);
+		if (compareToKnownSolution) {
+			if (!cipher.hasKnownSolution()) {
+				throw new IllegalStateException(
+						"Cannot compare to known solution because this cipher does not have a known solution.  "
+								+ cipher);
+			}
+
+			if (knownSolutionFitnessEvaluator == null) {
+				throw new IllegalStateException(
+						"Cannot compare to known solution because no respective FitnessEvaluator implementation has been set.  "
+								+ cipher);
+			}
 		}
 
-		GeneticAlgorithmStrategy geneticAlgorithmStrategy;
-
-		if (knownSolutionFitnessEvaluator != null) {
-			geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher, populationSize,
-					lifespan, numGenerations, survivalRate, mutationRate,
-					maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover,
-					fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
-					selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
-		} else {
-			geneticAlgorithmStrategy = new GeneticAlgorithmStrategy(cipher, populationSize,
-					lifespan, numGenerations, survivalRate, mutationRate,
-					maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover,
-					fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm,
-					selector);
-		}
-
-		return geneticAlgorithmStrategy;
+		return new GeneticAlgorithmStrategy(cipher, populationSize, lifespan, numGenerations,
+				survivalRate, mutationRate, maxMutationsPerIndividual, crossoverRate,
+				mutateDuringCrossover, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
+				selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
 	}
 
-	private Cipher getCipher(Map<String, Object> parameters) {
+	protected Cipher getCipher(Map<String, Object> parameters) {
 		Object cipherName = parameters.get(ParameterConstants.CIPHER_NAME);
+
+		if (cipherName == null) {
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.CIPHER_NAME
+					+ " cannot be null.");
+		}
 
 		if (!(cipherName instanceof String)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.CIPHER_NAME
@@ -138,23 +132,19 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Cipher cipher = cipherDao.findByCipherName((String) cipherName);
 
 		if (cipher == null) {
-			cipher = cipherDao.findByCipherName(cipherDefault);
-		}
-
-		if (cipher == null) {
 			throw new IllegalStateException("Unable to find the cipher with name: "
-					+ (String) cipherName + ", nor with default name: " + cipherDefault
-					+ ".  Unable to build GeneticAlgorithmStrategy.");
+					+ (String) cipherName + ".  Unable to build GeneticAlgorithmStrategy.");
 		}
 
 		return cipher;
 	}
 
-	private FitnessEvaluator getFitnessEvaluator(Map<String, Object> parameters) {
+	protected FitnessEvaluator getFitnessEvaluator(Map<String, Object> parameters) {
 		Object fitnessEvaluatorName = parameters.get(ParameterConstants.FITNESS_EVALUATOR);
 
 		if (fitnessEvaluatorName == null) {
-			return fitnessEvaluatorDefault;
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.FITNESS_EVALUATOR + " cannot be null.");
 		}
 
 		if (!(fitnessEvaluatorName instanceof String)) {
@@ -162,23 +152,18 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 					+ ParameterConstants.FITNESS_EVALUATOR + " must be of type String.");
 		}
 
-		FitnessEvaluator fitnessEvaluator = null;
-
-		try {
-			fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType.valueOf(
-					(String) fitnessEvaluatorName).getType());
-		} catch (IllegalArgumentException iae) {
-			fitnessEvaluator = fitnessEvaluatorDefault;
-		}
+		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType
+				.valueOf((String) fitnessEvaluatorName).getType());
 
 		return fitnessEvaluator;
 	}
 
-	private CrossoverAlgorithm getCrossoverAlgorithm(Map<String, Object> parameters) {
+	protected CrossoverAlgorithm getCrossoverAlgorithm(Map<String, Object> parameters) {
 		Object crossoverAlgorithmName = parameters.get(ParameterConstants.CROSSOVER_ALGORITHM);
 
 		if (crossoverAlgorithmName == null) {
-			return crossoverAlgorithmDefault;
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.CROSSOVER_ALGORITHM + " cannot be null.");
 		}
 
 		if (!(crossoverAlgorithmName instanceof String)) {
@@ -186,23 +171,18 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 					+ ParameterConstants.CROSSOVER_ALGORITHM + " must be of type String.");
 		}
 
-		CrossoverAlgorithm crossoverAlgorithm = null;
-
-		try {
-			crossoverAlgorithm = (CrossoverAlgorithm) context.getBean(CrossoverAlgorithmType
-					.valueOf((String) crossoverAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			crossoverAlgorithm = crossoverAlgorithmDefault;
-		}
+		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context
+				.getBean(CrossoverAlgorithmType.valueOf((String) crossoverAlgorithmName).getType());
 
 		return crossoverAlgorithm;
 	}
 
-	private MutationAlgorithm getMutationAlgorithm(Map<String, Object> parameters) {
+	protected MutationAlgorithm getMutationAlgorithm(Map<String, Object> parameters) {
 		Object mutationAlgorithmName = parameters.get(ParameterConstants.MUTATION_ALGORITHM);
 
 		if (mutationAlgorithmName == null) {
-			return mutationAlgorithmDefault;
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.MUTATION_ALGORITHM + " cannot be null.");
 		}
 
 		if (!(mutationAlgorithmName instanceof String)) {
@@ -210,23 +190,18 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 					+ ParameterConstants.MUTATION_ALGORITHM + " must be of type String.");
 		}
 
-		MutationAlgorithm mutationAlgorithm = null;
-
-		try {
-			mutationAlgorithm = (MutationAlgorithm) context.getBean(MutationAlgorithmType.valueOf(
-					(String) mutationAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			mutationAlgorithm = mutationAlgorithmDefault;
-		}
+		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
+				.getBean(MutationAlgorithmType.valueOf((String) mutationAlgorithmName).getType());
 
 		return mutationAlgorithm;
 	}
 
-	private SelectionAlgorithm getSelectionAlgorithm(Map<String, Object> parameters) {
+	protected SelectionAlgorithm getSelectionAlgorithm(Map<String, Object> parameters) {
 		Object selectionAlgorithmName = parameters.get(ParameterConstants.SELECTION_ALGORITHM);
 
 		if (selectionAlgorithmName == null) {
-			return selectionAlgorithmDefault;
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.SELECTION_ALGORITHM + " cannot be null.");
 		}
 
 		if (!(selectionAlgorithmName instanceof String)) {
@@ -234,23 +209,18 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 					+ ParameterConstants.SELECTION_ALGORITHM + " must be of type String.");
 		}
 
-		SelectionAlgorithm selectionAlgorithm = null;
-
-		try {
-			selectionAlgorithm = (SelectionAlgorithm) context.getBean(SelectionAlgorithmType
-					.valueOf((String) selectionAlgorithmName).getType());
-		} catch (IllegalArgumentException iae) {
-			selectionAlgorithm = selectionAlgorithmDefault;
-		}
+		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context
+				.getBean(SelectionAlgorithmType.valueOf((String) selectionAlgorithmName).getType());
 
 		return selectionAlgorithm;
 	}
 
-	private Selector getSelector(Map<String, Object> parameters) {
+	protected Selector getSelector(Map<String, Object> parameters) {
 		Object selectorName = parameters.get(ParameterConstants.SELECTOR_METHOD);
 
 		if (selectorName == null) {
-			return selectorDefault;
+			throw new IllegalArgumentException("The parameter "
+					+ ParameterConstants.SELECTOR_METHOD + " cannot be null.");
 		}
 
 		if (!(selectorName instanceof String)) {
@@ -258,19 +228,13 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 					+ ParameterConstants.SELECTOR_METHOD + " must be of type String.");
 		}
 
-		Selector selector = null;
-
-		try {
-			selector = (Selector) context.getBean(SelectorType.valueOf((String) selectorName)
-					.getType());
-		} catch (IllegalArgumentException iae) {
-			selector = selectorDefault;
-		}
+		Selector selector = (Selector) context.getBean(SelectorType.valueOf((String) selectorName)
+				.getType());
 
 		return selector;
 	}
 
-	private Integer getPopulationSize(Map<String, Object> parameters) {
+	protected Integer getPopulationSize(Map<String, Object> parameters) {
 		Object populationSize = parameters.get(ParameterConstants.POPULATION_SIZE);
 
 		if (populationSize == null) {
@@ -286,7 +250,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Integer) populationSize;
 	}
 
-	private Integer getLifespan(Map<String, Object> parameters) {
+	protected Integer getLifespan(Map<String, Object> parameters) {
 		Object lifespan = parameters.get(ParameterConstants.LIFESPAN);
 
 		if (lifespan == null) {
@@ -302,7 +266,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Integer) lifespan;
 	}
 
-	private Integer getNumGenerations(Map<String, Object> parameters) {
+	protected Integer getNumGenerations(Map<String, Object> parameters) {
 		Object numGenerations = parameters.get(ParameterConstants.NUMBER_OF_GENERATIONS);
 
 		if (numGenerations == null) {
@@ -318,7 +282,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Integer) numGenerations;
 	}
 
-	private Double getSurvivalRate(Map<String, Object> parameters) {
+	protected Double getSurvivalRate(Map<String, Object> parameters) {
 		Object survivalRate = parameters.get(ParameterConstants.SURVIVAL_RATE);
 
 		if (survivalRate == null) {
@@ -334,7 +298,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Double) survivalRate;
 	}
 
-	private Double getMutationRate(Map<String, Object> parameters) {
+	protected Double getMutationRate(Map<String, Object> parameters) {
 		Object mutationRate = parameters.get(ParameterConstants.MUTATION_RATE);
 
 		if (mutationRate == null) {
@@ -350,7 +314,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Double) mutationRate;
 	}
 
-	private Integer getMaxMutationsPerIndividual(Map<String, Object> parameters) {
+	protected Integer getMaxMutationsPerIndividual(Map<String, Object> parameters) {
 		Object maxMutationsPerIndividual = parameters
 				.get(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL);
 
@@ -367,7 +331,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Integer) maxMutationsPerIndividual;
 	}
 
-	private Double getCrossoverRate(Map<String, Object> parameters) {
+	protected Double getCrossoverRate(Map<String, Object> parameters) {
 		Object crossoverRate = parameters.get(ParameterConstants.CROSSOVER_RATE);
 
 		if (crossoverRate == null) {
@@ -383,7 +347,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Double) crossoverRate;
 	}
 
-	private Boolean getMutateDuringCrossover(Map<String, Object> parameters) {
+	protected Boolean getMutateDuringCrossover(Map<String, Object> parameters) {
 		Object mutateDuringCrossover = parameters.get(ParameterConstants.MUTATE_DURING_CROSSOVER);
 
 		if (mutateDuringCrossover == null) {
@@ -399,7 +363,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return (Boolean) mutateDuringCrossover;
 	}
 
-	private Boolean getCompareToKnown(Map<String, Object> parameters) {
+	protected Boolean getCompareToKnown(Map<String, Object> parameters) {
 		Object compareToKnown = parameters.get(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION);
 
 		if (compareToKnown == null) {
@@ -413,51 +377,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		}
 
 		return (Boolean) compareToKnown;
-	}
-
-	/**
-	 * @param fitnessEvaluatorDefault
-	 *            the fitnessEvaluatorDefault to set
-	 */
-	@Required
-	public void setFitnessEvaluatorDefault(FitnessEvaluator fitnessEvaluatorDefault) {
-		this.fitnessEvaluatorDefault = fitnessEvaluatorDefault;
-	}
-
-	/**
-	 * @param crossoverAlgorithmDefault
-	 *            the crossoverAlgorithmDefault to set
-	 */
-	@Required
-	public void setCrossoverAlgorithmDefault(CrossoverAlgorithm crossoverAlgorithmDefault) {
-		this.crossoverAlgorithmDefault = crossoverAlgorithmDefault;
-	}
-
-	/**
-	 * @param mutationAlgorithmDefault
-	 *            the mutationAlgorithmDefault to set
-	 */
-	@Required
-	public void setMutationAlgorithmDefault(MutationAlgorithm mutationAlgorithmDefault) {
-		this.mutationAlgorithmDefault = mutationAlgorithmDefault;
-	}
-
-	/**
-	 * @param selectionAlgorithmDefault
-	 *            the selectionAlgorithmDefault to set
-	 */
-	@Required
-	public void setSelectionAlgorithmDefault(SelectionAlgorithm selectionAlgorithmDefault) {
-		this.selectionAlgorithmDefault = selectionAlgorithmDefault;
-	}
-
-	/**
-	 * @param selectorDefault
-	 *            the selectorDefault to set
-	 */
-	@Required
-	public void setSelectorDefault(Selector selectorDefault) {
-		this.selectorDefault = selectorDefault;
 	}
 
 	/**
