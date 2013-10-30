@@ -38,7 +38,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.util.fitness.AscendingFitnessComparator;
+import com.ciphertool.genetics.fitness.AscendingFitnessComparator;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;

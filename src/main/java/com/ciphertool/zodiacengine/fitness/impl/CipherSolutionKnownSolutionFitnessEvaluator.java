@@ -22,7 +22,7 @@ package com.ciphertool.zodiacengine.fitness.impl;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;

@@ -34,6 +34,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
@@ -62,6 +64,20 @@ public class SolutionDaoTest {
 	@Before
 	public void resetMocks() {
 		reset(mongoTemplateMock);
+	}
+
+	@Test
+	public void testSetMongoTemplate() {
+		SolutionDao solutionDao = new SolutionDao();
+		solutionDao.setMongoTemplate(mongoTemplateMock);
+
+		Field mongoOperationsField = ReflectionUtils
+				.findField(SolutionDao.class, "mongoOperations");
+		ReflectionUtils.makeAccessible(mongoOperationsField);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(
+				mongoOperationsField, solutionDao);
+
+		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}
 
 	@Test

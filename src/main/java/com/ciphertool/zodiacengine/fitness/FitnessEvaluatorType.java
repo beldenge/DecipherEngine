@@ -19,7 +19,7 @@
 
 package com.ciphertool.zodiacengine.fitness;
 
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;

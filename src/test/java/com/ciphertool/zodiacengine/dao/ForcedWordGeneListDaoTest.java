@@ -29,9 +29,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
@@ -55,6 +58,20 @@ public class ForcedWordGeneListDaoTest {
 	@Before
 	public void resetMocks() {
 		reset(wordListDaoMock);
+	}
+
+	@Test
+	public void testSetWordListDao() {
+		ForcedWordGeneListDao forcedWordGeneListDao = new ForcedWordGeneListDao();
+		forcedWordGeneListDao.setWordListDao(wordListDaoMock);
+
+		Field wordListDaoField = ReflectionUtils.findField(ForcedWordGeneListDao.class,
+				"wordListDao");
+		ReflectionUtils.makeAccessible(wordListDaoField);
+		WordListDao wordListDaoFromObject = (WordListDao) ReflectionUtils.getField(
+				wordListDaoField, forcedWordGeneListDao);
+
+		assertSame(wordListDaoMock, wordListDaoFromObject);
 	}
 
 	@Test

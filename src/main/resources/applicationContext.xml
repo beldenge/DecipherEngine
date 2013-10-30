@@ -231,7 +231,7 @@
 		<property name="averageWordLength" value="${language.english.averageWordLength}" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.util.fitness.AscendingFitnessComparator"
+	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator"
 		id="defaultFitnessComparator" />
 	
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector">

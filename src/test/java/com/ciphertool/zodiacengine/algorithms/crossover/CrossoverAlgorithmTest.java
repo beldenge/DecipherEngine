@@ -41,8 +41,8 @@ import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.genetics.util.ChromosomeHelper;
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.dao.WordGeneListDao;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;

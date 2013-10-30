@@ -30,6 +30,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.zodiacengine.entities.Cipher;
 
@@ -56,6 +58,19 @@ public class CipherDaoTest {
 	@Before
 	public void resetMocks() {
 		reset(mongoTemplateMock);
+	}
+
+	@Test
+	public void testSetMongoTemplate() {
+		CipherDao cipherDao = new CipherDao();
+		cipherDao.setMongoTemplate(mongoTemplateMock);
+
+		Field mongoOperationsField = ReflectionUtils.findField(CipherDao.class, "mongoOperations");
+		ReflectionUtils.makeAccessible(mongoOperationsField);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(
+				mongoOperationsField, cipherDao);
+
+		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}
 
 	@Test

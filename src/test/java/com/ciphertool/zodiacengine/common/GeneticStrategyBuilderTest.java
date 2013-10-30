@@ -48,7 +48,7 @@ import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector;
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;

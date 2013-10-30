@@ -29,9 +29,12 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Field;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
@@ -61,6 +64,32 @@ public class WordGeneListDaoTest {
 	public void resetMocks() {
 		reset(wordListDaoMock);
 		reset(wordMapDaoMock);
+	}
+
+	@Test
+	public void testSetWordListDao() {
+		WordGeneListDao wordGeneListDao = new WordGeneListDao();
+		wordGeneListDao.setWordListDao(wordListDaoMock);
+
+		Field wordListDaoField = ReflectionUtils.findField(WordGeneListDao.class, "wordListDao");
+		ReflectionUtils.makeAccessible(wordListDaoField);
+		WordListDao wordListDaoFromObject = (WordListDao) ReflectionUtils.getField(
+				wordListDaoField, wordGeneListDao);
+
+		assertSame(wordListDaoMock, wordListDaoFromObject);
+	}
+
+	@Test
+	public void testSetWordMapDao() {
+		WordGeneListDao wordGeneListDao = new WordGeneListDao();
+		wordGeneListDao.setWordMapDao(wordMapDaoMock);
+
+		Field wordMapDaoField = ReflectionUtils.findField(WordGeneListDao.class, "wordMapDao");
+		ReflectionUtils.makeAccessible(wordMapDaoField);
+		WordMapDao wordMapDaoFromObject = (WordMapDao) ReflectionUtils.getField(wordMapDaoField,
+				wordGeneListDao);
+
+		assertSame(wordMapDaoMock, wordMapDaoFromObject);
 	}
 
 	@Test

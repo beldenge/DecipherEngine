@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;

@@ -54,7 +54,7 @@ import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.dao.ExecutionStatisticsDao;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.util.fitness.FitnessEvaluator;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.SolutionBreeder;
 import com.ciphertool.zodiacengine.dao.PlaintextSequenceDao;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
