@@ -332,7 +332,7 @@
 	
 	<bean class="com.ciphertool.genetics.algorithms.selection.TournamentSelectionAlgorithm" id="tournamentSelectionAlgorithm">
 		<property name="groupSize" value="${genetic.algorithm.tournament.groupSize}" />
-		<property name="tournamentSelector" ref="tournamentSelector" />
+		<property name="groupSelector" ref="tournamentSelector" />
 	</bean>
 
 	<bean
