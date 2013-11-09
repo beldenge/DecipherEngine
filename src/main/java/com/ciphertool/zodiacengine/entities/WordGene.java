@@ -324,7 +324,6 @@ public class WordGene implements Gene {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((chromosome == null) ? 0 : chromosome.hashCode());
 		result = prime * result + ((sequences == null) ? 0 : sequences.hashCode());
 		return result;
 	}
