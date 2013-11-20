@@ -49,311 +49,310 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends
 		 */
 		WordGene nextWordGene;
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution, 0);
+		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("like", 'X')), knownSolution, 1);
+		nextWordGene = new WordGene(new Word(new WordId("like", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution, 5);
+		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("people", 'X')), knownSolution, 12);
+		nextWordGene = new WordGene(new Word(new WordId("people", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution, 18);
+		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution, 25);
+		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution, 27);
+		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("so", 'X')), knownSolution, 29);
+		nextWordGene = new WordGene(new Word(new WordId("so", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("much", 'X')), knownSolution, 31);
+		nextWordGene = new WordGene(new Word(new WordId("much", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution, 35);
+		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution, 38);
+		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution, 40);
+		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("more", 'X')), knownSolution, 42);
+		nextWordGene = new WordGene(new Word(new WordId("more", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution, 46);
+		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution, 49);
+		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution, 53);
+		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("wild", 'X')), knownSolution, 60);
+		nextWordGene = new WordGene(new Word(new WordId("wild", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("game", 'X')), knownSolution, 64);
+		nextWordGene = new WordGene(new Word(new WordId("game", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution, 68);
+		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution, 70);
+		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("forrest", 'X')), knownSolution, 73);
+		nextWordGene = new WordGene(new Word(new WordId("forrest", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution, 80);
+		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("man", 'X')), knownSolution, 87);
+		nextWordGene = new WordGene(new Word(new WordId("man", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution, 90);
+		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution, 92);
+		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution, 95);
+		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("dangeroue", 'X')), knownSolution, 99);
+		nextWordGene = new WordGene(new Word(new WordId("dangeroue", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("anamal", 'X')), knownSolution, 108);
+		nextWordGene = new WordGene(new Word(new WordId("anamal", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution, 114);
+		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution, 116);
+		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution, 119);
+		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("kill", 'X')), knownSolution, 121);
+		nextWordGene = new WordGene(new Word(new WordId("kill", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("something", 'X')), knownSolution, 125);
+		nextWordGene = new WordGene(new Word(new WordId("something", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("gives", 'X')), knownSolution, 134);
+		nextWordGene = new WordGene(new Word(new WordId("gives", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("me", 'X')), knownSolution, 139);
+		nextWordGene = new WordGene(new Word(new WordId("me", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution, 141);
+		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution, 144);
+		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("thrilling", 'X')), knownSolution, 148);
+		nextWordGene = new WordGene(new Word(new WordId("thrilling", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("experence", 'X')), knownSolution, 157);
+		nextWordGene = new WordGene(new Word(new WordId("experence", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution, 166);
+		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution, 168);
+		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("even", 'X')), knownSolution, 170);
+		nextWordGene = new WordGene(new Word(new WordId("even", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("better", 'X')), knownSolution, 174);
+		nextWordGene = new WordGene(new Word(new WordId("better", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution, 180);
+		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("getting", 'X')), knownSolution, 184);
+		nextWordGene = new WordGene(new Word(new WordId("getting", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("your", 'X')), knownSolution, 191);
+		nextWordGene = new WordGene(new Word(new WordId("your", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("rocks", 'X')), knownSolution, 195);
+		nextWordGene = new WordGene(new Word(new WordId("rocks", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("off", 'X')), knownSolution, 200);
+		nextWordGene = new WordGene(new Word(new WordId("off", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("with", 'X')), knownSolution, 203);
+		nextWordGene = new WordGene(new Word(new WordId("with", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("a", 'X')), knownSolution, 207);
+		nextWordGene = new WordGene(new Word(new WordId("a", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("girl", 'X')), knownSolution, 208);
+		nextWordGene = new WordGene(new Word(new WordId("girl", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution, 212);
+		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("best", 'X')), knownSolution, 215);
+		nextWordGene = new WordGene(new Word(new WordId("best", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("part", 'X')), knownSolution, 219);
+		nextWordGene = new WordGene(new Word(new WordId("part", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution, 223);
+		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution, 225);
+		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("ia", 'X')), knownSolution, 227);
+		nextWordGene = new WordGene(new Word(new WordId("ia", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("thae", 'X')), knownSolution, 229);
+		nextWordGene = new WordGene(new Word(new WordId("thae", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("when", 'X')), knownSolution, 233);
+		nextWordGene = new WordGene(new Word(new WordId("when", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution, 237);
+		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("die", 'X')), knownSolution, 238);
+		nextWordGene = new WordGene(new Word(new WordId("die", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution, 241);
+		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution, 242);
+		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("be", 'X')), knownSolution, 246);
+		nextWordGene = new WordGene(new Word(new WordId("be", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("reborn", 'X')), knownSolution, 248);
+		nextWordGene = new WordGene(new Word(new WordId("reborn", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution, 254);
+		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("paradice", 'X')), knownSolution, 256);
+		nextWordGene = new WordGene(new Word(new WordId("paradice", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("snd", 'X')), knownSolution, 264);
+		nextWordGene = new WordGene(new Word(new WordId("snd", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution, 267);
+		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution, 270);
+		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution, 273);
+		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("have", 'X')), knownSolution, 274);
+		nextWordGene = new WordGene(new Word(new WordId("have", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killed", 'X')), knownSolution, 278);
+		nextWordGene = new WordGene(new Word(new WordId("killed", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution, 284);
+		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("become", 'X')), knownSolution, 288);
+		nextWordGene = new WordGene(new Word(new WordId("become", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution, 294);
+		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution, 296);
+		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution, 302);
+		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution, 303);
+		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("not", 'X')), knownSolution, 307);
+		nextWordGene = new WordGene(new Word(new WordId("not", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("give", 'X')), knownSolution, 310);
+		nextWordGene = new WordGene(new Word(new WordId("give", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution, 314);
+		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution, 317);
+		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("name", 'X')), knownSolution, 319);
+		nextWordGene = new WordGene(new Word(new WordId("name", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution, 323);
+		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution, 330);
+		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution, 333);
+		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("try", 'X')), knownSolution, 337);
+		nextWordGene = new WordGene(new Word(new WordId("try", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution, 340);
+		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("sloi", 'X')), knownSolution, 342);
+		nextWordGene = new WordGene(new Word(new WordId("sloi", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("down", 'X')), knownSolution, 346);
+		nextWordGene = new WordGene(new Word(new WordId("down", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("or", 'X')), knownSolution, 350);
+		nextWordGene = new WordGene(new Word(new WordId("or", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("stop", 'X')), knownSolution, 352);
+		nextWordGene = new WordGene(new Word(new WordId("stop", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution, 356);
+		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("collecting", 'X')), knownSolution, 358);
+		nextWordGene = new WordGene(new Word(new WordId("collecting", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution, 368);
+		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution, 370);
+		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("for", 'X')), knownSolution, 376);
+		nextWordGene = new WordGene(new Word(new WordId("for", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution, 379);
+		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("afterlife", 'X')), knownSolution, 381);
+		nextWordGene = new WordGene(new Word(new WordId("afterlife", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("e", 'X')), knownSolution, 390);
+		nextWordGene = new WordGene(new Word(new WordId("e", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("beorietemethhpiti", 'X')), knownSolution,
-				391);
+		nextWordGene = new WordGene(new Word(new WordId("beorietemethhpiti", 'X')), knownSolution);
 		knownSolution.addGene(nextWordGene);
 	}
 

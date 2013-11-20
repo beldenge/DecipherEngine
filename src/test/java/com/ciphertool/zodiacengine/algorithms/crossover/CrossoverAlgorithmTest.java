@@ -72,7 +72,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		 */
 		for (int i = 0; i < 5; i++) {
 			dummySolution.getGenes().get(0).insertSequence(0,
-					new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
+					new PlaintextSequence("i", dummySolution.getGenes().get(0)));
 		}
 
 		for (PlaintextSequence plaintext : dummySolution.getPlaintextCharacters()) {
@@ -238,7 +238,7 @@ public class CrossoverAlgorithmTest extends GeneticAlgorithmTestBase {
 		String geneWordString = ((WordGene) ((PlaintextSequence) plaintext).getGene())
 				.getWordString();
 
-		String mockWordString = ((WordGene) wordGeneListDao.findRandomGeneOfLength(null, 0,
+		String mockWordString = ((WordGene) wordGeneListDao.findRandomGeneOfLength(null,
 				geneWordString.length())).getWordString();
 
 		if (geneWordString.equals(mockWordString)) {

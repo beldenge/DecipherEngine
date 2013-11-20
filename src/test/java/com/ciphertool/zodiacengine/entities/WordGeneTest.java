@@ -58,7 +58,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testConstructor() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
@@ -70,17 +70,11 @@ public class WordGeneTest {
 		assertEquals("i", wordGene.getSequences().get(2).getValue());
 		assertEquals("l", wordGene.getSequences().get(3).getValue());
 		assertEquals("e", wordGene.getSequences().get(4).getValue());
-
-		assertEquals(new Integer(0), wordGene.getSequences().get(0).getSequenceId());
-		assertEquals(new Integer(1), wordGene.getSequences().get(1).getSequenceId());
-		assertEquals(new Integer(2), wordGene.getSequences().get(2).getSequenceId());
-		assertEquals(new Integer(3), wordGene.getSequences().get(3).getSequenceId());
-		assertEquals(new Integer(4), wordGene.getSequences().get(4).getSequenceId());
 	}
 
 	@Test
 	public void testConstructorNullWord() {
-		WordGene wordGene = new WordGene(null, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(null, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
@@ -91,7 +85,7 @@ public class WordGeneTest {
 	@Test
 	public void testConstructorNullWordId() {
 		Word wordWithNullId = new Word(null);
-		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
@@ -102,7 +96,7 @@ public class WordGeneTest {
 	@Test
 	public void testConstructorNullWordString() {
 		Word wordWithNullId = new Word(new WordId(null, 'N'));
-		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
@@ -120,7 +114,7 @@ public class WordGeneTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testSequencesUnmodifiable() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		List<Sequence> sequences = wordGene.getSequences();
 		sequences.remove(0); // should throw exception
@@ -134,19 +128,19 @@ public class WordGeneTest {
 
 	@Test
 	public void testAddInvalidSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		wordGene.addSequence(null);
 	}
 
 	@Test
 	public void testAddSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int ciphertextId = wordGene.size();
 
-		PlaintextSequence newPlaintextSequence = new PlaintextSequence(ciphertextId, "y", wordGene);
+		PlaintextSequence newPlaintextSequence = new PlaintextSequence("y", wordGene);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int geneSizeBefore = wordGene.size();
@@ -180,19 +174,19 @@ public class WordGeneTest {
 
 	@Test
 	public void testDoAddInvalidSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		wordGene.doAddSequence(null);
 	}
 
 	@Test
 	public void testDoAddSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int ciphertextId = wordGene.size();
 
-		PlaintextSequence newPlaintextSequence = new PlaintextSequence(ciphertextId, "y", wordGene);
+		PlaintextSequence newPlaintextSequence = new PlaintextSequence("y", wordGene);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int geneSizeBefore = wordGene.size();
@@ -226,19 +220,19 @@ public class WordGeneTest {
 
 	@Test
 	public void testInsertInvalidSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		wordGene.insertSequence(0, null);
 	}
 
 	@Test
 	public void testInsertSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int ciphertextId = 0;
 
-		PlaintextSequence newPlaintextSequence = new PlaintextSequence(ciphertextId, "h", wordGene);
+		PlaintextSequence newPlaintextSequence = new PlaintextSequence("h", wordGene);
 
 		int geneSizeBefore = wordGene.size();
 
@@ -271,14 +265,14 @@ public class WordGeneTest {
 
 	@Test
 	public void testRemoveInvalidSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		wordGene.removeSequence(null);
 	}
 
 	@Test
 	public void testRemoveSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int ciphertextId = 1;
@@ -315,14 +309,14 @@ public class WordGeneTest {
 
 	@Test
 	public void testReplaceInvalidSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		wordGene.replaceSequence(0, null);
 	}
 
 	@Test
 	public void testReplaceSequenceOutOfBounds() {
-		WordGene wordGeneOriginal = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGeneOriginal = new WordGene(word, solutionChromosome);
 		WordGene wordGeneCloneToCompare = wordGeneOriginal.clone();
 
 		wordGeneOriginal.replaceSequence(5, null);
@@ -332,12 +326,12 @@ public class WordGeneTest {
 
 	@Test
 	public void testReplaceSequence() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		int ciphertextId = 0;
 
-		PlaintextSequence newPlaintextSequence = new PlaintextSequence(ciphertextId, "h", wordGene);
+		PlaintextSequence newPlaintextSequence = new PlaintextSequence("h", wordGene);
 
 		int geneSizeBefore = wordGene.size();
 
@@ -412,9 +406,9 @@ public class WordGeneTest {
 
 	@Test
 	public void testResetSequences() {
-		PlaintextSequence sequence1 = new PlaintextSequence(0, "a", null);
-		PlaintextSequence sequence2 = new PlaintextSequence(1, "b", null);
-		PlaintextSequence sequence3 = new PlaintextSequence(2, "c", null);
+		PlaintextSequence sequence1 = new PlaintextSequence("a", null);
+		PlaintextSequence sequence2 = new PlaintextSequence("b", null);
+		PlaintextSequence sequence3 = new PlaintextSequence("c", null);
 
 		WordGene base = new WordGene();
 		base.setChromosome(solutionChromosome);
@@ -435,7 +429,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testCloneWordGene() {
-		WordGene wordGene = new WordGene(word, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		WordGene clonedWordGene = wordGene.clone();
@@ -480,7 +474,7 @@ public class WordGeneTest {
 	@Test
 	public void testSize() {
 		Word george = new Word(new WordId("george", 'N'));
-		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals(6, wordGene.size());
 	}
@@ -488,7 +482,7 @@ public class WordGeneTest {
 	@Test
 	public void testGetWordString() {
 		Word george = new Word(new WordId("george", 'N'));
-		WordGene wordGene = new WordGene(george, solutionChromosome, beginCiphertextIndex);
+		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals("george", wordGene.getWordString());
 	}
@@ -496,7 +490,7 @@ public class WordGeneTest {
 	@Test
 	public void testCountMatches() {
 		Word newWord = new Word(new WordId("smile", 'N'));
-		WordGene wordGeneToTest = new WordGene(newWord, null, 0);
+		WordGene wordGeneToTest = new WordGene(newWord, null);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(1)).setHasMatch(true);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(2)).setHasMatch(true);
 
@@ -505,18 +499,16 @@ public class WordGeneTest {
 
 	@Test
 	public void testEquals() {
-		PlaintextSequence sequence1 = new PlaintextSequence(0, "a", null);
-		PlaintextSequence sequence2 = new PlaintextSequence(1, "b", null);
-		PlaintextSequence sequence3 = new PlaintextSequence(2, "c", null);
+		PlaintextSequence sequence1 = new PlaintextSequence("a", null);
+		PlaintextSequence sequence2 = new PlaintextSequence("b", null);
+		PlaintextSequence sequence3 = new PlaintextSequence("c", null);
 
 		WordGene base = new WordGene();
-		base.setChromosome(solutionChromosome);
 		base.addSequence(sequence1.clone());
 		base.addSequence(sequence2.clone());
 		base.addSequence(sequence3.clone());
 
 		WordGene wordGeneEqualToBase = new WordGene();
-		wordGeneEqualToBase.setChromosome(solutionChromosome);
 		wordGeneEqualToBase.addSequence(sequence1.clone());
 		wordGeneEqualToBase.addSequence(sequence2.clone());
 		wordGeneEqualToBase.addSequence(sequence3.clone());

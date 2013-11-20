@@ -484,11 +484,13 @@ public class SolutionChromosome implements Chromosome {
 
 	@Dirty
 	public void addPlaintext(PlaintextSequence plaintext) {
+		plaintext.setSequenceId(this.plaintextCharacters.size());
 		this.plaintextCharacters.add(plaintext);
 	}
 
 	@Dirty
 	public void insertPlaintext(int index, PlaintextSequence plaintext) {
+		plaintext.setSequenceId(index);
 		this.plaintextCharacters.add(index, plaintext);
 	}
 

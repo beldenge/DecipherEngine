@@ -19,7 +19,6 @@
 
 package com.ciphertool.zodiacengine.dao;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +46,6 @@ public class PlaintextSequenceDaoTest {
 				gene, arbitraryInteger);
 
 		assertTrue(Character.isLetter(sequence.getValue().charAt(0)));
-		assertEquals(arbitraryInteger, sequence.getSequenceId());
 		assertSame(gene, sequence.getGene());
 	}
 

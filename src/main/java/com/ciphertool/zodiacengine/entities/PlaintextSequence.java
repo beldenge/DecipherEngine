@@ -41,8 +41,7 @@ public class PlaintextSequence implements Sequence {
 	public PlaintextSequence() {
 	}
 
-	public PlaintextSequence(Integer sequenceId, String value, Gene gene) {
-		this.sequenceId = sequenceId;
+	public PlaintextSequence(String value, Gene gene) {
 		this.value = value;
 		this.gene = gene;
 	}

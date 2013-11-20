@@ -294,7 +294,7 @@ public class SolutionChromosomeTest {
 
 		Word word = new Word(new WordId("smile", 'N'));
 
-		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		solutionChromosome.addGene(wordGene);
 
@@ -322,13 +322,13 @@ public class SolutionChromosomeTest {
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 		assertSame(solutionChromosome, wordGene1.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
 		Word word2 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.addGene(wordGene2);
 		assertSame(solutionChromosome, wordGene2.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
@@ -364,19 +364,19 @@ public class SolutionChromosomeTest {
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
 		Word word3 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
+		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene3);
 		assertSame(solutionChromosome, wordGene3.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 		assertSame(solutionChromosome, wordGene1.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
 		Word word2 = new Word(new WordId("elmer", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene2);
 		assertSame(solutionChromosome, wordGene2.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
@@ -406,15 +406,15 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGene() {
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 
 		Word word2 = new Word(new WordId("elmer", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene2);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
+		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(2, wordGene3);
 
 		assertEquals(solutionChromosome.getGenes().size(), 3);
@@ -449,7 +449,7 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testRemoveGeneOutOfBounds() {
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGeneOriginal);
 
 		solutionChromosome.removeGene(1);
@@ -461,17 +461,17 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testReplaceGene() {
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
+		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene3);
 
 		int beforeSize = solutionChromosome.getGenes().size();
 
 		Word word2 = new Word(new WordId("elmer", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 
 		/*
 		 * Make the solution clean before checking for dirtiness after
@@ -500,18 +500,18 @@ public class SolutionChromosomeTest {
 	@Test
 	public void testReplaceInvalidGene() {
 		Word word = new Word(new WordId("george", 'N'));
-		WordGene wordGeneToReplace = new WordGene(word, solutionChromosome, 0);
+		WordGene wordGeneToReplace = new WordGene(word, solutionChromosome);
 		solutionChromosome.replaceGene(0, wordGeneToReplace);
 	}
 
 	@Test
 	public void testReplaceGeneOutOfBounds() {
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGeneOriginal);
 
 		Word word2 = new Word(new WordId("smile", 'N'));
-		WordGene wordGeneToReplaceWith = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGeneToReplaceWith = new WordGene(word2, solutionChromosome);
 		solutionChromosome.replaceGene(1, wordGeneToReplaceWith);
 
 		assertSame(wordGeneOriginal, solutionChromosome.getGenes().get(0));
@@ -526,15 +526,15 @@ public class SolutionChromosomeTest {
 		solutionChromosome.setEvaluationNeeded(false);
 
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 
 		Word word2 = new Word(new WordId("elmer", 'N'));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome, 0);
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.addGene(wordGene2);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
+		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.addGene(wordGene3);
 
 		SolutionChromosome clonedSolutionChromosome = solutionChromosome.clone();
@@ -620,11 +620,11 @@ public class SolutionChromosomeTest {
 		solutionChromosome.setCipherId(cipher.getId());
 
 		Word word1 = new Word(new WordId("george", 'N'));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome, 0);
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 
 		Word word3 = new Word(new WordId("belden", 'N'));
-		WordGene wordGene3 = new WordGene(word3, solutionChromosome, 0);
+		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.addGene(wordGene3);
 
 		/*
@@ -708,11 +708,11 @@ public class SolutionChromosomeTest {
 		int baseAge = 30;
 		int baseNumberOfChildren = 1;
 		Word word1 = new Word(new WordId("learn", 'N'));
-		WordGene gene1 = new WordGene(word1, null, 0);
+		WordGene gene1 = new WordGene(word1, null);
 		Word word2 = new Word(new WordId("listen", 'N'));
-		WordGene gene2 = new WordGene(word2, null, 5);
+		WordGene gene2 = new WordGene(word2, null);
 		Word word3 = new Word(new WordId("love", 'N'));
-		WordGene gene3 = new WordGene(word3, null, 11);
+		WordGene gene3 = new WordGene(word3, null);
 
 		SolutionChromosome base = new SolutionChromosome();
 		base.setId(baseId);
@@ -842,8 +842,8 @@ public class SolutionChromosomeTest {
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene1.clone());
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene2.clone());
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene3.clone());
-		solutionChromosomeWithDifferentPlaintextCharacters.addPlaintext(new PlaintextSequence(15,
-				"x", gene3));
+		solutionChromosomeWithDifferentPlaintextCharacters.addPlaintext(new PlaintextSequence("x",
+				gene3));
 
 		assertFalse(base.equals(solutionChromosomeWithDifferentPlaintextCharacters));
 

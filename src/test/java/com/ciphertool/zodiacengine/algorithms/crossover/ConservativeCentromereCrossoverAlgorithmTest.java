@@ -57,7 +57,7 @@ public class ConservativeCentromereCrossoverAlgorithmTest extends GeneticAlgorit
 		dummySolution = knownSolution.clone();
 
 		dummySolution.getGenes().get(0).insertSequence(0,
-				new PlaintextSequence(0, "i", dummySolution.getGenes().get(0)));
+				new PlaintextSequence("i", dummySolution.getGenes().get(0)));
 
 		for (PlaintextSequence plaintext : dummySolution.getPlaintextCharacters()) {
 			plaintext.setValue("*");

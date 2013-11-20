@@ -38,7 +38,7 @@ public class WordGeneListDao implements GeneListDao {
 	private WordMapDao wordMapDao;
 
 	@Override
-	public Gene findRandomGene(Chromosome chromosome, int beginIndex) {
+	public Gene findRandomGene(Chromosome chromosome) {
 		if (chromosome == null) {
 			log.warn("Attempted to find random gene while specifying null chromosome.  Unable to continue, thus returning null.");
 
@@ -47,13 +47,13 @@ public class WordGeneListDao implements GeneListDao {
 
 		Word word = wordListDao.findRandomWord();
 
-		Gene gene = new WordGene(word, (SolutionChromosome) chromosome, beginIndex);
+		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);
 
 		return gene;
 	}
 
 	@Override
-	public Gene findRandomGeneOfLength(Chromosome chromosome, int beginIndex, int length) {
+	public Gene findRandomGeneOfLength(Chromosome chromosome, int length) {
 		if (chromosome == null) {
 			log.warn("Attempted to find random gene while specifying null chromosome.  Unable to continue, thus returning null.");
 
@@ -75,7 +75,7 @@ public class WordGeneListDao implements GeneListDao {
 					+ " which was not found.");
 		}
 
-		Gene gene = new WordGene(word, (SolutionChromosome) chromosome, beginIndex);
+		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);
 
 		return gene;
 	}

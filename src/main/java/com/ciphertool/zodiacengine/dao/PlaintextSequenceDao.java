@@ -38,8 +38,8 @@ public class PlaintextSequenceDao implements SequenceDao {
 			return null;
 		}
 
-		Sequence sequence = new PlaintextSequence(sequenceIndex, String.valueOf(LetterUtils
-				.getRandomLetter()), gene);
+		Sequence sequence = new PlaintextSequence(String.valueOf(LetterUtils.getRandomLetter()),
+				gene);
 
 		return sequence;
 	}

@@ -43,7 +43,7 @@ public class WordGene implements Gene {
 	public WordGene() {
 	}
 
-	public WordGene(Word word, SolutionChromosome solutionChromosome, int beginCiphertextId) {
+	public WordGene(Word word, SolutionChromosome solutionChromosome) {
 		this.chromosome = solutionChromosome;
 
 		if (word == null || word.getId() == null) {
@@ -63,8 +63,8 @@ public class WordGene implements Gene {
 		int wordLength = wordString.length();
 
 		for (int i = 0; i < wordLength; i++) {
-			PlaintextSequence plaintextSequence = new PlaintextSequence(beginCiphertextId + i,
-					String.valueOf(wordString.charAt(i)).toLowerCase(), this);
+			PlaintextSequence plaintextSequence = new PlaintextSequence(String.valueOf(
+					wordString.charAt(i)).toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}
@@ -168,8 +168,7 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
-		((SolutionChromosome) chromosome).insertPlaintext(sequence.getSequenceId(),
-				((PlaintextSequence) sequence));
+		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
 
 		/*
 		 * We additionally have to shift the ciphertextIds since the current

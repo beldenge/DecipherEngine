@@ -100,12 +100,11 @@ public class WordGeneListDaoTest {
 		Word wordToReturn = new Word(new WordId("testing", 'V'), arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck, arbitraryInteger);
+		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
 
-		Gene geneReturned = wordGeneListDao.findRandomGene(chromosomeToCheck, arbitraryInteger);
+		Gene geneReturned = wordGeneListDao.findRandomGene(chromosomeToCheck);
 
 		assertSame(chromosomeToCheck, geneReturned.getChromosome());
-		assertEquals(arbitraryInteger, geneReturned.getSequences().get(0).getSequenceId());
 		assertEquals(expectedGene, geneReturned);
 	}
 
@@ -116,7 +115,7 @@ public class WordGeneListDaoTest {
 		Word wordToReturn = new Word(new WordId("testing", 'V'), arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene geneReturned = wordGeneListDao.findRandomGene(null, arbitraryInteger);
+		Gene geneReturned = wordGeneListDao.findRandomGene(null);
 
 		assertNull(geneReturned);
 		verify(wordListDaoMock, never()).findRandomWord();
@@ -131,13 +130,11 @@ public class WordGeneListDaoTest {
 		Word wordToReturn = new Word(new WordId("testing", 'V'), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
-		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck, arbitraryInteger);
+		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
 
-		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(chromosomeToCheck,
-				arbitraryInteger, wordLength);
+		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(chromosomeToCheck, wordLength);
 
 		assertSame(chromosomeToCheck, geneReturned.getChromosome());
-		assertEquals(arbitraryInteger, geneReturned.getSequences().get(0).getSequenceId());
 		assertEquals(expectedGene, geneReturned);
 	}
 
@@ -149,8 +146,7 @@ public class WordGeneListDaoTest {
 		Word wordToReturn = new Word(new WordId("testing", 'V'), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
-		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(null, arbitraryInteger,
-				wordLength);
+		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(null, wordLength);
 
 		assertNull(geneReturned);
 		verify(wordListDaoMock, never()).findRandomWord();
@@ -165,8 +161,7 @@ public class WordGeneListDaoTest {
 		Word wordToReturn = new Word(new WordId("testing", 'V'), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
-		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(chromosomeToCheck,
-				arbitraryInteger, wordLength);
+		Gene geneReturned = wordGeneListDao.findRandomGeneOfLength(chromosomeToCheck, wordLength);
 
 		assertNull(geneReturned);
 		verify(wordListDaoMock, never()).findRandomWord();

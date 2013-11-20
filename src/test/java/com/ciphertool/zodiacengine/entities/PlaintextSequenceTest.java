@@ -47,14 +47,11 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testConstructor() {
-		Integer sequenceIdToSet = new Integer(123);
 		String valueToSet = "valueToSet";
 		Word arbitraryWord = new Word(new WordId("arbitraryWord", 'N'));
-		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome, 5);
-		PlaintextSequence plaintextSequence = new PlaintextSequence(sequenceIdToSet, valueToSet,
-				geneToSet);
+		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome);
+		PlaintextSequence plaintextSequence = new PlaintextSequence(valueToSet, geneToSet);
 
-		assertSame(sequenceIdToSet, plaintextSequence.getSequenceId());
 		assertEquals(valueToSet, plaintextSequence.getValue());
 		assertSame(geneToSet, plaintextSequence.getGene());
 	}
@@ -62,7 +59,7 @@ public class PlaintextSequenceTest {
 	@Test
 	public void testSetGene() {
 		Word arbitraryWord = new Word(new WordId("arbitraryWord", 'N'));
-		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome, 5);
+		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome);
 		PlaintextSequence plaintextSequence = new PlaintextSequence();
 		plaintextSequence.setGene(geneToSet);
 
@@ -106,21 +103,22 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testEquals() {
-		Integer baseSequenceId = new Integer(123);
 		String baseValue = "baseValue";
 
-		PlaintextSequence base = new PlaintextSequence(baseSequenceId, baseValue, null);
+		PlaintextSequence base = new PlaintextSequence(baseValue, null);
+		base.setSequenceId(1);
 
-		PlaintextSequence plaintextSequenceEqualToBase = new PlaintextSequence(baseSequenceId,
-				baseValue, null);
+		PlaintextSequence plaintextSequenceEqualToBase = new PlaintextSequence(baseValue, null);
+		plaintextSequenceEqualToBase.setSequenceId(1);
 		assertEquals(base, plaintextSequenceEqualToBase);
 
-		PlaintextSequence plaintextSequenceWithDifferentSequenceId = new PlaintextSequence(321,
+		PlaintextSequence plaintextSequenceWithDifferentSequenceId = new PlaintextSequence(
 				baseValue, null);
+		plaintextSequenceWithDifferentSequenceId.setSequenceId(2);
 		assertFalse(base.equals(plaintextSequenceWithDifferentSequenceId));
 
 		PlaintextSequence plaintextSequenceWithDifferentValue = new PlaintextSequence(
-				baseSequenceId, "differentWord", null);
+				"differentWord", null);
 		assertFalse(base.equals(plaintextSequenceWithDifferentValue));
 
 		PlaintextSequence plaintextSequenceWithNullPropertiesA = new PlaintextSequence();
@@ -131,9 +129,9 @@ public class PlaintextSequenceTest {
 	@Test
 	public void testClonePlaintextSequence() {
 		Word word = new Word(new WordId("george", 'N'));
-		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(0, "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
 		plaintextSequence.setHasMatch(true);
 
 		PlaintextSequence clonedPlaintextSequence = plaintextSequence.clone();
@@ -155,9 +153,10 @@ public class PlaintextSequenceTest {
 	@Test
 	public void testShiftLeft() {
 		Word word = new Word(new WordId("george", 'N'));
-		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
+		plaintextSequence.setSequenceId(5);
 
 		solutionChromosome.setEvaluationNeeded(false);
 
@@ -170,9 +169,10 @@ public class PlaintextSequenceTest {
 	@Test
 	public void testShiftRight() {
 		Word word = new Word(new WordId("george", 'N'));
-		WordGene wordGene = new WordGene(word, solutionChromosome, 0);
+		WordGene wordGene = new WordGene(word, solutionChromosome);
 
-		PlaintextSequence plaintextSequence = new PlaintextSequence(5, "g", wordGene);
+		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
+		plaintextSequence.setSequenceId(5);
 
 		solutionChromosome.setEvaluationNeeded(false);
 
