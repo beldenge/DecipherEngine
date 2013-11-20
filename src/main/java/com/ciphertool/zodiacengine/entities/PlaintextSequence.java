@@ -69,7 +69,7 @@ public class PlaintextSequence implements Sequence {
 		}
 		copySequence.setHasMatch(false);
 
-		copySequence.setSequenceId(this.sequenceId.intValue());
+		copySequence.setSequenceId((this.sequenceId != null) ? this.sequenceId.intValue() : null);
 
 		/*
 		 * The Gene must bet set at a higher level.
