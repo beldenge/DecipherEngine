@@ -519,6 +519,32 @@ public class SolutionChromosomeTest {
 	}
 
 	@Test
+	public void testResetGenes() {
+		Double originalFitness = 999.9;
+		solutionChromosome.setFitness(originalFitness);
+
+		Word word1 = new Word(new WordId("george", 'N'));
+		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
+		solutionChromosome.addGene(wordGene1);
+
+		Word word2 = new Word(new WordId("belden", 'N'));
+		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
+		solutionChromosome.addGene(wordGene2);
+
+		assertEquals(2, solutionChromosome.getGenes().size());
+		assertEquals(12, solutionChromosome.getPlaintextCharacters().size());
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+		assertEquals(originalFitness, solutionChromosome.getFitness());
+
+		solutionChromosome.resetGenes();
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(0, solutionChromosome.getPlaintextCharacters().size());
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		assertEquals(new Double(0.0), solutionChromosome.getFitness());
+	}
+
+	@Test
 	public void testCloneSolutionChromosome() {
 		solutionChromosome.setSolutionSetId(123);
 		solutionChromosome.setFitness(50.0);

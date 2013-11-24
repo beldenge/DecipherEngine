@@ -473,9 +473,11 @@ public class SolutionChromosome implements Chromosome {
 	}
 
 	@Override
-	@Dirty
+	@Clean
 	public void resetGenes() {
 		this.genes = new ArrayList<Gene>();
+		this.plaintextCharacters = new ArrayList<PlaintextSequence>();
+		this.fitness = 0.0;
 	}
 
 	public List<PlaintextSequence> getPlaintextCharacters() {
@@ -497,11 +499,6 @@ public class SolutionChromosome implements Chromosome {
 	@Dirty
 	public void removePlaintext(PlaintextSequence plaintext) {
 		this.plaintextCharacters.remove(plaintext);
-	}
-
-	@Dirty
-	public void resetPlaintextCharacters() {
-		this.plaintextCharacters = new ArrayList<PlaintextSequence>();
 	}
 
 	@Override
@@ -527,7 +524,6 @@ public class SolutionChromosome implements Chromosome {
 
 		copyChromosome.setId(null);
 		copyChromosome.resetGenes();
-		copyChromosome.resetPlaintextCharacters();
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		/*
