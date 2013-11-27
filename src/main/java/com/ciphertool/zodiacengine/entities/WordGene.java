@@ -143,17 +143,6 @@ public class WordGene implements Gene {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#insertSequence(int,
-	 * com.ciphertool.zodiacengine.genetic.Sequence)
-	 * 
-	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
-	 * relationship at the Chromosome level, so that Sequences within a Gene can
-	 * be managed independently of a Chromosome until they are actually added to
-	 * the Chromosome.
-	 */
 	@Override
 	@Dirty
 	public void insertSequence(int index, Sequence sequence) {
@@ -168,31 +157,13 @@ public class WordGene implements Gene {
 
 		this.sequences.add(index, sequence);
 
-		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
-
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
+		 * The SolutionChromosome is expected to take care of any shifting of
+		 * ciphertextIds that is necessary due to the insertion.
 		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
-				.getPlaintextCharacters();
-
-		int chromosomeSize = plaintextCharacters.size();
-		for (int i = sequence.getSequenceId() + 1; i < chromosomeSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftRight(1);
-		}
+		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#removeSequence(int)
-	 * 
-	 * TODO: I think it makes more sense to manage the Sequence-Chromosome
-	 * relationship at the Chromosome level, so that Sequences within a Gene can
-	 * be managed independently of a Chromosome until they are actually added to
-	 * the Chromosome.
-	 */
 	@Override
 	@Dirty
 	public void removeSequence(Sequence sequence) {
@@ -203,21 +174,19 @@ public class WordGene implements Gene {
 			return;
 		}
 
-		((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
+		/*
+		 * The SolutionChromosome is expected to take care of any shifting of
+		 * ciphertextIds that is necessary due to the removal.
+		 */
+		boolean result = ((SolutionChromosome) this.chromosome)
+				.removePlaintext((PlaintextSequence) sequence);
+
+		if (!result) {
+			// Return early if the removal was unsuccessful
+			return;
+		}
 
 		this.sequences.remove(sequence);
-
-		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
-		 */
-		List<PlaintextSequence> plaintextCharacters = ((SolutionChromosome) this.chromosome)
-				.getPlaintextCharacters();
-
-		int chromosomeSize = plaintextCharacters.size();
-		for (int i = sequence.getSequenceId(); i < chromosomeSize; i++) {
-			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(1);
-		}
 	}
 
 	/*

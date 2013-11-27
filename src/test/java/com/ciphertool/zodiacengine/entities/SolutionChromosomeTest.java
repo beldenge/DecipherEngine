@@ -26,15 +26,24 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
@@ -44,6 +53,7 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 public class SolutionChromosomeTest {
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 	private static Cipher cipher = new Cipher("zodiac", 24, 17);
+	private static Logger logMock;
 
 	private static final int CIPHER_SIZE = 408;
 
@@ -51,12 +61,20 @@ public class SolutionChromosomeTest {
 	public static void setUp() {
 		BigInteger cipherId = new BigInteger("12345");
 		cipher.setId(cipherId);
+
+		logMock = mock(Logger.class);
+
+		Field logField = ReflectionUtils.findField(SolutionChromosome.class, "log");
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, null, logMock);
 	}
 
 	@Before
-	public void resetSolutionChromosome() {
+	public void resetDependencies() {
 		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(),
 				cipher.getColumns());
+
+		reset(logMock);
 	}
 
 	@Test
@@ -417,7 +435,7 @@ public class SolutionChromosomeTest {
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(2, wordGene3);
 
-		assertEquals(solutionChromosome.getGenes().size(), 3);
+		assertEquals(3, solutionChromosome.getGenes().size());
 
 		/*
 		 * Make the solution clean before checking for dirtiness after
@@ -425,12 +443,12 @@ public class SolutionChromosomeTest {
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
-		assertEquals(wordGene2.size(), 5);
+		assertEquals(5, wordGene2.size());
 
 		solutionChromosome.removeGene(1);
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
-		assertEquals(solutionChromosome.getGenes().size(), 2);
+		assertEquals(2, solutionChromosome.getGenes().size());
 
 		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
 				.getId().getWord());
@@ -443,7 +461,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveInvalidGene() {
-		solutionChromosome.removeGene(0);
+		assertNull(solutionChromosome.removeGene(0));
 	}
 
 	@Test
@@ -542,6 +560,174 @@ public class SolutionChromosomeTest {
 		assertEquals(0, solutionChromosome.getPlaintextCharacters().size());
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(new Double(0.0), solutionChromosome.getFitness());
+	}
+
+	@Test
+	public void testAddPlaintext() {
+		WordGene wordGene = new WordGene();
+
+		PlaintextSequence plaintextSequence1 = new PlaintextSequence("g", wordGene);
+
+		assertNull(plaintextSequence1.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.addPlaintext(plaintextSequence1);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(1, solutionChromosome.getPlaintextCharacters().size());
+
+		PlaintextSequence plaintextSequence2 = new PlaintextSequence("b", wordGene);
+
+		assertNull(plaintextSequence2.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.addPlaintext(plaintextSequence2);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(2, solutionChromosome.getPlaintextCharacters().size());
+
+		assertSame(plaintextSequence1, solutionChromosome.getPlaintextCharacters().get(0));
+		assertSame(plaintextSequence2, solutionChromosome.getPlaintextCharacters().get(1));
+
+		assertFalse(plaintextSequence1.getHasMatch());
+		assertFalse(plaintextSequence2.getHasMatch());
+
+		assertEquals(0, plaintextSequence1.getSequenceId().intValue());
+		assertEquals(1, plaintextSequence2.getSequenceId().intValue());
+	}
+
+	@Test
+	public void testAddInvalidPlaintext() {
+		solutionChromosome.addPlaintext(null);
+		assertTrue(solutionChromosome.getPlaintextCharacters().isEmpty());
+		verify(logMock, times(1)).warn(anyString());
+		verifyNoMoreInteractions(logMock);
+	}
+
+	@Test
+	public void testInsertPlaintext() {
+		WordGene wordGene = new WordGene();
+
+		PlaintextSequence plaintextSequence3 = new PlaintextSequence("b", wordGene);
+
+		assertNull(plaintextSequence3.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.insertPlaintext(0, plaintextSequence3);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(1, solutionChromosome.getPlaintextCharacters().size());
+
+		PlaintextSequence plaintextSequence1 = new PlaintextSequence("g", wordGene);
+
+		assertNull(plaintextSequence1.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.insertPlaintext(0, plaintextSequence1);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(2, solutionChromosome.getPlaintextCharacters().size());
+
+		PlaintextSequence plaintextSequence2 = new PlaintextSequence("e", wordGene);
+
+		assertNull(plaintextSequence2.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.insertPlaintext(1, plaintextSequence2);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(3, solutionChromosome.getPlaintextCharacters().size());
+
+		assertSame(plaintextSequence1, solutionChromosome.getPlaintextCharacters().get(0));
+		assertSame(plaintextSequence2, solutionChromosome.getPlaintextCharacters().get(1));
+		assertSame(plaintextSequence3, solutionChromosome.getPlaintextCharacters().get(2));
+
+		assertFalse(plaintextSequence1.getHasMatch());
+		assertFalse(plaintextSequence2.getHasMatch());
+		assertFalse(plaintextSequence3.getHasMatch());
+
+		assertEquals(0, plaintextSequence1.getSequenceId().intValue());
+		assertEquals(1, plaintextSequence2.getSequenceId().intValue());
+		assertEquals(2, plaintextSequence3.getSequenceId().intValue());
+	}
+
+	@Test
+	public void testInsertInvalidPlaintext() {
+		solutionChromosome.insertPlaintext(0, null);
+		assertTrue(solutionChromosome.getPlaintextCharacters().isEmpty());
+		verify(logMock, times(1)).warn(anyString());
+		verifyNoMoreInteractions(logMock);
+	}
+
+	@Test
+	public void testRemovePlaintext() {
+		WordGene wordGene = new WordGene();
+
+		PlaintextSequence plaintextSequence1 = new PlaintextSequence("g", wordGene);
+
+		assertNull(plaintextSequence1.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.addPlaintext(plaintextSequence1);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(1, solutionChromosome.getPlaintextCharacters().size());
+
+		PlaintextSequence plaintextSequence2 = new PlaintextSequence("e", wordGene);
+
+		assertNull(plaintextSequence2.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.addPlaintext(plaintextSequence2);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(2, solutionChromosome.getPlaintextCharacters().size());
+
+		PlaintextSequence plaintextSequence3 = new PlaintextSequence("b", wordGene);
+
+		assertNull(plaintextSequence3.getSequenceId());
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+		solutionChromosome.addPlaintext(plaintextSequence3);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(0, solutionChromosome.getGenes().size());
+		assertEquals(3, solutionChromosome.getPlaintextCharacters().size());
+
+		/*
+		 * Make the solution clean before checking for dirtiness after
+		 * removeGene
+		 */
+		solutionChromosome.setFitness(0.0);
+		assertFalse(solutionChromosome.isEvaluationNeeded());
+
+		solutionChromosome.removePlaintext(plaintextSequence2);
+		assertTrue(solutionChromosome.isEvaluationNeeded());
+
+		assertEquals(2, solutionChromosome.getPlaintextCharacters().size());
+
+		assertSame(plaintextSequence1, solutionChromosome.getPlaintextCharacters().get(0));
+		assertSame(plaintextSequence3, solutionChromosome.getPlaintextCharacters().get(1));
+
+		assertFalse(plaintextSequence1.getHasMatch());
+		assertFalse(plaintextSequence3.getHasMatch());
+
+		assertEquals(0, plaintextSequence1.getSequenceId().intValue());
+		assertEquals(1, plaintextSequence3.getSequenceId().intValue());
+	}
+
+	@Test
+	public void testRemoveInvalidPlaintext() {
+		assertFalse(solutionChromosome.removePlaintext(null));
+		verify(logMock, times(1)).warn(anyString());
+		verifyNoMoreInteractions(logMock);
 	}
 
 	@Test
@@ -687,7 +873,7 @@ public class SolutionChromosomeTest {
 	 * @param solutionChromosome
 	 *            the SolutionChromosome to validate
 	 */
-	private void validateSequencesAndGenes(SolutionChromosome solutionChromosome) {
+	private static void validateSequencesAndGenes(SolutionChromosome solutionChromosome) {
 		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < gene.size(); j++) {
@@ -719,7 +905,7 @@ public class SolutionChromosomeTest {
 	 * @param expectedValue
 	 *            the expected value
 	 */
-	private void validateHasMatchValues(WordGene wordGeneToValidate, boolean expectedValue) {
+	private static void validateHasMatchValues(WordGene wordGeneToValidate, boolean expectedValue) {
 		for (Sequence sequence : wordGeneToValidate.getSequences()) {
 			assertEquals(expectedValue, ((PlaintextSequence) sequence).getHasMatch());
 		}

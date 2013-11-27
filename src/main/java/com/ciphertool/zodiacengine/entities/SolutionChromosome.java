@@ -486,19 +486,56 @@ public class SolutionChromosome implements Chromosome {
 
 	@Dirty
 	public void addPlaintext(PlaintextSequence plaintext) {
+		if (plaintext == null) {
+			log.warn("Attempted to add null PlaintextSequence to SolutionChromosome.  Returning since there's nothing to do.");
+			return;
+		}
+
 		plaintext.setSequenceId(this.plaintextCharacters.size());
 		this.plaintextCharacters.add(plaintext);
 	}
 
 	@Dirty
 	public void insertPlaintext(int index, PlaintextSequence plaintext) {
+		if (plaintext == null) {
+			log.warn("Attempted to insert null PlaintextSequence at position " + index
+					+ " in SolutionChromosome.  Returning since there's nothing to do.");
+			return;
+		}
+
 		plaintext.setSequenceId(index);
 		this.plaintextCharacters.add(index, plaintext);
+
+		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		int chromosomeSize = plaintextCharacters.size();
+		for (int i = plaintext.getSequenceId() + 1; i < chromosomeSize; i++) {
+			plaintextCharacters.get(i).shiftRight(1);
+		}
 	}
 
 	@Dirty
-	public void removePlaintext(PlaintextSequence plaintext) {
-		this.plaintextCharacters.remove(plaintext);
+	public boolean removePlaintext(PlaintextSequence plaintext) {
+		boolean result = this.plaintextCharacters.remove(plaintext);
+
+		if (!result) {
+			log.warn("Attempted to remove null PlaintextSequence from SolutionChromosome.  Returning since there's nothing to do.");
+
+			return false;
+		}
+
+		/*
+		 * We additionally have to shift the ciphertextIds since the current
+		 * ciphertextIds will no longer be accurate.
+		 */
+		int chromosomeSize = plaintextCharacters.size();
+		for (int i = plaintext.getSequenceId(); i < chromosomeSize; i++) {
+			((PlaintextSequence) plaintextCharacters.get(i)).shiftLeft(1);
+		}
+
+		return true;
 	}
 
 	@Override

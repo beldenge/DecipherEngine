@@ -34,6 +34,10 @@ public class PlaintextSequence implements Sequence {
 
 	protected Integer sequenceId;
 
+	/*
+	 * TODO: Change this to a char or Character instead of String, as it should
+	 * always be only one character for this implementation.
+	 */
 	protected String value;
 
 	protected boolean hasMatch;
