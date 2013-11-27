@@ -27,7 +27,7 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 
 public class PlaintextSequence implements Sequence {
-	private static Logger log = Logger.getLogger(WordGene.class);
+	private static Logger log = Logger.getLogger(PlaintextSequence.class);
 
 	@Transient
 	private Gene gene;
