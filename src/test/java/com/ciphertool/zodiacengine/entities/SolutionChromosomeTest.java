@@ -47,6 +47,7 @@ import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
@@ -310,7 +311,7 @@ public class SolutionChromosomeTest {
 	public void testActualSize() {
 		assertEquals(0, solutionChromosome.actualSize().intValue());
 
-		Word word = new Word(new WordId("smile", 'N'));
+		Word word = new Word(new WordId("smile", PartOfSpeechType.NOUN));
 
 		WordGene wordGene = new WordGene(word, solutionChromosome);
 
@@ -339,13 +340,13 @@ public class SolutionChromosomeTest {
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 		assertSame(solutionChromosome, wordGene1.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
-		Word word2 = new Word(new WordId("belden", 'N'));
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.addGene(wordGene2);
 		assertSame(solutionChromosome, wordGene2.getChromosome());
@@ -381,19 +382,19 @@ public class SolutionChromosomeTest {
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
-		Word word3 = new Word(new WordId("belden", 'N'));
+		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene3);
 		assertSame(solutionChromosome, wordGene3.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 		assertSame(solutionChromosome, wordGene1.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
-		Word word2 = new Word(new WordId("elmer", 'N'));
+		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene2);
 		assertSame(solutionChromosome, wordGene2.getChromosome());
@@ -423,15 +424,15 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveGene() {
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 
-		Word word2 = new Word(new WordId("elmer", 'N'));
+		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene2);
 
-		Word word3 = new Word(new WordId("belden", 'N'));
+		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(2, wordGene3);
 
@@ -466,7 +467,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testRemoveGeneOutOfBounds() {
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGeneOriginal);
 
@@ -478,17 +479,17 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testReplaceGene() {
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.insertGene(0, wordGene1);
 
-		Word word3 = new Word(new WordId("belden", 'N'));
+		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.insertGene(1, wordGene3);
 
 		int beforeSize = solutionChromosome.getGenes().size();
 
-		Word word2 = new Word(new WordId("elmer", 'N'));
+		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 
 		/*
@@ -517,18 +518,18 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testReplaceInvalidGene() {
-		Word word = new Word(new WordId("george", 'N'));
+		Word word = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGeneToReplace = new WordGene(word, solutionChromosome);
 		solutionChromosome.replaceGene(0, wordGeneToReplace);
 	}
 
 	@Test
 	public void testReplaceGeneOutOfBounds() {
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGeneOriginal = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGeneOriginal);
 
-		Word word2 = new Word(new WordId("smile", 'N'));
+		Word word2 = new Word(new WordId("smile", PartOfSpeechType.NOUN));
 		WordGene wordGeneToReplaceWith = new WordGene(word2, solutionChromosome);
 		solutionChromosome.replaceGene(1, wordGeneToReplaceWith);
 
@@ -541,11 +542,11 @@ public class SolutionChromosomeTest {
 		Double originalFitness = 999.9;
 		solutionChromosome.setFitness(originalFitness);
 
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 
-		Word word2 = new Word(new WordId("belden", 'N'));
+		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.addGene(wordGene2);
 
@@ -737,15 +738,15 @@ public class SolutionChromosomeTest {
 		solutionChromosome.setCipherId(new BigInteger("5678"));
 		solutionChromosome.setEvaluationNeeded(false);
 
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 
-		Word word2 = new Word(new WordId("elmer", 'N'));
+		Word word2 = new Word(new WordId("elmer", PartOfSpeechType.NOUN));
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 		solutionChromosome.addGene(wordGene2);
 
-		Word word3 = new Word(new WordId("belden", 'N'));
+		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.addGene(wordGene3);
 
@@ -831,11 +832,11 @@ public class SolutionChromosomeTest {
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		solutionChromosome.setCipherId(cipher.getId());
 
-		Word word1 = new Word(new WordId("george", 'N'));
+		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
 		solutionChromosome.addGene(wordGene1);
 
-		Word word3 = new Word(new WordId("belden", 'N'));
+		Word word3 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
 		WordGene wordGene3 = new WordGene(word3, solutionChromosome);
 		solutionChromosome.addGene(wordGene3);
 
@@ -919,11 +920,11 @@ public class SolutionChromosomeTest {
 		Date baseCreatedDate = new Date();
 		int baseAge = 30;
 		int baseNumberOfChildren = 1;
-		Word word1 = new Word(new WordId("learn", 'N'));
+		Word word1 = new Word(new WordId("learn", PartOfSpeechType.NOUN));
 		WordGene gene1 = new WordGene(word1, null);
-		Word word2 = new Word(new WordId("listen", 'N'));
+		Word word2 = new Word(new WordId("listen", PartOfSpeechType.NOUN));
 		WordGene gene2 = new WordGene(word2, null);
-		Word word3 = new Word(new WordId("love", 'N'));
+		Word word3 = new Word(new WordId("love", PartOfSpeechType.NOUN));
 		WordGene gene3 = new WordGene(word3, null);
 
 		SolutionChromosome base = new SolutionChromosome();

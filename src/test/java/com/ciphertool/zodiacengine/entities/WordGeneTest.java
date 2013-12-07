@@ -35,11 +35,12 @@ import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class WordGeneTest {
-	private static Word word = new Word(new WordId("smile", 'N'));
+	private static Word word = new Word(new WordId("smile", PartOfSpeechType.NOUN));
 	private static int beginCiphertextIndex = 0;
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
@@ -95,7 +96,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testConstructorNullWordString() {
-		Word wordWithNullId = new Word(new WordId(null, 'N'));
+		Word wordWithNullId = new Word(new WordId(null, PartOfSpeechType.NOUN));
 		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -473,7 +474,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testSize() {
-		Word george = new Word(new WordId("george", 'N'));
+		Word george = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals(6, wordGene.size());
@@ -481,7 +482,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testGetWordString() {
-		Word george = new Word(new WordId("george", 'N'));
+		Word george = new Word(new WordId("george", PartOfSpeechType.NOUN));
 		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals("george", wordGene.getWordString());
@@ -489,7 +490,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testCountMatches() {
-		Word newWord = new Word(new WordId("smile", 'N'));
+		Word newWord = new Word(new WordId("smile", PartOfSpeechType.NOUN));
 		WordGene wordGeneToTest = new WordGene(newWord, null);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(1)).setHasMatch(true);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(2)).setHasMatch(true);

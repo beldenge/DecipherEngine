@@ -22,6 +22,7 @@ package com.ciphertool.zodiacengine.algorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.GenericTestBase;
@@ -45,18 +46,20 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		 */
 		WordGene nextWordGene;
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("like", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("like", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("killing", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
@@ -66,7 +69,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("people", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("people", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("p", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -75,7 +79,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -85,65 +90,76 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("so", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("so", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("much", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("much", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("c", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("fun", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("more", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("more", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("fun", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("than", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("killing", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
@@ -153,32 +169,37 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("wild", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("wild", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("game", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("game", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("in", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("forrest", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("forrest", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
@@ -188,7 +209,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -198,31 +220,36 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("man", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("man", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("moat", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("dangeroue", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("dangeroue", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
@@ -234,7 +261,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("anamal", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("anamal", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
@@ -243,30 +271,35 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("all", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("to", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("kill", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("kill", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("something", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("something", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
@@ -278,7 +311,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("gives", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("gives", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
@@ -286,25 +320,29 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("me", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("me", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("moat", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("thrilling", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("thrilling", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
@@ -316,7 +354,8 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("experence", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("experence", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("x", nextWordGene));
@@ -328,24 +367,28 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("c", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("is", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("even", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("even", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("v", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("better", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("better", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -354,14 +397,16 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("than", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("than", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("getting", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("getting", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -371,14 +416,16 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("your", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("your", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("rocks", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("rocks", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
@@ -386,106 +433,121 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("off", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("off", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("with", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("with", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("a", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("a", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("girl", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("girl", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("best", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("best", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("part", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("part", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("p", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("it", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("ia", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("ia", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("thae", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("thae", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("when", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("when", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("die", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("die", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("be", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("be", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("reborn", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("reborn", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -494,12 +556,14 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("in", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("in", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("paradice", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("paradice", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("p", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
@@ -510,36 +574,41 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("c", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("snd", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("snd", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("all", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("all", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("the", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("have", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("have", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("h", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("v", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("killed", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("killed", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("k", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
@@ -548,14 +617,16 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("become", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("become", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -564,12 +635,14 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("slaves", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
@@ -578,49 +651,56 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("i", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("not", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("not", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("give", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("give", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("v", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("you", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("name", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("name", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("because", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
@@ -630,62 +710,72 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("you", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("you", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("u", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("will", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("try", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("try", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("to", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("to", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("sloi", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("sloi", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("down", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("down", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("d", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("w", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("or", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("or", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("stop", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("stop", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("p", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("collecting", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("collecting", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("c", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
@@ -698,12 +788,14 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("n", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("g", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("of", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("slaves", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("l", nextWordGene));
@@ -712,18 +804,21 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("s", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("for", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("for", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("o", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("r", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("my", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("m", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("y", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("afterlife", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("afterlife", PartOfSpeechType.NONE)),
+				knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("a", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
@@ -735,11 +830,12 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("f", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("e", 'X')), knownSolution);
+		nextWordGene = new WordGene(new Word(new WordId("e", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
 
-		nextWordGene = new WordGene(new Word(new WordId("beorietemethhpiti", 'X')), knownSolution);
+		nextWordGene = new WordGene(
+				new Word(new WordId("beorietemethhpiti", PartOfSpeechType.NONE)), knownSolution);
 		knownSolution.addGene(nextWordGene);
 		plaintextCharacters.add(new PlaintextSequence("b", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("e", nextWordGene));
