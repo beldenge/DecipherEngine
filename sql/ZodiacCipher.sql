@@ -36,9 +36,9 @@ CREATE DATABASE "Zodiac"
 CREATE TABLE parts_of_speech
 (
   word character varying NOT NULL,
-  part_of_speech character(1) NOT NULL,
+  part_of_speech character varying(17) NOT NULL,
   frequency_weight integer DEFAULT 1,
-  CONSTRAINT pk_word_pos PRIMARY KEY (part_of_speech, word )
+  CONSTRAINT pk_word_pos PRIMARY KEY (part_of_speech, word)
 )
 WITH (
   OIDS=FALSE
@@ -53,7 +53,7 @@ ALTER TABLE parts_of_speech
 CREATE INDEX idx_word
   ON parts_of_speech
   USING btree
-  (word COLLATE pg_catalog."default" );
+  (word COLLATE pg_catalog."default");
 
   
 -- Table: execution_stats
