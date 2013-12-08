@@ -109,7 +109,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<dependency>
 			<groupId>com.ciphertool.sentencebuilder</groupId>
 			<artifactId>SentenceBuilder</artifactId>
-			<version>1.1.0-SNAPSHOT</version>
+			<version>1.1.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
