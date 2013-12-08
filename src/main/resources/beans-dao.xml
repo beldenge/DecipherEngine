@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2013 George Belden
+
+This file is part of ZodiacEngine.
+
+ZodiacEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
+	
+ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+	
+You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao"
+		id="wordListDao">
+		<constructor-arg index="0"
+			type="com.ciphertool.sentencebuilder.dao.WordDao">
+			<ref bean="wordDao" />
+		</constructor-arg>
+	</bean>
+	
+	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
+	<!-- <bean class="com.ciphertool.sentencebuilder.dao.BasicWordMapDao"
+		id="wordMapDao">
+		<constructor-arg index="0"
+			type="com.ciphertool.sentencebuilder.dao.WordDao">
+			<ref bean="wordDao" />
+		</constructor-arg>
+	</bean> -->
+
+	<bean class="com.ciphertool.zodiacengine.dao.ForcedWordGeneListDao"
+		id="geneListDao">
+		<property name="wordListDao" ref="wordListDao" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.dao.PlaintextSequenceDao" id="sequenceDao" />
+	
+	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.dao.SolutionDao" id="solutionDao">
+		<property name="mongoTemplate" ref="mongoTemplate" />
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

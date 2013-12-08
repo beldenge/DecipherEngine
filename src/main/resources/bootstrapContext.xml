@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2013 George Belden
+
+This file is part of ZodiacEngine.
+
+ZodiacEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
+	
+ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+	
+You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       		http://www.springframework.org/schema/context
+       		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       		http://www.springframework.org/schema/tx 
+     		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     		http://www.springframework.org/schema/data/mongo
+            http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<import resource="classpath*:beans-dao.xml" />
+	<import resource="classpath*:geneticAlgorithmContext.xml" />
+
+	<context:annotation-config />
+	<tx:annotation-driven />
+	
+	<mongo:mongo host="${mongodb.host}" port="${mongodb.port}" />
+	<mongo:db-factory dbname="${mongodb.database}" />
+ 
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:zodiacengine.properties</value>
+		</property>
+	</bean>
+
+	<bean
+		class="com.ciphertool.zodiacengine.service.GeneticCipherSolutionService"
+		id="cipherSolutionService">
+		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+		<property name="solutionDao" ref="solutionDao" />
+		<property name="commandsBefore" value="${app.commands.before}" />
+		<property name="commandsAfter" value="${app.commands.after}" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.common.GeneticStrategyBuilder" id="strategyBuilder">
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
+	</bean>
+
+	<bean
+		class="com.ciphertool.zodiacengine.controller.ZodiacCipherSolutionController"
+		id="cipherSolutionController">
+		<property name="cipherSolutionService" ref="cipherSolutionService" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.view.SwingUserInterface"
+		id="userInterface" init-method="init">
+		<property name="windowTitle" value="${ui.window.title}" />
+		<property name="windowWidth" value="${ui.window.width}" />
+		<property name="windowHeight" value="${ui.window.height}" />
+		<property name="startButtonText" value="${ui.window.startButton.text}" />
+		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
+		<property name="cipherSolutionController" ref="cipherSolutionController" />
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="populationInitial" value="${genetic.population.size}" />
+		<property name="lifespanInitial" value="${genetic.algorithm.lifespan}" />
+		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
+		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
+		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
+		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />
+		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
+		<property name="defaultCipher" value="${cipher.name}" />
+		<property name="strategyBuilder" ref="strategyBuilder" />
+	</bean>
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${taskExecutor.corePoolSize}" />
+		<property name="maxPoolSize" value="${taskExecutor.maxPoolSize}" />
+		<!-- queueCapacity should be the same as populationSize, or we will get 
+			rejected execution exceptions -->
+		<property name="queueCapacity" value="${taskExecutor.queueCapacity}" />
+		<property name="keepAliveSeconds" value="5" />
+		<property name="allowCoreThreadTimeOut" value="true" />
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.connections.initialsize}" />
+		<property name="maxActive" value="${jdbc.connections.maxactive}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.ciphertool.sentencebuilder.entities.Word</value>
+				<value>com.ciphertool.genetics.entities.statistics.ExecutionStatistics</value>
+				<value>com.ciphertool.genetics.entities.statistics.GenerationStatistics</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+</beans>

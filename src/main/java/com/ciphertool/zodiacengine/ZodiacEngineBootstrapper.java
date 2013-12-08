@@ -39,6 +39,11 @@ public class ZodiacEngineBootstrapper {
 	protected static void initializeContext() {
 		log.info("Starting Spring application context");
 
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		long start = System.currentTimeMillis();
+
+		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
+
+		log.info("Spring application context started successfully in "
+				+ (System.currentTimeMillis() - start) + "ms.");
 	}
 }
