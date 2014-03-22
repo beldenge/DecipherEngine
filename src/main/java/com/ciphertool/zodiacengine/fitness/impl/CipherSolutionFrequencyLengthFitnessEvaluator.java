@@ -229,8 +229,6 @@ public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolut
 
 		fitness = fitness * wordLengthReductionFactor;
 
-		solution.setFitness(fitness);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}

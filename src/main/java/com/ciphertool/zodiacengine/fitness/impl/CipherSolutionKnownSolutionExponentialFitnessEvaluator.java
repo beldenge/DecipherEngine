@@ -495,8 +495,6 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends
 
 		double fitness = (double) subTotal;
 
-		solution.setFitness(fitness);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}

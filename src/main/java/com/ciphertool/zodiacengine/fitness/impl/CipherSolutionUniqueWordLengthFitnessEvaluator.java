@@ -179,7 +179,6 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends
 		double wordLengthFactor = determineWordLengthFactor(solution, lastSequenceToCheck);
 
 		double fitness = ((double) (total)) + uniquenessFactor + wordLengthFactor;
-		solution.setFitness(fitness);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);

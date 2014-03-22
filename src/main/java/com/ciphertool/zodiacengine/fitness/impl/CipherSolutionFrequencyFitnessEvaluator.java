@@ -215,8 +215,6 @@ public class CipherSolutionFrequencyFitnessEvaluator extends AbstractSolutionEva
 
 		fitness = fitness * frequencyReductionFactor;
 
-		solution.setFitness(fitness);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}

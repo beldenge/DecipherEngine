@@ -165,8 +165,6 @@ public class CipherSolutionMagicWordFitnessEvaluator extends AbstractSolutionTru
 
 		solution.setAdjacentMatches(adjacentMatchCount);
 
-		solution.setFitness((double) total);
-
 		/*
 		 * TODO: externalize these strings so that people don't think I'm a
 		 * psychopath. These are the only non-article words the Zodiac Killer

@@ -185,8 +185,6 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends
 		 */
 		fitness = fitness > 0 ? fitness : 1;
 
-		solution.setFitness(fitness);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}

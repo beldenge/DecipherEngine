@@ -166,8 +166,6 @@ public class CipherSolutionMultipleFitnessEvaluator extends AbstractSolutionTrun
 
 		double fitness = (totalUnique * UNIQUE_MATCH_MULTIPLIER) + total;
 
-		solution.setFitness(fitness);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);
 		}

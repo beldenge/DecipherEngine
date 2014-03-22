@@ -490,8 +490,6 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends
 
 		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
 
-		solution.setFitness(proximityToKnownSolution);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: "
 					+ proximityToKnownSolution);

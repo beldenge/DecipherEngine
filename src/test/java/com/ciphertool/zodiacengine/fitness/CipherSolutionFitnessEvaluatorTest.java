@@ -224,6 +224,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -239,6 +241,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -254,6 +258,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -269,6 +275,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -288,6 +296,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -302,6 +312,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -317,6 +329,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -330,6 +344,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);
@@ -343,6 +359,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 
 		assertTrue(knownSolution.isEvaluationNeeded());
 		Double fitness = fitnessEvaluator.evaluate(knownSolution);
+		assertTrue(knownSolution.isEvaluationNeeded());
+		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		log.info(knownSolution);

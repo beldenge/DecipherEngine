@@ -173,7 +173,6 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends
 		double matchDistanceFactor = determineMatchDistanceFactor(solution, lastSequenceToCheck);
 
 		double fitness = ((double) (total)) * (1.0 + matchDistanceFactor);
-		solution.setFitness(fitness);
 
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + fitness);

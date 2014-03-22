@@ -162,8 +162,6 @@ public class CipherSolutionFitnessEvaluator extends AbstractSolutionEvaluatorBas
 
 		solution.setAdjacentMatches(adjacentMatchCount);
 
-		solution.setFitness((double) total);
-
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + solution.getId() + " has a confidence level of: " + total);
 		}
