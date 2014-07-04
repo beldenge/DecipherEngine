@@ -38,6 +38,8 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.genetics.util.ChromosomeHelper" id="chromosomeHelper">
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
+	
+	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />
 
 	<bean
 		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"

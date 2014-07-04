@@ -41,7 +41,6 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 
 public class WordGeneTest {
 	private static Word word = new Word(new WordId("smile", PartOfSpeechType.NOUN));
-	private static int beginCiphertextIndex = 0;
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
 	@BeforeClass
