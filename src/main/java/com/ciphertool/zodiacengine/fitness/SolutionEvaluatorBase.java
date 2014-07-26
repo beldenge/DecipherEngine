@@ -23,37 +23,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
-public abstract class AbstractSolutionTruncatedEvaluatorBase {
-	protected Cipher cipher;
+public abstract class SolutionEvaluatorBase extends AbstractSolutionEvaluatorBase {
 	protected HashMap<String, List<Ciphertext>> ciphertextKey;
 
-	/**
-	 * Creates a map with the key as the String value of the Ciphertext
-	 * character and the value as a List of occurrences within the cipher
-	 * 
-	 * There's no reason to run this for every single iteration of the validator
-	 * since the ciphertext is not going to change during a run
-	 * 
-	 * @return
-	 */
+	@Override
 	protected HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
 		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (ct.getCiphertextId() >= lastRowBegin) {
-				/*
-				 * If this is the last row of the cipher, just exit the loop,
-				 * because for the Zodiac 408 Cipher the last row is garbage.
-				 */
-				break;
-			}
-
 			if (!ciphertextKey.containsKey(ct.getValue())) {
 				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
 			}
@@ -64,6 +45,7 @@ public abstract class AbstractSolutionTruncatedEvaluatorBase {
 		return ciphertextKey;
 	}
 
+	@Override
 	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
 		for (PlaintextSequence plaintext : solutionChromosome.getPlaintextCharacters()) {
 			plaintext.setHasMatch(false);

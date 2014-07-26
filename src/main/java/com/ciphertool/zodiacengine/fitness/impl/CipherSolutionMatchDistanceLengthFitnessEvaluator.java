@@ -34,10 +34,10 @@ import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
-import com.ciphertool.zodiacengine.fitness.AbstractSolutionTruncatedEvaluatorBase;
+import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
 public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
-		AbstractSolutionTruncatedEvaluatorBase implements FitnessEvaluator {
+		SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int ACCEPTABLE_DISTANCE = 3;
@@ -150,24 +150,10 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 			 */
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
+
 		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
-
-		boolean countAdjacent = false;
-		int adjacentMatchCount = 0;
-		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
-				countAdjacent = true;
-			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
-				adjacentMatchCount++;
-			} else {
-				countAdjacent = false;
-			}
-		}
-
-		solution.setAdjacentMatches(adjacentMatchCount);
+		solution.setAdjacentMatches(calculateAdjacentMatches(plaintextCharacters));
 
 		/*
 		 * We don't care to evaluate past the last row since it is likely to be

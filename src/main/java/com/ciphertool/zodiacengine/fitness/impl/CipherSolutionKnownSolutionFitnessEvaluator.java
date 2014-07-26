@@ -29,10 +29,10 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
-import com.ciphertool.zodiacengine.fitness.AbstractSolutionTruncatedEvaluatorBase;
+import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
 public class CipherSolutionKnownSolutionFitnessEvaluator extends
-		AbstractSolutionTruncatedEvaluatorBase implements FitnessEvaluator {
+		SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 

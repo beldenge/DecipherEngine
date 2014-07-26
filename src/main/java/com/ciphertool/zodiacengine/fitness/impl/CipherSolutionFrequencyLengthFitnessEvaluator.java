@@ -33,7 +33,7 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
-import com.ciphertool.zodiacengine.fitness.AbstractSolutionEvaluatorBase;
+import com.ciphertool.zodiacengine.fitness.SolutionEvaluatorBase;
 
 /**
  * This class was modeled after CipherSolutionFrequencyFitnessEvaluator, with
@@ -41,8 +41,8 @@ import com.ciphertool.zodiacengine.fitness.AbstractSolutionEvaluatorBase;
  * 
  * @author george
  */
-public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolutionEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionFrequencyLengthFitnessEvaluator extends SolutionEvaluatorBase implements
+		FitnessEvaluator {
 
 	private static Logger log = Logger
 			.getLogger(CipherSolutionFrequencyLengthFitnessEvaluator.class);
@@ -186,24 +186,10 @@ public class CipherSolutionFrequencyLengthFitnessEvaluator extends AbstractSolut
 			 */
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
+
 		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
-
-		boolean countAdjacent = false;
-		int adjacentMatchCount = 0;
-		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
-				countAdjacent = true;
-			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
-				adjacentMatchCount++;
-			} else {
-				countAdjacent = false;
-			}
-		}
-
-		solution.setAdjacentMatches(adjacentMatchCount);
+		solution.setAdjacentMatches(calculateAdjacentMatches(plaintextCharacters));
 
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {

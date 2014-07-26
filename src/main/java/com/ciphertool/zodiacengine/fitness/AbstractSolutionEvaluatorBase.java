@@ -19,7 +19,6 @@
 
 package com.ciphertool.zodiacengine.fitness;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public abstract class AbstractSolutionEvaluatorBase {
 	protected Cipher cipher;
-	protected HashMap<String, List<Ciphertext>> ciphertextKey;
 
 	/**
 	 * Creates a map with the key as the String value of the Ciphertext
@@ -39,25 +37,42 @@ public abstract class AbstractSolutionEvaluatorBase {
 	 * There's no reason to run this for every single iteration of the validator
 	 * since the ciphertext is not going to change during a run
 	 * 
-	 * @return
+	 * @return the ciphertextKey as a HashMap with the Ciphertext value as the
+	 *         map key and the List of occurrences as the value
 	 */
-	protected HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
-		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
+	protected abstract HashMap<String, List<Ciphertext>> createKeyFromCiphertext();
 
+	/**
+	 * Resets the hasMatch value for all PlaintextSequence instances in the
+	 * specified SolutionChromosome.
+	 * 
+	 * @param solutionChromosome
+	 *            the SolutionChromosome to clear hasMatch values for
+	 */
+	protected abstract void clearHasMatchValues(SolutionChromosome solutionChromosome);
+
+	/**
+	 * Determines the number of matches which are adjacent to other matches
+	 * 
+	 * @param plaintextCharacters
+	 *            the List of PlaintextSequences
+	 * @return the number of adjacent matches found
+	 */
+	protected int calculateAdjacentMatches(List<PlaintextSequence> plaintextCharacters) {
+		boolean countAdjacent = false;
+		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (!ciphertextKey.containsKey(ct.getValue())) {
-				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
+			if (countAdjacent == false
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
+				countAdjacent = true;
+			} else if (countAdjacent == true
+					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
+				adjacentMatchCount++;
+			} else {
+				countAdjacent = false;
 			}
-
-			ciphertextKey.get(ct.getValue()).add(ct);
 		}
 
-		return ciphertextKey;
-	}
-
-	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
-		for (PlaintextSequence plaintext : solutionChromosome.getPlaintextCharacters()) {
-			plaintext.setHasMatch(false);
-		}
+		return adjacentMatchCount;
 	}
 }
