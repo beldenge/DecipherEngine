@@ -17,40 +17,26 @@
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.fitness;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+package com.ciphertool.zodiacengine.fitness.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyTruncatedFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMatchDistanceFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMultipleFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionTruncatedFitnessEvaluator;
-import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator;
 
-public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase {
-	private static Logger log = Logger.getLogger(CipherSolutionFitnessEvaluatorTest.class);
+public class FrequencyFitnessEvaluatorTestBase extends GeneticAlgorithmTestBase {
+	private static Logger log = Logger.getLogger(FrequencyFitnessEvaluatorTestBase.class);
 
-	private static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
-	private static Double averageWordLength = 5.1;
+	protected static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
 	private static Map<Character, Integer> knownSolutionLetterTotals = new HashMap<Character, Integer>();
 	private static Map<Character, Integer> expectedLetterTotals = new HashMap<Character, Integer>();
+
+	protected static Double averageWordLength = 5.1;
 
 	@BeforeClass
 	public static void setUpFrequencies() {
@@ -209,161 +195,5 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		}
 		log.info("Average word length known: "
 				+ ((double) numCharsToEvaluate / (double) (validWordCount)));
-	}
-
-	@Before
-	public void resetDirtiness() {
-		knownSolution.setEvaluationNeeded(true);
-		assertTrue(knownSolution.isEvaluationNeeded());
-	}
-
-	@Test
-	public void testCipherSolutionFitnessEvaluator() {
-		CipherSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionFitnessEvaluator Fitness: " + fitness);
-
-		assertEquals(fitness, new Double(354.0));
-	}
-
-	@Test
-	public void testCipherSolutionMultipleFitnessEvaluator() {
-		CipherSolutionMultipleFitnessEvaluator fitnessEvaluator = new CipherSolutionMultipleFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionMultipleFitnessEvaluator Fitness: " + fitness);
-
-		assertEquals(fitness, new Double(602.0));
-	}
-
-	@Test
-	public void testCipherSolutionTruncatedFitnessEvaluator() {
-		CipherSolutionTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionTruncatedFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionTruncatedFitnessEvaluator Fitness: " + fitness);
-
-		assertEquals(fitness, new Double(337.0));
-	}
-
-	@Test
-	public void testCipherSolutionKnownSolutionFitnessEvaluator() {
-		CipherSolutionKnownSolutionFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionKnownSolutionFitnessEvaluator Fitness: " + fitness);
-
-		/*
-		 * This should return 100% since we know the solution.
-		 */
-		assertEquals(fitness, new Double(100.0));
-	}
-
-	@Test
-	public void testCipherSolutionFrequencyFitnessEvaluator() {
-		CipherSolutionFrequencyFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyFitnessEvaluator();
-		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionFrequencyFitnessEvaluator Fitness: " + fitness);
-	}
-
-	@Test
-	public void testCipherSolutionFrequencyTruncatedFitnessEvaluator() {
-		CipherSolutionFrequencyTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyTruncatedFitnessEvaluator();
-		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionFrequencyTruncatedFitnessEvaluator Fitness: " + fitness);
-	}
-
-	@Test
-	public void testCipherSolutionFrequencyLengthFitnessEvaluator() {
-		CipherSolutionFrequencyLengthFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyLengthFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
-		fitnessEvaluator.setAverageWordLength(averageWordLength);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionFrequencyLengthFitnessEvaluator Fitness: " + fitness);
-	}
-
-	@Test
-	public void testCipherSolutionMatchDistanceFitnessEvaluator() {
-		CipherSolutionMatchDistanceFitnessEvaluator fitnessEvaluator = new CipherSolutionMatchDistanceFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionMatchDistanceFitnessEvaluator Fitness: " + fitness);
-	}
-
-	@Test
-	public void testCipherSolutionUniqueWordFitnessEvaluator() {
-		CipherSolutionUniqueWordFitnessEvaluator fitnessEvaluator = new CipherSolutionUniqueWordFitnessEvaluator();
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		assertTrue(knownSolution.isEvaluationNeeded());
-		Double fitness = fitnessEvaluator.evaluate(knownSolution);
-		assertTrue(knownSolution.isEvaluationNeeded());
-		knownSolution.setFitness(fitness);
-		assertFalse(knownSolution.isEvaluationNeeded());
-
-		log.info(knownSolution);
-		log.info("CipherSolutionUniqueWordFitnessEvaluator Fitness: " + fitness);
 	}
 }

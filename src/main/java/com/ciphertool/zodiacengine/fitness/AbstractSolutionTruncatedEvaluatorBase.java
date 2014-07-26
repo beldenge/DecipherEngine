@@ -57,8 +57,10 @@ public abstract class AbstractSolutionTruncatedEvaluatorBase {
 			if (!ciphertextKey.containsKey(ct.getValue())) {
 				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
 			}
+
 			ciphertextKey.get(ct.getValue()).add(ct);
 		}
+
 		return ciphertextKey;
 	}
 

@@ -43,12 +43,15 @@ public abstract class AbstractSolutionEvaluatorBase {
 	 */
 	protected HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
 		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
+
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (!ciphertextKey.containsKey(ct.getValue())) {
 				ciphertextKey.put(ct.getValue(), new ArrayList<Ciphertext>());
 			}
+
 			ciphertextKey.get(ct.getValue()).add(ct);
 		}
+
 		return ciphertextKey;
 	}
 
