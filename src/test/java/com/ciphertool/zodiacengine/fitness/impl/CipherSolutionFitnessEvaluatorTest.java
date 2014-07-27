@@ -47,5 +47,8 @@ public class CipherSolutionFitnessEvaluatorTest extends GeneticAlgorithmTestBase
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(354.0), fitness);
+		assertEquals(354, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(407, knownSolution.getAdjacentMatches());
 	}
 }

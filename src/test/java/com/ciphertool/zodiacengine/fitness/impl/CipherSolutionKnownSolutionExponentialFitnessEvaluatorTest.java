@@ -51,5 +51,8 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluatorTest extends
 		 * This should return 100% since we know the solution.
 		 */
 		assertEquals(new Double(100.0), fitness);
+		assertEquals(391, knownSolution.getTotalMatches());
+		assertEquals(0, knownSolution.getUniqueMatches());
+		assertEquals(0, knownSolution.getAdjacentMatches());
 	}
 }

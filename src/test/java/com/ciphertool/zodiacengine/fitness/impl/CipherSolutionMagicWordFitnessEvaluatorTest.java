@@ -47,5 +47,8 @@ public class CipherSolutionMagicWordFitnessEvaluatorTest extends GeneticAlgorith
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(657.0), fitness);
+		assertEquals(337, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(390, knownSolution.getAdjacentMatches());
 	}
 }

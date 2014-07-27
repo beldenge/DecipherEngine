@@ -47,5 +47,8 @@ public class CipherSolutionTruncatedFitnessEvaluatorTest extends GeneticAlgorith
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(337.0), fitness);
+		assertEquals(337, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(390, knownSolution.getAdjacentMatches());
 	}
 }

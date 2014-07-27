@@ -151,6 +151,9 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 			totalUnique += (uniqueMatch ? 1 : 0);
 		}
 
+		/*
+		 * TODO: Maintain the total matches as a separate value from the fitness
+		 */
 		solution.setTotalMatches(total);
 		solution.setUniqueMatches(totalUnique);
 		solution.setAdjacentMatches(calculateAdjacentMatches(plaintextCharacters));

@@ -135,6 +135,11 @@ public class FrequencyFitnessEvaluatorTestBase extends GeneticAlgorithmTestBase 
 		for (Integer letterCount : expectedLetterTotals.values()) {
 			letterSum += letterCount;
 		}
+
+		/*
+		 * This may be slightly different than the actual letter total since we
+		 * are rounding the frequencies
+		 */
 		log.info("Total letters expected: " + letterSum);
 	}
 

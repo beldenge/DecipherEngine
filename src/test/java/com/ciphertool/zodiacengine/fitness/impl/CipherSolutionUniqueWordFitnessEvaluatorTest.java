@@ -45,5 +45,8 @@ public class CipherSolutionUniqueWordFitnessEvaluatorTest extends FrequencyFitne
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(1229.0), fitness);
+		assertEquals(1389, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(390, knownSolution.getAdjacentMatches());
 	}
 }

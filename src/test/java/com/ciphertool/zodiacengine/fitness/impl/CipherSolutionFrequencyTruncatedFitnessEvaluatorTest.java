@@ -47,5 +47,8 @@ public class CipherSolutionFrequencyTruncatedFitnessEvaluatorTest extends
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(248.78641457800512), fitness);
+		assertEquals(337, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(390, knownSolution.getAdjacentMatches());
 	}
 }

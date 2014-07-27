@@ -47,5 +47,8 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluatorTest extends Genet
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(499.0), fitness);
+		assertEquals(337, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(390, knownSolution.getAdjacentMatches());
 	}
 }

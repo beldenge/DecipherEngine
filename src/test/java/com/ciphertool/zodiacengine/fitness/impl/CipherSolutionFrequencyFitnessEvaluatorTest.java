@@ -46,5 +46,8 @@ public class CipherSolutionFrequencyFitnessEvaluatorTest extends FrequencyFitnes
 		assertFalse(knownSolution.isEvaluationNeeded());
 
 		assertEquals(new Double(259.52572941176464), fitness);
+		assertEquals(354, knownSolution.getTotalMatches());
+		assertEquals(53, knownSolution.getUniqueMatches());
+		assertEquals(407, knownSolution.getAdjacentMatches());
 	}
 }
