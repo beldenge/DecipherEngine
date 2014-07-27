@@ -20,12 +20,22 @@
 package com.ciphertool.zodiacengine.fitness;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -44,15 +54,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 	private class ConcreteSolutionEvaluatorBase extends AbstractSolutionEvaluatorBase {
 		@Override
 		protected HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
-			return null;
-		}
-
-		@Override
-		protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
-		}
-
-		protected void setGeneticStructure(Object cipher) {
-			this.cipher = (Cipher) cipher;
+			return new HashMap<String, List<Ciphertext>>();
 		}
 	}
 
@@ -82,19 +84,24 @@ public class AbstractSolutionEvaluatorBaseTest {
 		WordGene simpleWordGene = new WordGene(new Word(new WordId("abcdefghij",
 				PartOfSpeechType.NONE)), simpleSolution);
 		simpleSolution.addGene(simpleWordGene);
-
-		((PlaintextSequence) simpleWordGene.getSequences().get(0)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(1)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(4)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(5)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(6)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(8)).setHasMatch(true);
-		((PlaintextSequence) simpleWordGene.getSequences().get(9)).setHasMatch(true);
 	}
 
 	@Test
-	public void calculateAdjacentMatches() {
+	public void testCalculateAdjacentMatches() {
 		ConcreteSolutionEvaluatorBase abstractSolutionEvaluatorBase = new ConcreteSolutionEvaluatorBase();
+
+		Field logField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, abstractSolutionEvaluatorBase, mockLogger);
+
+		simpleSolution.getPlaintextCharacters().get(0).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(1).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(4).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(5).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(6).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(8).setHasMatch(true);
+		simpleSolution.getPlaintextCharacters().get(9).setHasMatch(true);
 
 		assertEquals(0, simpleSolution.getAdjacentMatches());
 
@@ -108,5 +115,84 @@ public class AbstractSolutionEvaluatorBaseTest {
 		 */
 		assertEquals(0, simpleSolution.getAdjacentMatches());
 		assertEquals(4, adjacentMatches);
+
+		verifyZeroInteractions(mockLogger);
+	}
+
+	@Test
+	public void testCalculateAdjacentMatches_NullPlaintextCharacters() {
+		ConcreteSolutionEvaluatorBase abstractSolutionEvaluatorBase = new ConcreteSolutionEvaluatorBase();
+
+		Field logField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, abstractSolutionEvaluatorBase, mockLogger);
+
+		abstractSolutionEvaluatorBase.calculateAdjacentMatches(null);
+
+		verify(mockLogger, times(1))
+				.warn("Attempted to calculate adjacent matches, but the List of plaintextCharacters was null or empty.  Returning -1.");
+	}
+
+	@Test
+	public void testClearHasMatchValues() {
+		ConcreteSolutionEvaluatorBase abstractSolutionEvaluatorBase = new ConcreteSolutionEvaluatorBase();
+
+		Field logField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, abstractSolutionEvaluatorBase, mockLogger);
+
+		for (PlaintextSequence plaintextSequence : simpleSolution.getPlaintextCharacters()) {
+			plaintextSequence.setHasMatch(true);
+			assertTrue(plaintextSequence.getHasMatch());
+		}
+
+		abstractSolutionEvaluatorBase.clearHasMatchValues(simpleSolution);
+
+		for (PlaintextSequence plaintextSequence : simpleSolution.getPlaintextCharacters()) {
+			assertFalse(plaintextSequence.getHasMatch());
+		}
+
+		verifyZeroInteractions(mockLogger);
+	}
+
+	@Test
+	public void testClearHasMatchValues_NullSolution() {
+		ConcreteSolutionEvaluatorBase abstractSolutionEvaluatorBase = new ConcreteSolutionEvaluatorBase();
+
+		Field logField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, abstractSolutionEvaluatorBase, mockLogger);
+
+		abstractSolutionEvaluatorBase.clearHasMatchValues(null);
+
+		verify(mockLogger, times(1))
+				.warn("Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testSetGeneticStructure() {
+		ConcreteSolutionEvaluatorBase abstractSolutionEvaluatorBase = new ConcreteSolutionEvaluatorBase();
+
+		abstractSolutionEvaluatorBase.setGeneticStructure(simpleCipher);
+
+		Field cipherField = ReflectionUtils
+				.findField(ConcreteSolutionEvaluatorBase.class, "cipher");
+		ReflectionUtils.makeAccessible(cipherField);
+		Cipher cipherFromObject = (Cipher) ReflectionUtils.getField(cipherField,
+				abstractSolutionEvaluatorBase);
+
+		assertEquals(simpleCipher, cipherFromObject);
+
+		Field ciphertextKeyField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class,
+				"ciphertextKey");
+		ReflectionUtils.makeAccessible(ciphertextKeyField);
+		HashMap<String, List<Ciphertext>> ciphertextKeyFromObject = (HashMap<String, List<Ciphertext>>) ReflectionUtils
+				.getField(ciphertextKeyField, abstractSolutionEvaluatorBase);
+
+		assertNotNull(ciphertextKeyFromObject);
 	}
 }

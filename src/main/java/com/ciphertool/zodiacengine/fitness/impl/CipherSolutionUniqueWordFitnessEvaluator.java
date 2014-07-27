@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
@@ -242,11 +241,5 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 		}
 
 		return penalty;
-	}
-
-	@Override
-	public void setGeneticStructure(Object cipher) {
-		this.cipher = (Cipher) cipher;
-		this.ciphertextKey = createKeyFromCiphertext();
 	}
 }

@@ -24,12 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.ciphertool.zodiacengine.entities.Ciphertext;
-import com.ciphertool.zodiacengine.entities.PlaintextSequence;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
-public abstract class SolutionEvaluatorBase extends AbstractSolutionEvaluatorBase {
-	protected HashMap<String, List<Ciphertext>> ciphertextKey;
-
+public class SolutionEvaluatorBase extends AbstractSolutionEvaluatorBase {
 	@Override
 	protected HashMap<String, List<Ciphertext>> createKeyFromCiphertext() {
 		HashMap<String, List<Ciphertext>> ciphertextKey = new HashMap<String, List<Ciphertext>>();
@@ -43,12 +39,5 @@ public abstract class SolutionEvaluatorBase extends AbstractSolutionEvaluatorBas
 		}
 
 		return ciphertextKey;
-	}
-
-	@Override
-	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
-		for (PlaintextSequence plaintext : solutionChromosome.getPlaintextCharacters()) {
-			plaintext.setHasMatch(false);
-		}
 	}
 }

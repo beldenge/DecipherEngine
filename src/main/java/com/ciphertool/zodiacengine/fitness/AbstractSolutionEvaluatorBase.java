@@ -22,12 +22,17 @@ package com.ciphertool.zodiacengine.fitness;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public abstract class AbstractSolutionEvaluatorBase {
+	private Logger log = Logger.getLogger(getClass());
+
+	protected HashMap<String, List<Ciphertext>> ciphertextKey;
 	protected Cipher cipher;
 
 	/**
@@ -49,7 +54,17 @@ public abstract class AbstractSolutionEvaluatorBase {
 	 * @param solutionChromosome
 	 *            the SolutionChromosome to clear hasMatch values for
 	 */
-	protected abstract void clearHasMatchValues(SolutionChromosome solutionChromosome);
+	protected void clearHasMatchValues(SolutionChromosome solutionChromosome) {
+		if (solutionChromosome == null) {
+			log.warn("Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
+
+			return;
+		}
+
+		for (PlaintextSequence plaintext : solutionChromosome.getPlaintextCharacters()) {
+			plaintext.setHasMatch(false);
+		}
+	}
 
 	/**
 	 * Determines the number of matches which are adjacent to other matches
@@ -59,6 +74,12 @@ public abstract class AbstractSolutionEvaluatorBase {
 	 * @return the number of adjacent matches found
 	 */
 	protected int calculateAdjacentMatches(List<PlaintextSequence> plaintextCharacters) {
+		if (plaintextCharacters == null || plaintextCharacters.isEmpty()) {
+			log.warn("Attempted to calculate adjacent matches, but the List of plaintextCharacters was null or empty.  Returning -1.");
+
+			return -1;
+		}
+
 		boolean countAdjacent = false;
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
@@ -74,5 +95,10 @@ public abstract class AbstractSolutionEvaluatorBase {
 		}
 
 		return adjacentMatchCount;
+	}
+
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
+		this.ciphertextKey = createKeyFromCiphertext();
 	}
 }

@@ -26,7 +26,6 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
@@ -502,11 +501,5 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends
 		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
 
 		return proximityToKnownSolution;
-	}
-
-	@Override
-	public void setGeneticStructure(Object cipher) {
-		this.cipher = (Cipher) cipher;
-		this.ciphertextKey = createKeyFromCiphertext();
 	}
 }
