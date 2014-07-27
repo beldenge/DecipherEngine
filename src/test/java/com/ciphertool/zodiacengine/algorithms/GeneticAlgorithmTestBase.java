@@ -19,8 +19,12 @@
 
 package com.ciphertool.zodiacengine.algorithms;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Before;
 
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -854,5 +858,14 @@ public class GeneticAlgorithmTestBase extends GenericTestBase {
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("t", nextWordGene));
 		plaintextCharacters.add(new PlaintextSequence("i", nextWordGene));
+	}
+
+	@Before
+	public void resetDirtiness() {
+		knownSolution.setEvaluationNeeded(true);
+		knownSolution.setTotalMatches(0);
+		knownSolution.setUniqueMatches(0);
+		knownSolution.setAdjacentMatches(0);
+		assertTrue(knownSolution.isEvaluationNeeded());
 	}
 }

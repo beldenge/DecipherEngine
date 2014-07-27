@@ -23,18 +23,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 
 public class CipherSolutionMatchDistanceLengthFitnessEvaluatorTest extends GeneticAlgorithmTestBase {
-	@Before
-	public void resetDirtiness() {
-		knownSolution.setEvaluationNeeded(true);
-		assertTrue(knownSolution.isEvaluationNeeded());
-	}
-
 	@Test
 	public void testEvaluate() {
 		CipherSolutionMatchDistanceLengthFitnessEvaluator fitnessEvaluator = new CipherSolutionMatchDistanceLengthFitnessEvaluator();
