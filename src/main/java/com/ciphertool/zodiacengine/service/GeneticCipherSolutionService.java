@@ -32,8 +32,9 @@ import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.view.GenericCallback;
 
-public class GeneticCipherSolutionService extends AbstractCipherSolutionService {
+public class GeneticCipherSolutionService implements CipherSolutionService {
 	private Logger log = Logger.getLogger(getClass());
+	private boolean running = false;
 
 	private GeneticAlgorithm geneticAlgorithm;
 	private String[] commandsBefore;
@@ -41,7 +42,15 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 	private SolutionDao solutionDao;
 	private long start;
 
-	public void start(GenericCallback uiCallback, boolean debugMode) {
+	// This is instantiated here to support unit testability
+	private Runtime runtime = Runtime.getRuntime();
+
+	@Override
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
+			GenericCallback uiCallback, boolean debugMode) {
+		toggleRunning();
+		setUp(geneticAlgorithmStrategy);
+
 		start = System.currentTimeMillis();
 
 		if (debugMode) {
@@ -51,47 +60,26 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
-	/**
-	 * In this method we ALWAYS want to execute the inherited end() method
-	 * 
-	 * @param teardownCallback
-	 */
-	private void runAlgorithmAutonomously(GenericCallback uiCallback) {
+	protected void setUp(GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
+		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
+
+		// currentCommand is really just used for exception logging.
+		String currentCommand = "";
+
 		try {
-			geneticAlgorithm.evolveAutonomously();
-		} catch (Throwable t) {
-			log.error("Caught Throwable while running cipher solution service.  "
-					+ "Cannot continue.  Performing tear-down tasks.", t);
-		} finally {
-			end();
-			uiCallback.doCallback();
+			for (String commandBefore : commandsBefore) {
+				log.info("Executing shell command on start up: " + commandBefore);
+				currentCommand = commandBefore;
+
+				runtime.exec(commandBefore);
+			}
+		} catch (IOException e) {
+			log.warn("Unable to execute commmand before app begin: " + currentCommand
+					+ ".  Continuing.");
 		}
 	}
 
-	/**
-	 * In this method we only want to execute the inherited end() method if an
-	 * exception is caught
-	 * 
-	 * @param teardownCallback
-	 */
-	private void runAlgorithmStepwise() {
-		try {
-			geneticAlgorithm.initialize();
-
-			/*
-			 * Print the population every generation since this is debug mode.
-			 */
-			this.geneticAlgorithm.getPopulation().printAscending();
-
-			geneticAlgorithm.proceedWithNextGeneration();
-		} catch (Throwable t) {
-			log.error("Caught Throwable while running cipher solution service.  "
-					+ "Cannot continue.  Performing tear-down tasks.", t);
-
-			end();
-		}
-	}
-
+	@Override
 	public void endImmediately(boolean inDebugMode) {
 		if (inDebugMode) {
 			end();
@@ -100,7 +88,8 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
-	protected void proceed() {
+	@Override
+	public void resume() {
 		try {
 			/*
 			 * Print the population every generation since this is debug mode,
@@ -118,42 +107,63 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
-	public void stop() {
-		/*
-		 * Print out summary information
-		 */
-		log.info("Total running time was " + (System.currentTimeMillis() - start) + "ms.");
-
-		this.geneticAlgorithm.getPopulation().printAscending();
-
-		persistPopulation();
-	}
-
-	protected void setUp(GeneticAlgorithmStrategy geneticAlgorithmStrategy) {
-		geneticAlgorithm.setStrategy(geneticAlgorithmStrategy);
-
-		/*
-		 * currentCommand is really just used for exception logging.
-		 */
-		String currentCommand = "";
-
+	/**
+	 * In this method we ALWAYS want to execute the inherited end() method
+	 * 
+	 * @param teardownCallback
+	 */
+	protected void runAlgorithmAutonomously(GenericCallback uiCallback) {
 		try {
-			for (String commandBefore : commandsBefore) {
-				log.info("Executing shell command on start up: " + commandBefore);
-				currentCommand = commandBefore;
-
-				Runtime.getRuntime().exec(commandBefore);
-			}
-		} catch (IOException e) {
-			log.warn("Unable to execute commmand before app begin: " + currentCommand
-					+ ".  Continuing.");
+			geneticAlgorithm.evolveAutonomously();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
+		} finally {
+			end();
+			uiCallback.doCallback();
 		}
 	}
 
+	/**
+	 * In this method we only want to execute the inherited end() method if an
+	 * exception is caught
+	 */
+	protected void runAlgorithmStepwise() {
+		try {
+			geneticAlgorithm.initialize();
+
+			// Print the population every generation since this is debug mode.
+			this.geneticAlgorithm.getPopulation().printAscending();
+
+			geneticAlgorithm.proceedWithNextGeneration();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while running cipher solution service.  "
+					+ "Cannot continue.  Performing tear-down tasks.", t);
+
+			end();
+		}
+	}
+
+	protected void end() {
+		try {
+			// Print out summary information
+			log.info("Total running time was " + (System.currentTimeMillis() - start) + "ms.");
+
+			this.geneticAlgorithm.getPopulation().printAscending();
+
+			persistPopulation();
+		} catch (Throwable t) {
+			log.error("Caught Throwable while attempting to stop service.  "
+					+ "Performing tear-down tasks.", t);
+		} finally {
+			tearDown();
+		}
+
+		toggleRunning();
+	}
+
 	protected void tearDown() {
-		/*
-		 * currentCommand is really just used for exception catching.
-		 */
+		// currentCommand is really just used for exception catching.
 		String currentCommand = "";
 
 		try {
@@ -161,7 +171,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 				log.info("Executing shell command on termination: " + commandAfter);
 				currentCommand = commandAfter;
 
-				Runtime.getRuntime().exec(commandAfter);
+				runtime.exec(commandAfter);
 			}
 		} catch (IOException e) {
 			log.warn("Unable to execute commmand after app end: " + currentCommand
@@ -169,7 +179,7 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 		}
 	}
 
-	private void persistPopulation() {
+	protected void persistPopulation() {
 		log.info("Persisting the entire population to database.");
 
 		List<Chromosome> individuals = geneticAlgorithm.getPopulation().getIndividuals();
@@ -193,6 +203,15 @@ public class GeneticCipherSolutionService extends AbstractCipherSolutionService 
 
 		log.info("Took " + (System.currentTimeMillis() - startInsert)
 				+ "ms to persist population to database.");
+	}
+
+	@Override
+	public synchronized boolean isRunning() {
+		return this.running;
+	}
+
+	protected synchronized void toggleRunning() {
+		this.running = !this.running;
 	}
 
 	/**
