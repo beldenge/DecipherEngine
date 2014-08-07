@@ -30,6 +30,7 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordGene implements Gene {
@@ -44,6 +45,10 @@ public class WordGene implements Gene {
 	}
 
 	public WordGene(Word word, SolutionChromosome solutionChromosome) {
+		this(word, solutionChromosome, true);
+	}
+
+	public WordGene(Word word, SolutionChromosome solutionChromosome, boolean getFromPool) {
 		this.chromosome = solutionChromosome;
 
 		if (word == null || word.getId() == null) {
@@ -63,8 +68,22 @@ public class WordGene implements Gene {
 		int wordLength = wordString.length();
 
 		for (int i = 0; i < wordLength; i++) {
-			PlaintextSequence plaintextSequence = new PlaintextSequence(String.valueOf(
-					wordString.charAt(i)).toLowerCase(), this);
+			PlaintextSequence plaintextSequence = null;
+
+			if (getFromPool) {
+				plaintextSequence = (PlaintextSequence) SequenceObjectPool.getNextObjectFromPool();
+
+				plaintextSequence.setValueClean(String.valueOf(wordString.charAt(i)).toLowerCase());
+				plaintextSequence.setGene(this);
+			} else {
+				/*
+				 * There can be instances where we do not want to get this from
+				 * an object pool, e.g. when building a known solution for
+				 * fitness evaluation.
+				 */
+				plaintextSequence = new PlaintextSequence(String.valueOf(wordString.charAt(i))
+						.toLowerCase(), this);
+			}
 
 			this.sequences.add(plaintextSequence);
 		}
@@ -97,6 +116,8 @@ public class WordGene implements Gene {
 	@Override
 	@Dirty
 	public void resetSequences() {
+		this.destroy();
+
 		this.sequences = new ArrayList<Sequence>();
 	}
 
@@ -138,7 +159,7 @@ public class WordGene implements Gene {
 		 * It is possible for the Chromosome to be null if this Gene is being
 		 * cloned.
 		 */
-		if (chromosome != null) {
+		if (this.chromosome != null) {
 			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
 		}
 	}
@@ -187,6 +208,8 @@ public class WordGene implements Gene {
 		}
 
 		this.sequences.remove(sequence);
+
+		SequenceObjectPool.returnObjectToPool(sequence);
 	}
 
 	/*
@@ -225,13 +248,7 @@ public class WordGene implements Gene {
 
 	@Override
 	public WordGene clone() {
-		WordGene copyGene = null;
-
-		try {
-			copyGene = (WordGene) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNotSupportedException while attempting to clone WordGene.", cnse);
-		}
+		WordGene copyGene = new WordGene();
 
 		/*
 		 * The Chromosome should be set at a higher level, so we just set it to
@@ -286,6 +303,23 @@ public class WordGene implements Gene {
 		}
 
 		return count;
+	}
+
+	/*
+	 * This may mimic the resetSequences() method, but in this case we don't
+	 * care about the dirty flag.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ciphertool.genetics.entities.Gene#destroy()
+	 */
+	@Override
+	public void destroy() {
+		for (Sequence sequence : this.sequences) {
+			SequenceObjectPool.returnObjectToPool(sequence);
+		}
+
+		this.sequences = null;
 	}
 
 	@Override

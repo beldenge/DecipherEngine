@@ -38,8 +38,9 @@ import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 
-public class WordGeneTest {
+public class WordGeneTest extends GenericTestBase {
 	private static Word word = new Word(new WordId("smile", PartOfSpeechType.NOUN));
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 

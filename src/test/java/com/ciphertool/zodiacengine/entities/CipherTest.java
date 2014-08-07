@@ -30,7 +30,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class CipherTest {
+import com.ciphertool.zodiacengine.GenericTestBase;
+
+public class CipherTest extends GenericTestBase {
 	@Test
 	public void testConstructor() {
 		String nameToSet = "cipherName";

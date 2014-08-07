@@ -35,8 +35,9 @@ import org.junit.Test;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 
-public class PlaintextSequenceTest {
+public class PlaintextSequenceTest extends GenericTestBase {
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
 	@Before
@@ -91,6 +92,24 @@ public class PlaintextSequenceTest {
 		plaintextSequence.setValue(valueToSet);
 
 		assertTrue(solutionChromosome.isEvaluationNeeded());
+		assertEquals(valueToSet, plaintextSequence.getValue());
+	}
+
+	@Test
+	public void testSetValueClean() {
+		String valueToSet = "valueToSet";
+		PlaintextSequence plaintextSequence = new PlaintextSequence();
+
+		// We have to set the Gene and Chromosome to satisfy the @Dirty aspect
+		WordGene geneToSet = new WordGene();
+		geneToSet.setChromosome(solutionChromosome);
+		plaintextSequence.setGene(geneToSet);
+
+		solutionChromosome.setEvaluationNeeded(false);
+
+		plaintextSequence.setValueClean(valueToSet);
+
+		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(valueToSet, plaintextSequence.getValue());
 	}
 

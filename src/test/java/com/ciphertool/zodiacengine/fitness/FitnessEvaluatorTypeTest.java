@@ -24,6 +24,7 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;
@@ -38,7 +39,7 @@ import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionTruncatedFitnessEv
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordLengthFitnessEvaluator;
 
-public class FitnessEvaluatorTypeTest {
+public class FitnessEvaluatorTypeTest extends GenericTestBase {
 	@Test
 	public void testTypes() {
 		assertEquals(13, FitnessEvaluatorType.values().length);

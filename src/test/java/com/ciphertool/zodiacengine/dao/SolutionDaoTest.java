@@ -46,10 +46,11 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
-public class SolutionDaoTest {
+public class SolutionDaoTest extends GenericTestBase {
 	private static SolutionDao solutionDao;
 	private static MongoOperations mongoTemplateMock;
 

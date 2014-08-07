@@ -41,9 +41,10 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.Cipher;
 
-public class CipherDaoTest {
+public class CipherDaoTest extends GenericTestBase {
 	private static CipherDao cipherDao;
 	private static MongoOperations mongoTemplateMock;
 

@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import com.ciphertool.genetics.dao.SequenceDao;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
-import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 
 public class PlaintextSequenceDao implements SequenceDao {
 	private static Logger log = Logger.getLogger(PlaintextSequenceDao.class);
@@ -38,8 +38,9 @@ public class PlaintextSequenceDao implements SequenceDao {
 			return null;
 		}
 
-		Sequence sequence = new PlaintextSequence(String.valueOf(LetterUtils.getRandomLetter()),
-				gene);
+		Sequence sequence = SequenceObjectPool.getNextObjectFromPool();
+		sequence.setValueClean(String.valueOf(LetterUtils.getRandomLetter()));
+		sequence.setGene(gene);
 
 		return sequence;
 	}

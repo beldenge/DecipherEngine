@@ -22,8 +22,11 @@ package com.ciphertool.zodiacengine.service;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -35,17 +38,19 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.view.GenericCallback;
 
-public class GeneticCipherSolutionServiceTest {
+public class GeneticCipherSolutionServiceTest extends GenericTestBase {
 	@Test
 	public void testSetGeneticAlgorithm() {
 		GeneticAlgorithm geneticAlgorithmToSet = mock(GeneticAlgorithm.class);
@@ -340,11 +345,20 @@ public class GeneticCipherSolutionServiceTest {
 		SolutionDao solutionDaoMock = mock(SolutionDao.class);
 		geneticCipherSolutionService.setSolutionDao(solutionDaoMock);
 
+		Field logField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, geneticCipherSolutionService, mockLogger);
+
+		doNothing().when(mockLogger).error(anyString(), any(Throwable.class));
+
 		assertTrue(geneticCipherSolutionService.isRunning());
 		geneticCipherSolutionService.resume();
 		assertFalse(geneticCipherSolutionService.isRunning());
 
 		verify(solutionDaoMock, times(1)).insert(same(solutionChromosome));
+
+		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
 		 * These commands should still get called even though an exception was
@@ -436,6 +450,13 @@ public class GeneticCipherSolutionServiceTest {
 		String[] commandsAfter = { "command1", "command2" };
 		geneticCipherSolutionService.setCommandsAfter(commandsAfter);
 
+		Field logField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, geneticCipherSolutionService, mockLogger);
+
+		doNothing().when(mockLogger).error(anyString(), any(Throwable.class));
+
 		assertTrue(geneticCipherSolutionService.isRunning());
 		geneticCipherSolutionService.runAlgorithmAutonomously(genericCallbackMock);
 		assertFalse(geneticCipherSolutionService.isRunning());
@@ -443,6 +464,8 @@ public class GeneticCipherSolutionServiceTest {
 		verify(solutionDaoMock, times(1)).insert(same(solutionChromosome));
 
 		verify(genericCallbackMock, times(1)).doCallback();
+
+		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
 		 * These commands should still get called even though an exception was
@@ -505,11 +528,20 @@ public class GeneticCipherSolutionServiceTest {
 		SolutionDao solutionDaoMock = mock(SolutionDao.class);
 		geneticCipherSolutionService.setSolutionDao(solutionDaoMock);
 
+		Field logField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, geneticCipherSolutionService, mockLogger);
+
+		doNothing().when(mockLogger).error(anyString(), any(Throwable.class));
+
 		assertTrue(geneticCipherSolutionService.isRunning());
 		geneticCipherSolutionService.runAlgorithmStepwise();
 		assertFalse(geneticCipherSolutionService.isRunning());
 
 		verify(solutionDaoMock, times(1)).insert(same(solutionChromosome));
+
+		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
 		 * These commands should still get called even though an exception was
@@ -580,11 +612,20 @@ public class GeneticCipherSolutionServiceTest {
 		SolutionDao solutionDaoMock = mock(SolutionDao.class);
 		geneticCipherSolutionService.setSolutionDao(solutionDaoMock);
 
+		Field logField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "log");
+		Logger mockLogger = mock(Logger.class);
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, geneticCipherSolutionService, mockLogger);
+
+		doNothing().when(mockLogger).error(anyString(), any(Throwable.class));
+
 		assertTrue(geneticCipherSolutionService.isRunning());
 		geneticCipherSolutionService.end();
 		assertFalse(geneticCipherSolutionService.isRunning());
 
 		verifyZeroInteractions(solutionDaoMock);
+
+		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
 		 * These commands should still get called even though an exception was

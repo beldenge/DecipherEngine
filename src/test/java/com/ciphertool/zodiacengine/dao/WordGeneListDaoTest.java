@@ -42,10 +42,11 @@ import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.dao.WordMapDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class WordGeneListDaoTest {
+public class WordGeneListDaoTest extends GenericTestBase {
 	private static WordGeneListDao wordGeneListDao;
 	private static WordListDao wordListDaoMock;
 	private static WordMapDao wordMapDaoMock;

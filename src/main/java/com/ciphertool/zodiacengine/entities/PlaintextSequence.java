@@ -19,16 +19,14 @@
 
 package com.ciphertool.zodiacengine.entities;
 
-import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
 
 public class PlaintextSequence implements Sequence {
-	private static Logger log = Logger.getLogger(PlaintextSequence.class);
-
 	@Transient
 	private Gene gene;
 
@@ -42,9 +40,17 @@ public class PlaintextSequence implements Sequence {
 
 	protected boolean hasMatch;
 
+	/*
+	 * TODO: Make constructors protected so that they must be constructed via a
+	 * Pool.
+	 */
 	public PlaintextSequence() {
 	}
 
+	/*
+	 * TODO: Make constructors protected so that they must be constructed via a
+	 * Pool.
+	 */
 	public PlaintextSequence(String value, Gene gene) {
 		this.value = value;
 		this.gene = gene;
@@ -62,17 +68,11 @@ public class PlaintextSequence implements Sequence {
 
 	@Override
 	public PlaintextSequence clone() {
-		PlaintextSequence copySequence = null;
+		PlaintextSequence copySequence = (PlaintextSequence) SequenceObjectPool
+				.getNextObjectFromPool();
 
-		try {
-			copySequence = (PlaintextSequence) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error(
-					"Caught CloneNotSupportedException while attempting to clone PlaintextSequence.",
-					cnse);
-		}
+		copySequence.value = this.value;
 		copySequence.setHasMatch(false);
-
 		copySequence.setSequenceId((this.sequenceId != null) ? this.sequenceId.intValue() : null);
 
 		/*
@@ -129,12 +129,28 @@ public class PlaintextSequence implements Sequence {
 		this.value = (String) obj;
 	}
 
+	@Override
+	public void setValueClean(Object obj) {
+		this.value = (String) obj;
+	}
+
 	public boolean getHasMatch() {
 		return hasMatch;
 	}
 
 	public void setHasMatch(boolean hasMatch) {
 		this.hasMatch = hasMatch;
+	}
+
+	@Override
+	public void reset() {
+		this.gene = null;
+
+		this.sequenceId = null;
+
+		this.value = null;
+
+		this.hasMatch = false;
 	}
 
 	/*

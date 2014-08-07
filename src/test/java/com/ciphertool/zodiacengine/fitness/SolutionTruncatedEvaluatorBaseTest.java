@@ -27,10 +27,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 
-public class SolutionTruncatedEvaluatorBaseTest {
+public class SolutionTruncatedEvaluatorBaseTest extends GenericTestBase {
 	private static Cipher simpleCipher = new Cipher("simpleCipher", 2, 10);
 
 	static {

@@ -26,10 +26,10 @@ import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
+import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
 
-public class FrequencyFitnessEvaluatorTestBase extends GeneticAlgorithmTestBase {
+public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase {
 	private static Logger log = Logger.getLogger(FrequencyFitnessEvaluatorTestBase.class);
 
 	protected static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();

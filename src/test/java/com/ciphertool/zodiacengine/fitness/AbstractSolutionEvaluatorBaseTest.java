@@ -40,13 +40,14 @@ import org.springframework.util.ReflectionUtils;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class AbstractSolutionEvaluatorBaseTest {
+public class AbstractSolutionEvaluatorBaseTest extends GenericTestBase {
 	/**
 	 * Dummy concrete class extending AbstractSolutionEvaluatorBase so that we
 	 * can instantiate it for unit testing purposes

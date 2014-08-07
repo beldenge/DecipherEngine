@@ -50,8 +50,9 @@ import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 
-public class SolutionChromosomeTest {
+public class SolutionChromosomeTest extends GenericTestBase {
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 	private static Cipher cipher = new Cipher("zodiac", 24, 17);
 	private static Logger logMock;

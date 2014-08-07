@@ -25,7 +25,9 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-public class CiphertextTest {
+import com.ciphertool.zodiacengine.GenericTestBase;
+
+public class CiphertextTest extends GenericTestBase {
 	@Test
 	public void testConstructor() {
 		Integer ciphertextIdToSet = new Integer(123);

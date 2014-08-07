@@ -17,17 +17,16 @@
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine;
+package com.ciphertool.zodiacengine.entities.factory;
 
-import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
-import com.ciphertool.zodiacengine.entities.factory.PlaintextSequenceObjectFactory;
+import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.factory.SequenceObjectFactory;
+import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 
-public class GenericTestBase {
-	static {
-		/*
-		 * The ObjectPools need to be initialized with their respective
-		 * ObjectFactories for all tests.
-		 */
-		SequenceObjectPool.setObjectFactory(new PlaintextSequenceObjectFactory());
+public class PlaintextSequenceObjectFactory implements SequenceObjectFactory {
+
+	@Override
+	public Sequence createObject() {
+		return new PlaintextSequence();
 	}
 }

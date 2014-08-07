@@ -49,13 +49,14 @@ import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator;
 
-public class GeneticStrategyBuilderTest {
+public class GeneticStrategyBuilderTest extends GenericTestBase {
 	@Test
 	public void testGetCipher() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();

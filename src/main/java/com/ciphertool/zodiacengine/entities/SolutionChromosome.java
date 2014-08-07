@@ -436,6 +436,8 @@ public class SolutionChromosome implements Chromosome {
 					.intValue());
 		}
 
+		geneToRemove.destroy();
+
 		return this.genes.remove(index);
 	}
 
@@ -570,8 +572,8 @@ public class SolutionChromosome implements Chromosome {
 		copyChromosome.setFitness(this.fitness.doubleValue());
 		copyChromosome.setDatabaseCreatedDate(null);
 		/*
-		 * We don 't need to clone the solutionSetId or cipherId as even though
-		 * they are objects , they should remain static.
+		 * We don't need to clone the solutionSetId or cipherId as even though
+		 * they are objects, they should remain static.
 		 */
 
 		Gene nextGene = null;
@@ -582,6 +584,20 @@ public class SolutionChromosome implements Chromosome {
 		}
 
 		return copyChromosome;
+	}
+
+	@Override
+	public void destroy() {
+		for (Gene gene : this.genes) {
+			/*
+			 * The Gene's destroy method should take care of returning
+			 * PlaintextSequences to the pool
+			 */
+			gene.destroy();
+		}
+
+		this.genes = new ArrayList<Gene>();
+		this.plaintextCharacters = new ArrayList<PlaintextSequence>();
 	}
 
 	/*

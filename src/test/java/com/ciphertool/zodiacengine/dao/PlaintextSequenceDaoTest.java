@@ -26,10 +26,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class PlaintextSequenceDaoTest {
+public class PlaintextSequenceDaoTest extends GenericTestBase {
 	private static PlaintextSequenceDao plaintextSequenceDao;
 
 	@BeforeClass

@@ -41,10 +41,11 @@ import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.zodiacengine.GenericTestBase;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class ForcedWordGeneListDaoTest {
+public class ForcedWordGeneListDaoTest extends GenericTestBase {
 	private static ForcedWordGeneListDao forcedWordGeneListDao;
 	private static WordListDao wordListDaoMock;
 
