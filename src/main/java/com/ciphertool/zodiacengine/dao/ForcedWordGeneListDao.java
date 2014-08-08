@@ -47,9 +47,7 @@ public class ForcedWordGeneListDao implements GeneListDao {
 
 		Word word = wordListDao.findRandomWord();
 
-		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);
-
-		return gene;
+		return new WordGene(word, (SolutionChromosome) chromosome);
 	}
 
 	@Override
@@ -91,9 +89,7 @@ public class ForcedWordGeneListDao implements GeneListDao {
 			}
 		} while (word.getId().getWord().length() != length);
 
-		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);
-
-		return gene;
+		return new WordGene(word, (SolutionChromosome) chromosome);
 	}
 
 	/**
