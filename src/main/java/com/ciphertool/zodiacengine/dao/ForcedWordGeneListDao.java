@@ -25,9 +25,9 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.genetics.dao.GeneListDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.pool.GeneObjectPool;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
 public class ForcedWordGeneListDao implements GeneListDao {
@@ -47,7 +47,11 @@ public class ForcedWordGeneListDao implements GeneListDao {
 
 		Word word = wordListDao.findRandomWord();
 
-		return new WordGene(word, (SolutionChromosome) chromosome);
+		Gene gene = GeneObjectPool.getNextObjectFromPool();
+		gene.setChromosome(chromosome);
+		((WordGene) gene).setSequencesFromWord(word, true);
+
+		return gene;
 	}
 
 	@Override
@@ -89,7 +93,11 @@ public class ForcedWordGeneListDao implements GeneListDao {
 			}
 		} while (word.getId().getWord().length() != length);
 
-		return new WordGene(word, (SolutionChromosome) chromosome);
+		Gene gene = GeneObjectPool.getNextObjectFromPool();
+		gene.setChromosome(chromosome);
+		((WordGene) gene).setSequencesFromWord(word, true);
+
+		return gene;
 	}
 
 	/**

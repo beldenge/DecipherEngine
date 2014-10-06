@@ -16,21 +16,16 @@
  * You should have received a copy of the GNU General Public License along with
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.ciphertool.zodiacengine.entities.factory;
 
-package com.ciphertool.zodiacengine;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.factory.GeneObjectFactory;
+import com.ciphertool.zodiacengine.entities.WordGene;
 
-import com.ciphertool.genetics.entities.pool.GeneObjectPool;
-import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
-import com.ciphertool.zodiacengine.entities.factory.PlaintextSequenceObjectFactory;
-import com.ciphertool.zodiacengine.entities.factory.WordGeneObjectFactory;
+public class WordGeneObjectFactory implements GeneObjectFactory {
 
-public class GenericTestBase {
-	static {
-		/*
-		 * The ObjectPools need to be initialized with their respective
-		 * ObjectFactories for all tests.
-		 */
-		SequenceObjectPool.setObjectFactory(new PlaintextSequenceObjectFactory());
-		GeneObjectPool.setObjectFactory(new WordGeneObjectFactory());
+	@Override
+	public Gene createObject() {
+		return new WordGene();
 	}
 }

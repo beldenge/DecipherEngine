@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.pool.GeneObjectPool;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.Cipher;
@@ -65,7 +66,9 @@ public class SolutionBreeder implements Breeder {
 		do {
 			nextWord = wordListDao.findRandomWord();
 
-			nextGene = new WordGene(nextWord, solutionChromosome);
+			nextGene = (WordGene) GeneObjectPool.getNextObjectFromPool();
+			nextGene.setChromosome(solutionChromosome);
+			nextGene.setSequencesFromWord(nextWord, true);
 
 			length += nextGene.size();
 

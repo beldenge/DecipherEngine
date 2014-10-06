@@ -23,8 +23,10 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.ciphertool.genetics.entities.pool.GeneObjectPool;
 import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
 import com.ciphertool.zodiacengine.entities.factory.PlaintextSequenceObjectFactory;
+import com.ciphertool.zodiacengine.entities.factory.WordGeneObjectFactory;
 
 public class ZodiacEngineBootstrapper {
 	private static Logger log = Logger.getLogger(ZodiacEngineBootstrapper.class);
@@ -45,6 +47,7 @@ public class ZodiacEngineBootstrapper {
 		long start = System.currentTimeMillis();
 
 		SequenceObjectPool.setObjectFactory(new PlaintextSequenceObjectFactory());
+		GeneObjectPool.setObjectFactory(new WordGeneObjectFactory());
 
 		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
 

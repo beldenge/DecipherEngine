@@ -30,6 +30,7 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.pool.GeneObjectPool;
 import com.ciphertool.genetics.entities.pool.SequenceObjectPool;
 import com.ciphertool.sentencebuilder.entities.Word;
 
@@ -51,6 +52,10 @@ public class WordGene implements Gene {
 	public WordGene(Word word, SolutionChromosome solutionChromosome, boolean getFromPool) {
 		this.chromosome = solutionChromosome;
 
+		setSequencesFromWord(word, getFromPool);
+	}
+
+	public void setSequencesFromWord(Word word, boolean getFromPool) {
 		if (word == null || word.getId() == null) {
 			log.error("Found null Word or WordId In full-args constructor.  Unable to construct WordGene.");
 
@@ -248,7 +253,7 @@ public class WordGene implements Gene {
 
 	@Override
 	public WordGene clone() {
-		WordGene copyGene = new WordGene();
+		WordGene copyGene = (WordGene) GeneObjectPool.getNextObjectFromPool();
 
 		/*
 		 * The Chromosome should be set at a higher level, so we just set it to
@@ -319,7 +324,16 @@ public class WordGene implements Gene {
 			SequenceObjectPool.returnObjectToPool(sequence);
 		}
 
-		this.sequences = null;
+		this.sequences = new ArrayList<Sequence>();
+
+		GeneObjectPool.returnObjectToPool(this);
+	}
+
+	@Override
+	public void reset() {
+		this.chromosome = null;
+
+		this.sequences = new ArrayList<Sequence>();
 	}
 
 	@Override
