@@ -25,10 +25,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
+import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
 
 public class CipherSolutionKnownSolutionExponentialFitnessEvaluatorTest extends
-		GeneticAlgorithmTestBase {
+		FitnessEvaluatorTestBase {
 	@Test
 	public void testEvaluate() {
 		CipherSolutionKnownSolutionExponentialFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionExponentialFitnessEvaluator();

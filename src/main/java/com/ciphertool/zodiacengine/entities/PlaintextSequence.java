@@ -19,7 +19,6 @@
 
 package com.ciphertool.zodiacengine.entities;
 
-import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
@@ -27,8 +26,6 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 
 public class PlaintextSequence implements Sequence {
-	private static Logger log = Logger.getLogger(PlaintextSequence.class);
-
 	@Transient
 	private Gene gene;
 
@@ -62,17 +59,10 @@ public class PlaintextSequence implements Sequence {
 
 	@Override
 	public PlaintextSequence clone() {
-		PlaintextSequence copySequence = null;
+		PlaintextSequence copySequence = new PlaintextSequence();
 
-		try {
-			copySequence = (PlaintextSequence) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error(
-					"Caught CloneNotSupportedException while attempting to clone PlaintextSequence.",
-					cnse);
-		}
+		copySequence.value = this.value;
 		copySequence.setHasMatch(false);
-
 		copySequence.setSequenceId((this.sequenceId != null) ? this.sequenceId.intValue() : null);
 
 		/*

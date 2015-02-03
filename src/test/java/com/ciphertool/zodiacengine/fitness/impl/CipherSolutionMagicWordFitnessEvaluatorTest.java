@@ -25,9 +25,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.ciphertool.zodiacengine.algorithms.GeneticAlgorithmTestBase;
+import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
 
-public class CipherSolutionMagicWordFitnessEvaluatorTest extends GeneticAlgorithmTestBase {
+public class CipherSolutionMagicWordFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	@Test
 	public void testEvaluate() {
 		CipherSolutionMagicWordFitnessEvaluator fitnessEvaluator = new CipherSolutionMagicWordFitnessEvaluator();

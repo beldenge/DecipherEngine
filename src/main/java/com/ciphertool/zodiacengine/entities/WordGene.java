@@ -138,7 +138,7 @@ public class WordGene implements Gene {
 		 * It is possible for the Chromosome to be null if this Gene is being
 		 * cloned.
 		 */
-		if (chromosome != null) {
+		if (this.chromosome != null) {
 			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
 		}
 	}
@@ -225,13 +225,7 @@ public class WordGene implements Gene {
 
 	@Override
 	public WordGene clone() {
-		WordGene copyGene = null;
-
-		try {
-			copyGene = (WordGene) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error("Caught CloneNotSupportedException while attempting to clone WordGene.", cnse);
-		}
+		WordGene copyGene = new WordGene();
 
 		/*
 		 * The Chromosome should be set at a higher level, so we just set it to

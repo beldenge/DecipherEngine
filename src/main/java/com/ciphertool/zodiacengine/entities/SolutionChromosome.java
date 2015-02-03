@@ -549,20 +549,22 @@ public class SolutionChromosome implements Chromosome {
 
 	@Override
 	public SolutionChromosome clone() {
-		SolutionChromosome copyChromosome = null;
+		SolutionChromosome copyChromosome = new SolutionChromosome();
 
-		try {
-			copyChromosome = (SolutionChromosome) super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			log.error(
-					"Caught CloneNotSupportedException while attempting to clone SolutionChromosome.",
-					cnse);
-		}
-
+		copyChromosome.genes = new ArrayList<Gene>();
+		copyChromosome.plaintextCharacters = new ArrayList<PlaintextSequence>();
 		copyChromosome.setId(null);
-		copyChromosome.resetGenes();
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
+		copyChromosome.setSolutionSetId(this.solutionSetId);
+		copyChromosome.setCipherId(this.cipherId);
+		copyChromosome.setRows(this.rows);
+		copyChromosome.setColumns(this.columns);
+		copyChromosome.setTotalMatches(this.totalMatches);
+		copyChromosome.setUniqueMatches(this.uniqueMatches);
+		copyChromosome.setAdjacentMatches(this.adjacentMatches);
+		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
+
 		/*
 		 * Since we are copying over the fitness value, we don't need to reset
 		 * the evaluationNeeded flag because the cloned default is correct.
@@ -570,8 +572,8 @@ public class SolutionChromosome implements Chromosome {
 		copyChromosome.setFitness(this.fitness.doubleValue());
 		copyChromosome.setDatabaseCreatedDate(null);
 		/*
-		 * We don 't need to clone the solutionSetId or cipherId as even though
-		 * they are objects , they should remain static.
+		 * We don't need to clone the solutionSetId or cipherId as even though
+		 * they are objects, they should remain static.
 		 */
 
 		Gene nextGene = null;
