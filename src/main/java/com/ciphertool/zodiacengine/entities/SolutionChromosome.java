@@ -33,12 +33,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.ComplexGene;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.KeylessChromosome;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 
 @Document(collection = "solutions")
-public class SolutionChromosome implements Chromosome {
+public class SolutionChromosome implements KeylessChromosome {
 
 	private static Logger log = Logger.getLogger(SolutionChromosome.class);
 
@@ -333,8 +333,8 @@ public class SolutionChromosome implements Chromosome {
 		this.genes.add(gene);
 
 		PlaintextSequence plaintextSequence = null;
-		for (int i = 0; i < ((ComplexGene) gene).size(); i++) {
-			plaintextSequence = (PlaintextSequence) ((ComplexGene) gene).getSequences().get(i);
+		for (int i = 0; i < ((VariableLengthGene) gene).size(); i++) {
+			plaintextSequence = (PlaintextSequence) ((VariableLengthGene) gene).getSequences().get(i);
 
 			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
 
@@ -368,8 +368,8 @@ public class SolutionChromosome implements Chromosome {
 		 * greater than the last Gene's greatest Sequence ID.
 		 */
 		if (index > 0) {
-			beginIndex = ((PlaintextSequence) ((ComplexGene) this.genes.get(index - 1)).getSequences().get(
-					((ComplexGene) this.genes.get(index - 1)).size() - 1)).getSequenceId() + 1;
+			beginIndex = ((PlaintextSequence) ((VariableLengthGene) this.genes.get(index - 1)).getSequences().get(
+					((VariableLengthGene) this.genes.get(index - 1)).size() - 1)).getSequenceId() + 1;
 		}
 
 		int actualSize = this.plaintextCharacters.size();
@@ -379,12 +379,12 @@ public class SolutionChromosome implements Chromosome {
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftRight(((ComplexGene) gene).size());
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftRight(((VariableLengthGene) gene).size());
 		}
 
 		PlaintextSequence plaintextSequence = null;
-		for (int i = 0; i < ((ComplexGene) gene).size(); i++) {
-			plaintextSequence = (PlaintextSequence) ((ComplexGene) gene).getSequences().get(i);
+		for (int i = 0; i < ((VariableLengthGene) gene).size(); i++) {
+			plaintextSequence = (PlaintextSequence) ((VariableLengthGene) gene).getSequences().get(i);
 
 			this.plaintextCharacters.add(beginIndex + i, plaintextSequence);
 
@@ -415,8 +415,8 @@ public class SolutionChromosome implements Chromosome {
 		 * We want the next Sequence ID to be one greater than the current
 		 * Gene's greatest Sequence ID.
 		 */
-		int beginIndex = ((PlaintextSequence) ((ComplexGene) geneToRemove).getSequences().get(
-				((ComplexGene) geneToRemove).getSequences().size() - 1)).getSequenceId() + 1;
+		int beginIndex = ((PlaintextSequence) ((VariableLengthGene) geneToRemove).getSequences().get(
+				((VariableLengthGene) geneToRemove).getSequences().size() - 1)).getSequenceId() + 1;
 
 		int actualSize = this.plaintextCharacters.size();
 
@@ -425,15 +425,15 @@ public class SolutionChromosome implements Chromosome {
 		 * ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
-			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(((ComplexGene) geneToRemove).size());
+			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(((VariableLengthGene) geneToRemove).size());
 		}
 
 		/*
 		 * We loop across the indices backwards since, if starting from the
 		 * beginning, they should decrement each time an element is removed.
 		 */
-		for (int i = ((ComplexGene) geneToRemove).size() - 1; i >= 0; i--) {
-			plaintextCharacters.remove(((ComplexGene) geneToRemove).getSequences().get(i).getSequenceId()
+		for (int i = ((VariableLengthGene) geneToRemove).size() - 1; i >= 0; i--) {
+			plaintextCharacters.remove(((VariableLengthGene) geneToRemove).getSequences().get(i).getSequenceId()
 					.intValue());
 		}
 

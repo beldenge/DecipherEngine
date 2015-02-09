@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.ComplexGene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
@@ -252,7 +252,7 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 		 */
 		int validWordCount = 0;
 		for (Gene gene : solution.getGenes()) {
-			if (((ComplexGene) gene).getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
+			if (((VariableLengthGene) gene).getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
 				validWordCount++;
 			}
 		}

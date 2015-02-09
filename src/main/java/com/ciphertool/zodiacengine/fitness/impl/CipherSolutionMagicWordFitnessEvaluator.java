@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.KeylessChromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
@@ -172,7 +173,7 @@ public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEv
 		return (double) total;
 	}
 
-	private static boolean containsMagicWord(Chromosome chromosome, String magicWord) {
+	private static boolean containsMagicWord(KeylessChromosome chromosome, String magicWord) {
 		for (Gene gene : chromosome.getGenes()) {
 			String wordString = ((WordGene) gene).getWordString();
 

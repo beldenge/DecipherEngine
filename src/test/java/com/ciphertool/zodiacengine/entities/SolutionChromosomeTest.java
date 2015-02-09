@@ -45,7 +45,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.genetics.entities.ComplexGene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
@@ -852,16 +852,16 @@ public class SolutionChromosomeTest {
 	private static void validateSequencesAndGenes(SolutionChromosome solutionChromosome) {
 		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < ((ComplexGene) gene).size(); j++) {
-				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((ComplexGene) gene)
+			for (int j = 0; j < ((VariableLengthGene) gene).size(); j++) {
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene)
 						.getSequences().get(j));
 
 				assertEquals(
 						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
 						count);
 
-				assertEquals(((ComplexGene) gene).getSequences().get(j).getSequenceId(), count);
-				assertEquals(((ComplexGene) gene).getSequences().get(j).getValue(), solutionChromosome
+				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getSequenceId(), count);
+				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome
 						.getPlaintextCharacters().get(count).getValue());
 
 				count++;

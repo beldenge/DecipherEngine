@@ -20,9 +20,9 @@
 package com.ciphertool.zodiacengine.entities.cipherkey;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Id;
@@ -34,9 +34,10 @@ import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.KeyedChromosome;
 
 @Document(collection = "solutions")
-public class CipherKeyChromosome implements Chromosome {
+public class CipherKeyChromosome implements KeyedChromosome<String> {
 	
 	private static Logger log = Logger.getLogger(CipherKeyChromosome.class);
 
@@ -66,7 +67,7 @@ public class CipherKeyChromosome implements Chromosome {
 	@Transient
 	private int numberOfChildren = 0;
 
-	private List<Gene> genes = new ArrayList<Gene>();
+	private Map<String, Gene> genes = new HashMap<String, Gene>();
 	
 	public CipherKeyChromosome() {
 	}
@@ -229,75 +230,65 @@ public class CipherKeyChromosome implements Chromosome {
 	}
 	
 	@Override
-	public List<Gene> getGenes() {
-		return Collections.unmodifiableList(genes);
+	public Map<String, Gene> getGenes() {
+		return Collections.unmodifiableMap(genes);
 	}
 
 	@Override
 	@Dirty
-	public void addGene(Gene gene) {
-		if (gene == null) {
-			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
+	public void putGene(String key, Gene gene) {
+		if (null == gene) {
+			log.warn("Attempted to insert a null Gene to CipherKeyChromosome.  Returning. " + this);
 
 			return;
 		}
 
-		gene.setChromosome(this);
-		
-		this.genes.add(gene);
-	}
-
-	@Override
-	@Dirty
-	public void insertGene(int index, Gene gene) {
-		if (gene == null) {
-			log.warn("Attempted to insert a null Gene to SolutionChromosome.  Returning. " + this);
+		if (this.genes.get(key) != null) {
+			log.warn("Attempted to insert a Gene to CipherKeyChromosome with key " + key + ", but the key already exists.  If this was intentional, please use replaceGene() instead.  Returning. " + this);
 
 			return;
 		}
-
+		
 		gene.setChromosome(this);
 		
-		this.genes.add(index, gene);
+		this.genes.put(key, gene);
 	}
 
 	@Override
 	@Dirty
-	public Gene removeGene(int index) {
-		if (this.genes == null || this.genes.size() <= index) {
-			log.warn("Attempted to remove a Gene from CipherKeyChromosome at index " + index
-					+ ", but the List of Genes has max index of "
-					+ (this.genes == null ? 0 : this.genes.size()) + ".  Returning null." + this);
+	public Gene removeGene(String key) {
+		if (null == this.genes || null == this.genes.get(key)) {
+			log.warn("Attempted to remove a Gene from CipherKeyChromosome with key " + key
+					+ ", but this key does not exist.  Returning null.");
 
 			return null;
 		}
 		
-		return this.genes.remove(index);
+		return this.genes.remove(key);
 	}
 
 	@Override
 	@Dirty
-	public void replaceGene(int index, Gene newGene) {
-		if (newGene == null) {
+	public void replaceGene(String key, Gene newGene) {
+		if (null == newGene) {
 			log.warn("Attempted to replace a Gene from CipherKeyChromosome, but the supplied Gene was null.  Cannot continue. "
 					+ this);
 
 			return;
 		}
 
-		if (this.genes == null || this.genes.size() <= index) {
-			log.warn("Attempted to replace a Gene from CipherKeyChromosome at index " + index
-					+ ", but the List of Genes has max index of "
-					+ (this.genes == null ? 0 : this.genes.size()) + ".  Cannot continue." + this);
+		if (null == this.genes || null == this.genes.get(key)) {
+			log.warn("Attempted to replace a Gene from CipherKeyChromosome with key " + key
+					+ ", but this key does not exist.  Cannot continue.");
 
 			return;
 		}
 
 		newGene.setChromosome(this);
 
-		this.removeGene(index);
+		this.removeGene(key);
 
-		this.insertGene(index, newGene);
+		this.putGene(key, newGene);
 	}
 
 	@Override
@@ -314,7 +305,7 @@ public class CipherKeyChromosome implements Chromosome {
 	public Chromosome clone() {
 		CipherKeyChromosome copyChromosome = new CipherKeyChromosome();
 
-		copyChromosome.genes = new ArrayList<Gene>();
+		copyChromosome.genes = new HashMap<String, Gene>();
 		copyChromosome.setId(null);
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
@@ -336,10 +327,10 @@ public class CipherKeyChromosome implements Chromosome {
 		 */
 
 		Gene nextGene = null;
-		for (Gene cipherKeyGene : this.genes) {
-			nextGene = cipherKeyGene.clone();
+		for (String key : this.genes.keySet()) {
+			nextGene = this.genes.get(key).clone();
 
-			copyChromosome.addGene(nextGene);
+			copyChromosome.putGene(key, nextGene);
 		}
 
 		return copyChromosome;

@@ -25,7 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 
-import com.ciphertool.genetics.entities.ComplexGene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
@@ -195,7 +195,7 @@ public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase 
 
 		int validWordCount = 0;
 		for (Gene gene : knownSolution.getGenes()) {
-			if (((ComplexGene) gene).getSequences().get(0).getSequenceId() < numCharsToEvaluate) {
+			if (((VariableLengthGene) gene).getSequences().get(0).getSequenceId() < numCharsToEvaluate) {
 				validWordCount++;
 			}
 		}

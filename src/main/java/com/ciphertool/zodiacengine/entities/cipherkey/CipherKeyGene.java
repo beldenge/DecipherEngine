@@ -33,8 +33,6 @@ public class CipherKeyGene implements Gene {
 	@Transient
 	private Chromosome chromosome;
 	
-	private String key;
-	
 	private String value;
 	
 	public CipherKeyGene() {
@@ -47,15 +45,14 @@ public class CipherKeyGene implements Gene {
 	 * @param key the cipher key
 	 * @param value the String value for this cipher key
 	 */
-	public CipherKeyGene(Chromosome chromosome, String key, String value) {
-		if (key == null || key.isEmpty()) {
-			log.error("Found null key in full-args constructor.  Unable to construct CipherKeyGene.");
+	public CipherKeyGene(Chromosome chromosome, String value) {
+		if (null == value || value.isEmpty()) {
+			log.error("Found null value in full-args constructor.  Unable to construct CipherKeyGene.");
 
 			return;
 		}
 		
 		this.chromosome = chromosome;
-		this.key = key;
 		this.value = value;
 	}
 
@@ -67,21 +64,6 @@ public class CipherKeyGene implements Gene {
 	@Override
 	public Chromosome getChromosome() {
 		return this.chromosome;
-	}
-
-	/**
-	 * @return the key
-	 */
-	public String getKey() {
-		return key;
-	}
-
-	/**
-	 * @param key the key to set
-	 */
-	@Dirty
-	public void setKey(String key) {
-		this.key = key;
 	}
 
 	/**
@@ -116,7 +98,6 @@ public class CipherKeyGene implements Gene {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		
 		return result;
@@ -135,13 +116,6 @@ public class CipherKeyGene implements Gene {
 		}
 		
 		CipherKeyGene other = (CipherKeyGene) obj;
-		if (key == null) {
-			if (other.key != null) {
-				return false;
-			}
-		} else if (!key.equals(other.key)) {
-			return false;
-		}
 		if (value == null) {
 			if (other.value != null) {
 				return false;
@@ -155,6 +129,6 @@ public class CipherKeyGene implements Gene {
 
 	@Override
 	public String toString() {
-		return "CipherKeyGene [key=" + key + ", value=" + value + "]";
+		return "CipherKeyGene [value=" + value + "]";
 	}
 }

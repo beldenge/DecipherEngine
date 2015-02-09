@@ -97,7 +97,7 @@ public class CipherKeyBreeder implements Breeder {
 	
 	@Override
 	public Chromosome breed() {
-		CipherKeyChromosome chromosome = new CipherKeyChromosome();		
+		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher.getId(), 0, 0);		
 		
 		for (int i = 0; i < chromosome.targetSize(); i ++) {
 			// Should never happen, but we check just in case
@@ -105,9 +105,9 @@ public class CipherKeyBreeder implements Breeder {
 				throw new IllegalStateException("Attempted to add a Gene to CipherKeyChromosome, but the maximum number of Genes (" + chromosome.targetSize() + ") have already been allocated.");				
 			}
 			
-			CipherKeyGene newGene = new CipherKeyGene(chromosome, KEYS[i], String.valueOf(LetterUtils.getRandomLetter()));
+			CipherKeyGene newGene = new CipherKeyGene(chromosome, String.valueOf(LetterUtils.getRandomLetter()));
 			
-			chromosome.addGene(newGene);
+			chromosome.putGene(KEYS[i], newGene);
 		}
 		
 		if (log.isDebugEnabled()) {
