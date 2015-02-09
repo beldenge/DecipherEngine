@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.ciphertool.genetics.entities.ComplexGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
@@ -388,43 +389,20 @@ public class WordGeneTest {
 		// Validate by looping through the Genes
 		int count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < gene.size(); j++) {
-				assertSame(solutionChromosome.getPlaintextCharacters().get(count), gene
+			for (int j = 0; j < ((ComplexGene) gene).size(); j++) {
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((ComplexGene) gene)
 						.getSequences().get(j));
 
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
 						.intValue(), count);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId().intValue(), count);
-				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
+				assertEquals(((ComplexGene) gene).getSequences().get(j).getSequenceId().intValue(), count);
+				assertEquals(((ComplexGene) gene).getSequences().get(j).getValue(), solutionChromosome
 						.getPlaintextCharacters().get(count).getValue());
 
 				count++;
 			}
 		}
-	}
-
-	@Test
-	public void testResetSequences() {
-		PlaintextSequence sequence1 = new PlaintextSequence("a", null);
-		PlaintextSequence sequence2 = new PlaintextSequence("b", null);
-		PlaintextSequence sequence3 = new PlaintextSequence("c", null);
-
-		WordGene base = new WordGene();
-		base.setChromosome(solutionChromosome);
-		base.addSequence(sequence1);
-		base.addSequence(sequence2);
-		base.addSequence(sequence3);
-
-		assertEquals(3, base.size());
-		assertSame(sequence1, base.getSequences().get(0));
-		assertSame(sequence2, base.getSequences().get(1));
-		assertSame(sequence3, base.getSequences().get(2));
-
-		base.resetSequences();
-
-		assertNotNull(base.getSequences());
-		assertEquals(0, base.getSequences().size());
 	}
 
 	@Test

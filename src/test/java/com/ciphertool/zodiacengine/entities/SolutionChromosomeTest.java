@@ -45,6 +45,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.genetics.entities.ComplexGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
@@ -538,32 +539,6 @@ public class SolutionChromosomeTest {
 	}
 
 	@Test
-	public void testResetGenes() {
-		Double originalFitness = 999.9;
-		solutionChromosome.setFitness(originalFitness);
-
-		Word word1 = new Word(new WordId("george", PartOfSpeechType.NOUN));
-		WordGene wordGene1 = new WordGene(word1, solutionChromosome);
-		solutionChromosome.addGene(wordGene1);
-
-		Word word2 = new Word(new WordId("belden", PartOfSpeechType.NOUN));
-		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
-		solutionChromosome.addGene(wordGene2);
-
-		assertEquals(2, solutionChromosome.getGenes().size());
-		assertEquals(12, solutionChromosome.getPlaintextCharacters().size());
-		assertTrue(solutionChromosome.isEvaluationNeeded());
-		assertEquals(originalFitness, solutionChromosome.getFitness());
-
-		solutionChromosome.resetGenes();
-
-		assertEquals(0, solutionChromosome.getGenes().size());
-		assertEquals(0, solutionChromosome.getPlaintextCharacters().size());
-		assertFalse(solutionChromosome.isEvaluationNeeded());
-		assertEquals(new Double(0.0), solutionChromosome.getFitness());
-	}
-
-	@Test
 	public void testAddPlaintext() {
 		WordGene wordGene = new WordGene();
 
@@ -877,16 +852,16 @@ public class SolutionChromosomeTest {
 	private static void validateSequencesAndGenes(SolutionChromosome solutionChromosome) {
 		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
-			for (int j = 0; j < gene.size(); j++) {
-				assertSame(solutionChromosome.getPlaintextCharacters().get(count), gene
+			for (int j = 0; j < ((ComplexGene) gene).size(); j++) {
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((ComplexGene) gene)
 						.getSequences().get(j));
 
 				assertEquals(
 						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
 						count);
 
-				assertEquals(gene.getSequences().get(j).getSequenceId(), count);
-				assertEquals(gene.getSequences().get(j).getValue(), solutionChromosome
+				assertEquals(((ComplexGene) gene).getSequences().get(j).getSequenceId(), count);
+				assertEquals(((ComplexGene) gene).getSequences().get(j).getValue(), solutionChromosome
 						.getPlaintextCharacters().get(count).getValue());
 
 				count++;

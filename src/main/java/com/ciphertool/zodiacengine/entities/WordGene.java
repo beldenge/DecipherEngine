@@ -28,11 +28,11 @@ import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.ComplexGene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.entities.Word;
 
-public class WordGene implements Gene {
+public class WordGene implements ComplexGene {
 	private static Logger log = Logger.getLogger(WordGene.class);
 
 	@Transient
@@ -83,21 +83,6 @@ public class WordGene implements Gene {
 	@Override
 	public List<Sequence> getSequences() {
 		return Collections.unmodifiableList(this.sequences);
-	}
-
-	/*
-	 * This should only be called from cloning methods. Otherwise, resetting the
-	 * sequences of a Gene should also remove those sequences from the
-	 * Chromosome.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ciphertool.genetics.entities.Gene#resetSequences()
-	 */
-	@Override
-	@Dirty
-	public void resetSequences() {
-		this.sequences = new ArrayList<Sequence>();
 	}
 
 	/*
