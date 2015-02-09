@@ -1,5 +1,5 @@
 rem
-rem Copyright 2013 George Belden
+rem Copyright 2015 George Belden
 rem 
 rem This file is part of ZodiacEngine.
 rem 
