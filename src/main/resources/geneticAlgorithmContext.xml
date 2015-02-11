@@ -35,7 +35,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="selector" ref="defaultSelector" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.util.ChromosomeHelper" id="chromosomeHelper">
+	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
 		<property name="geneListDao" ref="geneListDao" />
 	</bean>
 	
@@ -44,7 +44,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.genetics.util.RandomListElementSelector" id="randomListElementSelector" />
 
 	<bean
-		class="com.ciphertool.genetics.algorithms.ConcurrentBasicGeneticAlgorithm"
+		class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm"
 		id="geneticAlgorithm">
 		<property name="population" ref="population" />
 		<property name="taskExecutor" ref="taskExecutor" />
