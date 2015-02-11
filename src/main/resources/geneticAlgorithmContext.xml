@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	</bean>
 
 	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
-		<property name="geneListDao" ref="geneListDao" />
+		<property name="geneDao" ref="geneDao" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />

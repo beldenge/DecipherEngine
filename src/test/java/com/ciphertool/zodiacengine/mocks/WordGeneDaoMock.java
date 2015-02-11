@@ -29,12 +29,12 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.zodiacengine.dao.WordGeneListDao;
+import com.ciphertool.zodiacengine.dao.WordGeneDao;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class WordGeneListDaoMock extends WordGeneListDao {
-	private static Logger log = Logger.getLogger(WordGeneListDaoMock.class);
+public class WordGeneDaoMock extends WordGeneDao {
+	private static Logger log = Logger.getLogger(WordGeneDaoMock.class);
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {

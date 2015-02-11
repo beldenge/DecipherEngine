@@ -35,6 +35,7 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeyedChromosome;
+import com.ciphertool.zodiacengine.entities.Cipher;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {
@@ -49,11 +50,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	@Indexed
 	protected Integer solutionSetId;
 
-	protected BigInteger cipherId;
-	
-	private int rows;
-
-	private int columns;
+	protected Cipher cipher;
 	
 	@Transient
 	protected boolean evaluationNeeded = true;
@@ -80,16 +77,13 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	 * @param columns
 	 *            the columns to set
 	 */
-	public CipherKeyChromosome(BigInteger cipherId, int rows, int columns) {
-		if (cipherId == null) {
+	public CipherKeyChromosome(Cipher cipher) {
+		if (cipher == null) {
 			throw new IllegalArgumentException(
-					"Cannot construct CipherKeyChromosome with null cipherId.");
+					"Cannot construct CipherKeyChromosome with null cipher.");
 		}
 
-		this.cipherId = cipherId;
-
-		this.rows = rows;
-		this.columns = columns;
+		this.cipher = cipher;
 	}
 	
 	/**
@@ -123,52 +117,18 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	}
 
 	/**
-	 * @return the cipherId
+	 * @return the cipher
 	 */
-	public BigInteger getCipherId() {
-		return cipherId;
+	public Cipher getCipher() {
+		return this.cipher;
 	}
 
 	/**
-	 * @param cipherId
-	 *            the cipherId to set
+	 * @param cipher
+	 *            the cipher to set
 	 */
-	public void setCipherId(BigInteger cipherId) {
-		this.cipherId = cipherId;
-	}
-	
-	/**
-	 * Should only be used by unit tests
-	 * 
-	 * @return the rows
-	 */
-	protected int getRows() {
-		return rows;
-	}
-
-	/**
-	 * @param rows
-	 *            the rows to set
-	 */
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
-
-	/**
-	 * Should only be used by unit tests
-	 * 
-	 * @return the columns
-	 */
-	protected int getColumns() {
-		return columns;
-	}
-
-	/**
-	 * @param columns
-	 *            the columns to set
-	 */
-	public void setColumns(int columns) {
-		this.columns = columns;
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
 	}
 	
 	/**
@@ -310,9 +270,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.setSolutionSetId(this.solutionSetId);
-		copyChromosome.setCipherId(this.cipherId);
-		copyChromosome.setRows(this.rows);
-		copyChromosome.setColumns(this.columns);
+		copyChromosome.setCipher(this.cipher);
 		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		/*
@@ -342,7 +300,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		int result = 1;
 		result = prime * result + age;
 		result = prime * result
-				+ ((cipherId == null) ? 0 : cipherId.hashCode());
+				+ ((cipher == null) ? 0 : cipher.hashCode());
 		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + numberOfChildren;
@@ -366,11 +324,11 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		if (age != other.age) {
 			return false;
 		}
-		if (cipherId == null) {
-			if (other.cipherId != null) {
+		if (cipher == null) {
+			if (other.cipher != null) {
 				return false;
 			}
-		} else if (!cipherId.equals(other.cipherId)) {
+		} else if (!cipher.getId().equals(other.cipher.getId())) {
 			return false;
 		}
 		if (genes == null) {
@@ -398,5 +356,47 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 			return false;
 		}
 		return true;
+	}
+	
+	/*
+	 * Prints the properties of the solution and then outputs the entire
+	 * plaintext list in block format.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
+				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
+				+ numberOfChildren + ", evaluationNeeded=" + evaluationNeeded + "]\n");
+
+		if (this.cipher != null) {
+			CipherKeyGene nextPlaintext = null;
+			int actualSize = this.cipher.getCiphertextCharacters().size();
+			for (int i = 0; i < actualSize; i++) {
+
+				nextPlaintext = (CipherKeyGene) this.genes.get(this.cipher.getCiphertextCharacters().get(i).getValue());
+
+				// subtract 1 since the get method begins with 0
+				sb.append(" ");
+				sb.append(nextPlaintext.getValue());
+				sb.append(" ");
+
+				/*
+				 * Print a newline if we are at the end of the row. Add 1 to the
+				 * index so the modulus function doesn't break.
+				 */
+				if (((i + 1) % this.cipher.getColumns()) == 0) {
+					sb.append("\n");
+				} else {
+					sb.append(" ");
+				}
+			}
+		}
+
+		return sb.toString();
 	}
 }

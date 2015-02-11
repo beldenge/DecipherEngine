@@ -22,7 +22,7 @@ package com.ciphertool.zodiacengine.dao;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.dao.GeneListDao;
+import com.ciphertool.genetics.dao.VariableLengthGeneDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
@@ -30,7 +30,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class ForcedWordGeneListDao implements GeneListDao {
+public class ForcedWordGeneDao implements VariableLengthGeneDao {
 	private Logger log = Logger.getLogger(getClass());
 
 	private WordListDao wordListDao;

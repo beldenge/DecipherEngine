@@ -44,16 +44,16 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 
-public class ForcedWordGeneListDaoTest {
-	private static ForcedWordGeneListDao forcedWordGeneListDao;
+public class ForcedWordGeneDaoTest {
+	private static ForcedWordGeneDao forcedWordGeneDao;
 	private static WordListDao wordListDaoMock;
 
 	@BeforeClass
 	public static void setUp() {
-		forcedWordGeneListDao = new ForcedWordGeneListDao();
+		forcedWordGeneDao = new ForcedWordGeneDao();
 
 		wordListDaoMock = mock(WordListDao.class);
-		forcedWordGeneListDao.setWordListDao(wordListDaoMock);
+		forcedWordGeneDao.setWordListDao(wordListDaoMock);
 	}
 
 	@Before
@@ -63,14 +63,14 @@ public class ForcedWordGeneListDaoTest {
 
 	@Test
 	public void testSetWordListDao() {
-		ForcedWordGeneListDao forcedWordGeneListDao = new ForcedWordGeneListDao();
-		forcedWordGeneListDao.setWordListDao(wordListDaoMock);
+		ForcedWordGeneDao forcedWordGeneDao = new ForcedWordGeneDao();
+		forcedWordGeneDao.setWordListDao(wordListDaoMock);
 
-		Field wordListDaoField = ReflectionUtils.findField(ForcedWordGeneListDao.class,
+		Field wordListDaoField = ReflectionUtils.findField(ForcedWordGeneDao.class,
 				"wordListDao");
 		ReflectionUtils.makeAccessible(wordListDaoField);
 		WordListDao wordListDaoFromObject = (WordListDao) ReflectionUtils.getField(
-				wordListDaoField, forcedWordGeneListDao);
+				wordListDaoField, forcedWordGeneDao);
 
 		assertSame(wordListDaoMock, wordListDaoFromObject);
 	}
@@ -86,7 +86,7 @@ public class ForcedWordGeneListDaoTest {
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGene(chromosomeToCheck);
+		Gene geneReturned = forcedWordGeneDao.findRandomGene(chromosomeToCheck);
 
 		assertSame(chromosomeToCheck, geneReturned.getChromosome());
 		assertEquals(expectedGene, geneReturned);
@@ -100,7 +100,7 @@ public class ForcedWordGeneListDaoTest {
 				arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGene(null);
+		Gene geneReturned = forcedWordGeneDao.findRandomGene(null);
 
 		assertNull(geneReturned);
 		verify(wordListDaoMock, never()).findRandomWord();
@@ -118,7 +118,7 @@ public class ForcedWordGeneListDaoTest {
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGeneOfLength(chromosomeToCheck,
+		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(chromosomeToCheck,
 				wordLength);
 
 		assertSame(chromosomeToCheck, geneReturned.getChromosome());
@@ -134,7 +134,7 @@ public class ForcedWordGeneListDaoTest {
 				arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGeneOfLength(null, wordLength);
+		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(null, wordLength);
 
 		assertNull(geneReturned);
 		verify(wordListDaoMock, never()).findRandomWord();
@@ -150,7 +150,7 @@ public class ForcedWordGeneListDaoTest {
 				arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGeneOfLength(chromosomeToCheck,
+		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(chromosomeToCheck,
 				wordLength);
 
 		assertNull(geneReturned);
@@ -167,7 +167,7 @@ public class ForcedWordGeneListDaoTest {
 				arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
-		Gene geneReturned = forcedWordGeneListDao.findRandomGeneOfLength(chromosomeToCheck,
+		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(chromosomeToCheck,
 				wordLength);
 
 		assertNull(geneReturned);

@@ -22,15 +22,17 @@ package com.ciphertool.zodiacengine;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.Breeder;
+import com.ciphertool.genetics.dao.GeneDao;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.sentencebuilder.util.LetterUtils;
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
 public class CipherKeyBreeder implements Breeder {
 	
 	private Logger log = Logger.getLogger(getClass());
+	
+	private GeneDao geneDao;
 	
 	private static final String[] KEYS = {"a",
 		"anchor",
@@ -97,15 +99,15 @@ public class CipherKeyBreeder implements Breeder {
 	
 	@Override
 	public Chromosome breed() {
-		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher.getId(), 0, 0);		
+		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher);		
 		
-		for (int i = 0; i < chromosome.targetSize(); i ++) {
+		for (int i = 0; i < KEYS.length; i ++) {
 			// Should never happen, but we check just in case
 			if (chromosome.actualSize() >= chromosome.targetSize()) {
 				throw new IllegalStateException("Attempted to add a Gene to CipherKeyChromosome, but the maximum number of Genes (" + chromosome.targetSize() + ") have already been allocated.");				
 			}
 			
-			CipherKeyGene newGene = new CipherKeyGene(chromosome, String.valueOf(LetterUtils.getRandomLetter()));
+			Gene newGene = geneDao.findRandomGene(chromosome);
 			
 			chromosome.putGene(KEYS[i], newGene);
 		}

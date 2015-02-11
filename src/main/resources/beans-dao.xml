@@ -32,8 +32,8 @@ You should have received a copy of the GNU General Public License along with Zod
 		</constructor-arg>
 	</bean> -->
 
-	<bean class="com.ciphertool.zodiacengine.dao.ForcedWordGeneListDao"
-		id="geneListDao">
+	<bean class="com.ciphertool.zodiacengine.dao.ForcedWordGeneDao"
+		id="geneDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 	
