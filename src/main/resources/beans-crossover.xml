@@ -63,7 +63,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean
 		class="com.ciphertool.genetics.algorithms.crossover.ConservativeCentromereCrossoverAlgorithm"
 		id="conservativeCentromereCrossoverAlgorithm">
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="randomListElementSelector" ref="randomListElementSelector" />
 	</bean>
