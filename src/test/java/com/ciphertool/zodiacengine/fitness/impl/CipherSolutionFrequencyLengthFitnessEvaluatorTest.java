@@ -40,7 +40,7 @@ public class CipherSolutionFrequencyLengthFitnessEvaluatorTest extends
 		knownSolution.setFitness(fitness);
 		assertFalse(knownSolution.isEvaluationNeeded());
 
-		assertEquals(new Double(203.5495916955017), fitness);
+		assertEquals(new Double(203.54959169550168), fitness);
 		assertEquals(354, knownSolution.getTotalMatches());
 		assertEquals(53, knownSolution.getUniqueMatches());
 		assertEquals(407, knownSolution.getAdjacentMatches());
