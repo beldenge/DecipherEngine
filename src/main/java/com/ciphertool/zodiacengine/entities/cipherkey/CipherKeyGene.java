@@ -88,8 +88,7 @@ public class CipherKeyGene implements Gene {
 		CipherKeyGene copyGene = new CipherKeyGene();
 
 		/*
-		 * The Chromosome should be set at a higher level, so we just set it to
-		 * null which should be overwritten.
+		 * The Chromosome should be set at a higher level, so we just set it to null which should be overwritten.
 		 */
 		copyGene.chromosome = null;
 

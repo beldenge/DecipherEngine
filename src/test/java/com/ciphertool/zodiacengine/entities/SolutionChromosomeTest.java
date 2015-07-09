@@ -433,8 +433,7 @@ public class SolutionChromosomeTest {
 		assertEquals(3, solutionChromosome.getGenes().size());
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * removeGene
+		 * Make the solution clean before checking for dirtiness after removeGene
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -485,8 +484,7 @@ public class SolutionChromosomeTest {
 		WordGene wordGene2 = new WordGene(word2, solutionChromosome);
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * replaceGene
+		 * Make the solution clean before checking for dirtiness after replaceGene
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -667,8 +665,7 @@ public class SolutionChromosomeTest {
 		assertEquals(3, solutionChromosome.getPlaintextCharacters().size());
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * removeGene
+		 * Make the solution clean before checking for dirtiness after removeGene
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -717,8 +714,7 @@ public class SolutionChromosomeTest {
 		SolutionChromosome clonedSolutionChromosome = solutionChromosome.clone();
 
 		/*
-		 * Make sure the Ciphers and Solution Sets reference the same memory
-		 * address since those Objects are not cloned.
+		 * Make sure the Ciphers and Solution Sets reference the same memory address since those Objects are not cloned.
 		 */
 		assertSame(solutionChromosome.getCipherId(), clonedSolutionChromosome.getCipherId());
 		assertSame(solutionChromosome.getSolutionSetId(), clonedSolutionChromosome.getSolutionSetId());
@@ -809,8 +805,7 @@ public class SolutionChromosomeTest {
 		assertTrue(clonedSolutionChromosome.isEvaluationNeeded());
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * removeGene
+		 * Make the solution clean before checking for dirtiness after removeGene
 		 */
 		clonedSolutionChromosome.setFitness(0.0);
 		assertFalse(clonedSolutionChromosome.isEvaluationNeeded());
@@ -825,8 +820,8 @@ public class SolutionChromosomeTest {
 	}
 
 	/**
-	 * Reusable method for validating Lists of Sequences by looping through them
-	 * at the Chromosome level and comparing to what exists at the Gene level.
+	 * Reusable method for validating Lists of Sequences by looping through them at the Chromosome level and comparing
+	 * to what exists at the Gene level.
 	 * 
 	 * @param solutionChromosome
 	 *            the SolutionChromosome to validate
@@ -852,8 +847,7 @@ public class SolutionChromosomeTest {
 	}
 
 	/**
-	 * Reusable method for validating that an entire Gene has the expected
-	 * hasMatch value set.
+	 * Reusable method for validating that an entire Gene has the expected hasMatch value set.
 	 * 
 	 * @param wordGeneToValidate
 	 *            the WordGene to validate

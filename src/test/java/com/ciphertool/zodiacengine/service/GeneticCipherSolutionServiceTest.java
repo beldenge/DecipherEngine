@@ -143,8 +143,7 @@ public class GeneticCipherSolutionServiceTest {
 		assertFalse(geneticCipherSolutionService.isRunning());
 		geneticCipherSolutionService.begin(geneticAlgorithmStrategy, genericCallbackMock, false);
 		/*
-		 * After the algorithm ends, this will again be false. It is only true
-		 * actually during the algorithm.
+		 * After the algorithm ends, this will again be false. It is only true actually during the algorithm.
 		 */
 		assertFalse(geneticCipherSolutionService.isRunning());
 
@@ -153,8 +152,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(genericCallbackMock, times(1)).doCallback();
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));
@@ -351,8 +349,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));
@@ -397,8 +394,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(genericCallbackMock, times(1)).doCallback();
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));
@@ -456,8 +452,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));
@@ -531,8 +526,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));
@@ -613,8 +607,7 @@ public class GeneticCipherSolutionServiceTest {
 		verify(mockLogger, times(1)).error(anyString(), any(Throwable.class));
 
 		/*
-		 * These commands should still get called even though an exception was
-		 * caught
+		 * These commands should still get called even though an exception was caught
 		 */
 		verify(runtimeMock, times(1)).exec(eq("command1"));
 		verify(runtimeMock, times(1)).exec(eq("command2"));

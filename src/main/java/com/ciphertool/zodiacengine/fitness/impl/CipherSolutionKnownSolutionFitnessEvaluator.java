@@ -39,13 +39,11 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEv
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
+	 * @see com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
 	 * (com.ciphertool.zodiacengine.entities.Solution)
 	 * 
-	 * This is essentially a test class. It evaluates fitness by comparing
-	 * against a known solution so that we can rule out issues with the
-	 * evaluator when debugging issues.
+	 * This is essentially a test class. It evaluates fitness by comparing against a known solution so that we can rule
+	 * out issues with the evaluator when debugging issues.
 	 */
 	@Override
 	public Double evaluate(Chromosome chromosome) {

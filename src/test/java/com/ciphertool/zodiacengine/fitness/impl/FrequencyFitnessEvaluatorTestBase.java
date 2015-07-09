@@ -138,8 +138,7 @@ public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase 
 		}
 
 		/*
-		 * This may be slightly different than the actual letter total since we
-		 * are rounding the frequencies
+		 * This may be slightly different than the actual letter total since we are rounding the frequencies
 		 */
 		log.info("Total letters expected: " + letterSum);
 	}

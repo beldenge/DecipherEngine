@@ -36,20 +36,19 @@ public abstract class AbstractSolutionEvaluatorBase {
 	protected Cipher cipher;
 
 	/**
-	 * Creates a map with the key as the String value of the Ciphertext
-	 * character and the value as a List of occurrences within the cipher
+	 * Creates a map with the key as the String value of the Ciphertext character and the value as a List of occurrences
+	 * within the cipher
 	 * 
-	 * There's no reason to run this for every single iteration of the validator
-	 * since the ciphertext is not going to change during a run
+	 * There's no reason to run this for every single iteration of the validator since the ciphertext is not going to
+	 * change during a run
 	 * 
-	 * @return the ciphertextKey as a HashMap with the Ciphertext value as the
-	 *         map key and the List of occurrences as the value
+	 * @return the ciphertextKey as a HashMap with the Ciphertext value as the map key and the List of occurrences as
+	 *         the value
 	 */
 	protected abstract HashMap<String, List<Ciphertext>> createKeyFromCiphertext();
 
 	/**
-	 * Resets the hasMatch value for all PlaintextSequence instances in the
-	 * specified SolutionChromosome.
+	 * Resets the hasMatch value for all PlaintextSequence instances in the specified SolutionChromosome.
 	 * 
 	 * @param solutionChromosome
 	 *            the SolutionChromosome to clear hasMatch values for

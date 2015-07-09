@@ -32,8 +32,8 @@ public class PlaintextSequence implements Sequence {
 	protected Integer sequenceId;
 
 	/*
-	 * TODO: Change this to a char or Character instead of String, as it should
-	 * always be only one character for this implementation.
+	 * TODO: Change this to a char or Character instead of String, as it should always be only one character for this
+	 * implementation.
 	 */
 	protected String value;
 
@@ -74,8 +74,7 @@ public class PlaintextSequence implements Sequence {
 	}
 
 	/**
-	 * Shifts all the plaintext characters to the right the specified number of
-	 * places.
+	 * Shifts all the plaintext characters to the right the specified number of places.
 	 * 
 	 * @param places
 	 */
@@ -85,8 +84,7 @@ public class PlaintextSequence implements Sequence {
 	}
 
 	/**
-	 * Shifts all the plaintext characters to the left the specified number of
-	 * places.
+	 * Shifts all the plaintext characters to the left the specified number of places.
 	 * 
 	 * @param places
 	 */
@@ -132,8 +130,7 @@ public class PlaintextSequence implements Sequence {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 * 
-	 * We purposely do not hash the hasMatch property since it is set to false
-	 * for clones.
+	 * We purposely do not hash the hasMatch property since it is set to false for clones.
 	 */
 	@Override
 	public int hashCode() {
@@ -149,8 +146,7 @@ public class PlaintextSequence implements Sequence {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We purposely do not check the hasMatch property since it is set to false
-	 * for clones.
+	 * We purposely do not check the hasMatch property since it is set to false for clones.
 	 */
 	@Override
 	public boolean equals(Object obj) {

@@ -151,8 +151,7 @@ public class WordGeneTest {
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * addSequence
+		 * Make the solution clean before checking for dirtiness after addSequence
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -195,8 +194,7 @@ public class WordGeneTest {
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * addSequence
+		 * Make the solution clean before checking for dirtiness after addSequence
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -238,8 +236,7 @@ public class WordGeneTest {
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * insertSequence
+		 * Make the solution clean before checking for dirtiness after insertSequence
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -279,8 +276,7 @@ public class WordGeneTest {
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * removeSequence
+		 * Make the solution clean before checking for dirtiness after removeSequence
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -334,8 +330,7 @@ public class WordGeneTest {
 		int chromosomeSizeBefore = solutionChromosome.getPlaintextCharacters().size();
 
 		/*
-		 * Make the solution clean before checking for dirtiness after
-		 * replaceSequence
+		 * Make the solution clean before checking for dirtiness after replaceSequence
 		 */
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -357,9 +352,8 @@ public class WordGeneTest {
 	}
 
 	/**
-	 * Reusable method for validating Lists of Sequnces by looping through the
-	 * List of Sequences at the Chromosome level and also by individually
-	 * looping through the Genes.
+	 * Reusable method for validating Lists of Sequnces by looping through the List of Sequences at the Chromosome level
+	 * and also by individually looping through the Genes.
 	 * 
 	 * @param solutionChromosome
 	 *            the SolutionChromosome to validate

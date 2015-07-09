@@ -49,15 +49,12 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
+	 * @see com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
 	 * (com.ciphertool.zodiacengine.entities.Solution)
 	 * 
-	 * Calculates the confidence level as the number of instances that a
-	 * ciphertext character has the same plaintext character mapped to it. If a
-	 * ciphertext character has multiple matches, then select the plaintext
-	 * character with the most matches (or if there's a tie, then the first one
-	 * wins).
+	 * Calculates the confidence level as the number of instances that a ciphertext character has the same plaintext
+	 * character mapped to it. If a ciphertext character has multiple matches, then select the plaintext character with
+	 * the most matches (or if there's a tie, then the first one wins).
 	 */
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -84,19 +81,15 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 			plaintextMatchMap = new HashMap<String, List<PlaintextSequence>>();
 
 			/*
-			 * Now iterate for each occurrence of the current Ciphertext
-			 * character
+			 * Now iterate for each occurrence of the current Ciphertext character
 			 */
 			for (Ciphertext ciphertextIndice : ciphertextIndices) {
 				/*
-				 * This just returns the Plaintext character that corresponds to
-				 * the given Ciphertext character. The usage of List.get()
-				 * assumes that the ArrayList is properly sorted by CiphertextId
+				 * This just returns the Plaintext character that corresponds to the given Ciphertext character. The
+				 * usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
 				 * 
-				 * We could also make this into a map with the ciphertextId as
-				 * the key. Then we would no longer have to worry about order
-				 * and or subtracting one from the id. It does come with a
-				 * performance hit though.
+				 * We could also make this into a map with the ciphertextId as the key. Then we would no longer have to
+				 * worry about order and or subtracting one from the id. It does come with a performance hit though.
 				 */
 				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 
@@ -112,8 +105,8 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 
 				if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
 					/*
-					 * Subtract by one when setting maxMatches so that a match
-					 * on just a pair does not count as two matches.
+					 * Subtract by one when setting maxMatches so that a match on just a pair does not count as two
+					 * matches.
 					 */
 					maxMatches = plaintextMatchMap.get(currentValue).size() - 1;
 
@@ -122,10 +115,8 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 			}
 
 			/*
-			 * If there was a match on this Ciphertext, set the hasMatch
-			 * property to true on all the Plaintext matches. Use the bestMatch
-			 * value so that only the Plaintext with the optimal number of
-			 * matches is set.
+			 * If there was a match on this Ciphertext, set the hasMatch property to true on all the Plaintext matches.
+			 * Use the bestMatch value so that only the Plaintext with the optimal number of matches is set.
 			 */
 			if (bestMatch != null) {
 				for (PlaintextSequence pt : plaintextMatchMap.get(bestMatch)) {
@@ -134,9 +125,8 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 			}
 
 			/*
-			 * Add the Plaintext matches on this Ciphertext character to the
-			 * overall confidence value, represented by total. Each successive
-			 * match gives increasingly more points to the fitness value.
+			 * Add the Plaintext matches on this Ciphertext character to the overall confidence value, represented by
+			 * total. Each successive match gives increasingly more points to the fitness value.
 			 */
 			int subtotal = 0;
 			for (int i = 1; i <= maxMatches; i++) {
@@ -158,8 +148,7 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 		solution.setAdjacentMatches(calculateAdjacentMatches(plaintextCharacters));
 
 		/*
-		 * We don't care to evaluate past the last row since it is likely to be
-		 * filler.
+		 * We don't care to evaluate past the last row since it is likely to be filler.
 		 */
 		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
 		double uniquenessFactor = determineUniquenessFactor(solution, lastSequenceToCheck);
@@ -167,9 +156,8 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 		double fitness = ((double) (total)) - uniquenessFactor;
 
 		/*
-		 * if fitness is less than zero, we will get
-		 * ArrayIndexOutOfBoundsException, and if it is equal to zero, then that
-		 * could mess up selector methods.
+		 * if fitness is less than zero, we will get ArrayIndexOutOfBoundsException, and if it is equal to zero, then
+		 * that could mess up selector methods.
 		 */
 		fitness = fitness > 0 ? fitness : 1;
 
@@ -181,8 +169,7 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 	}
 
 	/**
-	 * This awards extra points towards fitness due to the uniqueness of words
-	 * in the cipher.
+	 * This awards extra points towards fitness due to the uniqueness of words in the cipher.
 	 * 
 	 * @param solution
 	 *            the solution to evaluate
@@ -204,9 +191,8 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 			if (nextWordGene.getSequences().get(0).getSequenceId() < lastSequenceToCheck) {
 				if (nextWordGene.countMatches() == 0) {
 					/*
-					 * We only want to consider this for duplication if it
-					 * contains plaintext matches. Otherwise it's not affecting
-					 * anything.
+					 * We only want to consider this for duplication if it contains plaintext matches. Otherwise it's
+					 * not affecting anything.
 					 */
 					continue;
 				}
@@ -224,14 +210,12 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 		double penalty = 0;
 
 		/*
-		 * We don't care about the Strings themselves anymore. Just their
-		 * numbers of occurrences.
+		 * We don't care about the Strings themselves anymore. Just their numbers of occurrences.
 		 */
 		for (Integer numOccurrences : geneOccurrenceMap.values()) {
 			int pointsToSubtract = 1;
 			/*
-			 * For each successive occurrence over the threshold, add
-			 * increasingly more points to the penalty.
+			 * For each successive occurrence over the threshold, add increasingly more points to the penalty.
 			 */
 			for (int i = numOccurrences; i > MATCH_THRESHOLD; i--) {
 				penalty += pointsToSubtract;

@@ -50,15 +50,12 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
+	 * @see com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
 	 * (com.ciphertool.zodiacengine.entities.Solution)
 	 * 
-	 * Calculates the confidence level as the number of instances that a
-	 * ciphertext character has the same plaintext character mapped to it. If a
-	 * ciphertext character has multiple matches, then select the plaintext
-	 * character with the most matches (or if there's a tie, then the first one
-	 * wins).
+	 * Calculates the confidence level as the number of instances that a ciphertext character has the same plaintext
+	 * character mapped to it. If a ciphertext character has multiple matches, then select the plaintext character with
+	 * the most matches (or if there's a tie, then the first one wins).
 	 */
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -85,19 +82,15 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 			plaintextMatchMap = new HashMap<String, List<PlaintextSequence>>();
 
 			/*
-			 * Now iterate for each occurrence of the current Ciphertext
-			 * character
+			 * Now iterate for each occurrence of the current Ciphertext character
 			 */
 			for (Ciphertext ciphertextIndice : ciphertextIndices) {
 				/*
-				 * This just returns the Plaintext character that corresponds to
-				 * the given Ciphertext character. The usage of List.get()
-				 * assumes that the ArrayList is properly sorted by CiphertextId
+				 * This just returns the Plaintext character that corresponds to the given Ciphertext character. The
+				 * usage of List.get() assumes that the ArrayList is properly sorted by CiphertextId
 				 * 
-				 * We could also make this into a map with the ciphertextId as
-				 * the key. Then we would no longer have to worry about order
-				 * and or subtracting one from the id. It does come with a
-				 * performance hit though.
+				 * We could also make this into a map with the ciphertextId as the key. Then we would no longer have to
+				 * worry about order and or subtracting one from the id. It does come with a performance hit though.
 				 */
 				plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 
@@ -113,8 +106,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 
 				if (plaintextMatchMap.get(currentValue).size() > maxMatches) {
 					/*
-					 * Subtract by one when setting maxMatches so that a match
-					 * on just a pair does not count as two matches.
+					 * Subtract by one when setting maxMatches so that a match on just a pair does not count as two
+					 * matches.
 					 */
 					maxMatches = plaintextMatchMap.get(currentValue).size() - 1;
 
@@ -123,10 +116,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 			}
 
 			/*
-			 * If there was a match on this Ciphertext, set the hasMatch
-			 * property to true on all the Plaintext matches. Use the bestMatch
-			 * value so that only the Plaintext with the optimal number of
-			 * matches is set.
+			 * If there was a match on this Ciphertext, set the hasMatch property to true on all the Plaintext matches.
+			 * Use the bestMatch value so that only the Plaintext with the optimal number of matches is set.
 			 */
 			if (bestMatch != null) {
 				for (PlaintextSequence pt : plaintextMatchMap.get(bestMatch)) {
@@ -135,8 +126,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 			}
 
 			/*
-			 * Add the Plaintext matches on this Ciphertext character to the
-			 * overall confidence value, represented by total
+			 * Add the Plaintext matches on this Ciphertext character to the overall confidence value, represented by
+			 * total
 			 */
 			total += maxMatches;
 
@@ -151,8 +142,7 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 		solution.setAdjacentMatches(calculateAdjacentMatches(plaintextCharacters));
 
 		/*
-		 * We don't care to evaluate past the last row since it is likely to be
-		 * filler.
+		 * We don't care to evaluate past the last row since it is likely to be filler.
 		 */
 		int lastSequenceToCheck = (cipher.getColumns() * (cipher.getRows() - 1));
 		double matchDistanceFactor = determineMatchDistanceFactor(solution, lastSequenceToCheck);
@@ -167,9 +157,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 	}
 
 	/**
-	 * This awards extra points towards fitness due to sufficient gaps among
-	 * identical words. The beginning and end of the cipher are used as
-	 * endpoints for gap checking regardless of the existence of another match.
+	 * This awards extra points towards fitness due to sufficient gaps among identical words. The beginning and end of
+	 * the cipher are used as endpoints for gap checking regardless of the existence of another match.
 	 * 
 	 * @param solution
 	 *            the solution to evaluate
@@ -197,18 +186,15 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 		double extraPoints = 0;
 
 		/*
-		 * We don't care about the Strings themselves anymore. Just their
-		 * positions.
+		 * We don't care about the Strings themselves anymore. Just their positions.
 		 */
 		for (List<Integer> positionList : genePositionMap.values()) {
 			int index = 0;
 
 			for (Integer position : positionList) {
 				/*
-				 * Give extra points towards the fitness for each gap between
-				 * identical words greater than an acceptable distance. If index
-				 * is zero, then this is the first word, so there is nothing to
-				 * compare with yet.
+				 * Give extra points towards the fitness for each gap between identical words greater than an acceptable
+				 * distance. If index is zero, then this is the first word, so there is nothing to compare with yet.
 				 */
 				if (index > 0 && (position - index) < ACCEPTABLE_DISTANCE) {
 					extraPoints -= MATCH_DISTANCE_BONUS;
@@ -218,10 +204,8 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 			}
 
 			/*
-			 * No need to check if there is an acceptable distance between this
-			 * word and the end of the solution. It's meaningless as the whole
-			 * point of this evaluator is to check the distance of words among
-			 * each other.
+			 * No need to check if there is an acceptable distance between this word and the end of the solution. It's
+			 * meaningless as the whole point of this evaluator is to check the distance of words among each other.
 			 */
 		}
 

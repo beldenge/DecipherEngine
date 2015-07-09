@@ -845,8 +845,7 @@ public class GeneticStrategyBuilderTest {
 		assertTrue(exceptionCaught);
 
 		/*
-		 * Try comparing to known solution when no known solution fitness
-		 * evaluator implementation exists
+		 * Try comparing to known solution when no known solution fitness evaluator implementation exists
 		 */
 		cipher.setHasKnownSolution(true);
 		when(cipherDaoMock.findByCipherName(eq(cipherNameValue))).thenReturn(cipher);

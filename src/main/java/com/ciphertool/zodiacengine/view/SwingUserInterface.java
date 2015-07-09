@@ -161,23 +161,20 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		return new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
 				/*
-				 * Run in a separate thread so the window closes, but the
-				 * process remains alive until we are finished handling the
-				 * windowClosing event.
+				 * Run in a separate thread so the window closes, but the process remains alive until we are finished
+				 * handling the windowClosing event.
 				 */
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
 						/*
-						 * In case the program was terminated abruptly, try to
-						 * stop the service as normal so that the post-execution
-						 * tasks are performed.
+						 * In case the program was terminated abruptly, try to stop the service as normal so that the
+						 * post-execution tasks are performed.
 						 */
 						if (cipherSolutionController.isServiceThreadActive()) {
 							cipherSolutionController.stopServiceThread(SwingUserInterface.inDebugMode);
 
 							/*
-							 * Keep waiting for the program to finish
-							 * post-execution tasks.
+							 * Keep waiting for the program to finish post-execution tasks.
 							 */
 							try {
 								while (cipherSolutionController.isServiceThreadActive()) {
@@ -207,8 +204,8 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		getContentPane().add(containerPanel);
 
 		/*
-		 * Use a BorderLayout for the main container so we can use the SOUTH
-		 * panel as a status bar and use the NORTH panel as a menu bar, etc.
+		 * Use a BorderLayout for the main container so we can use the SOUTH panel as a status bar and use the NORTH
+		 * panel as a menu bar, etc.
 		 */
 		containerPanel.setLayout(new BorderLayout());
 
@@ -252,8 +249,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		statusPanel.add(statusLabel);
 
 		/*
-		 * Next make a grid bag for the thirteen input elements with labels on
-		 * the left and spinners on the right.
+		 * Next make a grid bag for the thirteen input elements with labels on the left and spinners on the right.
 		 */
 		JPanel mainPanel = new JPanel();
 		GridBagLayout gridBagLayout = new GridBagLayout();

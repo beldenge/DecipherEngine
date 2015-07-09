@@ -90,9 +90,8 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 	public void resume() {
 		try {
 			/*
-			 * Print the population every generation since this is debug mode,
-			 * and print beforehand since it will all be printed again at the
-			 * finish.
+			 * Print the population every generation since this is debug mode, and print beforehand since it will all be
+			 * printed again at the finish.
 			 */
 			this.geneticAlgorithm.getPopulation().printAscending();
 
@@ -123,8 +122,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 	}
 
 	/**
-	 * In this method we only want to execute the inherited end() method if an
-	 * exception is caught
+	 * In this method we only want to execute the inherited end() method if an exception is caught
 	 */
 	protected void runAlgorithmStepwise() {
 		try {

@@ -383,8 +383,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 	}
 
 	/**
-	 * This is NOT required. We will not always know the solution. In fact, that
-	 * should be the rare case.
+	 * This is NOT required. We will not always know the solution. In fact, that should be the rare case.
 	 * 
 	 * @param knownSolutionFitnessEvaluator
 	 *            the knownSolutionFitnessEvaluator to set

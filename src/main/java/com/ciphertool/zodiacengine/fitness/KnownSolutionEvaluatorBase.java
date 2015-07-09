@@ -35,8 +35,7 @@ public class KnownSolutionEvaluatorBase extends SolutionTruncatedEvaluatorBase {
 		knownSolution.setColumns(17);
 
 		/*
-		 * PartOfSpeech is not used by the evaluator, so set it to something
-		 * arbitrary
+		 * PartOfSpeech is not used by the evaluator, so set it to something arbitrary
 		 */
 		WordGene nextWordGene;
 

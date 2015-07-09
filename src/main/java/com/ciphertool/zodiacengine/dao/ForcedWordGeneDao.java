@@ -70,9 +70,8 @@ public class ForcedWordGeneDao implements VariableLengthGeneDao {
 		Word word = null;
 
 		/*
-		 * Keep trying until we find a word with the right length. Or return
-		 * null if we reach the max attempts. Otherwise there is a chance of
-		 * infinite loop if a length of inordinate size is provided.
+		 * Keep trying until we find a word with the right length. Or return null if we reach the max attempts.
+		 * Otherwise there is a chance of infinite loop if a length of inordinate size is provided.
 		 */
 		int attempts = 0;
 		do {

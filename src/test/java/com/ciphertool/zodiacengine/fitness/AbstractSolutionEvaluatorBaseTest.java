@@ -48,8 +48,8 @@ import com.ciphertool.zodiacengine.entities.WordGene;
 
 public class AbstractSolutionEvaluatorBaseTest {
 	/**
-	 * Dummy concrete class extending AbstractSolutionEvaluatorBase so that we
-	 * can instantiate it for unit testing purposes
+	 * Dummy concrete class extending AbstractSolutionEvaluatorBase so that we can instantiate it for unit testing
+	 * purposes
 	 */
 	private class ConcreteSolutionEvaluatorBase extends AbstractSolutionEvaluatorBase {
 		@Override
@@ -110,8 +110,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 				.getPlaintextCharacters());
 
 		/*
-		 * The adjacent match count should not be updated on the solution. It
-		 * should only be returned by the method.
+		 * The adjacent match count should not be updated on the solution. It should only be returned by the method.
 		 */
 		assertEquals(0, simpleSolution.getAdjacentMatches());
 		assertEquals(4, adjacentMatches);

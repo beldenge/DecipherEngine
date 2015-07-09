@@ -34,8 +34,8 @@ public class SolutionTruncatedEvaluatorBase extends AbstractSolutionEvaluatorBas
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
 			if (ct.getCiphertextId() >= lastRowBegin) {
 				/*
-				 * If this is the last row of the cipher, just exit the loop,
-				 * because for the Zodiac 408 Cipher the last row is garbage.
+				 * If this is the last row of the cipher, just exit the loop, because for the Zodiac 408 Cipher the last
+				 * row is garbage.
 				 */
 				break;
 			}

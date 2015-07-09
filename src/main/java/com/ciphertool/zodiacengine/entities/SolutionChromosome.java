@@ -164,8 +164,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	}
 
 	/**
-	 * This should only be called for purposes of hydrating the entity. The
-	 * createdDate should never be modified.
+	 * This should only be called for purposes of hydrating the entity. The createdDate should never be modified.
 	 * 
 	 * @param databaseCreatedDate
 	 *            the databaseCreatedDate to set
@@ -340,8 +339,7 @@ public class SolutionChromosome implements KeylessChromosome {
 			plaintextSequence.setHasMatch(false);
 
 			/*
-			 * We additionally have to reset the ciphertextId since the current
-			 * ciphertextIds may no longer be accurate.
+			 * We additionally have to reset the ciphertextId since the current ciphertextIds may no longer be accurate.
 			 */
 			plaintextSequence.setSequenceId(beginIndex + i);
 		}
@@ -363,8 +361,8 @@ public class SolutionChromosome implements KeylessChromosome {
 		int beginIndex = 0;
 
 		/*
-		 * If this isn't the first Gene, we want the next Sequence ID to be one
-		 * greater than the last Gene's greatest Sequence ID.
+		 * If this isn't the first Gene, we want the next Sequence ID to be one greater than the last Gene's greatest
+		 * Sequence ID.
 		 */
 		if (index > 0) {
 			beginIndex = ((PlaintextSequence) ((VariableLengthGene) this.genes.get(index - 1)).getSequences().get(
@@ -374,8 +372,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		int actualSize = this.plaintextCharacters.size();
 
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
+		 * We additionally have to shift the ciphertextIds since the current ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
 			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftRight(((VariableLengthGene) gene).size());
@@ -390,8 +387,7 @@ public class SolutionChromosome implements KeylessChromosome {
 			plaintextSequence.setHasMatch(false);
 
 			/*
-			 * We additionally have to reset the ciphertextId since the current
-			 * ciphertextIds may no longer be accurate.
+			 * We additionally have to reset the ciphertextId since the current ciphertextIds may no longer be accurate.
 			 */
 			plaintextSequence.setSequenceId(beginIndex + i);
 		}
@@ -411,8 +407,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		Gene geneToRemove = this.genes.get(index);
 
 		/*
-		 * We want the next Sequence ID to be one greater than the current
-		 * Gene's greatest Sequence ID.
+		 * We want the next Sequence ID to be one greater than the current Gene's greatest Sequence ID.
 		 */
 		int beginIndex = ((PlaintextSequence) ((VariableLengthGene) geneToRemove).getSequences().get(
 				((VariableLengthGene) geneToRemove).getSequences().size() - 1)).getSequenceId() + 1;
@@ -420,16 +415,15 @@ public class SolutionChromosome implements KeylessChromosome {
 		int actualSize = this.plaintextCharacters.size();
 
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
+		 * We additionally have to shift the ciphertextIds since the current ciphertextIds will no longer be accurate.
 		 */
 		for (int i = beginIndex; i < actualSize; i++) {
 			((PlaintextSequence) this.plaintextCharacters.get(i)).shiftLeft(((VariableLengthGene) geneToRemove).size());
 		}
 
 		/*
-		 * We loop across the indices backwards since, if starting from the
-		 * beginning, they should decrement each time an element is removed.
+		 * We loop across the indices backwards since, if starting from the beginning, they should decrement each time
+		 * an element is removed.
 		 */
 		for (int i = ((VariableLengthGene) geneToRemove).size() - 1; i >= 0; i--) {
 			plaintextCharacters.remove(((VariableLengthGene) geneToRemove).getSequences().get(i).getSequenceId()
@@ -444,8 +438,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	 * 
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#replaceGene(int,
-	 * com.ciphertool.zodiacengine.genetic.Gene)
+	 * @see com.ciphertool.zodiacengine.genetic.Chromosome#replaceGene(int, com.ciphertool.zodiacengine.genetic.Gene)
 	 */
 	@Override
 	@Dirty
@@ -499,8 +492,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		this.plaintextCharacters.add(index, plaintext);
 
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
+		 * We additionally have to shift the ciphertextIds since the current ciphertextIds will no longer be accurate.
 		 */
 		int chromosomeSize = plaintextCharacters.size();
 		for (int i = plaintext.getSequenceId() + 1; i < chromosomeSize; i++) {
@@ -519,8 +511,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		}
 
 		/*
-		 * We additionally have to shift the ciphertextIds since the current
-		 * ciphertextIds will no longer be accurate.
+		 * We additionally have to shift the ciphertextIds since the current ciphertextIds will no longer be accurate.
 		 */
 		int chromosomeSize = plaintextCharacters.size();
 		for (int i = plaintext.getSequenceId(); i < chromosomeSize; i++) {
@@ -558,14 +549,14 @@ public class SolutionChromosome implements KeylessChromosome {
 		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		/*
-		 * Since we are copying over the fitness value, we don't need to reset
-		 * the evaluationNeeded flag because the cloned default is correct.
+		 * Since we are copying over the fitness value, we don't need to reset the evaluationNeeded flag because the
+		 * cloned default is correct.
 		 */
 		copyChromosome.setFitness(this.fitness.doubleValue());
 		copyChromosome.setDatabaseCreatedDate(null);
 		/*
-		 * We don't need to clone the solutionSetId or cipherId as even though
-		 * they are objects, they should remain static.
+		 * We don't need to clone the solutionSetId or cipherId as even though they are objects, they should remain
+		 * static.
 		 */
 
 		Gene nextGene = null;
@@ -667,8 +658,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	}
 
 	/*
-	 * Prints the properties of the solution and then outputs the entire
-	 * plaintext list in block format.
+	 * Prints the properties of the solution and then outputs the entire plaintext list in block format.
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -701,8 +691,8 @@ public class SolutionChromosome implements KeylessChromosome {
 				}
 
 				/*
-				 * Print a newline if we are at the end of the row. Add 1 to the
-				 * index so the modulus function doesn't break.
+				 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
+				 * break.
 				 */
 				if (((i + 1) % this.columns) == 0) {
 					sb.append("\n");

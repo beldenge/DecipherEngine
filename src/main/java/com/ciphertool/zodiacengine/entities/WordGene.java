@@ -88,9 +88,7 @@ public class WordGene implements VariableLengthGene {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.ciphertool.genetics.entities.Gene#addSequence(com.ciphertool.genetics
-	 * .entities.Sequence)
+	 * @see com.ciphertool.genetics.entities.Gene#addSequence(com.ciphertool.genetics .entities.Sequence)
 	 * 
 	 * Simple pass-through method allowing aspect orientation.
 	 */
@@ -101,8 +99,8 @@ public class WordGene implements VariableLengthGene {
 	}
 
 	/**
-	 * Add a Sequence to this Gene. This allows other methods within this class
-	 * to bypass aspect orientation when adding sequences.
+	 * Add a Sequence to this Gene. This allows other methods within this class to bypass aspect orientation when adding
+	 * sequences.
 	 * 
 	 * @param sequence
 	 *            the Sequence to add
@@ -120,8 +118,7 @@ public class WordGene implements VariableLengthGene {
 		this.sequences.add(sequence);
 
 		/*
-		 * It is possible for the Chromosome to be null if this Gene is being
-		 * cloned.
+		 * It is possible for the Chromosome to be null if this Gene is being cloned.
 		 */
 		if (this.chromosome != null) {
 			((SolutionChromosome) chromosome).addPlaintext((PlaintextSequence) sequence);
@@ -143,8 +140,8 @@ public class WordGene implements VariableLengthGene {
 		this.sequences.add(index, sequence);
 
 		/*
-		 * The SolutionChromosome is expected to take care of any shifting of
-		 * ciphertextIds that is necessary due to the insertion.
+		 * The SolutionChromosome is expected to take care of any shifting of ciphertextIds that is necessary due to the
+		 * insertion.
 		 */
 		((SolutionChromosome) chromosome).insertPlaintext(index, ((PlaintextSequence) sequence));
 	}
@@ -160,8 +157,8 @@ public class WordGene implements VariableLengthGene {
 		}
 
 		/*
-		 * The SolutionChromosome is expected to take care of any shifting of
-		 * ciphertextIds that is necessary due to the removal.
+		 * The SolutionChromosome is expected to take care of any shifting of ciphertextIds that is necessary due to the
+		 * removal.
 		 */
 		boolean result = ((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
 
@@ -178,8 +175,7 @@ public class WordGene implements VariableLengthGene {
 	 * 
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ciphertool.zodiacengine.genetic.Gene#replaceSequence(int,
-	 * com.ciphertool.zodiacengine.genetic.Sequence)
+	 * @see com.ciphertool.zodiacengine.genetic.Gene#replaceSequence(int, com.ciphertool.zodiacengine.genetic.Sequence)
 	 */
 	@Override
 	@Dirty
@@ -211,8 +207,7 @@ public class WordGene implements VariableLengthGene {
 		WordGene copyGene = new WordGene();
 
 		/*
-		 * The Chromosome should be set at a higher level, so we just set it to
-		 * null which should be overwritten.
+		 * The Chromosome should be set at a higher level, so we just set it to null which should be overwritten.
 		 */
 		copyGene.chromosome = null;
 
@@ -226,10 +221,9 @@ public class WordGene implements VariableLengthGene {
 			copyGene.doAddSequence(clonedSequence);
 
 			/*
-			 * We do NOT want to set the SolutionChromosome for the
-			 * PlaintextSequence here, since the only SolutionChromosome we have
-			 * access to here is the one referenced by the WordGene being
-			 * cloned. It should be set at a higher level.
+			 * We do NOT want to set the SolutionChromosome for the PlaintextSequence here, since the only
+			 * SolutionChromosome we have access to here is the one referenced by the WordGene being cloned. It should
+			 * be set at a higher level.
 			 */
 
 			clonedSequence.setGene(copyGene);
@@ -278,8 +272,7 @@ public class WordGene implements VariableLengthGene {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 * 
-	 * We don't check the Chromosome here since it should be set at a higher
-	 * level.
+	 * We don't check the Chromosome here since it should be set at a higher level.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -311,8 +304,7 @@ public class WordGene implements VariableLengthGene {
 	 * 
 	 * @see java.lang.Object#toString()
 	 * 
-	 * We purposely do not print out the Chromosome because that could cause an
-	 * infinite loop.
+	 * We purposely do not print out the Chromosome because that could cause an infinite loop.
 	 */
 	@Override
 	public String toString() {

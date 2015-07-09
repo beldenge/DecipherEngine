@@ -276,14 +276,14 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		/*
-		 * Since we are copying over the fitness value, we don't need to reset
-		 * the evaluationNeeded flag because the cloned default is correct.
+		 * Since we are copying over the fitness value, we don't need to reset the evaluationNeeded flag because the
+		 * cloned default is correct.
 		 */
 		copyChromosome.setFitness(this.fitness.doubleValue());
 
 		/*
-		 * We don't need to clone the solutionSetId or cipherId as even though
-		 * they are objects, they should remain static.
+		 * We don't need to clone the solutionSetId or cipherId as even though they are objects, they should remain
+		 * static.
 		 */
 
 		Gene nextGene = null;
@@ -359,8 +359,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	}
 
 	/*
-	 * Prints the properties of the solution and then outputs the entire
-	 * plaintext list in block format.
+	 * Prints the properties of the solution and then outputs the entire plaintext list in block format.
 	 * 
 	 * (non-Javadoc)
 	 * 
@@ -386,8 +385,8 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 				sb.append(" ");
 
 				/*
-				 * Print a newline if we are at the end of the row. Add 1 to the
-				 * index so the modulus function doesn't break.
+				 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
+				 * break.
 				 */
 				if (((i + 1) % this.cipher.getColumns()) == 0) {
 					sb.append("\n");
