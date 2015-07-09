@@ -49,6 +49,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 
 	private ApplicationContext context;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public GeneticAlgorithmStrategy buildStrategy(Map<String, Object> parameters) {
 		Cipher cipher = getCipher(parameters);
@@ -157,6 +158,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return fitnessEvaluator;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected CrossoverAlgorithm getCrossoverAlgorithm(Map<String, Object> parameters) {
 		Object crossoverAlgorithmName = parameters.get(ParameterConstants.CROSSOVER_ALGORITHM);
 
@@ -176,6 +178,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		return crossoverAlgorithm;
 	}
 
+	@SuppressWarnings("rawtypes")
 	protected MutationAlgorithm getMutationAlgorithm(Map<String, Object> parameters) {
 		Object mutationAlgorithmName = parameters.get(ParameterConstants.MUTATION_ALGORITHM);
 

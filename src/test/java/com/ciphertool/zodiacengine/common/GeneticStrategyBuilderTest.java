@@ -148,6 +148,7 @@ public class GeneticStrategyBuilderTest {
 		geneticStrategyBuilder.getFitnessEvaluator(parametersMap);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testGetCrossoverAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
@@ -195,6 +196,7 @@ public class GeneticStrategyBuilderTest {
 		geneticStrategyBuilder.getCrossoverAlgorithm(parametersMap);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testGetMutationAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
