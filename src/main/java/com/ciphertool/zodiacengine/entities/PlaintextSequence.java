@@ -183,7 +183,6 @@ public class PlaintextSequence implements Sequence {
 
 	@Override
 	public String toString() {
-		return "PlaintextSequence [sequenceId=" + sequenceId + ", value=" + value + ", hasMatch="
-				+ hasMatch + "]";
+		return "PlaintextSequence [sequenceId=" + sequenceId + ", value=" + value + ", hasMatch=" + hasMatch + "]";
 	}
 }

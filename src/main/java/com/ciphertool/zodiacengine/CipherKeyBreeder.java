@@ -29,93 +29,46 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyBreeder implements Breeder {
-	
+
 	private Logger log = Logger.getLogger(getClass());
-	
+
 	private GeneDao geneDao;
-	
-	private static final String[] KEYS = {"a",
-		"anchor",
-		"b",
-		"backc",
-		"backd",
-		"backe",
-		"backf",
-		"backj",
-		"backk",
-		"backl",
-		"backp",
-		"backq",
-		"backr",
-		"backslash",
-		"box",
-		"boxdot",
-		"carrot",
-		"circledot",
-		"d",
-		"e",
-		"f",
-		"flipt",
-		"forslash",
-		"fullbox",
-		"fullcircle",
-		"fulltri",
-		"g",
-		"h",
-		"horstrike",
-		"i",
-		"j",
-		"k",
-		"l",
-		"lrbox",
-		"m",
-		"n",
-		"o",
-		"p",
-		"pi",
-		"plus",
-		"q",
-		"r",
-		"s",
-		"t",
-		"tri",
-		"tridot",
-		"u",
-		"v",
-		"vertstrike",
-		"w",
-		"x",
-		"y",
-		"z",
-		"zodiac"};
-	
+
+	private static final String[] KEYS = { "a", "anchor", "b", "backc", "backd", "backe", "backf", "backj", "backk",
+			"backl", "backp", "backq", "backr", "backslash", "box", "boxdot", "carrot", "circledot", "d", "e", "f",
+			"flipt", "forslash", "fullbox", "fullcircle", "fulltri", "g", "h", "horstrike", "i", "j", "k", "l",
+			"lrbox", "m", "n", "o", "p", "pi", "plus", "q", "r", "s", "t", "tri", "tridot", "u", "v", "vertstrike",
+			"w", "x", "y", "z", "zodiac" };
+
 	private Cipher cipher;
-	
+
 	/**
 	 * Default no-args constructor
 	 */
 	public CipherKeyBreeder() {
 	}
-	
+
 	@Override
 	public Chromosome breed() {
-		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher);		
-		
-		for (int i = 0; i < KEYS.length; i ++) {
+		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher);
+
+		for (int i = 0; i < KEYS.length; i++) {
 			// Should never happen, but we check just in case
 			if (chromosome.actualSize() >= chromosome.targetSize()) {
-				throw new IllegalStateException("Attempted to add a Gene to CipherKeyChromosome, but the maximum number of Genes (" + chromosome.targetSize() + ") have already been allocated.");				
+				throw new IllegalStateException(
+						"Attempted to add a Gene to CipherKeyChromosome, but the maximum number of Genes ("
+								+ chromosome.targetSize() + ") have already been allocated.");
 			}
-			
+
 			Gene newGene = geneDao.findRandomGene(chromosome);
-			
+
 			chromosome.putGene(KEYS[i], newGene);
 		}
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug(chromosome);
 		}
-		
+
 		return chromosome;
 	}
 

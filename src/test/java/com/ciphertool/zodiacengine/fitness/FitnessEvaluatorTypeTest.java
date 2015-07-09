@@ -43,28 +43,27 @@ public class FitnessEvaluatorTypeTest {
 	public void testTypes() {
 		assertEquals(13, FitnessEvaluatorType.values().length);
 
-		assertSame(CipherSolutionFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION
+		assertSame(CipherSolutionFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION.getType());
+		assertSame(CipherSolutionTruncatedFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_TRUNCATED
 				.getType());
-		assertSame(CipherSolutionTruncatedFitnessEvaluator.class,
-				FitnessEvaluatorType.CIPHER_SOLUTION_TRUNCATED.getType());
-		assertSame(CipherSolutionMultipleFitnessEvaluator.class,
-				FitnessEvaluatorType.CIPHER_SOLUTION_MULTIPLE.getType());
+		assertSame(CipherSolutionMultipleFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_MULTIPLE
+				.getType());
 		assertSame(CipherSolutionKnownSolutionFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_KNOWN_SOLUTION.getType());
 		assertSame(CipherSolutionKnownSolutionExponentialFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_KNOWN_SOLUTION_EXPONENTIAL.getType());
-		assertSame(CipherSolutionMagicWordFitnessEvaluator.class,
-				FitnessEvaluatorType.CIPHER_SOLUTION_MAGIC_WORD.getType());
-		assertSame(CipherSolutionFrequencyFitnessEvaluator.class,
-				FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY.getType());
+		assertSame(CipherSolutionMagicWordFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_MAGIC_WORD
+				.getType());
+		assertSame(CipherSolutionFrequencyFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY
+				.getType());
 		assertSame(CipherSolutionFrequencyTruncatedFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY_TRUNCATED.getType());
 		assertSame(CipherSolutionFrequencyLengthFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_FREQUENCY_LENGTH.getType());
 		assertSame(CipherSolutionMatchDistanceFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_MATCH_DISTANCE.getType());
-		assertSame(CipherSolutionUniqueWordFitnessEvaluator.class,
-				FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD.getType());
+		assertSame(CipherSolutionUniqueWordFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD
+				.getType());
 		assertSame(CipherSolutionMatchDistanceLengthFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_MATCH_DISTANCE_LENGTH.getType());
 		assertSame(CipherSolutionUniqueWordLengthFitnessEvaluator.class,

@@ -30,7 +30,7 @@ public class CipherKeyGeneDao implements GeneDao {
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {
 		CipherKeyGene newGene = new CipherKeyGene(chromosome, String.valueOf(LetterUtils.getRandomLetter()));
-		
+
 		return newGene;
 	}
 }

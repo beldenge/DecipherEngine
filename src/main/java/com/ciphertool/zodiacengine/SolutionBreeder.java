@@ -44,8 +44,8 @@ public class SolutionBreeder implements Breeder {
 	@Override
 	public Chromosome breed() {
 		// Set confidence levels to lowest possible
-		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher
-				.getRows(), cipher.getColumns());
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(), cipher
+				.getColumns());
 
 		populateGenes(solution);
 

@@ -96,11 +96,10 @@ public class SolutionChromosome implements KeylessChromosome {
 	 * @param columns
 	 *            the columns to set
 	 */
-	public SolutionChromosome(BigInteger cipherId, int totalMatches, int uniqueMatches,
-			int adjacentMatches, int rows, int columns) {
+	public SolutionChromosome(BigInteger cipherId, int totalMatches, int uniqueMatches, int adjacentMatches, int rows,
+			int columns) {
 		if (cipherId == null) {
-			throw new IllegalArgumentException(
-					"Cannot construct SolutionChromosome with null cipherId.");
+			throw new IllegalArgumentException("Cannot construct SolutionChromosome with null cipherId.");
 		}
 
 		this.cipherId = cipherId;
@@ -403,8 +402,8 @@ public class SolutionChromosome implements KeylessChromosome {
 	public Gene removeGene(int index) {
 		if (this.genes == null || this.genes.size() <= index) {
 			log.warn("Attempted to remove a Gene from SolutionChromosome at index " + index
-					+ ", but the List of Genes has max index of "
-					+ (this.genes == null ? 0 : this.genes.size()) + ".  Returning null." + this);
+					+ ", but the List of Genes has max index of " + (this.genes == null ? 0 : this.genes.size())
+					+ ".  Returning null." + this);
 
 			return null;
 		}
@@ -460,8 +459,8 @@ public class SolutionChromosome implements KeylessChromosome {
 
 		if (this.genes == null || this.genes.size() <= index) {
 			log.warn("Attempted to replace a Gene from SolutionChromosome at index " + index
-					+ ", but the List of Genes has max index of "
-					+ (this.genes == null ? 0 : this.genes.size()) + ".  Cannot continue." + this);
+					+ ", but the List of Genes has max index of " + (this.genes == null ? 0 : this.genes.size())
+					+ ".  Cannot continue." + this);
 
 			return;
 		}
@@ -590,13 +589,11 @@ public class SolutionChromosome implements KeylessChromosome {
 		int result = 1;
 		result = prime * result + age;
 		result = prime * result + ((cipherId == null) ? 0 : cipherId.hashCode());
-		result = prime * result
-				+ ((databaseCreatedDate == null) ? 0 : databaseCreatedDate.hashCode());
+		result = prime * result + ((databaseCreatedDate == null) ? 0 : databaseCreatedDate.hashCode());
 		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + numberOfChildren;
-		result = prime * result
-				+ ((plaintextCharacters == null) ? 0 : plaintextCharacters.hashCode());
+		result = prime * result + ((plaintextCharacters == null) ? 0 : plaintextCharacters.hashCode());
 		result = prime * result + ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
 		return result;
 	}
@@ -680,10 +677,9 @@ public class SolutionChromosome implements KeylessChromosome {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness="
-				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
-				+ numberOfChildren + ", totalMatches=" + totalMatches + ", uniqueMatches="
-				+ uniqueMatches + ", adjacentMatches=" + adjacentMatches + ", evaluationNeeded="
+		sb.append("Solution [id=" + id + ", cipherId=" + cipherId + ", fitness=" + String.format("%1$,.2f", fitness)
+				+ ", age=" + age + ", numberOfChildren=" + numberOfChildren + ", totalMatches=" + totalMatches
+				+ ", uniqueMatches=" + uniqueMatches + ", adjacentMatches=" + adjacentMatches + ", evaluationNeeded="
 				+ evaluationNeeded + ", databaseCreatedDate=" + databaseCreatedDate + "]\n");
 
 		if (this.cipherId != null) {

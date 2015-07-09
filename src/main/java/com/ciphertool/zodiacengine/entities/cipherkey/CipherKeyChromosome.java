@@ -39,11 +39,11 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {
-	
+
 	private static Logger log = Logger.getLogger(CipherKeyChromosome.class);
 
 	private static final int KEY_SIZE = 54;
-	
+
 	@Id
 	protected BigInteger id;
 
@@ -51,7 +51,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	protected Integer solutionSetId;
 
 	protected Cipher cipher;
-	
+
 	@Transient
 	protected boolean evaluationNeeded = true;
 
@@ -65,7 +65,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	private int numberOfChildren = 0;
 
 	private Map<String, Gene> genes = new HashMap<String, Gene>();
-	
+
 	public CipherKeyChromosome() {
 	}
 
@@ -79,13 +79,12 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	 */
 	public CipherKeyChromosome(Cipher cipher) {
 		if (cipher == null) {
-			throw new IllegalArgumentException(
-					"Cannot construct CipherKeyChromosome with null cipher.");
+			throw new IllegalArgumentException("Cannot construct CipherKeyChromosome with null cipher.");
 		}
 
 		this.cipher = cipher;
 	}
-	
+
 	/**
 	 * @return the id
 	 */
@@ -130,7 +129,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	public void setCipher(Cipher cipher) {
 		this.cipher = cipher;
 	}
-	
+
 	/**
 	 * @return the evaluationNeeded
 	 */
@@ -188,7 +187,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	public void increaseNumberOfChildren() {
 		this.numberOfChildren++;
 	}
-	
+
 	@Override
 	public Map<String, Gene> getGenes() {
 		return Collections.unmodifiableMap(genes);
@@ -204,13 +203,16 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		}
 
 		if (this.genes.get(key) != null) {
-			log.warn("Attempted to insert a Gene to CipherKeyChromosome with key " + key + ", but the key already exists.  If this was intentional, please use replaceGene() instead.  Returning. " + this);
+			log.warn("Attempted to insert a Gene to CipherKeyChromosome with key "
+					+ key
+					+ ", but the key already exists.  If this was intentional, please use replaceGene() instead.  Returning. "
+					+ this);
 
 			return;
 		}
-		
+
 		gene.setChromosome(this);
-		
+
 		this.genes.put(key, gene);
 	}
 
@@ -223,7 +225,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 			return null;
 		}
-		
+
 		return this.genes.remove(key);
 	}
 
@@ -278,7 +280,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		 * the evaluationNeeded flag because the cloned default is correct.
 		 */
 		copyChromosome.setFitness(this.fitness.doubleValue());
-		
+
 		/*
 		 * We don't need to clone the solutionSetId or cipherId as even though
 		 * they are objects, they should remain static.
@@ -299,13 +301,11 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + age;
-		result = prime * result
-				+ ((cipher == null) ? 0 : cipher.hashCode());
+		result = prime * result + ((cipher == null) ? 0 : cipher.hashCode());
 		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + numberOfChildren;
-		result = prime * result
-				+ ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
+		result = prime * result + ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
 		return result;
 	}
 
@@ -357,7 +357,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		}
 		return true;
 	}
-	
+
 	/*
 	 * Prints the properties of the solution and then outputs the entire
 	 * plaintext list in block format.
@@ -370,8 +370,8 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
-				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren="
-				+ numberOfChildren + ", evaluationNeeded=" + evaluationNeeded + "]\n");
+				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren=" + numberOfChildren
+				+ ", evaluationNeeded=" + evaluationNeeded + "]\n");
 
 		if (this.cipher != null) {
 			CipherKeyGene nextPlaintext = null;

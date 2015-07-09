@@ -68,8 +68,7 @@ public class SolutionTruncatedEvaluatorBaseTest {
 		SolutionTruncatedEvaluatorBase solutionTruncatedEvaluatorBase = new SolutionTruncatedEvaluatorBase();
 		solutionTruncatedEvaluatorBase.setGeneticStructure(simpleCipher);
 
-		HashMap<String, List<Ciphertext>> keyFromCiphertext = solutionTruncatedEvaluatorBase
-				.createKeyFromCiphertext();
+		HashMap<String, List<Ciphertext>> keyFromCiphertext = solutionTruncatedEvaluatorBase.createKeyFromCiphertext();
 
 		assertEquals(7, keyFromCiphertext.size());
 

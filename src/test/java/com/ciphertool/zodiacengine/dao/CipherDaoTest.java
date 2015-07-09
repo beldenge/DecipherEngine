@@ -67,8 +67,8 @@ public class CipherDaoTest {
 
 		Field mongoOperationsField = ReflectionUtils.findField(CipherDao.class, "mongoOperations");
 		ReflectionUtils.makeAccessible(mongoOperationsField);
-		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(
-				mongoOperationsField, cipherDao);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField,
+				cipherDao);
 
 		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}
@@ -76,8 +76,7 @@ public class CipherDaoTest {
 	@Test
 	public void testFindByCipherName() {
 		Cipher cipherToReturn = new Cipher("fiveByFive", 5, 5);
-		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(
-				cipherToReturn);
+		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(cipherToReturn);
 
 		Cipher cipherReturned = cipherDao.findByCipherName("arbitraryCipherName");
 

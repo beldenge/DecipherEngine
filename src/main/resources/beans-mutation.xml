@@ -10,24 +10,23 @@ ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY 
 	
 You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
-		<property name="sequenceDao" ref="sequenceDao"/>
+		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.mutation.LiberalMutationAlgorithm" id="liberalMutationAlgorithm">
 		<property name="geneDao" ref="geneDao" />
 		<property name="chromosomeHelper" ref="chromosomeHelper" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm" id="conservativeMutationAlgorithm">
 		<property name="geneDao" ref="geneDao" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.mutation.GroupMutationAlgorithm" id="groupMutationAlgorithm">
 		<property name="geneDao" ref="geneDao" />
 	</bean>

@@ -47,8 +47,7 @@ public class WordGeneDaoMock extends WordGeneDao {
 	@Override
 	public Gene findRandomGeneOfLength(Chromosome chromosome, int length) {
 		if (length < 1) {
-			log.warn("Unable to find random gene of length "
-					+ length
+			log.warn("Unable to find random gene of length " + length
 					+ " since it is less than 1, which is obviously the minimum length.  Returning null.");
 
 			return null;
@@ -113,8 +112,7 @@ public class WordGeneDaoMock extends WordGeneDao {
 			word.append("$");
 		}
 
-		WordGene wordGene = new WordGene(new Word(
-				new WordId(word.toString(), PartOfSpeechType.NONE)),
+		WordGene wordGene = new WordGene(new Word(new WordId(word.toString(), PartOfSpeechType.NONE)),
 				(SolutionChromosome) chromosome);
 
 		return wordGene;

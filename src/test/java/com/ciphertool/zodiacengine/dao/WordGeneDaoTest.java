@@ -74,8 +74,7 @@ public class WordGeneDaoTest {
 
 		Field wordListDaoField = ReflectionUtils.findField(WordGeneDao.class, "wordListDao");
 		ReflectionUtils.makeAccessible(wordListDaoField);
-		WordListDao wordListDaoFromObject = (WordListDao) ReflectionUtils.getField(
-				wordListDaoField, wordGeneDao);
+		WordListDao wordListDaoFromObject = (WordListDao) ReflectionUtils.getField(wordListDaoField, wordGeneDao);
 
 		assertSame(wordListDaoMock, wordListDaoFromObject);
 	}
@@ -87,8 +86,7 @@ public class WordGeneDaoTest {
 
 		Field wordMapDaoField = ReflectionUtils.findField(WordGeneDao.class, "wordMapDao");
 		ReflectionUtils.makeAccessible(wordMapDaoField);
-		WordMapDao wordMapDaoFromObject = (WordMapDao) ReflectionUtils.getField(wordMapDaoField,
-				wordGeneDao);
+		WordMapDao wordMapDaoFromObject = (WordMapDao) ReflectionUtils.getField(wordMapDaoField, wordGeneDao);
 
 		assertSame(wordMapDaoMock, wordMapDaoFromObject);
 	}
@@ -98,8 +96,7 @@ public class WordGeneDaoTest {
 		SolutionChromosome chromosomeToCheck = new SolutionChromosome();
 		Integer arbitraryInteger = 5;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE),
-				arbitraryInteger);
+		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
@@ -114,8 +111,7 @@ public class WordGeneDaoTest {
 	public void testFindRandomGeneNullChromosome() {
 		Integer arbitraryInteger = 5;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE),
-				arbitraryInteger);
+		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene geneReturned = wordGeneDao.findRandomGene(null);
@@ -130,8 +126,7 @@ public class WordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 7;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE),
-				arbitraryInteger);
+		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
@@ -147,8 +142,7 @@ public class WordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 7;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE),
-				arbitraryInteger);
+		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
 		Gene geneReturned = wordGeneDao.findRandomGeneOfLength(null, wordLength);
@@ -163,8 +157,7 @@ public class WordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 0;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE),
-				arbitraryInteger);
+		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
 		when(wordMapDaoMock.findRandomWordByLength(eq(wordLength))).thenReturn(wordToReturn);
 
 		Gene geneReturned = wordGeneDao.findRandomGeneOfLength(chromosomeToCheck, wordLength);

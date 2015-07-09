@@ -27,8 +27,7 @@ import org.junit.Test;
 
 import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
 
-public class CipherSolutionKnownSolutionExponentialFitnessEvaluatorTest extends
-		FitnessEvaluatorTestBase {
+public class CipherSolutionKnownSolutionExponentialFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	@Test
 	public void testEvaluate() {
 		CipherSolutionKnownSolutionExponentialFitnessEvaluator fitnessEvaluator = new CipherSolutionKnownSolutionExponentialFitnessEvaluator();

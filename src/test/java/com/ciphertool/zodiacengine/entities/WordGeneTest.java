@@ -164,11 +164,9 @@ public class WordGeneTest {
 		assertEquals(wordGene.size(), geneSizeBefore + 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore + 1);
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
-		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
-				newPlaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), newPlaintextSequence);
 
 		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
@@ -210,11 +208,9 @@ public class WordGeneTest {
 		assertEquals(wordGene.size(), geneSizeBefore + 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore + 1);
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
-		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
-				newPlaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), newPlaintextSequence);
 
 		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
@@ -255,11 +251,9 @@ public class WordGeneTest {
 		assertEquals(wordGene.size(), geneSizeBefore + 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore + 1);
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
-		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
-				newPlaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), newPlaintextSequence);
 
 		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
@@ -297,8 +291,7 @@ public class WordGeneTest {
 		assertEquals(wordGene.size(), geneSizeBefore - 1);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore - 1);
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(0)).getValue(), "s");
 		assertEquals(((PlaintextSequence) wordGene.getSequences().get(1)).getValue(), "i");
@@ -347,8 +340,7 @@ public class WordGeneTest {
 		solutionChromosome.setFitness(0.0);
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
-		String valueBefore = ((PlaintextSequence) wordGene.getSequences().get(ciphertextId))
-				.getValue();
+		String valueBefore = ((PlaintextSequence) wordGene.getSequences().get(ciphertextId)).getValue();
 		wordGene.replaceSequence(ciphertextId, newPlaintextSequence);
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 		assertFalse(valueBefore.equals(newPlaintextSequence.getValue()));
@@ -357,11 +349,9 @@ public class WordGeneTest {
 		assertEquals(wordGene.size(), geneSizeBefore);
 		assertEquals(solutionChromosome.getPlaintextCharacters().size(), chromosomeSizeBefore);
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
-		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId),
-				newPlaintextSequence);
+		assertSame(solutionChromosome.getPlaintextCharacters().get(ciphertextId), newPlaintextSequence);
 
 		validateSequencesAndGenes(solutionChromosome, wordGene);
 	}
@@ -379,11 +369,9 @@ public class WordGeneTest {
 	private void validateSequencesAndGenes(SolutionChromosome solutionChromosome, WordGene wordGene) {
 		// Validate by looping through the Sequences
 		for (int i = 0; i < solutionChromosome.getPlaintextCharacters().size(); i++) {
-			assertSame(solutionChromosome.getPlaintextCharacters().get(i), wordGene.getSequences()
-					.get(i));
+			assertSame(solutionChromosome.getPlaintextCharacters().get(i), wordGene.getSequences().get(i));
 
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getSequenceId()
-					.intValue(), i);
+			assertEquals(solutionChromosome.getPlaintextCharacters().get(i).getSequenceId().intValue(), i);
 		}
 
 		// Validate by looping through the Genes
@@ -393,8 +381,7 @@ public class WordGeneTest {
 				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene)
 						.getSequences().get(j));
 
-				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId()
-						.intValue(), count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId().intValue(), count);
 
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getSequenceId().intValue(), count);
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome

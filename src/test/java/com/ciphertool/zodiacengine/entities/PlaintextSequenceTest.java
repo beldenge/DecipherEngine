@@ -113,13 +113,11 @@ public class PlaintextSequenceTest {
 		plaintextSequenceEqualToBase.setSequenceId(1);
 		assertEquals(base, plaintextSequenceEqualToBase);
 
-		PlaintextSequence plaintextSequenceWithDifferentSequenceId = new PlaintextSequence(
-				baseValue, null);
+		PlaintextSequence plaintextSequenceWithDifferentSequenceId = new PlaintextSequence(baseValue, null);
 		plaintextSequenceWithDifferentSequenceId.setSequenceId(2);
 		assertFalse(base.equals(plaintextSequenceWithDifferentSequenceId));
 
-		PlaintextSequence plaintextSequenceWithDifferentValue = new PlaintextSequence(
-				"differentWord", null);
+		PlaintextSequence plaintextSequenceWithDifferentValue = new PlaintextSequence("differentWord", null);
 		assertFalse(base.equals(plaintextSequenceWithDifferentValue));
 
 		PlaintextSequence plaintextSequenceWithNullPropertiesA = new PlaintextSequence();

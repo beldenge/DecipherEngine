@@ -71,11 +71,10 @@ public class SolutionDaoTest {
 		SolutionDao solutionDao = new SolutionDao();
 		solutionDao.setMongoTemplate(mongoTemplateMock);
 
-		Field mongoOperationsField = ReflectionUtils
-				.findField(SolutionDao.class, "mongoOperations");
+		Field mongoOperationsField = ReflectionUtils.findField(SolutionDao.class, "mongoOperations");
 		ReflectionUtils.makeAccessible(mongoOperationsField);
-		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(
-				mongoOperationsField, solutionDao);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField,
+				solutionDao);
 
 		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}
@@ -83,8 +82,7 @@ public class SolutionDaoTest {
 	@Test
 	public void testFindBySolutionId() {
 		SolutionChromosome solutionToReturn = new SolutionChromosome();
-		when(mongoTemplateMock.findOne(any(Query.class), eq(SolutionChromosome.class))).thenReturn(
-				solutionToReturn);
+		when(mongoTemplateMock.findOne(any(Query.class), eq(SolutionChromosome.class))).thenReturn(solutionToReturn);
 
 		int arbitraryInteger = 1;
 		SolutionChromosome solutionReturned = solutionDao.findBySolutionId(arbitraryInteger);
@@ -108,14 +106,11 @@ public class SolutionDaoTest {
 		solutionsToReturn.add(solution2);
 
 		Cipher dummyCipherToReturn = new Cipher();
-		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(
-				dummyCipherToReturn);
+		when(mongoTemplateMock.findOne(any(Query.class), eq(Cipher.class))).thenReturn(dummyCipherToReturn);
 
-		when(mongoTemplateMock.find(any(Query.class), eq(SolutionChromosome.class))).thenReturn(
-				solutionsToReturn);
+		when(mongoTemplateMock.find(any(Query.class), eq(SolutionChromosome.class))).thenReturn(solutionsToReturn);
 
-		List<SolutionChromosome> solutionsReturned = solutionDao
-				.findByCipherName("arbitraryCipherName");
+		List<SolutionChromosome> solutionsReturned = solutionDao.findByCipherName("arbitraryCipherName");
 
 		verify(mongoTemplateMock, times(1)).findOne(any(Query.class), eq(Cipher.class));
 		assertEquals(solutionsToReturn, solutionsReturned);
@@ -141,8 +136,7 @@ public class SolutionDaoTest {
 
 	@Test
 	public void testInsert() {
-		SolutionChromosome solutionToInsert = new SolutionChromosome(new BigInteger("1"), 1, 1, 1,
-				10, 10);
+		SolutionChromosome solutionToInsert = new SolutionChromosome(new BigInteger("1"), 1, 1, 1, 10, 10);
 
 		boolean result = solutionDao.insert(solutionToInsert);
 

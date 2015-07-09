@@ -40,8 +40,7 @@ import com.ciphertool.zodiacengine.fitness.SolutionEvaluatorBase;
  * 
  * @author george
  */
-public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBase implements
-		FitnessEvaluator {
+public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBase implements FitnessEvaluator {
 
 	private static Logger log = Logger.getLogger(CipherSolutionFrequencyFitnessEvaluator.class);
 	private Map<Character, Double> expectedLetterFrequencies;
@@ -119,10 +118,10 @@ public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBa
 				try {
 					plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 				} catch (IndexOutOfBoundsException ioobe) {
-					log.error("Caught IndexOutOfBoundsException for index "
-							+ (ciphertextIndice.getCiphertextId()) + " and size "
-							+ plaintextCharacters.size() + " while evaluating Chromosome: "
-							+ chromosome, ioobe);
+					log.error(
+							"Caught IndexOutOfBoundsException for index " + (ciphertextIndice.getCiphertextId())
+									+ " and size " + plaintextCharacters.size() + " while evaluating Chromosome: "
+									+ chromosome, ioobe);
 				}
 
 				currentValue = plaintext.getValue().toLowerCase();
@@ -135,8 +134,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBa
 				 */
 				currentFrequency = actualLetterFrequencies.get(currentCharacter);
 				if (currentFrequency != null) {
-					actualLetterFrequencies.put(currentCharacter, currentFrequency
-							+ oneCharacterFrequency);
+					actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
 				} else {
 					log.debug("Found non-alpha character in Plaintext: " + currentValue.charAt(0));
 				}
@@ -190,8 +188,7 @@ public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBa
 
 		Double totalDifference = 0.0;
 		for (Character letter : expectedLetterFrequencies.keySet()) {
-			totalDifference += Math.abs(expectedLetterFrequencies.get(letter)
-					- actualLetterFrequencies.get(letter));
+			totalDifference += Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
 		}
 
 		Double fitness = (double) total;

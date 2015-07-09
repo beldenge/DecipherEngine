@@ -36,8 +36,8 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
-		SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
+public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
+		FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int ACCEPTABLE_DISTANCE = 3;
@@ -183,8 +183,7 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 	 *            the sequence for which we don't want to evaluate further than
 	 * @return the extra points awarded
 	 */
-	private static double determineMatchDistanceFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
+	private static double determineMatchDistanceFactor(SolutionChromosome solution, int lastSequenceToCheck) {
 		int numberOfGenes = solution.getGenes().size();
 		Map<String, List<Integer>> genePositionMap = new HashMap<String, List<Integer>>();
 
@@ -244,8 +243,7 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 	 *            the sequence for which we don't want to evaluate further than
 	 * @return the extra points awarded
 	 */
-	private static double determineWordLengthFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
+	private static double determineWordLengthFactor(SolutionChromosome solution, int lastSequenceToCheck) {
 
 		/*
 		 * Get the average word length.
@@ -261,8 +259,7 @@ public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends
 
 		double extraPoints = 0;
 
-		if (averageWordLength > WORD_LENGTH_LOW_AVERAGE
-				&& averageWordLength < WORD_LENGTH_HIGH_AVERAGE) {
+		if (averageWordLength > WORD_LENGTH_LOW_AVERAGE && averageWordLength < WORD_LENGTH_HIGH_AVERAGE) {
 			extraPoints += AVERAGE_WORD_LENGTH_BONUS;
 		}
 

@@ -34,8 +34,8 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
+		FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final double MATCH_THRESHOLD = 0.0;
@@ -190,8 +190,7 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 	 *            the sequence for which we don't want to evaluate further than
 	 * @return the extra points awarded
 	 */
-	private static double determineUniquenessFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
+	private static double determineUniquenessFactor(SolutionChromosome solution, int lastSequenceToCheck) {
 		int numberOfGenes = solution.getGenes().size();
 		Map<String, Integer> geneOccurrenceMap = new HashMap<String, Integer>();
 

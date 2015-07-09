@@ -63,8 +63,8 @@ public class WordGene implements VariableLengthGene {
 		int wordLength = wordString.length();
 
 		for (int i = 0; i < wordLength; i++) {
-			PlaintextSequence plaintextSequence = new PlaintextSequence(String.valueOf(
-					wordString.charAt(i)).toLowerCase(), this);
+			PlaintextSequence plaintextSequence = new PlaintextSequence(String.valueOf(wordString.charAt(i))
+					.toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}
@@ -163,8 +163,7 @@ public class WordGene implements VariableLengthGene {
 		 * The SolutionChromosome is expected to take care of any shifting of
 		 * ciphertextIds that is necessary due to the removal.
 		 */
-		boolean result = ((SolutionChromosome) this.chromosome)
-				.removePlaintext((PlaintextSequence) sequence);
+		boolean result = ((SolutionChromosome) this.chromosome).removePlaintext((PlaintextSequence) sequence);
 
 		if (!result) {
 			// Return early if the removal was unsuccessful
@@ -195,8 +194,7 @@ public class WordGene implements VariableLengthGene {
 		if (this.sequences == null || this.sequences.size() <= index) {
 			log.warn("Attempted to replace a Sequence from WordGene at index " + index
 					+ ", but the List of Sequences has max index of "
-					+ (this.sequences == null ? 0 : this.sequences.size()) + ".  Cannot continue."
-					+ this);
+					+ (this.sequences == null ? 0 : this.sequences.size()) + ".  Cannot continue." + this);
 
 			return;
 		}

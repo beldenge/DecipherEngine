@@ -39,8 +39,7 @@ public class ZodiacCipherSolutionController implements CipherSolutionController 
 			Thread serviceThread = new Thread(new Runnable() {
 				public void run() {
 					if (geneticAlgorithmStrategy == null) {
-						throw new IllegalArgumentException(
-								"The geneticAlgorithmStrategy cannot be null.");
+						throw new IllegalArgumentException("The geneticAlgorithmStrategy cannot be null.");
 					}
 
 					cipherSolutionService.begin(geneticAlgorithmStrategy, uiCallback, debugMode);

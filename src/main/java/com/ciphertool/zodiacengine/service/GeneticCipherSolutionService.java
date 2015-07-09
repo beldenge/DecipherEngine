@@ -46,8 +46,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 	private Runtime runtime = Runtime.getRuntime();
 
 	@Override
-	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
-			GenericCallback uiCallback, boolean debugMode) {
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy, GenericCallback uiCallback, boolean debugMode) {
 		toggleRunning();
 		setUp(geneticAlgorithmStrategy);
 
@@ -74,8 +73,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 				runtime.exec(commandBefore);
 			}
 		} catch (IOException e) {
-			log.warn("Unable to execute commmand before app begin: " + currentCommand
-					+ ".  Continuing.");
+			log.warn("Unable to execute commmand before app begin: " + currentCommand + ".  Continuing.");
 		}
 	}
 
@@ -153,8 +151,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 
 			persistPopulation();
 		} catch (Throwable t) {
-			log.error("Caught Throwable while attempting to stop service.  "
-					+ "Performing tear-down tasks.", t);
+			log.error("Caught Throwable while attempting to stop service.  " + "Performing tear-down tasks.", t);
 		} finally {
 			tearDown();
 		}
@@ -174,8 +171,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 				runtime.exec(commandAfter);
 			}
 		} catch (IOException e) {
-			log.warn("Unable to execute commmand after app end: " + currentCommand
-					+ ".  Continuing.");
+			log.warn("Unable to execute commmand after app end: " + currentCommand + ".  Continuing.");
 		}
 	}
 
@@ -201,8 +197,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 			solutionDao.insert((SolutionChromosome) individual);
 		}
 
-		log.info("Took " + (System.currentTimeMillis() - startInsert)
-				+ "ms to persist population to database.");
+		log.info("Took " + (System.currentTimeMillis() - startInsert) + "ms to persist population to database.");
 	}
 
 	@Override

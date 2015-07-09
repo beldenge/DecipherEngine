@@ -30,20 +30,20 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-	
+
 	protected Cipher cipher;
 
 	private static final String KNOWN_SOLUTION_STRING = "ilikekillingpeoplebecauseitissomuchfunitismorefunthankillingwildgameintheforrest"
 			+ "becausemanisthemoatdangeroueanamalofalltokillsomethinggivesmethemoatthrillingexperenceitisevenbetterthangettingyourrocksoff"
 			+ "withagirlthebestpartofitiathaewhenidieiwillbereborninparadicesndalltheihavekilledwillbecomemyslavesiwillnotgiveyoumynamebecause"
 			+ "youwilltrytosloidownorstopmycollectingofslavesformyafterlifeebeorietemethhpiti";
-	
+
 	/**
 	 * Default no-args constructor
 	 */
 	public CipherKeyKnownSolutionFitnessEvaluator() {
 	}
-	
+
 	@Override
 	public Double evaluate(Chromosome chromosome) {
 		double proximityToKnownSolution = 0.0;
@@ -54,33 +54,36 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 		}
 
 		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
-		
+
 		if (currentSolutionString.length() != KNOWN_SOLUTION_STRING.length()) {
-			log.error("Current solution length of " + currentSolutionString.length() + " does not match the known solution String length of "
-					+ KNOWN_SOLUTION_STRING.length() + ".  This will cause innacurate fitness calculations.");
+			log.error("Current solution length of " + currentSolutionString.length()
+					+ " does not match the known solution String length of " + KNOWN_SOLUTION_STRING.length()
+					+ ".  This will cause innacurate fitness calculations.");
 		}
-		
-		for (int i = 0; i < currentSolutionString.length(); i ++) {
+
+		for (int i = 0; i < currentSolutionString.length(); i++) {
 			if (currentSolutionString.charAt(i) == KNOWN_SOLUTION_STRING.charAt(i)) {
-				proximityToKnownSolution ++;
+				proximityToKnownSolution++;
 			}
 		}
-		
+
 		return proximityToKnownSolution;
 	}
-	
+
 	protected String getSolutionAsString(CipherKeyChromosome chromosome) {
 		StringBuffer sb = new StringBuffer();
 
 		if (null == this.cipher) {
-			throw new IllegalStateException("Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
+			throw new IllegalStateException(
+					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
 		}
-		
+
 		CipherKeyGene nextPlaintext = null;
 		int actualSize = this.cipher.getCiphertextCharacters().size();
-		
+
 		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(this.cipher.getCiphertextCharacters().get(i).getValue());
+			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
+					this.cipher.getCiphertextCharacters().get(i).getValue());
 
 			sb.append(nextPlaintext.getValue());
 		}

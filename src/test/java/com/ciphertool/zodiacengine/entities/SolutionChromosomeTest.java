@@ -73,8 +73,7 @@ public class SolutionChromosomeTest {
 
 	@Before
 	public void resetDependencies() {
-		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(),
-				cipher.getColumns());
+		solutionChromosome = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(), cipher.getColumns());
 
 		reset(logMock);
 	}
@@ -88,9 +87,8 @@ public class SolutionChromosomeTest {
 		int rowsToSet = 4;
 		int columnsToSet = 5;
 
-		SolutionChromosome solutionChromosome = new SolutionChromosome(cipherIdToSet,
-				totalMatchesToSet, uniqueMatchesToSet, adjacentMatchesToSet, rowsToSet,
-				columnsToSet);
+		SolutionChromosome solutionChromosome = new SolutionChromosome(cipherIdToSet, totalMatchesToSet,
+				uniqueMatchesToSet, adjacentMatchesToSet, rowsToSet, columnsToSet);
 
 		assertSame(cipherIdToSet, solutionChromosome.getCipherId());
 		assertEquals(totalMatchesToSet, solutionChromosome.getTotalMatches());
@@ -108,8 +106,8 @@ public class SolutionChromosomeTest {
 		int rowsToSet = 4;
 		int columnsToSet = 5;
 
-		new SolutionChromosome(null, totalMatchesToSet, uniqueMatchesToSet, adjacentMatchesToSet,
-				rowsToSet, columnsToSet);
+		new SolutionChromosome(null, totalMatchesToSet, uniqueMatchesToSet, adjacentMatchesToSet, rowsToSet,
+				columnsToSet);
 	}
 
 	@Test
@@ -355,11 +353,9 @@ public class SolutionChromosomeTest {
 
 		assertEquals(2, solutionChromosome.getGenes().size());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1.getId().getWord());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2.getId().getWord());
 
 		validateSequencesAndGenes(solutionChromosome);
 
@@ -401,14 +397,11 @@ public class SolutionChromosomeTest {
 		assertSame(solutionChromosome, wordGene2.getChromosome());
 		assertTrue(solutionChromosome.isEvaluationNeeded());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1.getId().getWord());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2.getId().getWord());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(2)).getWordString(), word3
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(2)).getWordString(), word3.getId().getWord());
 
 		validateSequencesAndGenes(solutionChromosome);
 
@@ -452,11 +445,9 @@ public class SolutionChromosomeTest {
 
 		assertEquals(2, solutionChromosome.getGenes().size());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1.getId().getWord());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word3
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word3.getId().getWord());
 
 		validateSequencesAndGenes(solutionChromosome);
 	}
@@ -506,11 +497,9 @@ public class SolutionChromosomeTest {
 
 		assertEquals(solutionChromosome.getGenes().size(), beforeSize);
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(0)).getWordString(), word1.getId().getWord());
 
-		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2
-				.getId().getWord());
+		assertEquals(((WordGene) solutionChromosome.getGenes().get(1)).getWordString(), word2.getId().getWord());
 
 		validateSequencesAndGenes(solutionChromosome);
 
@@ -732,8 +721,7 @@ public class SolutionChromosomeTest {
 		 * address since those Objects are not cloned.
 		 */
 		assertSame(solutionChromosome.getCipherId(), clonedSolutionChromosome.getCipherId());
-		assertSame(solutionChromosome.getSolutionSetId(), clonedSolutionChromosome
-				.getSolutionSetId());
+		assertSame(solutionChromosome.getSolutionSetId(), clonedSolutionChromosome.getSolutionSetId());
 
 		assertEquals(solutionChromosome.getFitness(), clonedSolutionChromosome.getFitness());
 		assertNotSame(solutionChromosome.getFitness(), clonedSolutionChromosome.getFitness());
@@ -741,8 +729,7 @@ public class SolutionChromosomeTest {
 		assertNull(clonedSolutionChromosome.getDatabaseCreatedDate());
 		assertEquals(0, clonedSolutionChromosome.getNumberOfChildren());
 		assertEquals(0, clonedSolutionChromosome.getAge());
-		assertEquals(solutionChromosome.isEvaluationNeeded(), clonedSolutionChromosome
-				.isEvaluationNeeded());
+		assertEquals(solutionChromosome.isEvaluationNeeded(), clonedSolutionChromosome.isEvaluationNeeded());
 
 		/*
 		 * Make sure the Chromosomes reference different memory addresses.
@@ -758,44 +745,40 @@ public class SolutionChromosomeTest {
 		 * Make sure the WordGenes all reference different memory addresses.
 		 */
 		for (int i = 0; i < solutionChromosome.getGenes().size(); i++) {
-			assertNotSame(solutionChromosome.getGenes().get(i), clonedSolutionChromosome.getGenes()
-					.get(i));
+			assertNotSame(solutionChromosome.getGenes().get(i), clonedSolutionChromosome.getGenes().get(i));
 		}
 
 		/*
 		 * Make sure the content of the WordGenes are equal.
 		 */
 		for (int i = 0; i < solutionChromosome.getGenes().size(); i++) {
-			assertEquals(solutionChromosome.getGenes().get(i), clonedSolutionChromosome.getGenes()
-					.get(i));
+			assertEquals(solutionChromosome.getGenes().get(i), clonedSolutionChromosome.getGenes().get(i));
 		}
 
 		/*
 		 * Make sure the the WordGenes all reference the cloned Chromosome.
 		 */
 		for (int i = 0; i < solutionChromosome.getGenes().size(); i++) {
-			assertSame(clonedSolutionChromosome, clonedSolutionChromosome.getGenes().get(i)
-					.getChromosome());
+			assertSame(clonedSolutionChromosome, clonedSolutionChromosome.getGenes().get(i).getChromosome());
 		}
 
 		/*
 		 * Make sure the Sequences reference different memory addresses.
 		 */
 		for (int i = 0; i < solutionChromosome.actualSize(); i++) {
-			assertNotSame(solutionChromosome.getPlaintextCharacters().get(i),
-					clonedSolutionChromosome.getPlaintextCharacters().get(i));
+			assertNotSame(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome
+					.getPlaintextCharacters().get(i));
 		}
 
 		/*
 		 * Make sure the content of the Sequences are equal.
 		 */
 		for (int i = 0; i < solutionChromosome.actualSize(); i++) {
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i),
-					clonedSolutionChromosome.getPlaintextCharacters().get(i));
+			assertEquals(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome
+					.getPlaintextCharacters().get(i));
 		}
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 
 		validateSequencesAndGenes(clonedSolutionChromosome);
 	}
@@ -836,8 +819,7 @@ public class SolutionChromosomeTest {
 		assertTrue(clonedSolutionChromosome.isEvaluationNeeded());
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 
-		assertEquals(((WordGene) clonedSolutionChromosome.getGenes().get(0)).getWordString(), word1
-				.getId().getWord());
+		assertEquals(((WordGene) clonedSolutionChromosome.getGenes().get(0)).getWordString(), word1.getId().getWord());
 
 		validateSequencesAndGenes(clonedSolutionChromosome);
 	}
@@ -856,9 +838,7 @@ public class SolutionChromosomeTest {
 				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene)
 						.getSequences().get(j));
 
-				assertEquals(
-						solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(),
-						count);
+				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(), count);
 
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getSequenceId(), count);
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome
@@ -868,8 +848,7 @@ public class SolutionChromosomeTest {
 			}
 		}
 
-		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome
-				.getPlaintextCharacters().size());
+		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
 	}
 
 	/**
@@ -1025,13 +1004,11 @@ public class SolutionChromosomeTest {
 		solutionChromosomeWithDifferentPlaintextCharacters.setCipherId(baseCipherId);
 		solutionChromosomeWithDifferentPlaintextCharacters.setDatabaseCreatedDate(baseCreatedDate);
 		solutionChromosomeWithDifferentPlaintextCharacters.setAge(baseAge);
-		solutionChromosomeWithDifferentPlaintextCharacters
-				.setNumberOfChildren(baseNumberOfChildren);
+		solutionChromosomeWithDifferentPlaintextCharacters.setNumberOfChildren(baseNumberOfChildren);
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene1.clone());
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene2.clone());
 		solutionChromosomeWithDifferentPlaintextCharacters.addGene(gene3.clone());
-		solutionChromosomeWithDifferentPlaintextCharacters.addPlaintext(new PlaintextSequence("x",
-				gene3));
+		solutionChromosomeWithDifferentPlaintextCharacters.addPlaintext(new PlaintextSequence("x", gene3));
 
 		assertFalse(base.equals(solutionChromosomeWithDifferentPlaintextCharacters));
 

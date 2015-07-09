@@ -36,8 +36,7 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final double MAGIC_WORD_FACTOR = 1.25;

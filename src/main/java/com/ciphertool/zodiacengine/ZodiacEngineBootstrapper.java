@@ -43,7 +43,6 @@ public class ZodiacEngineBootstrapper {
 
 		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
 
-		log.info("Spring application context started successfully in "
-				+ (System.currentTimeMillis() - start) + "ms.");
+		log.info("Spring application context started successfully in " + (System.currentTimeMillis() - start) + "ms.");
 	}
 }

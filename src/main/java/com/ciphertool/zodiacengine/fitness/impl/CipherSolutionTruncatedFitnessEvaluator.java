@@ -33,8 +33,7 @@ import com.ciphertool.zodiacengine.entities.PlaintextSequence;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionTruncatedFitnessEvaluator extends SolutionTruncatedEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionTruncatedFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 

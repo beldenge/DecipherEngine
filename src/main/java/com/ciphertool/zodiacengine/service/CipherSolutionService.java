@@ -23,8 +23,7 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.zodiacengine.view.GenericCallback;
 
 public interface CipherSolutionService {
-	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy,
-			GenericCallback uiCallback, boolean debugMode);
+	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy, GenericCallback uiCallback, boolean debugMode);
 
 	/**
 	 * @param inDebugMode

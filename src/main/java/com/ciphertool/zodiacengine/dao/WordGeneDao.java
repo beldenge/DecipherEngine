@@ -61,8 +61,7 @@ public class WordGeneDao implements VariableLengthGeneDao {
 		}
 
 		if (length < 1) {
-			log.warn("Unable to find random gene of length "
-					+ length
+			log.warn("Unable to find random gene of length " + length
 					+ " since it is less than 1, which is obviously the minimum length.  Returning null.");
 
 			return null;
@@ -71,8 +70,7 @@ public class WordGeneDao implements VariableLengthGeneDao {
 		Word word = wordMapDao.findRandomWordByLength(length);
 
 		if (word == null) {
-			throw new IllegalArgumentException("Attempted to find a word of length " + length
-					+ " which was not found.");
+			throw new IllegalArgumentException("Attempted to find a word of length " + length + " which was not found.");
 		}
 
 		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);

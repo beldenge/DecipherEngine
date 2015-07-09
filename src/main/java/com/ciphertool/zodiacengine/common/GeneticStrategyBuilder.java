@@ -110,18 +110,17 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 			}
 		}
 
-		return new GeneticAlgorithmStrategy(cipher, populationSize, lifespan, numGenerations,
-				survivalRate, mutationRate, maxMutationsPerIndividual, crossoverRate,
-				mutateDuringCrossover, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
-				selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
+		return new GeneticAlgorithmStrategy(cipher, populationSize, lifespan, numGenerations, survivalRate,
+				mutationRate, maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover, fitnessEvaluator,
+				crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm, selector, knownSolutionFitnessEvaluator,
+				compareToKnownSolution);
 	}
 
 	protected Cipher getCipher(Map<String, Object> parameters) {
 		Object cipherName = parameters.get(ParameterConstants.CIPHER_NAME);
 
 		if (cipherName == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.CIPHER_NAME
-					+ " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.CIPHER_NAME + " cannot be null.");
 		}
 
 		if (!(cipherName instanceof String)) {
@@ -132,8 +131,8 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Cipher cipher = cipherDao.findByCipherName((String) cipherName);
 
 		if (cipher == null) {
-			throw new IllegalStateException("Unable to find the cipher with name: "
-					+ (String) cipherName + ".  Unable to build GeneticAlgorithmStrategy.");
+			throw new IllegalStateException("Unable to find the cipher with name: " + (String) cipherName
+					+ ".  Unable to build GeneticAlgorithmStrategy.");
 		}
 
 		return cipher;
@@ -143,17 +142,17 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object fitnessEvaluatorName = parameters.get(ParameterConstants.FITNESS_EVALUATOR);
 
 		if (fitnessEvaluatorName == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.FITNESS_EVALUATOR + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.FITNESS_EVALUATOR
+					+ " cannot be null.");
 		}
 
 		if (!(fitnessEvaluatorName instanceof String)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.FITNESS_EVALUATOR + " must be of type String.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.FITNESS_EVALUATOR
+					+ " must be of type String.");
 		}
 
-		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType
-				.valueOf((String) fitnessEvaluatorName).getType());
+		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType.valueOf(
+				(String) fitnessEvaluatorName).getType());
 
 		return fitnessEvaluator;
 	}
@@ -162,17 +161,17 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object crossoverAlgorithmName = parameters.get(ParameterConstants.CROSSOVER_ALGORITHM);
 
 		if (crossoverAlgorithmName == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.CROSSOVER_ALGORITHM + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_ALGORITHM
+					+ " cannot be null.");
 		}
 
 		if (!(crossoverAlgorithmName instanceof String)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.CROSSOVER_ALGORITHM + " must be of type String.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_ALGORITHM
+					+ " must be of type String.");
 		}
 
-		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context
-				.getBean(CrossoverAlgorithmType.valueOf((String) crossoverAlgorithmName).getType());
+		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context.getBean(CrossoverAlgorithmType.valueOf(
+				(String) crossoverAlgorithmName).getType());
 
 		return crossoverAlgorithm;
 	}
@@ -181,17 +180,17 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object mutationAlgorithmName = parameters.get(ParameterConstants.MUTATION_ALGORITHM);
 
 		if (mutationAlgorithmName == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MUTATION_ALGORITHM + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_ALGORITHM
+					+ " cannot be null.");
 		}
 
 		if (!(mutationAlgorithmName instanceof String)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MUTATION_ALGORITHM + " must be of type String.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_ALGORITHM
+					+ " must be of type String.");
 		}
 
-		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context
-				.getBean(MutationAlgorithmType.valueOf((String) mutationAlgorithmName).getType());
+		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context.getBean(MutationAlgorithmType.valueOf(
+				(String) mutationAlgorithmName).getType());
 
 		return mutationAlgorithm;
 	}
@@ -200,17 +199,17 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object selectionAlgorithmName = parameters.get(ParameterConstants.SELECTION_ALGORITHM);
 
 		if (selectionAlgorithmName == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.SELECTION_ALGORITHM + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
+					+ " cannot be null.");
 		}
 
 		if (!(selectionAlgorithmName instanceof String)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.SELECTION_ALGORITHM + " must be of type String.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
+					+ " must be of type String.");
 		}
 
-		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context
-				.getBean(SelectionAlgorithmType.valueOf((String) selectionAlgorithmName).getType());
+		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context.getBean(SelectionAlgorithmType.valueOf(
+				(String) selectionAlgorithmName).getType());
 
 		return selectionAlgorithm;
 	}
@@ -219,17 +218,16 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object selectorName = parameters.get(ParameterConstants.SELECTOR_METHOD);
 
 		if (selectorName == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.SELECTOR_METHOD + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTOR_METHOD
+					+ " cannot be null.");
 		}
 
 		if (!(selectorName instanceof String)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.SELECTOR_METHOD + " must be of type String.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTOR_METHOD
+					+ " must be of type String.");
 		}
 
-		Selector selector = (Selector) context.getBean(SelectorType.valueOf((String) selectorName)
-				.getType());
+		Selector selector = (Selector) context.getBean(SelectorType.valueOf((String) selectorName).getType());
 
 		return selector;
 	}
@@ -238,13 +236,13 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object populationSize = parameters.get(ParameterConstants.POPULATION_SIZE);
 
 		if (populationSize == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.POPULATION_SIZE + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.POPULATION_SIZE
+					+ " cannot be null.");
 		}
 
 		if (!(populationSize instanceof Integer)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.POPULATION_SIZE + " must be of type Integer.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.POPULATION_SIZE
+					+ " must be of type Integer.");
 		}
 
 		return (Integer) populationSize;
@@ -254,8 +252,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object lifespan = parameters.get(ParameterConstants.LIFESPAN);
 
 		if (lifespan == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.LIFESPAN
-					+ " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.LIFESPAN + " cannot be null.");
 		}
 
 		if (!(lifespan instanceof Integer)) {
@@ -270,13 +267,13 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object numGenerations = parameters.get(ParameterConstants.NUMBER_OF_GENERATIONS);
 
 		if (numGenerations == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.NUMBER_OF_GENERATIONS + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.NUMBER_OF_GENERATIONS
+					+ " cannot be null.");
 		}
 
 		if (!(numGenerations instanceof Integer)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.NUMBER_OF_GENERATIONS + " must be of type Integer.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.NUMBER_OF_GENERATIONS
+					+ " must be of type Integer.");
 		}
 
 		return (Integer) numGenerations;
@@ -286,8 +283,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object survivalRate = parameters.get(ParameterConstants.SURVIVAL_RATE);
 
 		if (survivalRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE
-					+ " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE + " cannot be null.");
 		}
 
 		if (!(survivalRate instanceof Double)) {
@@ -302,8 +298,7 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object mutationRate = parameters.get(ParameterConstants.MUTATION_RATE);
 
 		if (mutationRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_RATE
-					+ " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_RATE + " cannot be null.");
 		}
 
 		if (!(mutationRate instanceof Double)) {
@@ -315,17 +310,16 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 	}
 
 	protected Integer getMaxMutationsPerIndividual(Map<String, Object> parameters) {
-		Object maxMutationsPerIndividual = parameters
-				.get(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL);
+		Object maxMutationsPerIndividual = parameters.get(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL);
 
 		if (maxMutationsPerIndividual == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL
+					+ " cannot be null.");
 		}
 
 		if (!(maxMutationsPerIndividual instanceof Integer)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL + " must be of type Integer.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL
+					+ " must be of type Integer.");
 		}
 
 		return (Integer) maxMutationsPerIndividual;
@@ -351,13 +345,13 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object mutateDuringCrossover = parameters.get(ParameterConstants.MUTATE_DURING_CROSSOVER);
 
 		if (mutateDuringCrossover == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MUTATE_DURING_CROSSOVER + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATE_DURING_CROSSOVER
+					+ " cannot be null.");
 		}
 
 		if (!(mutateDuringCrossover instanceof Boolean)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.MUTATE_DURING_CROSSOVER + " must be of type Boolean.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATE_DURING_CROSSOVER
+					+ " must be of type Boolean.");
 		}
 
 		return (Boolean) mutateDuringCrossover;
@@ -367,13 +361,13 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 		Object compareToKnown = parameters.get(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION);
 
 		if (compareToKnown == null) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.COMPARE_TO_KNOWN_SOLUTION + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.COMPARE_TO_KNOWN_SOLUTION
+					+ " cannot be null.");
 		}
 
 		if (!(compareToKnown instanceof Boolean)) {
-			throw new IllegalArgumentException("The parameter "
-					+ ParameterConstants.COMPARE_TO_KNOWN_SOLUTION + " must be of type Boolean.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.COMPARE_TO_KNOWN_SOLUTION
+					+ " must be of type Boolean.");
 		}
 
 		return (Boolean) compareToKnown;

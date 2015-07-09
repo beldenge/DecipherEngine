@@ -10,46 +10,27 @@ ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY 
 	
 You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator"
-		id="cipherSolutionFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator" id="cipherSolutionFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMultipleFitnessEvaluator"
-		id="cipherSolutionMultipleFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMultipleFitnessEvaluator" id="cipherSolutionMultipleFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator"
-		id="defaultFitnessEvaluator" />
-		
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMatchDistanceFitnessEvaluator"
-		id="cipherSolutionMatchDistanceFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator" id="defaultFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionTruncatedFitnessEvaluator"
-		id="cipherSolutionTruncatedFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMatchDistanceFitnessEvaluator" id="cipherSolutionMatchDistanceFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator"
-		id="cipherSolutionKnownSolutionFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionTruncatedFitnessEvaluator" id="cipherSolutionTruncatedFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionExponentialFitnessEvaluator"
-		id="cipherSolutionKnownSolutionExponentialFitnessEvaluator" />
-		
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMagicWordFitnessEvaluator"
-		id="cipherSolutionMagicWordFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator" id="cipherSolutionKnownSolutionFitnessEvaluator" />
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator"
-		id="cipherSolutionFrequencyFitnessEvaluator">
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionExponentialFitnessEvaluator" id="cipherSolutionKnownSolutionExponentialFitnessEvaluator" />
+
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMagicWordFitnessEvaluator" id="cipherSolutionMagicWordFitnessEvaluator" />
+
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator" id="cipherSolutionFrequencyFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -82,9 +63,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		</property>
 	</bean>
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyTruncatedFitnessEvaluator"
-		id="frequencyTruncatedFitnessEvaluator">
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyTruncatedFitnessEvaluator" id="frequencyTruncatedFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -117,9 +96,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		</property>
 	</bean>
 
-	<bean
-		class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator"
-		id="cipherSolutionFrequencyLengthFitnessEvaluator">
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator" id="cipherSolutionFrequencyLengthFitnessEvaluator">
 		<property name="expectedLetterFrequencies">
 			<map>
 				<entry key="a" value="${language.english.frequency.a}" />
@@ -153,6 +130,5 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="averageWordLength" value="${language.english.averageWordLength}" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator"
-		id="defaultFitnessComparator" />
+	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="defaultFitnessComparator" />
 </beans>

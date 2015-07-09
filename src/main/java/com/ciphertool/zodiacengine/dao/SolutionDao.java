@@ -60,8 +60,7 @@ public class SolutionDao {
 
 		Query selectByIdQuery = new Query(Criteria.where("id").is(solutionId));
 
-		SolutionChromosome solutionChromosome = mongoOperations.findOne(selectByIdQuery,
-				SolutionChromosome.class);
+		SolutionChromosome solutionChromosome = mongoOperations.findOne(selectByIdQuery, SolutionChromosome.class);
 
 		return solutionChromosome;
 	}
@@ -82,8 +81,7 @@ public class SolutionDao {
 		// Then find the Solutions that correspond to this Cipher
 		Query selectByCipherIdQuery = new Query(Criteria.where("cipherId").is(cipher.getId()));
 
-		List<SolutionChromosome> solutions = mongoOperations.find(selectByCipherIdQuery,
-				SolutionChromosome.class);
+		List<SolutionChromosome> solutions = mongoOperations.find(selectByCipherIdQuery, SolutionChromosome.class);
 
 		return solutions;
 	}

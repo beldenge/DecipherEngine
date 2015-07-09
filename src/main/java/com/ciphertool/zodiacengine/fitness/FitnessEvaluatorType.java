@@ -92,8 +92,7 @@ public enum FitnessEvaluatorType {
 	private Class<? extends FitnessEvaluator> type;
 	private String description;
 
-	FitnessEvaluatorType(String displayName, Class<? extends FitnessEvaluator> type,
-			String description) {
+	FitnessEvaluatorType(String displayName, Class<? extends FitnessEvaluator> type, String description) {
 		this.displayName = displayName;
 		this.type = type;
 		this.description = description;

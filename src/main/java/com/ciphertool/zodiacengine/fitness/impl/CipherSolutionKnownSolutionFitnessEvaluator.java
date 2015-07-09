@@ -26,8 +26,7 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.fitness.KnownSolutionEvaluatorBase;
 
-public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 
@@ -70,8 +69,7 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEv
 		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
 
 		if (log.isDebugEnabled()) {
-			log.debug("Solution " + solution.getId() + " has a confidence level of: "
-					+ proximityToKnownSolution);
+			log.debug("Solution " + solution.getId() + " has a confidence level of: " + proximityToKnownSolution);
 		}
 
 		return proximityToKnownSolution;

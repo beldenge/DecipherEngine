@@ -11,8 +11,7 @@ You should have received a copy of the GNU General Public License along with Zod
 -->
 
 <?xml version="1.0" encoding="UTF-8" ?>
-<ContextFreeGrammar first-rule="Sentence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<ContextFreeGrammar first-rule="Sentence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="CFG.xsd">
 	<Rule non-terminal="Sentence">
 		<Expansion>

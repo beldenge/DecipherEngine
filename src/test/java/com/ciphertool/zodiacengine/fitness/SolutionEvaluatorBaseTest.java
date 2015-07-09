@@ -55,8 +55,7 @@ public class SolutionEvaluatorBaseTest {
 		SolutionEvaluatorBase solutionEvaluatorBase = new SolutionEvaluatorBase();
 		solutionEvaluatorBase.setGeneticStructure(simpleCipher);
 
-		HashMap<String, List<Ciphertext>> keyFromCiphertext = solutionEvaluatorBase
-				.createKeyFromCiphertext();
+		HashMap<String, List<Ciphertext>> keyFromCiphertext = solutionEvaluatorBase.createKeyFromCiphertext();
 
 		assertEquals(7, keyFromCiphertext.size());
 

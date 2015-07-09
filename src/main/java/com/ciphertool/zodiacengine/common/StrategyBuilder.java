@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License along with
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package com.ciphertool.zodiacengine.common;
+
+package com.ciphertool.zodiacengine.common;
 
 import java.util.Map;
 

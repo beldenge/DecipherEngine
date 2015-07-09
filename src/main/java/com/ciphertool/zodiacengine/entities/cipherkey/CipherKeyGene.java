@@ -29,21 +29,22 @@ import com.ciphertool.genetics.entities.Gene;
 public class CipherKeyGene implements Gene {
 
 	private static Logger log = Logger.getLogger(CipherKeyGene.class);
-	
+
 	@Transient
 	private Chromosome chromosome;
-	
+
 	private String value;
-	
+
 	public CipherKeyGene() {
 	}
-	
+
 	/**
 	 * Full-args constructor
 	 * 
-	 * @param chromosome the Chromosome
-	 * @param key the cipher key
-	 * @param value the String value for this cipher key
+	 * @param chromosome
+	 *            the Chromosome
+	 * @param value
+	 *            the String value for this cipher key
 	 */
 	public CipherKeyGene(Chromosome chromosome, String value) {
 		if (null == value || value.isEmpty()) {
@@ -51,7 +52,7 @@ public class CipherKeyGene implements Gene {
 
 			return;
 		}
-		
+
 		this.chromosome = chromosome;
 		this.value = value;
 	}
@@ -74,13 +75,14 @@ public class CipherKeyGene implements Gene {
 	}
 
 	/**
-	 * @param value the value to set
+	 * @param value
+	 *            the value to set
 	 */
 	@Dirty
 	public void setValue(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public Gene clone() {
 		CipherKeyGene copyGene = new CipherKeyGene();
@@ -90,7 +92,7 @@ public class CipherKeyGene implements Gene {
 		 * null which should be overwritten.
 		 */
 		copyGene.chromosome = null;
-		
+
 		return copyGene;
 	}
 
@@ -99,7 +101,7 @@ public class CipherKeyGene implements Gene {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
-		
+
 		return result;
 	}
 
@@ -114,7 +116,7 @@ public class CipherKeyGene implements Gene {
 		if (!(obj instanceof CipherKeyGene)) {
 			return false;
 		}
-		
+
 		CipherKeyGene other = (CipherKeyGene) obj;
 		if (value == null) {
 			if (other.value != null) {
@@ -123,7 +125,7 @@ public class CipherKeyGene implements Gene {
 		} else if (!value.equals(other.value)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

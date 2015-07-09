@@ -10,25 +10,24 @@ ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY 
 	
 You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-       		
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector">
 		<property name="selectionAccuracy" value="${genetic.algorithm.tournament.selectionAccuracy}" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.AlphaSelector" id="alphaSelector" />
-		
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="defaultSelector" />
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RandomSelector" id="randomSelector" />
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.TruncationSelectionAlgorithm" id="truncationSelectionAlgorithm" />
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.selection.TournamentSelectionAlgorithm" id="tournamentSelectionAlgorithm">
 		<property name="groupSize" value="${genetic.algorithm.tournament.groupSize}" />
 		<property name="groupSelector" ref="tournamentSelector" />

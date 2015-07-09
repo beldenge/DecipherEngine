@@ -36,8 +36,8 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.entities.WordGene;
 import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
 
-public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase
-		implements FitnessEvaluator {
+public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
+		FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final double UNIQUE_WORD_BONUS = 5.0;
@@ -183,8 +183,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTrun
 	 *            the sequence for which we don't want to evaluate further than
 	 * @return the extra points awarded
 	 */
-	private static double determineUniquenessFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
+	private static double determineUniquenessFactor(SolutionChromosome solution, int lastSequenceToCheck) {
 		int numberOfGenes = solution.getGenes().size();
 		Map<String, Integer> geneOccurrenceMap = new HashMap<String, Integer>();
 
@@ -236,8 +235,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTrun
 	 *            the sequence for which we don't want to evaluate further than
 	 * @return the extra points awarded
 	 */
-	private static double determineWordLengthFactor(SolutionChromosome solution,
-			int lastSequenceToCheck) {
+	private static double determineWordLengthFactor(SolutionChromosome solution, int lastSequenceToCheck) {
 
 		/*
 		 * Get the average word length.
@@ -253,8 +251,7 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTrun
 
 		double extraPoints = 0;
 
-		if (averageWordLength > WORD_LENGTH_LOW_AVERAGE
-				&& averageWordLength < WORD_LENGTH_HIGH_AVERAGE) {
+		if (averageWordLength > WORD_LENGTH_LOW_AVERAGE && averageWordLength < WORD_LENGTH_HIGH_AVERAGE) {
 			extraPoints += AVERAGE_WORD_LENGTH_BONUS;
 		}
 

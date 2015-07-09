@@ -81,8 +81,8 @@ public class AbstractSolutionEvaluatorBaseTest {
 		simpleSolution.setRows(1);
 		simpleSolution.setColumns(10);
 
-		WordGene simpleWordGene = new WordGene(new Word(new WordId("abcdefghij",
-				PartOfSpeechType.NONE)), simpleSolution);
+		WordGene simpleWordGene = new WordGene(new Word(new WordId("abcdefghij", PartOfSpeechType.NONE)),
+				simpleSolution);
 		simpleSolution.addGene(simpleWordGene);
 	}
 
@@ -168,8 +168,8 @@ public class AbstractSolutionEvaluatorBaseTest {
 
 		abstractSolutionEvaluatorBase.clearHasMatchValues(null);
 
-		verify(mockLogger, times(1))
-				.warn("Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
+		verify(mockLogger, times(1)).warn(
+				"Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -179,16 +179,13 @@ public class AbstractSolutionEvaluatorBaseTest {
 
 		abstractSolutionEvaluatorBase.setGeneticStructure(simpleCipher);
 
-		Field cipherField = ReflectionUtils
-				.findField(ConcreteSolutionEvaluatorBase.class, "cipher");
+		Field cipherField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "cipher");
 		ReflectionUtils.makeAccessible(cipherField);
-		Cipher cipherFromObject = (Cipher) ReflectionUtils.getField(cipherField,
-				abstractSolutionEvaluatorBase);
+		Cipher cipherFromObject = (Cipher) ReflectionUtils.getField(cipherField, abstractSolutionEvaluatorBase);
 
 		assertEquals(simpleCipher, cipherFromObject);
 
-		Field ciphertextKeyField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class,
-				"ciphertextKey");
+		Field ciphertextKeyField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "ciphertextKey");
 		ReflectionUtils.makeAccessible(ciphertextKeyField);
 		HashMap<String, List<Ciphertext>> ciphertextKeyFromObject = (HashMap<String, List<Ciphertext>>) ReflectionUtils
 				.getField(ciphertextKeyField, abstractSolutionEvaluatorBase);

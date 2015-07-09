@@ -10,8 +10,7 @@ ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY 
 	
 You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
@@ -19,10 +18,8 @@ You should have received a copy of the GNU General Public License along with Zod
 	<import resource="classpath*:beans-selection.xml" />
 	<import resource="classpath*:beans-mutation.xml" />
 	<import resource="classpath*:beans-crossover.xml" />
-	
-	<bean
-		class="com.ciphertool.zodiacengine.SolutionBreeder"
-		id="breeder">
+
+	<bean class="com.ciphertool.zodiacengine.SolutionBreeder" id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
@@ -38,14 +35,12 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
 		<property name="geneDao" ref="geneDao" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />
-	
+
 	<bean class="com.ciphertool.genetics.util.RandomListElementSelector" id="randomListElementSelector" />
 
-	<bean
-		class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm"
-		id="geneticAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm" id="geneticAlgorithm">
 		<property name="population" ref="population" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />

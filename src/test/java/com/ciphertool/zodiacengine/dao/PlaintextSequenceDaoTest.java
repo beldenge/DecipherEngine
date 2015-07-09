@@ -42,8 +42,8 @@ public class PlaintextSequenceDaoTest {
 		Integer arbitraryInteger = 50;
 
 		WordGene gene = new WordGene();
-		PlaintextSequence sequence = (PlaintextSequence) plaintextSequenceDao.findRandomSequence(
-				gene, arbitraryInteger);
+		PlaintextSequence sequence = (PlaintextSequence) plaintextSequenceDao
+				.findRandomSequence(gene, arbitraryInteger);
 
 		assertTrue(Character.isLetter(sequence.getValue().charAt(0)));
 		assertSame(gene, sequence.getGene());
@@ -53,8 +53,8 @@ public class PlaintextSequenceDaoTest {
 	public void testFindRandomSequenceNullGene() {
 		Integer arbitraryInteger = 50;
 
-		PlaintextSequence sequence = (PlaintextSequence) plaintextSequenceDao.findRandomSequence(
-				null, arbitraryInteger);
+		PlaintextSequence sequence = (PlaintextSequence) plaintextSequenceDao
+				.findRandomSequence(null, arbitraryInteger);
 
 		assertNull(sequence);
 	}

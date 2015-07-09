@@ -61,8 +61,7 @@ public class ForcedWordGeneDao implements VariableLengthGeneDao {
 		}
 
 		if (length < 1) {
-			log.warn("Unable to find random gene of length "
-					+ length
+			log.warn("Unable to find random gene of length " + length
 					+ " since it is less than 1, which is obviously the minimum length.  Returning null.");
 
 			return null;
@@ -83,8 +82,8 @@ public class ForcedWordGeneDao implements VariableLengthGeneDao {
 
 			if (attempts >= MAX_FIND_ATTEMPTS) {
 				if (log.isDebugEnabled()) {
-					log.debug("Unable to find random gene of length " + length + " after "
-							+ attempts + " attempts.  Returning null.");
+					log.debug("Unable to find random gene of length " + length + " after " + attempts
+							+ " attempts.  Returning null.");
 				}
 
 				return null;

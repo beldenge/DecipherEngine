@@ -25,8 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class CipherSolutionFrequencyTruncatedFitnessEvaluatorTest extends
-		FrequencyFitnessEvaluatorTestBase {
+public class CipherSolutionFrequencyTruncatedFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
 	@Test
 	public void testEvaluate() {
 		CipherSolutionFrequencyTruncatedFitnessEvaluator fitnessEvaluator = new CipherSolutionFrequencyTruncatedFitnessEvaluator();

@@ -83,11 +83,9 @@ public abstract class AbstractSolutionEvaluatorBase {
 		boolean countAdjacent = false;
 		int adjacentMatchCount = 0;
 		for (Ciphertext ct : cipher.getCiphertextCharacters()) {
-			if (countAdjacent == false
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
+			if (countAdjacent == false && plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				countAdjacent = true;
-			} else if (countAdjacent == true
-					&& plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
+			} else if (countAdjacent == true && plaintextCharacters.get(ct.getCiphertextId()).getHasMatch()) {
 				adjacentMatchCount++;
 			} else {
 				countAdjacent = false;

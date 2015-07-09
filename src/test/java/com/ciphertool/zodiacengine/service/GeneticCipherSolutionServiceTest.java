@@ -56,8 +56,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.setGeneticAlgorithm(geneticAlgorithmToSet);
 
-		Field geneticAlgorithmField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"geneticAlgorithm");
+		Field geneticAlgorithmField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "geneticAlgorithm");
 		ReflectionUtils.makeAccessible(geneticAlgorithmField);
 		GeneticAlgorithm geneticAlgorithmFromObject = (GeneticAlgorithm) ReflectionUtils.getField(
 				geneticAlgorithmField, geneticCipherSolutionService);
@@ -71,11 +70,10 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.setCommandsBefore(commandsBeforeToSet);
 
-		Field commandsBeforeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"commandsBefore");
+		Field commandsBeforeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "commandsBefore");
 		ReflectionUtils.makeAccessible(commandsBeforeField);
-		String[] commandsBeforeFromObject = (String[]) ReflectionUtils.getField(
-				commandsBeforeField, geneticCipherSolutionService);
+		String[] commandsBeforeFromObject = (String[]) ReflectionUtils.getField(commandsBeforeField,
+				geneticCipherSolutionService);
 
 		assertSame(commandsBeforeToSet, commandsBeforeFromObject);
 	}
@@ -86,8 +84,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.setCommandsAfter(commandsAfterToSet);
 
-		Field commandsAfterField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"commandsAfter");
+		Field commandsAfterField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "commandsAfter");
 		ReflectionUtils.makeAccessible(commandsAfterField);
 		String[] commandsAfterFromObject = (String[]) ReflectionUtils.getField(commandsAfterField,
 				geneticCipherSolutionService);
@@ -101,11 +98,10 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.setSolutionDao(solutionDaoToSet);
 
-		Field solutionDaoField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"solutionDao");
+		Field solutionDaoField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "solutionDao");
 		ReflectionUtils.makeAccessible(solutionDaoField);
-		SolutionDao solutionDaoFromObject = (SolutionDao) ReflectionUtils.getField(
-				solutionDaoField, geneticCipherSolutionService);
+		SolutionDao solutionDaoFromObject = (SolutionDao) ReflectionUtils.getField(solutionDaoField,
+				geneticCipherSolutionService);
 
 		assertSame(solutionDaoToSet, solutionDaoFromObject);
 	}
@@ -131,8 +127,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -192,8 +187,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -226,8 +220,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -273,8 +266,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -333,8 +325,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -390,8 +381,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -441,8 +431,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -516,8 +505,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -567,8 +555,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -600,8 +587,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
@@ -641,8 +627,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Runtime runtimeMock = mock(Runtime.class);
 
-		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class,
-				"runtime");
+		Field runtimeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "runtime");
 		ReflectionUtils.makeAccessible(runtimeField);
 		ReflectionUtils.setField(runtimeField, geneticCipherSolutionService, runtimeMock);
 
