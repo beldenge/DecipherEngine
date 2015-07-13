@@ -50,7 +50,7 @@ You should have received a copy of the GNU General Public License along with Zod
 
 	<bean class="com.ciphertool.zodiacengine.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
-		<property name="knownSolutionFitnessEvaluator" ref="cipherSolutionKnownSolutionFitnessEvaluator" />
+		<property name="knownSolutionFitnessEvaluator" ref="cipherKeyKnownSolutionFitnessEvaluator" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">

@@ -28,8 +28,8 @@ import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordGene implements VariableLengthGene {

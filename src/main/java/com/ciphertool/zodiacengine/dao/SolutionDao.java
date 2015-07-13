@@ -29,8 +29,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 
 public class SolutionDao {
 	private static Logger log = Logger.getLogger(SolutionDao.class);
@@ -38,20 +38,20 @@ public class SolutionDao {
 	private MongoOperations mongoOperations;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public boolean insert(SolutionChromosome solutionChromosome) {
-		if (solutionChromosome == null) {
+	public boolean insert(Chromosome chromosome) {
+		if (chromosome == null) {
 			log.warn("Attempted to insert null solution.  Returning.");
 
 			return false;
 		}
 
-		mongoOperations.insert(solutionChromosome);
+		mongoOperations.insert(chromosome);
 
 		return true;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public SolutionChromosome findBySolutionId(Integer solutionId) {
+	public Chromosome findBySolutionId(Integer solutionId) {
 		if (solutionId == null) {
 			log.warn("Attempted to find solution by null ID.  Returning null.");
 
@@ -60,13 +60,13 @@ public class SolutionDao {
 
 		Query selectByIdQuery = new Query(Criteria.where("id").is(solutionId));
 
-		SolutionChromosome solutionChromosome = mongoOperations.findOne(selectByIdQuery, SolutionChromosome.class);
+		Chromosome chromosome = mongoOperations.findOne(selectByIdQuery, Chromosome.class);
 
-		return solutionChromosome;
+		return chromosome;
 	}
 
 	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-	public List<SolutionChromosome> findByCipherName(String cipherName) {
+	public List<Chromosome> findByCipherName(String cipherName) {
 		if (cipherName == null || cipherName.isEmpty()) {
 			log.warn("Attempted to find solution by cipher name with null or empty cipherName.  Returning null.");
 
@@ -81,7 +81,7 @@ public class SolutionDao {
 		// Then find the Solutions that correspond to this Cipher
 		Query selectByCipherIdQuery = new Query(Criteria.where("cipherId").is(cipher.getId()));
 
-		List<SolutionChromosome> solutions = mongoOperations.find(selectByCipherIdQuery, SolutionChromosome.class);
+		List<Chromosome> solutions = mongoOperations.find(selectByCipherIdQuery, Chromosome.class);
 
 		return solutions;
 	}

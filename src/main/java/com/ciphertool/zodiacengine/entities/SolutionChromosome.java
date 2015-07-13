@@ -126,17 +126,12 @@ public class SolutionChromosome implements KeylessChromosome {
 		this.id = id;
 	}
 
-	/**
-	 * @return the solutionSetId
-	 */
+	@Override
 	public Integer getSolutionSetId() {
 		return solutionSetId;
 	}
 
-	/**
-	 * @param solutionSetId
-	 *            the solutionSetId to set
-	 */
+	@Override
 	public void setSolutionSetId(Integer solutionSetId) {
 		this.solutionSetId = solutionSetId;
 	}

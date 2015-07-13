@@ -20,6 +20,12 @@ You should have received a copy of the GNU General Public License along with Zod
 		</constructor-arg>
 	</bean>
 	
+	<bean class="com.ciphertool.sentencebuilder.dao.UniqueWordListDao" id="uniqueWordListDao">
+		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.WordDao">
+			<ref bean="wordDao" />
+		</constructor-arg>
+	</bean>
+	
 	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
 	<!-- <bean class="com.ciphertool.sentencebuilder.dao.BasicWordMapDao"
 		id="wordMapDao">
@@ -50,4 +56,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.dao.cipherkey.CipherKeyGeneDao" id="cipherKeyGeneDao" />
 </beans>

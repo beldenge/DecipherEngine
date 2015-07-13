@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License along with Zod
 
 	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMultipleFitnessEvaluator" id="cipherSolutionMultipleFitnessEvaluator" />
 
-	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator" id="defaultFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator" id="cipherSolutionUniqueWordFitnessEvaluator" />
 
 	<bean class="com.ciphertool.zodiacengine.fitness.impl.CipherSolutionMatchDistanceFitnessEvaluator" id="cipherSolutionMatchDistanceFitnessEvaluator" />
 
@@ -131,4 +131,11 @@ You should have received a copy of the GNU General Public License along with Zod
 	</bean>
 
 	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="defaultFitnessComparator" />
+	
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator" id="cipherKeyKnownSolutionFitnessEvaluator" />
+	
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator" id="defaultFitnessEvaluator">
+		<property name="top" value="${fitness.graph.words.count}" />
+		<property name="wordListDao" ref="uniqueWordListDao" />
+	</bean>
 </beans>

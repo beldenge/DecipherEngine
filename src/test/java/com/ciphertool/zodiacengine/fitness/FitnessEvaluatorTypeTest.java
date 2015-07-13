@@ -24,6 +24,8 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;
@@ -41,7 +43,7 @@ import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordLengthFi
 public class FitnessEvaluatorTypeTest {
 	@Test
 	public void testTypes() {
-		assertEquals(13, FitnessEvaluatorType.values().length);
+		assertEquals(15, FitnessEvaluatorType.values().length);
 
 		assertSame(CipherSolutionFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION.getType());
 		assertSame(CipherSolutionTruncatedFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_SOLUTION_TRUNCATED
@@ -68,5 +70,8 @@ public class FitnessEvaluatorTypeTest {
 				FitnessEvaluatorType.CIPHER_SOLUTION_MATCH_DISTANCE_LENGTH.getType());
 		assertSame(CipherSolutionUniqueWordLengthFitnessEvaluator.class,
 				FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD_LENGTH.getType());
+		assertSame(CipherKeyKnownSolutionFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_KEY_KNOWN_SOLUTION
+				.getType());
+		assertSame(CipherKeyWordGraphFitnessEvaluator.class, FitnessEvaluatorType.CIPHER_KEY_WORD_GRAPH.getType());
 	}
 }

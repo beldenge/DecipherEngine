@@ -29,7 +29,6 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.view.GenericCallback;
 
 public class GeneticCipherSolutionService implements CipherSolutionService {
@@ -190,9 +189,9 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 
 		for (Chromosome individual : individuals) {
 			// Set the solution set ID as the current timestamp
-			((SolutionChromosome) individual).setSolutionSetId(solutionSetId);
+			individual.setSolutionSetId(solutionSetId);
 
-			solutionDao.insert((SolutionChromosome) individual);
+			solutionDao.insert(individual);
 		}
 
 		log.info("Took " + (System.currentTimeMillis() - startInsert) + "ms to persist population to database.");

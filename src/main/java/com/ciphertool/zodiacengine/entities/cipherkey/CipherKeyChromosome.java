@@ -100,17 +100,12 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		this.id = id;
 	}
 
-	/**
-	 * @return the solutionSetId
-	 */
+	@Override
 	public Integer getSolutionSetId() {
 		return solutionSetId;
 	}
 
-	/**
-	 * @param solutionSetId
-	 *            the solutionSetId to set
-	 */
+	@Override
 	public void setSolutionSetId(Integer solutionSetId) {
 		this.solutionSetId = solutionSetId;
 	}
@@ -229,6 +224,9 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		return this.genes.remove(key);
 	}
 
+	/*
+	 * This does the same thing as putGene(), and exists solely for semantic consistency.
+	 */
 	@Override
 	@Dirty
 	public void replaceGene(String key, Gene newGene) {
@@ -248,9 +246,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 		newGene.setChromosome(this);
 
-		this.removeGene(key);
-
-		this.putGene(key, newGene);
+		this.genes.put(key, newGene);
 	}
 
 	@Override

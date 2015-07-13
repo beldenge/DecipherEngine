@@ -19,8 +19,12 @@ You should have received a copy of the GNU General Public License along with Zod
 	<import resource="classpath*:beans-mutation.xml" />
 	<import resource="classpath*:beans-crossover.xml" />
 
-	<bean class="com.ciphertool.zodiacengine.SolutionBreeder" id="breeder">
+	<!-- <bean class="com.ciphertool.zodiacengine.SolutionBreeder" id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
+	</bean> -->
+	
+	<bean class="com.ciphertool.zodiacengine.CipherKeyBreeder" id="breeder">
+		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.Population" id="population">

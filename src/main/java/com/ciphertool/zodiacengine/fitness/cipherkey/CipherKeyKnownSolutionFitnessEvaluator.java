@@ -25,13 +25,10 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
-public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEvaluatorBase implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
-
-	protected Cipher cipher;
 
 	private static final String KNOWN_SOLUTION_STRING = "ilikekillingpeoplebecauseitissomuchfunitismorefunthankillingwildgameintheforrest"
 			+ "becausemanisthemoatdangeroueanamalofalltokillsomethinggivesmethemoatthrillingexperenceitisevenbetterthangettingyourrocksoff"
@@ -58,7 +55,7 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 		if (currentSolutionString.length() != KNOWN_SOLUTION_STRING.length()) {
 			log.error("Current solution length of " + currentSolutionString.length()
 					+ " does not match the known solution String length of " + KNOWN_SOLUTION_STRING.length()
-					+ ".  This will cause innacurate fitness calculations.");
+					+ ".  This will cause innacurate fitness calculations.  Solution: " + currentSolutionString);
 		}
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
@@ -68,27 +65,6 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 		}
 
 		return proximityToKnownSolution;
-	}
-
-	protected String getSolutionAsString(CipherKeyChromosome chromosome) {
-		StringBuffer sb = new StringBuffer();
-
-		if (null == this.cipher) {
-			throw new IllegalStateException(
-					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
-		}
-
-		CipherKeyGene nextPlaintext = null;
-		int actualSize = this.cipher.getCiphertextCharacters().size();
-
-		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
-					this.cipher.getCiphertextCharacters().get(i).getValue());
-
-			sb.append(nextPlaintext.getValue());
-		}
-
-		return sb.toString();
 	}
 
 	@Override

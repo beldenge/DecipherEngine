@@ -20,6 +20,7 @@
 package com.ciphertool.zodiacengine;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.dao.GeneDao;
@@ -75,5 +76,14 @@ public class CipherKeyBreeder implements Breeder {
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+	}
+
+	/**
+	 * @param geneDao
+	 *            the geneDao to set
+	 */
+	@Required
+	public void setGeneDao(GeneDao geneDao) {
+		this.geneDao = geneDao;
 	}
 }

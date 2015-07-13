@@ -20,6 +20,8 @@
 package com.ciphertool.zodiacengine.fitness;
 
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFrequencyLengthFitnessEvaluator;
@@ -86,7 +88,15 @@ public enum FitnessEvaluatorType {
 	CIPHER_SOLUTION_UNIQUE_WORD_LENGTH(
 			"Cipher Solution Unique Word / Word Length",
 			CipherSolutionUniqueWordLengthFitnessEvaluator.class,
-			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, awarding extra points towards fitness based on the uniqueness of words.  Includes a factor based on average word length.  Skips the last row of the cipher.");
+			"This will evaluate cipher solutions based on the number of plaintext characters that match for the same ciphertext symbol, awarding extra points towards fitness based on the uniqueness of words.  Includes a factor based on average word length.  Skips the last row of the cipher."),
+	CIPHER_KEY_KNOWN_SOLUTION(
+			"Cipher Key Known Solution",
+			CipherKeyKnownSolutionFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match a known solution, skipping the last row of the Cipher"),
+	CIPHER_KEY_WORD_GRAPH(
+			"Cipher Key Word Graph",
+			CipherKeyWordGraphFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of English words that match the plaintext, giving higher fitness score for larger words.");
 
 	private String displayName;
 	private Class<? extends FitnessEvaluator> type;

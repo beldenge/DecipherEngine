@@ -91,6 +91,7 @@ public class CipherKeyGene implements Gene {
 		 * The Chromosome should be set at a higher level, so we just set it to null which should be overwritten.
 		 */
 		copyGene.chromosome = null;
+		copyGene.value = this.value;
 
 		return copyGene;
 	}

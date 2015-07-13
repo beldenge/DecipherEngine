@@ -1,0 +1,261 @@
+/**
+ * Copyright 2015 George Belden
+ * 
+ * This file is part of ZodiacEngine.
+ * 
+ * ZodiacEngine is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.ciphertool.zodiacengine.fitness.cipherkey;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Required;
+
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.zodiacengine.entities.Cipher;
+import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
+
+public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluatorBase implements FitnessEvaluator {
+	private Logger log = Logger.getLogger(getClass());
+
+	private int top;
+
+	private UniqueWordListDao wordListDao;
+
+	private List<Word> topWords = new ArrayList<Word>();
+
+	@PostConstruct
+	public void init() {
+		topWords = wordListDao.getTopWords(top);
+
+		if (topWords == null || topWords.size() < top) {
+			String message = "Attempted to get top " + top + " words from populated DAO, but only "
+					+ (topWords == null ? 0 : topWords.size()) + " words were available.";
+			log.error(message);
+			throw new IllegalStateException(message);
+		}
+	}
+
+	@Override
+	public Double evaluate(Chromosome chromosome) {
+		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
+
+		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
+
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			for (Word word : topWords) {
+				// Skip single-letter words
+				if (word.getId().getWord().length() > 1
+						&& currentSolutionString.length() >= i + word.getId().getWord().length()
+						&& word.getId().getWord().toLowerCase().equals(
+								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {
+					if (!matchMap.containsKey(i)) {
+						matchMap.put(i, new ArrayList<Match>());
+					}
+
+					matchMap.get(i).add(new Match(i, i + word.getId().getWord().length() - 1, word.getId().getWord()));
+				}
+			}
+		}
+
+		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
+		int beginPos;
+		for (beginPos = 0; beginPos < currentSolutionString.length(); beginPos++) {
+			if (matchMap.containsKey(beginPos)) {
+				if (nonOverlapping(beginPos, rootNodes)) {
+					break;
+				}
+
+				for (Match match : matchMap.get(beginPos)) {
+					rootNodes.add(new MatchNode(match));
+				}
+			}
+		}
+
+		List<String> branches = new ArrayList<String>();
+		for (MatchNode node : rootNodes) {
+			findOverlappingChildren(node.getSelf().getEndPos() + 1, currentSolutionString.length(), matchMap, node);
+
+			branches.addAll(node.printBranches());
+		}
+
+		long score;
+		long highestScore = 0;
+		for (String branch : branches) {
+			score = 0;
+
+			for (String word : branch.replace("Branch [", "").replace("]", "").split(", ")) {
+				score += Math.pow(2, word.length());
+			}
+
+			if (score > highestScore) {
+				highestScore = score;
+			}
+		}
+
+		return Double.valueOf(highestScore);
+	}
+
+	protected void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap,
+			MatchNode currentNode) {
+		int i;
+		MatchNode newNode;
+		for (i = beginPos; i < endPos; i++) {
+			if (i < currentNode.getSelf().getEndPos()) {
+				continue;
+			}
+
+			if (matchMap.containsKey(i)) {
+				if (nonOverlapping(i, currentNode.getChildren())) {
+					break;
+				}
+
+				for (Match match : matchMap.get(i)) {
+					newNode = new MatchNode(match);
+					currentNode.addChild(newNode);
+
+					findOverlappingChildren(newNode.getSelf().getEndPos() + 1, endPos, matchMap, newNode);
+				}
+			}
+		}
+	}
+
+	protected boolean nonOverlapping(int beginPos, List<MatchNode> rootNodes) {
+		for (MatchNode node : rootNodes) {
+			if (beginPos > node.getSelf().getEndPos()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private class Match {
+		private int beginPos;
+		private int endPos;
+		private String word;
+
+		/**
+		 * @param beginPos
+		 * @param endPos
+		 * @param word
+		 */
+		public Match(int beginPos, int endPos, String word) {
+			this.beginPos = beginPos;
+			this.endPos = endPos;
+			this.word = word;
+		}
+
+		public final int getEndPos() {
+			return endPos;
+		}
+
+		public final String getWord() {
+			return word;
+		}
+
+		@Override
+		public String toString() {
+			return "Match [beginPos=" + beginPos + ", endPos=" + endPos + ", word=" + word + "]";
+		}
+	}
+
+	private class MatchNode {
+		private Match self;
+		private List<MatchNode> children = new ArrayList<MatchNode>();
+
+		/**
+		 * @param self
+		 */
+		public MatchNode(Match self) {
+			this.self = self;
+		}
+
+		public final Match getSelf() {
+			return self;
+		}
+
+		public List<MatchNode> getChildren() {
+			return Collections.unmodifiableList(children);
+		}
+
+		public void addChild(MatchNode child) {
+			this.children.add(child);
+		}
+
+		public List<String> printBranches() {
+			List<String> branches = new ArrayList<String>();
+
+			walk(branches, this.self.getWord());
+
+			return branches;
+		}
+
+		private void walk(List<String> branches, String branch) {
+			if (!this.getChildren().isEmpty()) {
+				for (MatchNode child : this.children) {
+					child.walk(branches, branch + ", " + child.self.getWord());
+				}
+			}
+
+			branches.add("Branch [" + branch + "]");
+		}
+
+		@Override
+		public String toString() {
+			return "MatchNode [self=" + self + "]";
+		}
+	}
+
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
+	}
+
+	/**
+	 * @param top
+	 *            the top to set
+	 */
+	@Required
+	public void setTop(int top) {
+		if (top <= 0) {
+			String message = "Value of " + top + " is invalid for top in " + this.getClass()
+					+ ".  Value must be greater than zero.";
+			log.error(message);
+			throw new IllegalArgumentException(message);
+		}
+
+		this.top = top;
+	}
+
+	/**
+	 * @param wordListDao
+	 *            the wordListDao to set
+	 */
+	@Required
+	public void setWordListDao(UniqueWordListDao wordListDao) {
+		this.wordListDao = wordListDao;
+	}
+}
