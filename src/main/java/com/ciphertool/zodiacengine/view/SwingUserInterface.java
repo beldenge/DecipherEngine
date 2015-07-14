@@ -485,7 +485,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
 			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
 		}
-		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD.name());
+		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_KEY_WORD_GRAPH.name());
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -504,7 +504,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (CrossoverAlgorithmType crossoverAlgorithmType : CrossoverAlgorithmType.values()) {
 			crossoverAlgorithmComboBox.addItem(crossoverAlgorithmType.name());
 		}
-		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.LOWEST_COMMON_GROUP.name());
+		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.RANDOM_SINGLE_POINT.name());
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -524,7 +524,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
 			mutationAlgorithmComboBox.addItem(mutationAlgorithmType.name());
 		}
-		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.CONSERVATIVE.name());
+		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.RANDOM_VALUE.name());
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -561,7 +561,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (SelectorType selectorType : SelectorType.values()) {
 			selectorComboBox.addItem(selectorType.name());
 		}
-		selectorComboBox.setSelectedItem(SelectorType.TOURNAMENT.name());
+		selectorComboBox.setSelectedItem(SelectorType.ROULETTE.name());
 		JLabel selectorNameLabel = new JLabel(selectorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

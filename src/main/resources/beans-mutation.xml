@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="defaultMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.SingleSequenceMutationAlgorithm" id="singleSequenceMutationAlgorithm">
 		<property name="sequenceDao" ref="sequenceDao" />
 	</bean>
 
@@ -31,7 +31,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="geneDao" ref="geneDao" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.RandomValueMutationAlgorithm" id="randomValueMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.RandomValueMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 </beans>

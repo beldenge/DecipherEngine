@@ -105,7 +105,10 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 
 		long score;
 		long highestScore = 0;
+
+		@SuppressWarnings("unused")
 		String bestBranch = "";
+
 		for (String branch : branches) {
 			score = 0;
 
