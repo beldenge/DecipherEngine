@@ -64,11 +64,13 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		for (int i = 0; i < currentSolutionString.length(); i++) {
+		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
+
+		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
 				// Skip single-letter words
 				if (word.getId().getWord().length() > 1
-						&& currentSolutionString.length() >= i + word.getId().getWord().length()
+						&& lastRowBegin >= i + word.getId().getWord().length()
 						&& word.getId().getWord().toLowerCase().equals(
 								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {
 					if (!matchMap.containsKey(i)) {
@@ -82,7 +84,7 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 
 		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
 		int beginPos;
-		for (beginPos = 0; beginPos < currentSolutionString.length(); beginPos++) {
+		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
 				if (nonOverlapping(beginPos, rootNodes)) {
 					break;
@@ -96,22 +98,24 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 
 		List<String> branches = new ArrayList<String>();
 		for (MatchNode node : rootNodes) {
-			findOverlappingChildren(node.getSelf().getEndPos() + 1, currentSolutionString.length(), matchMap, node);
+			findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
 
 			branches.addAll(node.printBranches());
 		}
 
 		long score;
 		long highestScore = 0;
+		String bestBranch = "";
 		for (String branch : branches) {
 			score = 0;
 
-			for (String word : branch.replace("Branch [", "").replace("]", "").split(", ")) {
+			for (String word : branch.split(", ")) {
 				score += Math.pow(2, word.length());
 			}
 
 			if (score > highestScore) {
 				highestScore = score;
+				bestBranch = branch;
 			}
 		}
 
@@ -123,7 +127,7 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 		int i;
 		MatchNode newNode;
 		for (i = beginPos; i < endPos; i++) {
-			if (i < currentNode.getSelf().getEndPos()) {
+			if (i <= currentNode.getSelf().getEndPos()) {
 				continue;
 			}
 
@@ -132,12 +136,17 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 					break;
 				}
 
+				Match bestMatch = null;
 				for (Match match : matchMap.get(i)) {
-					newNode = new MatchNode(match);
-					currentNode.addChild(newNode);
-
-					findOverlappingChildren(newNode.getSelf().getEndPos() + 1, endPos, matchMap, newNode);
+					if (bestMatch == null || match.getWord().length() > bestMatch.getWord().length()) {
+						bestMatch = match;
+					}
 				}
+
+				newNode = new MatchNode(bestMatch);
+				currentNode.addChild(newNode);
+				currentNode = newNode;
+				// findOverlappingChildren(newNode.getSelf().getEndPos() + 1, endPos, matchMap, newNode);
 			}
 		}
 	}
@@ -220,7 +229,7 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 				}
 			}
 
-			branches.add("Branch [" + branch + "]");
+			branches.add(branch);
 		}
 
 		@Override

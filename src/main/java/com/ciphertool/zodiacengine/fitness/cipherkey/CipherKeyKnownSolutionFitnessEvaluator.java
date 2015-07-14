@@ -43,12 +43,9 @@ public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEval
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		double proximityToKnownSolution = 0.0;
+		int total = 0;
 
-		if (log.isDebugEnabled()) {
-			log.debug("Solution " + ((CipherKeyChromosome) chromosome).getId() + " has a confidence level of: "
-					+ proximityToKnownSolution);
-		}
+		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
 
@@ -58,10 +55,17 @@ public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEval
 					+ ".  This will cause innacurate fitness calculations.  Solution: " + currentSolutionString);
 		}
 
-		for (int i = 0; i < currentSolutionString.length(); i++) {
+		for (int i = 0; i < lastRowBegin; i++) {
 			if (currentSolutionString.charAt(i) == KNOWN_SOLUTION_STRING.charAt(i)) {
-				proximityToKnownSolution++;
+				total++;
 			}
+		}
+
+		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
+
+		if (log.isDebugEnabled()) {
+			log.debug("Solution " + ((CipherKeyChromosome) chromosome).getId() + " has a confidence level of: "
+					+ proximityToKnownSolution);
 		}
 
 		return proximityToKnownSolution;
