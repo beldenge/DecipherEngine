@@ -35,6 +35,8 @@ import com.ciphertool.sentencebuilder.entities.Word;
 public class WordGene implements VariableLengthGene {
 	private static Logger log = Logger.getLogger(WordGene.class);
 
+	private boolean hasMatch;
+
 	@Transient
 	private Chromosome chromosome;
 
@@ -309,5 +311,15 @@ public class WordGene implements VariableLengthGene {
 	@Override
 	public String toString() {
 		return "WordGene [sequences=" + sequences + "]";
+	}
+
+	@Override
+	public boolean hasMatch() {
+		return this.hasMatch;
+	}
+
+	@Override
+	public void setHasMatch(boolean hasMatch) {
+		this.hasMatch = hasMatch;
 	}
 }

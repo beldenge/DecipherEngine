@@ -375,10 +375,15 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 				nextPlaintext = (CipherKeyGene) this.genes.get(this.cipher.getCiphertextCharacters().get(i).getValue());
 
-				// subtract 1 since the get method begins with 0
-				sb.append(" ");
-				sb.append(nextPlaintext.getValue());
-				sb.append(" ");
+				if (nextPlaintext.hasMatch()) {
+					sb.append("[");
+					sb.append(nextPlaintext.getValue());
+					sb.append("]");
+				} else {
+					sb.append(" ");
+					sb.append(nextPlaintext.getValue());
+					sb.append(" ");
+				}
 
 				/*
 				 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't

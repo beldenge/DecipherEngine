@@ -35,6 +35,8 @@ public class CipherKeyGene implements Gene {
 
 	private String value;
 
+	private boolean hasMatch;
+
 	public CipherKeyGene() {
 	}
 
@@ -132,5 +134,15 @@ public class CipherKeyGene implements Gene {
 	@Override
 	public String toString() {
 		return "CipherKeyGene [value=" + value + "]";
+	}
+
+	@Override
+	public boolean hasMatch() {
+		return this.hasMatch;
+	}
+
+	@Override
+	public void setHasMatch(boolean hasMatch) {
+		this.hasMatch = hasMatch;
 	}
 }

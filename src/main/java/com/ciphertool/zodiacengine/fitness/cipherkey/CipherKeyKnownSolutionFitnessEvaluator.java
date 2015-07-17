@@ -23,17 +23,71 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
+import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
-public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEvaluatorBase implements FitnessEvaluator {
+public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator {
 
 	private Logger log = Logger.getLogger(getClass());
 
-	private static final String KNOWN_SOLUTION_STRING = "ilikekillingpeoplebecauseitissomuchfunitismorefunthankillingwildgameintheforrest"
-			+ "becausemanisthemoatdangeroueanamalofalltokillsomethinggivesmethemoatthrillingexperenceitisevenbetterthangettingyourrocksoff"
-			+ "withagirlthebestpartofitiathaewhenidieiwillbereborninparadicesndalltheihavekilledwillbecomemyslavesiwillnotgiveyoumynamebecause"
-			+ "youwilltrytosloidownorstopmycollectingofslavesformyafterlifeebeorietemethhpiti";
+	private static CipherKeyChromosome knownSolution = new CipherKeyChromosome();
+
+	static {
+		knownSolution.putGene("tri", new CipherKeyGene(knownSolution, "i"));
+		knownSolution.putGene("lrbox", new CipherKeyGene(knownSolution, "l"));
+		knownSolution.putGene("p", new CipherKeyGene(knownSolution, "i"));
+		knownSolution.putGene("forslash", new CipherKeyGene(knownSolution, "k"));
+		knownSolution.putGene("z", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("u", new CipherKeyGene(knownSolution, "i"));
+		knownSolution.putGene("b", new CipherKeyGene(knownSolution, "l"));
+		knownSolution.putGene("backk", new CipherKeyGene(knownSolution, "i"));
+		knownSolution.putGene("o", new CipherKeyGene(knownSolution, "n"));
+		knownSolution.putGene("r", new CipherKeyGene(knownSolution, "g"));
+		knownSolution.putGene("pi", new CipherKeyGene(knownSolution, "p"));
+		knownSolution.putGene("backp", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("x", new CipherKeyGene(knownSolution, "o"));
+		knownSolution.putGene("w", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("v", new CipherKeyGene(knownSolution, "b"));
+		knownSolution.putGene("plus", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("backe", new CipherKeyGene(knownSolution, "c"));
+		knownSolution.putGene("g", new CipherKeyGene(knownSolution, "a"));
+		knownSolution.putGene("y", new CipherKeyGene(knownSolution, "u"));
+		knownSolution.putGene("f", new CipherKeyGene(knownSolution, "s"));
+		knownSolution.putGene("circledot", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("h", new CipherKeyGene(knownSolution, "t"));
+		knownSolution.putGene("boxdot", new CipherKeyGene(knownSolution, "s"));
+		knownSolution.putGene("k", new CipherKeyGene(knownSolution, "s"));
+		knownSolution.putGene("anchor", new CipherKeyGene(knownSolution, "o"));
+		knownSolution.putGene("backq", new CipherKeyGene(knownSolution, "m"));
+		knownSolution.putGene("m", new CipherKeyGene(knownSolution, "h"));
+		knownSolution.putGene("j", new CipherKeyGene(knownSolution, "f"));
+		knownSolution.putGene("carrot", new CipherKeyGene(knownSolution, "n"));
+		knownSolution.putGene("i", new CipherKeyGene(knownSolution, "t"));
+		knownSolution.putGene("tridot", new CipherKeyGene(knownSolution, "s"));
+		knownSolution.putGene("t", new CipherKeyGene(knownSolution, "o"));
+		knownSolution.putGene("flipt", new CipherKeyGene(knownSolution, "r"));
+		knownSolution.putGene("n", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("q", new CipherKeyGene(knownSolution, "f"));
+		knownSolution.putGene("d", new CipherKeyGene(knownSolution, "n"));
+		knownSolution.putGene("fullcircle", new CipherKeyGene(knownSolution, "t"));
+		knownSolution.putGene("horstrike", new CipherKeyGene(knownSolution, "h"));
+		knownSolution.putGene("s", new CipherKeyGene(knownSolution, "a"));
+		knownSolution.putGene("vertstrike", new CipherKeyGene(knownSolution, "n"));
+		knownSolution.putGene("fullbox", new CipherKeyGene(knownSolution, "l"));
+		knownSolution.putGene("a", new CipherKeyGene(knownSolution, "w"));
+		knownSolution.putGene("backf", new CipherKeyGene(knownSolution, "d"));
+		knownSolution.putGene("backl", new CipherKeyGene(knownSolution, "a"));
+		knownSolution.putGene("e", new CipherKeyGene(knownSolution, "e"));
+		knownSolution.putGene("l", new CipherKeyGene(knownSolution, "t"));
+		knownSolution.putGene("backd", new CipherKeyGene(knownSolution, "o"));
+		knownSolution.putGene("backr", new CipherKeyGene(knownSolution, "r"));
+		knownSolution.putGene("backslash", new CipherKeyGene(knownSolution, "r"));
+		knownSolution.putGene("fulltri", new CipherKeyGene(knownSolution, "a"));
+		knownSolution.putGene("zodiac", new CipherKeyGene(knownSolution, "d"));
+		knownSolution.putGene("backc", new CipherKeyGene(knownSolution, "v"));
+		knownSolution.putGene("backj", new CipherKeyGene(knownSolution, "x"));
+		knownSolution.putGene("box", new CipherKeyGene(knownSolution, "y"));
+	}
 
 	/**
 	 * Default no-args constructor
@@ -43,25 +97,24 @@ public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEval
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		int total = 0;
+		double total = 0.0;
 
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
-
-		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
-
-		if (currentSolutionString.length() != KNOWN_SOLUTION_STRING.length()) {
-			log.error("Current solution length of " + currentSolutionString.length()
-					+ " does not match the known solution String length of " + KNOWN_SOLUTION_STRING.length()
-					+ ".  This will cause innacurate fitness calculations.  Solution: " + currentSolutionString);
+		if (knownSolution.getGenes().size() != ((CipherKeyChromosome) chromosome).getGenes().size()) {
+			log.error("Current solution size of " + ((CipherKeyChromosome) chromosome).getGenes().size()
+					+ " does not match the known solution size of " + knownSolution.getGenes().size()
+					+ ".  This will cause innacurate fitness calculations.  Solution: " + chromosome);
 		}
 
-		for (int i = 0; i < lastRowBegin; i++) {
-			if (currentSolutionString.charAt(i) == KNOWN_SOLUTION_STRING.charAt(i)) {
+		for (String key : knownSolution.getGenes().keySet()) {
+			if (knownSolution.getGenes().get(key).equals(
+					((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)))) {
 				total++;
+
+				((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)).setHasMatch(true);
 			}
 		}
 
-		double proximityToKnownSolution = (((double) total) / lastRowBegin) * 100;
+		double proximityToKnownSolution = (total / (double) ((CipherKeyChromosome) chromosome).getGenes().size()) * 100.0;
 
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + ((CipherKeyChromosome) chromosome).getId() + " has a confidence level of: "
@@ -73,6 +126,6 @@ public class CipherKeyKnownSolutionFitnessEvaluator extends CipherKeyFitnessEval
 
 	@Override
 	public void setGeneticStructure(Object cipher) {
-		this.cipher = (Cipher) cipher;
+		// Not needed for this implementation
 	}
 }

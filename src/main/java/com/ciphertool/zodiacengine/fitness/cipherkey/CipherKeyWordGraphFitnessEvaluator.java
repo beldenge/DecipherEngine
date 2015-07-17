@@ -36,10 +36,13 @@ import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
+import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
-public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluatorBase implements FitnessEvaluator {
+public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
 
+	protected Cipher cipher;
+	private int MIN_WORD_LENGTH = 2;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
@@ -69,7 +72,7 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
 				// Skip single-letter words
-				if (word.getId().getWord().length() > 1
+				if (word.getId().getWord().length() > MIN_WORD_LENGTH
 						&& lastRowBegin >= i + word.getId().getWord().length()
 						&& word.getId().getWord().toLowerCase().equals(
 								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {
@@ -162,6 +165,27 @@ public class CipherKeyWordGraphFitnessEvaluator extends CipherKeyFitnessEvaluato
 		}
 
 		return false;
+	}
+
+	protected String getSolutionAsString(CipherKeyChromosome chromosome) {
+		StringBuffer sb = new StringBuffer();
+
+		if (null == this.cipher) {
+			throw new IllegalStateException(
+					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
+		}
+
+		CipherKeyGene nextPlaintext = null;
+		int actualSize = this.cipher.getCiphertextCharacters().size();
+
+		for (int i = 0; i < actualSize; i++) {
+			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
+					this.cipher.getCiphertextCharacters().get(i).getValue());
+
+			sb.append(nextPlaintext.getValue());
+		}
+
+		return sb.toString();
 	}
 
 	private class Match {
