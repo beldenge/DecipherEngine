@@ -30,11 +30,11 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.genetics.algorithms.mutation.GroupMutationAlgorithm" id="groupMutationAlgorithm">
 		<property name="geneDao" ref="geneDao" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.RandomValueMutationAlgorithm" id="randomValueMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.StandardMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />

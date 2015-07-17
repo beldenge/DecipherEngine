@@ -22,7 +22,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	<!-- <bean class="com.ciphertool.zodiacengine.SolutionBreeder" id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean> -->
-	
+
 	<bean class="com.ciphertool.zodiacengine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>

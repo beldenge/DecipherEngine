@@ -51,11 +51,11 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="randomListElementSelector" ref="randomListElementSelector" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.RandomSinglePointCrossoverAlgorithm" id="randomSinglePointCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm" id="defaultCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
