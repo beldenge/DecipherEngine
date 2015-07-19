@@ -504,7 +504,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (CrossoverAlgorithmType crossoverAlgorithmType : CrossoverAlgorithmType.values()) {
 			crossoverAlgorithmComboBox.addItem(crossoverAlgorithmType.name());
 		}
-		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.RANDOM_SINGLE_POINT.name());
+		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.EQUAL_OPPORTUNITY.name());
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -524,7 +524,7 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
 			mutationAlgorithmComboBox.addItem(mutationAlgorithmType.name());
 		}
-		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.RANDOM_VALUE.name());
+		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.STANDARD.name());
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

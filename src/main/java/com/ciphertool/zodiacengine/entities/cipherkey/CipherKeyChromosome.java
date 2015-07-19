@@ -399,4 +399,18 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 		return sb.toString();
 	}
+
+	@Override
+	public double similarityTo(Chromosome other) {
+		int total = 0;
+
+		for (Object key : this.genes.keySet()) {
+			if (((CipherKeyGene) this.genes.get(key)).getValue().equals(
+					((CipherKeyGene) ((CipherKeyChromosome) other).genes.get(key)).getValue())) {
+				total++;
+			}
+		}
+
+		return ((double) total) / ((double) this.genes.size());
+	}
 }

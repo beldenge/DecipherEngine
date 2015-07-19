@@ -27,7 +27,6 @@ import com.ciphertool.zodiacengine.entities.SolutionChromosome;
 import com.ciphertool.zodiacengine.fitness.KnownSolutionEvaluatorBase;
 
 public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase implements FitnessEvaluator {
-
 	private Logger log = Logger.getLogger(getClass());
 
 	/**

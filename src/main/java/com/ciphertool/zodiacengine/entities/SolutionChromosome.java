@@ -33,6 +33,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
+import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeylessChromosome;
 import com.ciphertool.genetics.entities.VariableLengthGene;
@@ -698,5 +699,19 @@ public class SolutionChromosome implements KeylessChromosome {
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	public double similarityTo(Chromosome other) {
+		int total = 0;
+
+		for (int i = 0; i < this.plaintextCharacters.size(); i++) {
+			if (this.getPlaintextCharacters().get(i).getValue().toLowerCase().equals(
+					((SolutionChromosome) other).getPlaintextCharacters().get(i).getValue().toLowerCase())) {
+				total++;
+			}
+		}
+
+		return ((double) total) / ((double) this.plaintextCharacters.size());
 	}
 }
