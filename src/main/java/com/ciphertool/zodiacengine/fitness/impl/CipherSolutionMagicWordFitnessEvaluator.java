@@ -173,4 +173,9 @@ public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEv
 
 		return false;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Magic Word";
+	}
 }

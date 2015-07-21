@@ -147,4 +147,9 @@ public class CipherSolutionMultipleFitnessEvaluator extends SolutionTruncatedEva
 
 		return fitness;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Multiple";
+	}
 }

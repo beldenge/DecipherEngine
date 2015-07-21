@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -46,27 +47,37 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
-import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
+import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.cipherkey.StandardMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
+import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
+import com.ciphertool.genetics.algorithms.selection.modes.Selector;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.common.ParameterConstants;
 import com.ciphertool.zodiacengine.common.StrategyBuilder;
 import com.ciphertool.zodiacengine.controller.CipherSolutionController;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
 
-public class SwingUserInterface extends JFrame implements UserInterface {
+public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
 	private static final long serialVersionUID = -7682403631152076457L;
 
 	private Logger log = Logger.getLogger(getClass());
 	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
 	private static final double LAYOUT_LABEL_WEIGHT = 1.0;
 	private static final double LAYOUT_INPUT_WEIGHT = 2.0;
+
+	private ApplicationContext applicationContext;
 
 	private static boolean inDebugMode;
 
@@ -133,11 +144,16 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	private JButton continueButton;
 	private JButton stopButton;
 	private JComboBox<String> cipherComboBox;
-	private JComboBox<String> fitnessEvaluatorComboBox;
-	private JComboBox<String> crossoverAlgorithmComboBox;
-	private JComboBox<String> mutationAlgorithmComboBox;
-	private JComboBox<String> selectionAlgorithmComboBox;
-	private JComboBox<String> selectorComboBox;
+	private JComboBox<FitnessEvaluator> fitnessEvaluatorComboBox;
+
+	@SuppressWarnings("rawtypes")
+	private JComboBox<CrossoverAlgorithm> crossoverAlgorithmComboBox;
+
+	@SuppressWarnings("rawtypes")
+	private JComboBox<MutationAlgorithm> mutationAlgorithmComboBox;
+
+	private JComboBox<SelectionAlgorithm> selectionAlgorithmComboBox;
+	private JComboBox<Selector> selectorComboBox;
 	private JCheckBox runContinuouslyCheckBox;
 	private JSpinner generationsSpinner;
 	private JSpinner populationSpinner;
@@ -481,11 +497,22 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
 			JPanel mainPanel) {
-		fitnessEvaluatorComboBox = new JComboBox<String>();
-		for (FitnessEvaluatorType fitnessEvaluatorType : FitnessEvaluatorType.values()) {
-			fitnessEvaluatorComboBox.addItem(fitnessEvaluatorType.name());
+		Map<String, FitnessEvaluator> beanMap = applicationContext.getBeansOfType(FitnessEvaluator.class);
+
+		FitnessEvaluator[] beans = new FitnessEvaluator[beanMap.size()];
+
+		int i = 0;
+		for (String key : beanMap.keySet()) {
+			beans[i] = beanMap.get(key);
+			i++;
 		}
-		fitnessEvaluatorComboBox.setSelectedItem(FitnessEvaluatorType.CIPHER_KEY_WORD_GRAPH.name());
+
+		SelectableRenderer selectableRenderer = new SelectableRenderer();
+		DefaultComboBoxModel<FitnessEvaluator> model = new DefaultComboBoxModel<FitnessEvaluator>(beans);
+
+		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
+		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyWordGraphFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -498,13 +525,26 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(fitnessEvaluatorComboBox);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void appendCrossoverAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
 			JPanel mainPanel) {
-		crossoverAlgorithmComboBox = new JComboBox<String>();
-		for (CrossoverAlgorithmType crossoverAlgorithmType : CrossoverAlgorithmType.values()) {
-			crossoverAlgorithmComboBox.addItem(crossoverAlgorithmType.name());
+		Map<String, CrossoverAlgorithm> beanMap = applicationContext.getBeansOfType(CrossoverAlgorithm.class);
+
+		CrossoverAlgorithm[] beans = new CrossoverAlgorithm[beanMap.size()];
+
+		int i = 0;
+		for (String key : beanMap.keySet()) {
+			beans[i] = beanMap.get(key);
+			i++;
 		}
-		crossoverAlgorithmComboBox.setSelectedItem(CrossoverAlgorithmType.EQUAL_OPPORTUNITY.name());
+
+		SelectableRenderer selectableRenderer = new SelectableRenderer();
+		DefaultComboBoxModel<CrossoverAlgorithm> model = new DefaultComboBoxModel<CrossoverAlgorithm>(beans);
+
+		crossoverAlgorithmComboBox = new JComboBox<CrossoverAlgorithm>(model);
+		crossoverAlgorithmComboBox.setRenderer(selectableRenderer);
+		crossoverAlgorithmComboBox.setSelectedItem(applicationContext
+				.getBean(EqualOpportunityGeneCrossoverAlgorithm.class));
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -517,14 +557,25 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 		mainPanel.add(crossoverAlgorithmComboBox);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void appendMutationAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
 			JPanel mainPanel) {
+		Map<String, MutationAlgorithm> beanMap = applicationContext.getBeansOfType(MutationAlgorithm.class);
 
-		mutationAlgorithmComboBox = new JComboBox<String>();
-		for (MutationAlgorithmType mutationAlgorithmType : MutationAlgorithmType.values()) {
-			mutationAlgorithmComboBox.addItem(mutationAlgorithmType.name());
+		MutationAlgorithm[] beans = new MutationAlgorithm[beanMap.size()];
+
+		int i = 0;
+		for (String key : beanMap.keySet()) {
+			beans[i] = beanMap.get(key);
+			i++;
 		}
-		mutationAlgorithmComboBox.setSelectedItem(MutationAlgorithmType.STANDARD.name());
+
+		SelectableRenderer selectableRenderer = new SelectableRenderer();
+		DefaultComboBoxModel<MutationAlgorithm> model = new DefaultComboBoxModel<MutationAlgorithm>(beans);
+
+		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
+		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(StandardMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -539,11 +590,22 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 
 	private void appendSelectionAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
 			JPanel mainPanel) {
-		selectionAlgorithmComboBox = new JComboBox<String>();
-		for (SelectionAlgorithmType selectionAlgorithmType : SelectionAlgorithmType.values()) {
-			selectionAlgorithmComboBox.addItem(selectionAlgorithmType.name());
+		Map<String, SelectionAlgorithm> beanMap = applicationContext.getBeansOfType(SelectionAlgorithm.class);
+
+		SelectionAlgorithm[] beans = new SelectionAlgorithm[beanMap.size()];
+
+		int i = 0;
+		for (String key : beanMap.keySet()) {
+			beans[i] = beanMap.get(key);
+			i++;
 		}
-		selectionAlgorithmComboBox.setSelectedItem(SelectionAlgorithmType.PROBABILISTIC.name());
+
+		SelectableRenderer selectableRenderer = new SelectableRenderer();
+		DefaultComboBoxModel<SelectionAlgorithm> model = new DefaultComboBoxModel<SelectionAlgorithm>(beans);
+
+		selectionAlgorithmComboBox = new JComboBox<SelectionAlgorithm>(model);
+		selectionAlgorithmComboBox.setRenderer(selectableRenderer);
+		selectionAlgorithmComboBox.setSelectedItem(applicationContext.getBean(ProbabilisticSelectionAlgorithm.class));
 		JLabel selectionAlgorithmNameLabel = new JLabel(selectionAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -557,11 +619,22 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	}
 
 	private void appendSelectorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		selectorComboBox = new JComboBox<String>();
-		for (SelectorType selectorType : SelectorType.values()) {
-			selectorComboBox.addItem(selectorType.name());
+		Map<String, Selector> beanMap = applicationContext.getBeansOfType(Selector.class);
+
+		Selector[] beans = new Selector[beanMap.size()];
+
+		int i = 0;
+		for (String key : beanMap.keySet()) {
+			beans[i] = beanMap.get(key);
+			i++;
 		}
-		selectorComboBox.setSelectedItem(SelectorType.ROULETTE.name());
+
+		SelectableRenderer selectableRenderer = new SelectableRenderer();
+		DefaultComboBoxModel<Selector> model = new DefaultComboBoxModel<Selector>(beans);
+
+		selectorComboBox = new JComboBox<Selector>(model);
+		selectorComboBox.setRenderer(selectableRenderer);
+		selectorComboBox.setSelectedItem(applicationContext.getBean(RouletteSelector.class));
 		JLabel selectorNameLabel = new JLabel(selectorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -866,5 +939,10 @@ public class SwingUserInterface extends JFrame implements UserInterface {
 	@Required
 	public void setStrategyBuilder(StrategyBuilder strategyBuilder) {
 		this.strategyBuilder = strategyBuilder;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 }

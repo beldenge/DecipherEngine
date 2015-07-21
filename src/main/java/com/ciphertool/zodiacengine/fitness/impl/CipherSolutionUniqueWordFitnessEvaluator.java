@@ -225,4 +225,9 @@ public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedE
 
 		return penalty;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Unique Word";
+	}
 }

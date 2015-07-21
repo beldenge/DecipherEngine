@@ -211,4 +211,9 @@ public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncat
 
 		return extraPoints;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Match Distance";
+	}
 }

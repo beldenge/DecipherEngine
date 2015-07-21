@@ -294,4 +294,9 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	public void setWordListDao(UniqueWordListDao wordListDao) {
 		this.wordListDao = wordListDao;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Word Graph";
+	}
 }

@@ -71,4 +71,9 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEv
 
 		return proximityToKnownSolution;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Known Solution";
+	}
 }

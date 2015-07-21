@@ -143,4 +143,9 @@ public class CipherSolutionTruncatedFitnessEvaluator extends SolutionTruncatedEv
 
 		return (double) total;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Truncated";
+	}
 }

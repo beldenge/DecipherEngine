@@ -22,32 +22,22 @@ package com.ciphertool.zodiacengine.common;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
-import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;
 
-public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationContextAware {
+public class GeneticStrategyBuilder implements StrategyBuilder {
 	private Logger log = Logger.getLogger(getClass());
 
 	private CipherDao cipherDao;
 	private FitnessEvaluator knownSolutionFitnessEvaluator;
-
-	private ApplicationContext context;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -140,99 +130,85 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 	}
 
 	protected FitnessEvaluator getFitnessEvaluator(Map<String, Object> parameters) {
-		Object fitnessEvaluatorName = parameters.get(ParameterConstants.FITNESS_EVALUATOR);
+		Object selectedFitnessEvaluator = parameters.get(ParameterConstants.FITNESS_EVALUATOR);
 
-		if (fitnessEvaluatorName == null) {
+		if (selectedFitnessEvaluator == null) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.FITNESS_EVALUATOR
 					+ " cannot be null.");
 		}
 
-		if (!(fitnessEvaluatorName instanceof String)) {
+		if (!(selectedFitnessEvaluator instanceof FitnessEvaluator)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.FITNESS_EVALUATOR
-					+ " must be of type String.");
+					+ " must be of type FitnessEvaluator.");
 		}
 
-		FitnessEvaluator fitnessEvaluator = (FitnessEvaluator) context.getBean(FitnessEvaluatorType.valueOf(
-				(String) fitnessEvaluatorName).getType());
-
-		return fitnessEvaluator;
+		return (FitnessEvaluator) selectedFitnessEvaluator;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected CrossoverAlgorithm getCrossoverAlgorithm(Map<String, Object> parameters) {
-		Object crossoverAlgorithmName = parameters.get(ParameterConstants.CROSSOVER_ALGORITHM);
+		Object selectedCrossoverAlgorithm = parameters.get(ParameterConstants.CROSSOVER_ALGORITHM);
 
-		if (crossoverAlgorithmName == null) {
+		if (selectedCrossoverAlgorithm == null) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_ALGORITHM
 					+ " cannot be null.");
 		}
 
-		if (!(crossoverAlgorithmName instanceof String)) {
+		if (!(selectedCrossoverAlgorithm instanceof CrossoverAlgorithm)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_ALGORITHM
-					+ " must be of type String.");
+					+ " must be of type CrossoverAlgorithm.");
 		}
 
-		CrossoverAlgorithm crossoverAlgorithm = (CrossoverAlgorithm) context.getBean(CrossoverAlgorithmType.valueOf(
-				(String) crossoverAlgorithmName).getType());
-
-		return crossoverAlgorithm;
+		return (CrossoverAlgorithm) selectedCrossoverAlgorithm;
 	}
 
 	@SuppressWarnings("rawtypes")
 	protected MutationAlgorithm getMutationAlgorithm(Map<String, Object> parameters) {
-		Object mutationAlgorithmName = parameters.get(ParameterConstants.MUTATION_ALGORITHM);
+		Object selectedMutationAlgorithm = parameters.get(ParameterConstants.MUTATION_ALGORITHM);
 
-		if (mutationAlgorithmName == null) {
+		if (selectedMutationAlgorithm == null) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_ALGORITHM
 					+ " cannot be null.");
 		}
 
-		if (!(mutationAlgorithmName instanceof String)) {
+		if (!(selectedMutationAlgorithm instanceof MutationAlgorithm)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_ALGORITHM
-					+ " must be of type String.");
+					+ " must be of type MutationAlgorithm.");
 		}
 
-		MutationAlgorithm mutationAlgorithm = (MutationAlgorithm) context.getBean(MutationAlgorithmType.valueOf(
-				(String) mutationAlgorithmName).getType());
-
-		return mutationAlgorithm;
+		return (MutationAlgorithm) selectedMutationAlgorithm;
 	}
 
 	protected SelectionAlgorithm getSelectionAlgorithm(Map<String, Object> parameters) {
-		Object selectionAlgorithmName = parameters.get(ParameterConstants.SELECTION_ALGORITHM);
+		Object selectedSelectionAlgorithm = parameters.get(ParameterConstants.SELECTION_ALGORITHM);
 
-		if (selectionAlgorithmName == null) {
+		if (selectedSelectionAlgorithm == null) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
 					+ " cannot be null.");
 		}
 
-		if (!(selectionAlgorithmName instanceof String)) {
+		if (!(selectedSelectionAlgorithm instanceof SelectionAlgorithm)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
-					+ " must be of type String.");
+					+ " must be of type SelectionAlgorithm.");
 		}
 
-		SelectionAlgorithm selectionAlgorithm = (SelectionAlgorithm) context.getBean(SelectionAlgorithmType.valueOf(
-				(String) selectionAlgorithmName).getType());
-
-		return selectionAlgorithm;
+		return (SelectionAlgorithm) selectedSelectionAlgorithm;
 	}
 
 	protected Selector getSelector(Map<String, Object> parameters) {
-		Object selectorName = parameters.get(ParameterConstants.SELECTOR_METHOD);
+		Object selectedSelector = parameters.get(ParameterConstants.SELECTOR_METHOD);
 
-		if (selectorName == null) {
+		if (selectedSelector == null) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTOR_METHOD
 					+ " cannot be null.");
 		}
 
-		if (!(selectorName instanceof String)) {
+		if (!(selectedSelector instanceof Selector)) {
 			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTOR_METHOD
-					+ " must be of type String.");
+					+ " must be of type Selector.");
 		}
 
-		Selector selector = (Selector) context.getBean(SelectorType.valueOf((String) selectorName).getType());
-
-		return selector;
+		return (Selector) selectedSelector;
 	}
 
 	protected Integer getPopulationSize(Map<String, Object> parameters) {
@@ -393,10 +369,5 @@ public class GeneticStrategyBuilder implements StrategyBuilder, ApplicationConte
 	 */
 	public void setKnownSolutionFitnessEvaluator(FitnessEvaluator knownSolutionFitnessEvaluator) {
 		this.knownSolutionFitnessEvaluator = knownSolutionFitnessEvaluator;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext context) throws BeansException {
-		this.context = context;
 	}
 }

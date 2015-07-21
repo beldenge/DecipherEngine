@@ -223,4 +223,9 @@ public class CipherSolutionFrequencyLengthFitnessEvaluator extends SolutionEvalu
 	public void setAverageWordLength(Double averageWordLength) {
 		this.averageWordLength = averageWordLength;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Frequency Length";
+	}
 }

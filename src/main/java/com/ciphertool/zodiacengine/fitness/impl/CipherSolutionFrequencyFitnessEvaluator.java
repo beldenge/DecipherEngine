@@ -201,4 +201,9 @@ public class CipherSolutionFrequencyFitnessEvaluator extends SolutionEvaluatorBa
 	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
 		this.expectedLetterFrequencies = expectedLetterFrequencies;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Frequency";
+	}
 }

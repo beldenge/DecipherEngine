@@ -80,4 +80,9 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends Know
 
 		return proximityToKnownSolution;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Known Solution Exponential";
+	}
 }

@@ -338,4 +338,9 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 	public void setSigma(double sigma) {
 		this.sigma = sigma;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Crowding";
+	}
 }

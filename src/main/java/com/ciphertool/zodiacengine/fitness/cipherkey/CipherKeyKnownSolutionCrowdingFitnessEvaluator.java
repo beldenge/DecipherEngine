@@ -74,4 +74,9 @@ public class CipherKeyKnownSolutionCrowdingFitnessEvaluator extends CipherKeyKno
 	public void setSigma(double sigma) {
 		this.sigma = sigma;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Known Solution Crowding";
+	}
 }

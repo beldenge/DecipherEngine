@@ -143,4 +143,9 @@ public class CipherSolutionFitnessEvaluator extends SolutionEvaluatorBase implem
 
 		return (double) total;
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution";
+	}
 }

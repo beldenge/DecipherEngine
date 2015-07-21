@@ -128,4 +128,9 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 	public void setGeneticStructure(Object cipher) {
 		// Not needed for this implementation
 	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Known Solution";
+	}
 }

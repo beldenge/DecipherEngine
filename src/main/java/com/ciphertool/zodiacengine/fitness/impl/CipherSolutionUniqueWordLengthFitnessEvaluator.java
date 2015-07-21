@@ -27,8 +27,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.entities.Ciphertext;
 import com.ciphertool.zodiacengine.entities.PlaintextSequence;
@@ -243,5 +243,10 @@ public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTrun
 		}
 
 		return extraPoints;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Solution Unique Word Length";
 	}
 }

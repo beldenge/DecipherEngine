@@ -33,25 +33,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithmType;
 import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithmType;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
-import com.ciphertool.genetics.algorithms.selection.modes.SelectorType;
 import com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorType;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator;
 
@@ -105,24 +99,15 @@ public class GeneticStrategyBuilderTest {
 	public void testGetFitnessEvaluator() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		String fitnessEvaluatorValue = FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD.name();
+		FitnessEvaluator fitnessEvaluatorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
 
-		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorValue);
-
-		CipherSolutionUniqueWordFitnessEvaluator fitnessEvalutorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
+		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		when(applicationContextMock.getBean(eq(CipherSolutionUniqueWordFitnessEvaluator.class))).thenReturn(
-				fitnessEvalutorToReturn);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
-
 		FitnessEvaluator fitnessEvaluatorReturned = geneticStrategyBuilder.getFitnessEvaluator(parametersMap);
 
-		verify(applicationContextMock, times(1)).getBean(eq(CipherSolutionUniqueWordFitnessEvaluator.class));
-		verifyNoMoreInteractions(applicationContextMock);
-		assertSame(fitnessEvalutorToReturn, fitnessEvaluatorReturned);
+		assertSame(fitnessEvaluatorToReturn, fitnessEvaluatorReturned);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -153,23 +138,14 @@ public class GeneticStrategyBuilderTest {
 	public void testGetCrossoverAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
-		String crossoverAlgorithmValue = CrossoverAlgorithmType.LOWEST_COMMON_GROUP.name();
+		CrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
 
-		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmValue);
-
-		LowestCommonGroupCrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
+		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmToReturn);
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		when(applicationContextMock.getBean(eq(LowestCommonGroupCrossoverAlgorithm.class))).thenReturn(
-				crossoverAlgorithmToReturn);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
-
 		CrossoverAlgorithm crossoverAlgorithmReturned = geneticStrategyBuilder.getCrossoverAlgorithm(parametersMap);
 
-		verify(applicationContextMock, times(1)).getBean(eq(LowestCommonGroupCrossoverAlgorithm.class));
-		verifyNoMoreInteractions(applicationContextMock);
 		assertSame(crossoverAlgorithmToReturn, crossoverAlgorithmReturned);
 	}
 
@@ -201,23 +177,14 @@ public class GeneticStrategyBuilderTest {
 	public void testGetMutationAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String mutationAlgorithmParameter = ParameterConstants.MUTATION_ALGORITHM;
-		String mutationAlgorithmValue = MutationAlgorithmType.CONSERVATIVE.name();
-
-		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmValue);
-
 		ConservativeMutationAlgorithm mutationAlgorithmToReturn = new ConservativeMutationAlgorithm();
+
+		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmToReturn);
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		when(applicationContextMock.getBean(eq(ConservativeMutationAlgorithm.class))).thenReturn(
-				mutationAlgorithmToReturn);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
-
 		MutationAlgorithm mutationAlgorithmReturned = geneticStrategyBuilder.getMutationAlgorithm(parametersMap);
 
-		verify(applicationContextMock, times(1)).getBean(eq(ConservativeMutationAlgorithm.class));
-		verifyNoMoreInteractions(applicationContextMock);
 		assertSame(mutationAlgorithmToReturn, mutationAlgorithmReturned);
 	}
 
@@ -248,23 +215,14 @@ public class GeneticStrategyBuilderTest {
 	public void testGetSelectionAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-		String selectionAlgorithmValue = SelectionAlgorithmType.PROBABILISTIC.name();
-
-		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmValue);
-
 		ProbabilisticSelectionAlgorithm selectionAlgorithmToReturn = new ProbabilisticSelectionAlgorithm();
+
+		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmToReturn);
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		when(applicationContextMock.getBean(eq(ProbabilisticSelectionAlgorithm.class))).thenReturn(
-				selectionAlgorithmToReturn);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
-
 		SelectionAlgorithm selectionAlgorithmReturned = geneticStrategyBuilder.getSelectionAlgorithm(parametersMap);
 
-		verify(applicationContextMock, times(1)).getBean(eq(ProbabilisticSelectionAlgorithm.class));
-		verifyNoMoreInteractions(applicationContextMock);
 		assertSame(selectionAlgorithmToReturn, selectionAlgorithmReturned);
 	}
 
@@ -295,22 +253,14 @@ public class GeneticStrategyBuilderTest {
 	public void testGetSelectorMethod() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String selectorMethodParameter = ParameterConstants.SELECTOR_METHOD;
-		String selectorMethodValue = SelectorType.TOURNAMENT.name();
-
-		parametersMap.put(selectorMethodParameter, selectorMethodValue);
-
 		TournamentSelector selectorMethodToReturn = new TournamentSelector();
+
+		parametersMap.put(selectorMethodParameter, selectorMethodToReturn);
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		when(applicationContextMock.getBean(eq(TournamentSelector.class))).thenReturn(selectorMethodToReturn);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
-
 		Selector selectorMethodReturned = geneticStrategyBuilder.getSelector(parametersMap);
 
-		verify(applicationContextMock, times(1)).getBean(eq(TournamentSelector.class));
-		verifyNoMoreInteractions(applicationContextMock);
 		assertSame(selectorMethodToReturn, selectorMethodReturned);
 	}
 
@@ -679,12 +629,11 @@ public class GeneticStrategyBuilderTest {
 		geneticStrategyBuilder.getCompareToKnown(parametersMap);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void testBuildStrategy() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		ApplicationContext applicationContextMock = mock(ApplicationContext.class);
-		geneticStrategyBuilder.setApplicationContext(applicationContextMock);
 
 		/*
 		 * Set up all parameters
@@ -694,24 +643,24 @@ public class GeneticStrategyBuilderTest {
 		parametersMap.put(cipherNameParameter, cipherNameValue);
 
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		String fitnessEvaluatorValue = FitnessEvaluatorType.CIPHER_SOLUTION_UNIQUE_WORD.name();
-		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorValue);
+		FitnessEvaluator fitnessEvaluatorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
+		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
-		String crossoverAlgorithmValue = CrossoverAlgorithmType.LOWEST_COMMON_GROUP.name();
-		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmValue);
+		CrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
+		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmToReturn);
 
 		String mutationAlgorithmParameter = ParameterConstants.MUTATION_ALGORITHM;
-		String mutationAlgorithmValue = MutationAlgorithmType.CONSERVATIVE.name();
-		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmValue);
+		MutationAlgorithm mutationAlgorithmToReturn = new ConservativeMutationAlgorithm();
+		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmToReturn);
 
 		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-		String selectionAlgorithmValue = SelectionAlgorithmType.PROBABILISTIC.name();
-		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmValue);
+		ProbabilisticSelectionAlgorithm selectionAlgorithmToReturn = new ProbabilisticSelectionAlgorithm();
+		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmToReturn);
 
 		String selectorMethodParameter = ParameterConstants.SELECTOR_METHOD;
-		String selectorMethodValue = SelectorType.TOURNAMENT.name();
-		parametersMap.put(selectorMethodParameter, selectorMethodValue);
+		TournamentSelector selectorToReturn = new TournamentSelector();
+		parametersMap.put(selectorMethodParameter, selectorToReturn);
 
 		String populationSizeParameter = ParameterConstants.POPULATION_SIZE;
 		Integer populationSizeValue = 1000;
@@ -758,25 +707,6 @@ public class GeneticStrategyBuilderTest {
 		when(cipherDaoMock.findByCipherName(eq(cipherNameValue))).thenReturn(cipher);
 		geneticStrategyBuilder.setCipherDao(cipherDaoMock);
 
-		CipherSolutionUniqueWordFitnessEvaluator fitnessEvalutorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
-		when(applicationContextMock.getBean(eq(CipherSolutionUniqueWordFitnessEvaluator.class))).thenReturn(
-				fitnessEvalutorToReturn);
-
-		LowestCommonGroupCrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
-		when(applicationContextMock.getBean(eq(LowestCommonGroupCrossoverAlgorithm.class))).thenReturn(
-				crossoverAlgorithmToReturn);
-
-		ConservativeMutationAlgorithm mutationAlgorithmToReturn = new ConservativeMutationAlgorithm();
-		when(applicationContextMock.getBean(eq(ConservativeMutationAlgorithm.class))).thenReturn(
-				mutationAlgorithmToReturn);
-
-		ProbabilisticSelectionAlgorithm selectionAlgorithmToReturn = new ProbabilisticSelectionAlgorithm();
-		when(applicationContextMock.getBean(eq(ProbabilisticSelectionAlgorithm.class))).thenReturn(
-				selectionAlgorithmToReturn);
-
-		TournamentSelector selectorMethodToReturn = new TournamentSelector();
-		when(applicationContextMock.getBean(eq(TournamentSelector.class))).thenReturn(selectorMethodToReturn);
-
 		CipherSolutionKnownSolutionFitnessEvaluator knownSolutionfitnessEvalutorToSet = new CipherSolutionKnownSolutionFitnessEvaluator();
 		geneticStrategyBuilder.setKnownSolutionFitnessEvaluator(knownSolutionfitnessEvalutorToSet);
 
@@ -789,11 +719,11 @@ public class GeneticStrategyBuilderTest {
 		 * Validate everything
 		 */
 		assertSame(cipher, geneticAlgorithmStrategy.getGeneticStructure());
-		assertSame(fitnessEvalutorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
+		assertSame(fitnessEvaluatorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
 		assertSame(crossoverAlgorithmToReturn, geneticAlgorithmStrategy.getCrossoverAlgorithm());
 		assertSame(mutationAlgorithmToReturn, geneticAlgorithmStrategy.getMutationAlgorithm());
 		assertSame(selectionAlgorithmToReturn, geneticAlgorithmStrategy.getSelectionAlgorithm());
-		assertSame(selectorMethodToReturn, geneticAlgorithmStrategy.getSelector());
+		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
 		assertSame(lifespanValue, geneticAlgorithmStrategy.getLifespan());
@@ -813,11 +743,11 @@ public class GeneticStrategyBuilderTest {
 		geneticAlgorithmStrategy = geneticStrategyBuilder.buildStrategy(parametersMap);
 
 		assertSame(cipher, geneticAlgorithmStrategy.getGeneticStructure());
-		assertSame(fitnessEvalutorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
+		assertSame(fitnessEvaluatorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
 		assertSame(crossoverAlgorithmToReturn, geneticAlgorithmStrategy.getCrossoverAlgorithm());
 		assertSame(mutationAlgorithmToReturn, geneticAlgorithmStrategy.getMutationAlgorithm());
 		assertSame(selectionAlgorithmToReturn, geneticAlgorithmStrategy.getSelectionAlgorithm());
-		assertSame(selectorMethodToReturn, geneticAlgorithmStrategy.getSelector());
+		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
 		assertSame(lifespanValue, geneticAlgorithmStrategy.getLifespan());
