@@ -20,6 +20,8 @@
 package com.ciphertool.zodiacengine.fitness;
 
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyCrowdingFitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionCrowdingFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
 import com.ciphertool.zodiacengine.fitness.impl.CipherSolutionFitnessEvaluator;
@@ -96,7 +98,15 @@ public enum FitnessEvaluatorType {
 	CIPHER_KEY_WORD_GRAPH(
 			"Cipher Key Word Graph",
 			CipherKeyWordGraphFitnessEvaluator.class,
-			"This will evaluate cipher solutions based on the number of English words that match the plaintext, giving higher fitness score for larger words.");
+			"This will evaluate cipher solutions based on the number of English words that match the plaintext, giving higher fitness score for larger words."),
+	CIPHER_KEY_CROWDING(
+			"Cipher Key Crowding",
+			CipherKeyCrowdingFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of English words that match the plaintext, giving higher fitness score for larger words.  It then reduces fitness by a factor equal to the number of other individuals in the population with a similar Hamming distance."),
+	CIPHER_KEY_KNOWN_SOLUTION_CROWDING(
+			"Cipher Key Known Solution Crowding",
+			CipherKeyKnownSolutionCrowdingFitnessEvaluator.class,
+			"This will evaluate cipher solutions based on the number of plaintext characters that match a known solution, skipping the last row of the Cipher.  It then reduces fitness by a factor equal to the number of other individuals in the population with a similar Hamming distance.");
 
 	private String displayName;
 	private Class<? extends FitnessEvaluator> type;

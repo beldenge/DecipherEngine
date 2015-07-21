@@ -31,6 +31,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -76,6 +77,8 @@ public class SolutionChromosome implements KeylessChromosome {
 	private int numberOfChildren = 0;
 
 	private List<Gene> genes = new ArrayList<Gene>();
+
+	private Population population;
 
 	@Transient
 	protected List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
@@ -713,5 +716,22 @@ public class SolutionChromosome implements KeylessChromosome {
 		}
 
 		return ((double) total) / ((double) this.plaintextCharacters.size());
+	}
+
+	/**
+	 * @return the population
+	 */
+	@Override
+	public Population getPopulation() {
+		return population;
+	}
+
+	/**
+	 * @param population
+	 *            the population to set
+	 */
+	@Override
+	public void setPopulation(Population population) {
+		this.population = population;
 	}
 }
