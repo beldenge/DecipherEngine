@@ -67,7 +67,7 @@ import com.ciphertool.zodiacengine.common.StrategyBuilder;
 import com.ciphertool.zodiacengine.controller.CipherSolutionController;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphFitnessEvaluator;
 
 public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
 	private static final long serialVersionUID = -7682403631152076457L;
@@ -512,7 +512,8 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyWordGraphFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext
+				.getBean(CipherKeyIndexedWordGraphFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
