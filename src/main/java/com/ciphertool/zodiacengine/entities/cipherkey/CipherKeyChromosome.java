@@ -43,6 +43,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 	private static Logger log = Logger.getLogger(CipherKeyChromosome.class);
 
+	@Transient
 	private static final int KEY_SIZE = 54;
 
 	@Id
@@ -67,6 +68,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 	private Map<String, Gene> genes = new HashMap<String, Gene>();
 
+	@Transient
 	private Population population;
 
 	public CipherKeyChromosome() {
