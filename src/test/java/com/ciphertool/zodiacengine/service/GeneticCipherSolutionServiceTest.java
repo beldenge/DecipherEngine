@@ -107,7 +107,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testBegin() throws IOException {
+	public void testBegin() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -166,7 +166,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testBegin_DebugMode() throws IOException {
+	public void testBegin_DebugMode() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -286,7 +286,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testResume() throws IOException {
+	public void testResume() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -306,7 +306,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testResume_ExceptionThrown() throws IOException {
+	public void testResume_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.toggleRunning();
 
@@ -357,7 +357,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testRunAlgorithmAutonomously() throws IOException {
+	public void testRunAlgorithmAutonomously() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.toggleRunning();
 
@@ -404,7 +404,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testRunAlgorithmAutonomously_ExceptionThrown() throws IOException {
+	public void testRunAlgorithmAutonomously_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.toggleRunning();
 
@@ -462,7 +462,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testRunAlgorithmStepwise() {
+	public void testRunAlgorithmStepwise() throws InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -483,7 +483,7 @@ public class GeneticCipherSolutionServiceTest {
 	}
 
 	@Test
-	public void testRunAlgorithmStepwise_ExceptionThrown() throws IOException {
+	public void testRunAlgorithmStepwise_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 		geneticCipherSolutionService.toggleRunning();
 
