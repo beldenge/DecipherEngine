@@ -45,9 +45,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
@@ -112,7 +112,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testSetId() {
-		BigInteger idToSet = new BigInteger("999");
+		String idToSet = "999";
 
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setId(idToSet);
@@ -862,7 +862,7 @@ public class SolutionChromosomeTest {
 
 	@Test
 	public void testEquals() {
-		BigInteger baseId = new BigInteger("12345");
+		String baseId = "12345";
 		Integer baseSolutionSetId = new Integer(678);
 		BigInteger baseCipherId = new BigInteger("999");
 		Date baseCreatedDate = new Date();
@@ -900,7 +900,7 @@ public class SolutionChromosomeTest {
 		assertEquals(base, solutionChromosomeEqualToBase);
 
 		SolutionChromosome solutionChromosomeWithDifferentId = new SolutionChromosome();
-		solutionChromosomeWithDifferentId.setId(new BigInteger("54321"));
+		solutionChromosomeWithDifferentId.setId("54321");
 		solutionChromosomeWithDifferentId.setSolutionSetId(baseSolutionSetId);
 		solutionChromosomeWithDifferentId.setCipherId(baseCipherId);
 		solutionChromosomeWithDifferentId.setDatabaseCreatedDate(baseCreatedDate);
@@ -910,7 +910,7 @@ public class SolutionChromosomeTest {
 		solutionChromosomeWithDifferentId.addGene(gene2.clone());
 		solutionChromosomeWithDifferentId.addGene(gene3.clone());
 
-		assertFalse(base.equals(solutionChromosomeWithDifferentId));
+		assertTrue(base.equals(solutionChromosomeWithDifferentId));
 
 		SolutionChromosome solutionChromosomeWithDifferentSolutionSetId = new SolutionChromosome();
 		solutionChromosomeWithDifferentSolutionSetId.setId(baseId);

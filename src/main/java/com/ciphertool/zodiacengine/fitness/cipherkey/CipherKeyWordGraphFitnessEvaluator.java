@@ -42,7 +42,7 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
 
 	protected Cipher cipher;
-	private int MIN_WORD_LENGTH = 2;
+	private int MIN_WORD_LENGTH = 4;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
@@ -71,8 +71,7 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
-				// Skip single-letter words
-				if (word.getId().getWord().length() > MIN_WORD_LENGTH
+				if (word.getId().getWord().length() >= MIN_WORD_LENGTH
 						&& lastRowBegin >= i + word.getId().getWord().length()
 						&& word.getId().getWord().toLowerCase().equals(
 								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {

@@ -187,6 +187,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 
 		long startInsert = System.currentTimeMillis();
 
+		// TODO: Candidate for batching/parallelization
 		for (Chromosome individual : individuals) {
 			// Set the solution set ID as the current timestamp
 			individual.setSolutionSetId(solutionSetId);

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Id;
@@ -34,6 +35,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
+import com.ciphertool.genetics.entities.Ancestry;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeylessChromosome;
@@ -44,8 +46,12 @@ public class SolutionChromosome implements KeylessChromosome {
 
 	private static Logger log = Logger.getLogger(SolutionChromosome.class);
 
+	/**
+	 * This initial value is only used as a unique identifier for the Chromosome's ancestry, but a different generated
+	 * ID is persisted to database.
+	 */
 	@Id
-	protected BigInteger id;
+	protected String id = UUID.randomUUID().toString();
 
 	@Indexed
 	protected Integer solutionSetId;
@@ -118,7 +124,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	/**
 	 * @return the id
 	 */
-	public BigInteger getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -126,7 +132,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(BigInteger id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -553,10 +559,6 @@ public class SolutionChromosome implements KeylessChromosome {
 		 */
 		copyChromosome.setFitness(this.fitness.doubleValue());
 		copyChromosome.setDatabaseCreatedDate(null);
-		/*
-		 * We don't need to clone the solutionSetId or cipherId as even though they are objects, they should remain
-		 * static.
-		 */
 
 		Gene nextGene = null;
 		for (Gene wordGene : this.genes) {
@@ -581,7 +583,6 @@ public class SolutionChromosome implements KeylessChromosome {
 		result = prime * result + ((cipherId == null) ? 0 : cipherId.hashCode());
 		result = prime * result + ((databaseCreatedDate == null) ? 0 : databaseCreatedDate.hashCode());
 		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + numberOfChildren;
 		result = prime * result + ((plaintextCharacters == null) ? 0 : plaintextCharacters.hashCode());
 		result = prime * result + ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
@@ -627,13 +628,6 @@ public class SolutionChromosome implements KeylessChromosome {
 				return false;
 			}
 		} else if (!genes.equals(other.genes)) {
-			return false;
-		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (numberOfChildren != other.numberOfChildren) {
@@ -733,5 +727,15 @@ public class SolutionChromosome implements KeylessChromosome {
 	@Override
 	public void setPopulation(Population population) {
 		this.population = population;
+	}
+
+	@Override
+	public Ancestry getAncestry() {
+		throw new UnsupportedOperationException("Method getAncestry() not implemented");
+	}
+
+	@Override
+	public void setAncestry(Ancestry ancestry) {
+		throw new UnsupportedOperationException("Method setAncestry() not implemented");
 	}
 }

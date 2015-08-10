@@ -19,10 +19,10 @@
 
 package com.ciphertool.zodiacengine.entities.cipherkey;
 
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.annotation.Id;
@@ -33,6 +33,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
+import com.ciphertool.genetics.entities.Ancestry;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeyedChromosome;
@@ -46,13 +47,19 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	@Transient
 	private static final int KEY_SIZE = 54;
 
+	/**
+	 * This initial value is only used as a unique identifier for the Chromosome's ancestry, but a different generated
+	 * ID is persisted to database.
+	 */
 	@Id
-	protected BigInteger id;
+	protected String id = UUID.randomUUID().toString();
 
 	@Indexed
 	protected Integer solutionSetId;
 
 	protected Cipher cipher;
+
+	private Ancestry ancestry;
 
 	@Transient
 	protected boolean evaluationNeeded = true;
@@ -93,7 +100,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	/**
 	 * @return the id
 	 */
-	public BigInteger getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -101,7 +108,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(BigInteger id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -269,7 +276,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		CipherKeyChromosome copyChromosome = new CipherKeyChromosome();
 
 		copyChromosome.genes = new HashMap<String, Gene>();
-		copyChromosome.setId(null);
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.setSolutionSetId(this.solutionSetId);
@@ -281,11 +287,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		 * cloned default is correct.
 		 */
 		copyChromosome.setFitness(this.fitness.doubleValue());
-
-		/*
-		 * We don't need to clone the solutionSetId or cipherId as even though they are objects, they should remain
-		 * static.
-		 */
 
 		Gene nextGene = null;
 		for (String key : this.genes.keySet()) {
@@ -304,7 +305,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		result = prime * result + age;
 		result = prime * result + ((cipher == null) ? 0 : cipher.hashCode());
 		result = prime * result + ((genes == null) ? 0 : genes.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + numberOfChildren;
 		result = prime * result + ((solutionSetId == null) ? 0 : solutionSetId.hashCode());
 		return result;
@@ -337,13 +337,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 				return false;
 			}
 		} else if (!genes.equals(other.genes)) {
-			return false;
-		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (numberOfChildren != other.numberOfChildren) {
@@ -434,5 +427,15 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	@Override
 	public void setPopulation(Population population) {
 		this.population = population;
+	}
+
+	@Override
+	public Ancestry getAncestry() {
+		return ancestry;
+	}
+
+	@Override
+	public void setAncestry(Ancestry ancestry) {
+		this.ancestry = ancestry;
 	}
 }

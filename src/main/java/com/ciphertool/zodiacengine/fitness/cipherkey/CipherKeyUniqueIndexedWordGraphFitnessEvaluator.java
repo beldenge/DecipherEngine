@@ -38,20 +38,18 @@ import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
-public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
-
+	private int matchThreshold = 2;
 	protected Cipher cipher;
-	private int MIN_WORD_LENGTH = 4;
+	private int minWordLength = 4;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
 
 	private List<Word> topWords = new ArrayList<Word>();
 
-	private int minCrowdSize;
-	private double penaltyFactor;
-	private double sigma;
+	private IndexNode rootNode = new IndexNode();
 
 	@PostConstruct
 	public void init() {
@@ -63,28 +61,118 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 			log.error(message);
 			throw new IllegalStateException(message);
 		}
+
+		String lowerCaseWord;
+		for (Word word : topWords) {
+			if (word.getId().getWord().length() < minWordLength) {
+				continue;
+			}
+
+			lowerCaseWord = word.getId().getWord().toLowerCase();
+			populateMap(rootNode, lowerCaseWord, lowerCaseWord);
+		}
+	}
+
+	protected void populateMap(IndexNode currentNode, String wordPart, String terminal) {
+		Character firstLetter = wordPart.charAt(0);
+
+		if (wordPart.length() == 1) {
+			if (currentNode.containsChild(firstLetter)) {
+				currentNode.getChild(firstLetter).setTerminal(terminal);
+			} else {
+				currentNode.putChild(firstLetter, new IndexNode(terminal));
+			}
+		} else {
+			if (!currentNode.containsChild(firstLetter)) {
+				currentNode.putChild(firstLetter, new IndexNode());
+			}
+
+			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1), terminal);
+		}
+	}
+
+	protected String findLongestWordMatch(IndexNode node, int index, String solutionString, String longestMatch) {
+		if (index >= solutionString.length()) {
+			return longestMatch;
+		}
+
+		Character currentChar = solutionString.charAt(index);
+
+		if (node.getTerminal() != null) {
+			longestMatch = node.getTerminal();
+		}
+
+		if (node.containsChild(currentChar)) {
+			return findLongestWordMatch(node.getChild(currentChar), ++index, solutionString, longestMatch);
+		} else {
+			return longestMatch;
+		}
+	}
+
+	private class IndexNode {
+		private String terminal;
+		private Map<Character, IndexNode> letterMap = new HashMap<Character, IndexNode>();
+
+		/**
+		 * Default no-args constructor
+		 */
+		public IndexNode() {
+		}
+
+		/**
+		 * @param terminal
+		 */
+		public IndexNode(String terminal) {
+			super();
+			this.terminal = terminal;
+		}
+
+		public boolean containsChild(Character c) {
+			return this.letterMap.containsKey(c);
+		}
+
+		public IndexNode getChild(Character c) {
+			return this.letterMap.get(c);
+		}
+
+		public void putChild(Character c, IndexNode child) {
+			this.letterMap.put(c, child);
+		}
+
+		/**
+		 * @return the terminal
+		 */
+		public String getTerminal() {
+			return terminal;
+		}
+
+		/**
+		 * @param terminal
+		 *            the terminal to set
+		 */
+		public void setTerminal(String terminal) {
+			this.terminal = terminal;
+		}
 	}
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
-
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
 		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
-		for (int i = 0; i < lastRowBegin; i++) {
-			for (Word word : topWords) {
-				if (word.getId().getWord().length() >= MIN_WORD_LENGTH
-						&& lastRowBegin >= i + word.getId().getWord().length()
-						&& word.getId().getWord().toLowerCase().equals(
-								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {
-					if (!matchMap.containsKey(i)) {
-						matchMap.put(i, new ArrayList<Match>());
-					}
+		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-					matchMap.get(i).add(new Match(i, i + word.getId().getWord().length() - 1, word.getId().getWord()));
+		String longestMatch;
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			longestMatch = findLongestWordMatch(rootNode, i, currentSolutionString, null);
+
+			if (longestMatch != null) {
+				if (!matchMap.containsKey(i)) {
+					matchMap.put(i, new ArrayList<Match>());
 				}
+
+				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
@@ -112,7 +200,6 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 		long score;
 		long highestScore = 0;
 
-		@SuppressWarnings("unused")
 		String bestBranch = "";
 
 		for (String branch : branches) {
@@ -128,20 +215,35 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
-		double fitness = Double.valueOf(highestScore);
+		double uniquenessPenalty = highestScore * determineUniquenessPenalty(bestBranch.split(", "));
 
-		int crowdSize = 1;
-		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
-			if (chromosome.similarityTo(other) > sigma) {
-				crowdSize++;
+		return ((double) (highestScore)) - uniquenessPenalty;
+	}
+
+	private double determineUniquenessPenalty(String[] words) {
+		Map<String, Integer> wordOccurrenceMap = new HashMap<String, Integer>();
+
+		/*
+		 * Count the number of occurrences of each word and stick it in a map.
+		 */
+		for (String word : words) {
+			if (!wordOccurrenceMap.containsKey(word)) {
+				wordOccurrenceMap.put(word, 0);
 			}
+
+			wordOccurrenceMap.put(word, wordOccurrenceMap.get(word) + 1);
 		}
 
-		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness = fitness * penaltyFactor;
+		double penalty = 0;
+
+		/*
+		 * We don't care about the Strings themselves anymore. Just their numbers of occurrences.
+		 */
+		for (Integer numOccurrences : wordOccurrenceMap.values()) {
+			penalty += (0.01 * (numOccurrences - matchThreshold));
 		}
 
-		return fitness;
+		return penalty;
 	}
 
 	protected void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap,
@@ -311,35 +413,26 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 		this.wordListDao = wordListDao;
 	}
 
-	/**
-	 * @param minCrowdSize
-	 *            the minGroupSize to set
-	 */
-	@Required
-	public void setMinCrowdSize(int minCrowdSize) {
-		this.minCrowdSize = minCrowdSize;
-	}
-
-	/**
-	 * @param penaltyFactor
-	 *            the penaltyFactor to set
-	 */
-	@Required
-	public void setPenaltyFactor(double penaltyFactor) {
-		this.penaltyFactor = penaltyFactor;
-	}
-
-	/**
-	 * @param sigma
-	 *            the sigma to set
-	 */
-	@Required
-	public void setSigma(double sigma) {
-		this.sigma = sigma;
-	}
-
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Crowding";
+		return "Cipher Key Unique Indexed Word Graph";
+	}
+
+	/**
+	 * @param matchThreshold
+	 *            the matchThreshold to set
+	 */
+	@Required
+	public void setMatchThreshold(int matchThreshold) {
+		this.matchThreshold = matchThreshold;
+	}
+
+	/**
+	 * @param minWordLength
+	 *            the minWordLength to set
+	 */
+	@Required
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
 	}
 }
