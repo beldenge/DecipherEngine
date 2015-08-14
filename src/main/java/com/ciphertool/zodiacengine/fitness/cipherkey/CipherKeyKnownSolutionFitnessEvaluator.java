@@ -109,8 +109,6 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 			if (knownSolution.getGenes().get(key).equals(
 					((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)))) {
 				total++;
-
-				((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)).setHasMatch(true);
 			}
 		}
 

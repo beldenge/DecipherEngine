@@ -172,4 +172,6 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="matchThreshold" value="${fitness.match.threshold}" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator" />
 </beans>
