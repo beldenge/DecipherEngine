@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.entities.Word;
@@ -34,7 +36,7 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher cipher;
-	private int MIN_WORD_LENGTH = 4;
+	private int minWordLength;
 	private static List<Word> topWords = new ArrayList<Word>();
 
 	static {
@@ -115,7 +117,7 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 	public void init() {
 		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getId().getWord().length() < MIN_WORD_LENGTH) {
+			if (word.getId().getWord().length() < minWordLength) {
 				continue;
 			}
 
@@ -410,6 +412,15 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+	}
+
+	/**
+	 * @param minWordLength
+	 *            the minWordLength to set
+	 */
+	@Required
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
 	}
 
 	@Override

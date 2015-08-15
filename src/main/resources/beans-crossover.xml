@@ -62,4 +62,24 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
+	
+	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunitySwapCrossoverAlgorithm" id="equalOpportunitySwapCrossoverAlgorithm">
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
+		<property name="coin" ref="coin" />
+		<property name="maxGenerations" value="${fitness.ancestry.max}" />
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
+		<property name="coin" ref="coin" />
+		<property name="maxGenerations" value="${fitness.ancestry.max}" />
+		<property name="fitnessEvaluator" ref="cipherKeyIndexedWordGraphCorpusFitnessEvaluator" />
+	</bean>
+	
+	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedSwapCrossoverAlgorithm" id="equalOpportunityGuaranteedSwapCrossoverAlgorithm">
+		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
+		<property name="coin" ref="coin" />
+		<property name="maxGenerations" value="${fitness.ancestry.max}" />
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
+	</bean>
 </beans>

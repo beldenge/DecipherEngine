@@ -42,7 +42,7 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 	private Logger log = Logger.getLogger(getClass());
 	private int matchThreshold = 2;
 	protected Cipher cipher;
-	private int minWordLength = 4;
+	private int minWordLength;
 	private int top;
 
 	private UniqueWordListDao wordListDao;

@@ -42,7 +42,7 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 	private Logger log = Logger.getLogger(getClass());
 
 	protected Cipher cipher;
-	private int MIN_WORD_LENGTH = 4;
+	private int minWordLength;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
@@ -68,7 +68,7 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 
 		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getId().getWord().length() < MIN_WORD_LENGTH) {
+			if (word.getId().getWord().length() < minWordLength) {
 				continue;
 			}
 
@@ -428,6 +428,15 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 	@Required
 	public void setSigma(double sigma) {
 		this.sigma = sigma;
+	}
+
+	/**
+	 * @param minWordLength
+	 *            the minWordLength to set
+	 */
+	@Required
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
 	}
 
 	@Override

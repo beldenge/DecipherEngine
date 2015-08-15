@@ -137,6 +137,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator" id="cipherKeyWordGraphFitnessEvaluator">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyCrowdingFitnessEvaluator" id="defaultFitnessEvaluator">
@@ -145,6 +146,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyKnownSolutionCrowdingFitnessEvaluator" id="cipherKeyKnownSolutionCrowdingFitnessEvaluator">
@@ -156,6 +158,7 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphFitnessEvaluator" id="cipherKeyIndexedWordGraphFitnessEvaluator">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedCrowdingWordGraphFitnessEvaluator" id="cipherKeyIndexedCrowdingWordGraphFitnessEvaluator">
@@ -164,6 +167,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyUniqueIndexedWordGraphFitnessEvaluator" id="cipherKeyUniqueIndexedWordGraphFitnessEvaluator">
@@ -173,5 +177,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
-	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator" />
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator">
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
 </beans>
