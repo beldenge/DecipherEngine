@@ -92,7 +92,7 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends Fitness
 	public static void setUp() {
 		fitnessEvaluator = new CipherKeyIndexedWordGraphCorpusFitnessEvaluator();
 
-		fitnessEvaluator.setMinWordLength(1);
+		fitnessEvaluator.setMinWordLength(4);
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 	}
