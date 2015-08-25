@@ -19,8 +19,19 @@
 
 package com.ciphertool.zodiacengine.fitness.cipherkey;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.lang.reflect.Field;
+
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
@@ -88,6 +99,7 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends Fitness
 		solution.putGene("box", new CipherKeyGene(solution, "y"));
 	}
 
+	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
 		fitnessEvaluator = new CipherKeyIndexedWordGraphCorpusFitnessEvaluator();
@@ -95,6 +107,23 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends Fitness
 		fitnessEvaluator.setMinWordLength(4);
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		Logger logMock = mock(Logger.class);
+		when(logMock.isDebugEnabled()).thenReturn(true);
+
+		doAnswer(new Answer() {
+			public Object answer(InvocationOnMock invocation) {
+				Object[] args = invocation.getArguments();
+
+				System.out.println(args[0]);
+
+				return null;
+			}
+		}).when(logMock).debug(anyString());
+
+		Field logField = ReflectionUtils.findField(CipherKeyIndexedWordGraphCorpusFitnessEvaluator.class, "log");
+		ReflectionUtils.makeAccessible(logField);
+		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 	}
 
 	@Test

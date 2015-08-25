@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
@@ -35,6 +36,8 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
  */
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger log = Logger.getLogger(getClass());
+
 	protected Cipher cipher;
 	private int minWordLength;
 	private static List<Word> topWords = new ArrayList<Word>();
@@ -60,18 +63,16 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 		topWords.add(new Word(new WordId("man", null)));
 		topWords.add(new Word(new WordId("most", null)));
 		topWords.add(new Word(new WordId("moat", null))); // this misspelling is repeated twice
-		topWords.add(new Word(new WordId("dangerous", null)));
+		// topWords.add(new Word(new WordId("dangerous", null)));
 		topWords.add(new Word(new WordId("animal", null)));
 		topWords.add(new Word(new WordId("of", null)));
 		topWords.add(new Word(new WordId("all", null)));
 		topWords.add(new Word(new WordId("to", null)));
-		topWords.add(new Word(new WordId("all", null)));
 		topWords.add(new Word(new WordId("kill", null)));
 		topWords.add(new Word(new WordId("something", null)));
 		topWords.add(new Word(new WordId("gives", null)));
 		topWords.add(new Word(new WordId("me", null)));
 		topWords.add(new Word(new WordId("thrilling", null)));
-		topWords.add(new Word(new WordId("experience", null)));
 		topWords.add(new Word(new WordId("even", null)));
 		topWords.add(new Word(new WordId("better", null)));
 		topWords.add(new Word(new WordId("than", null)));
@@ -109,6 +110,119 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 		topWords.add(new Word(new WordId("collecting", null)));
 		topWords.add(new Word(new WordId("for", null)));
 		topWords.add(new Word(new WordId("afterlife", null)));
+
+		// 2-grams
+		topWords.add(new Word(new WordId("ilike", null)));
+		topWords.add(new Word(new WordId("likekilling", null)));
+		topWords.add(new Word(new WordId("killingpeople", null)));
+		topWords.add(new Word(new WordId("becauseit", null)));
+		topWords.add(new Word(new WordId("itis", null)));
+		topWords.add(new Word(new WordId("isso", null)));
+		topWords.add(new Word(new WordId("somuch", null)));
+		topWords.add(new Word(new WordId("muchfun", null)));
+		topWords.add(new Word(new WordId("ismore", null)));
+		topWords.add(new Word(new WordId("morefun", null)));
+		topWords.add(new Word(new WordId("funthan", null)));
+		topWords.add(new Word(new WordId("thankilling", null)));
+		topWords.add(new Word(new WordId("wildgame", null)));
+		topWords.add(new Word(new WordId("inthe", null)));
+		topWords.add(new Word(new WordId("theforrest", null)));
+		topWords.add(new Word(new WordId("becauseman", null)));
+		topWords.add(new Word(new WordId("manis", null)));
+		topWords.add(new Word(new WordId("isthe", null)));
+		topWords.add(new Word(new WordId("themoat", null)));
+		topWords.add(new Word(new WordId("ofall", null)));
+		topWords.add(new Word(new WordId("tokill", null)));
+		topWords.add(new Word(new WordId("killsomething", null)));
+		topWords.add(new Word(new WordId("givesme", null)));
+		topWords.add(new Word(new WordId("methe", null)));
+		topWords.add(new Word(new WordId("iseven", null)));
+		topWords.add(new Word(new WordId("evenbetter", null)));
+		topWords.add(new Word(new WordId("betterthan", null)));
+		topWords.add(new Word(new WordId("thangetting", null)));
+		topWords.add(new Word(new WordId("gettingyour", null)));
+		topWords.add(new Word(new WordId("rocksoff", null)));
+		topWords.add(new Word(new WordId("offwith", null)));
+		topWords.add(new Word(new WordId("witha", null)));
+		topWords.add(new Word(new WordId("agirl", null)));
+		topWords.add(new Word(new WordId("thebest", null)));
+		topWords.add(new Word(new WordId("bestpart", null)));
+		topWords.add(new Word(new WordId("partof", null)));
+		topWords.add(new Word(new WordId("ofit", null)));
+		topWords.add(new Word(new WordId("wheni", null)));
+		topWords.add(new Word(new WordId("idie", null)));
+		topWords.add(new Word(new WordId("diei", null)));
+		topWords.add(new Word(new WordId("iwill", null)));
+		topWords.add(new Word(new WordId("willbe", null)));
+		topWords.add(new Word(new WordId("bereborn", null)));
+		topWords.add(new Word(new WordId("rebornin", null)));
+		topWords.add(new Word(new WordId("allthe", null)));
+		topWords.add(new Word(new WordId("thei", null)));
+		topWords.add(new Word(new WordId("ihave", null)));
+		topWords.add(new Word(new WordId("havekilled", null)));
+		topWords.add(new Word(new WordId("willbecome", null)));
+		topWords.add(new Word(new WordId("becomemy", null)));
+		topWords.add(new Word(new WordId("myslave", null)));
+		topWords.add(new Word(new WordId("willnot", null)));
+		topWords.add(new Word(new WordId("notgive", null)));
+		topWords.add(new Word(new WordId("giveyou", null)));
+		topWords.add(new Word(new WordId("youmy", null)));
+		topWords.add(new Word(new WordId("myname", null)));
+		topWords.add(new Word(new WordId("namebecause", null)));
+		topWords.add(new Word(new WordId("becauseyou", null)));
+		topWords.add(new Word(new WordId("youwill", null)));
+		topWords.add(new Word(new WordId("willtry", null)));
+		topWords.add(new Word(new WordId("tryto", null)));
+		topWords.add(new Word(new WordId("downor", null)));
+		topWords.add(new Word(new WordId("orstop", null)));
+		topWords.add(new Word(new WordId("stopmy", null)));
+		topWords.add(new Word(new WordId("collectingof", null)));
+		topWords.add(new Word(new WordId("ofslaves", null)));
+		topWords.add(new Word(new WordId("formy", null)));
+
+		// 3-grams
+		topWords.add(new Word(new WordId("becauseitis", null)));
+		topWords.add(new Word(new WordId("itisso", null)));
+		topWords.add(new Word(new WordId("issomuch", null)));
+		topWords.add(new Word(new WordId("somuchfun", null)));
+		topWords.add(new Word(new WordId("itismore", null)));
+		topWords.add(new Word(new WordId("ismorefun", null)));
+		topWords.add(new Word(new WordId("morefunthan", null)));
+		topWords.add(new Word(new WordId("givesmethe", null)));
+		topWords.add(new Word(new WordId("itiseven", null)));
+		topWords.add(new Word(new WordId("isevenbetter", null)));
+		topWords.add(new Word(new WordId("evenbetterthan", null)));
+		topWords.add(new Word(new WordId("withagirl", null)));
+		topWords.add(new Word(new WordId("thebestpart", null)));
+		topWords.add(new Word(new WordId("bestpartof", null)));
+		topWords.add(new Word(new WordId("partofit", null)));
+		topWords.add(new Word(new WordId("whenidie", null)));
+		topWords.add(new Word(new WordId("iwillbe", null)));
+		topWords.add(new Word(new WordId("ihavekilled", null)));
+		topWords.add(new Word(new WordId("iwillnot", null)));
+		topWords.add(new Word(new WordId("willnotgive", null)));
+		topWords.add(new Word(new WordId("notgiveyou", null)));
+		topWords.add(new Word(new WordId("giveyoumy", null)));
+		topWords.add(new Word(new WordId("youmyname", null)));
+		topWords.add(new Word(new WordId("becauseyouwill", null)));
+		topWords.add(new Word(new WordId("willtryto", null)));
+
+		// 4-grams
+		topWords.add(new Word(new WordId("issomuchfun", null)));
+		topWords.add(new Word(new WordId("becauseitisso", null)));
+		topWords.add(new Word(new WordId("itissomuch", null)));
+		topWords.add(new Word(new WordId("ismorefunthan", null)));
+		topWords.add(new Word(new WordId("isevenbetterthan", null)));
+		topWords.add(new Word(new WordId("thebestpartof", null)));
+		topWords.add(new Word(new WordId("bestpartofit", null)));
+		topWords.add(new Word(new WordId("iwillnotgive", null)));
+		topWords.add(new Word(new WordId("willnotgiveyou", null)));
+
+		// 5-grams
+		topWords.add(new Word(new WordId("becauseitissomuch", null)));
+		topWords.add(new Word(new WordId("itissomuchfun", null)));
+		topWords.add(new Word(new WordId("thebestpartofit", null)));
+		topWords.add(new Word(new WordId("iwillnotgiveyou", null)));
 	}
 
 	private IndexNode rootNode = new IndexNode();
@@ -253,7 +367,6 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 		long score;
 		long highestScore = 0;
 
-		@SuppressWarnings("unused")
 		String bestBranch = "";
 
 		for (String branch : branches) {
@@ -267,6 +380,10 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 				highestScore = score;
 				bestBranch = branch;
 			}
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
 		}
 
 		return Double.valueOf(highestScore);

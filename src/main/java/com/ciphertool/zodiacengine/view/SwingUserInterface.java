@@ -56,7 +56,7 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.cipherkey.StandardMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.cipherkey.MultipleGuaranteedFitnessMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
@@ -576,7 +576,8 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
 		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
-		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(StandardMutationAlgorithm.class));
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext
+				.getBean(MultipleGuaranteedFitnessMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

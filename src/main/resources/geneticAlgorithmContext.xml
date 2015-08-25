@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
-		<property name="chromosomePrinter" ref="cipherKeyChromosomePrinter" />
+		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
@@ -53,9 +53,14 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 	</bean>
-	
+
 	<bean class="com.ciphertool.zodiacengine.common.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.common.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
+		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 </beans>
