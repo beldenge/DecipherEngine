@@ -63,24 +63,15 @@ CREATE INDEX idx_word
 CREATE TABLE n_gram
 (
   n_gram character varying NOT NULL,
-  frequency_weight integer DEFAULT 1,
-  CONSTRAINT pk_n_gram PRIMARY KEY (n_gram)
+  frequency_weight integer NOT NULL DEFAULT 1,
+  num_words smallint NOT NULL,
+  CONSTRAINT pk_n_gram_num_words PRIMARY KEY (n_gram, num_words)
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE n_gram
   OWNER TO postgres;
-
-  
--- Index: idx_n_gram
-
--- DROP INDEX idx_n_gram;
-
-CREATE INDEX idx_n_gram
-  ON n_gram
-  USING btree
-  (n_gram COLLATE pg_catalog."default");
   
  
 -- Table: execution_stats

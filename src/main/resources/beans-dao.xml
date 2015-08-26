@@ -14,16 +14,36 @@ You should have received a copy of the GNU General Public License along with Zod
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
+	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao" id="wordListDao">
 		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
+		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
 	</bean>
 
 	<bean class="com.ciphertool.sentencebuilder.dao.UniqueWordListDao" id="uniqueWordListDao">
 		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
+		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
+	</bean>
+	
+	<bean class="com.ciphertool.sentencebuilder.dao.UniqueNGramListDao" id="uniqueNGramListDao">
+		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.NGramDao">
+			<ref bean="nGramDao" />
+		</constructor-arg>
+		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.ngram.two.topWords}" />
+		<constructor-arg index="2" type="java.lang.Integer" value="${fitness.ngram.three.topWords}" />
+		<constructor-arg index="3" type="java.lang.Integer" value="${fitness.ngram.four.topWords}" />
+		<constructor-arg index="4" type="java.lang.Integer" value="${fitness.ngram.five.topWords}" />
 	</bean>
 	
 	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
@@ -40,10 +60,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.PlaintextSequenceDao" id="sequenceDao" />
-
-	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.CipherDao" id="cipherDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />

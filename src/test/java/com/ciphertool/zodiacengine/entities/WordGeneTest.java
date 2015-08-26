@@ -33,9 +33,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
@@ -85,7 +85,8 @@ public class WordGeneTest {
 
 	@Test
 	public void testConstructorNullWordId() {
-		Word wordWithNullId = new Word(null);
+		WordId nullWordId = null;
+		Word wordWithNullId = new Word(nullWordId);
 		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
