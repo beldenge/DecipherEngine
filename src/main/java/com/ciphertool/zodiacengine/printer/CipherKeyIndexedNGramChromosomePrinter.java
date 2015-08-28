@@ -17,9 +17,10 @@
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.fitness.cipherkey;
+package com.ciphertool.zodiacengine.printer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,25 +30,26 @@ import javax.annotation.PostConstruct;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.sentencebuilder.dao.NGramListDao;
 import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
+import com.ciphertool.sentencebuilder.entities.NGram;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
-import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
-public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter {
 	private Logger log = Logger.getLogger(getClass());
-	private int matchThreshold = 2;
-	protected Cipher cipher;
+
 	private int minWordLength;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
+	private NGramListDao nGramListDao;
 
 	private List<Word> topWords = new ArrayList<Word>();
 
@@ -55,7 +57,15 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 
 	@PostConstruct
 	public void init() {
-		topWords = wordListDao.getTopWords(top);
+		topWords.addAll(wordListDao.getTopWords(top));
+
+		Map<Integer, List<NGram>> mapOfNGramLists = nGramListDao.getMapOfNGramLists();
+
+		for (Integer numWords : mapOfNGramLists.keySet()) {
+			for (NGram nGram : mapOfNGramLists.get(numWords)) {
+				topWords.add(new Word(nGram));
+			}
+		}
 
 		if (topWords == null || topWords.size() < top) {
 			String message = "Attempted to get top " + top + " words from populated DAO, but only "
@@ -76,13 +86,15 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public String print(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
+		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns() * (((CipherKeyChromosome) chromosome)
+				.getCipher().getRows() - 1));
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
+
+		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
@@ -136,40 +148,82 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 			}
 		}
 
-		double uniquenessPenalty = highestScore * determineUniquenessPenalty(bestBranch.split(", "));
+		StringBuffer sb = new StringBuffer();
 
-		return ((double) (highestScore)) - uniquenessPenalty;
-	}
+		sb.append("Solution [id=" + chromosome.getId() + ", cipherId="
+				+ ((CipherKeyChromosome) chromosome).getCipher().getId() + ", fitness="
+				+ String.format("%1$,.2f", chromosome.getFitness()) + ", age=" + chromosome.getAge()
+				+ ", numberOfChildren=" + chromosome.getNumberOfChildren() + ", evaluationNeeded="
+				+ chromosome.isEvaluationNeeded() + "]\n");
 
-	private double determineUniquenessPenalty(String[] words) {
-		Map<String, Integer> wordOccurrenceMap = new HashMap<String, Integer>();
+		List<String> words = new ArrayList<String>();
 
-		/*
-		 * Count the number of occurrences of each word and stick it in a map.
-		 */
-		for (String word : words) {
-			if (!wordOccurrenceMap.containsKey(word)) {
-				wordOccurrenceMap.put(word, 0);
+		// In the off chance that no words were found at all
+		if (!bestBranch.isEmpty()) {
+			words.addAll(Arrays.asList(bestBranch.split(", ")));
+		}
+
+		String word = words.isEmpty() ? null : words.get(0);
+		for (int i = 0; i < fullSolutionString.length(); i++) {
+			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i + word.length()))) {
+				sb.append("[");
+
+				for (int j = 0; j < word.length(); j++) {
+					if (j > 0) {
+						sb.append(" ");
+					}
+
+					sb.append(fullSolutionString.charAt(i + j));
+
+					if (j < word.length() - 1) {
+						sb.append(" ");
+					} else if (j == word.length() - 1) {
+						sb.append("]");
+					}
+
+					/*
+					 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function
+					 * doesn't break.
+					 */
+					if (((i + j + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
+						sb.append("\n");
+					} else {
+						sb.append(" ");
+					}
+
+					// Prevent ArrayIndexOutOfBoundsException
+					if (i + j >= fullSolutionString.length()) {
+						break;
+					}
+				}
+
+				i += word.length() - 1;
+
+				words.remove(0);
+
+				if (!words.isEmpty()) {
+					word = words.get(0);
+				}
+
+				continue;
 			}
 
-			wordOccurrenceMap.put(word, wordOccurrenceMap.get(word) + 1);
+			sb.append(" ");
+			sb.append(fullSolutionString.charAt(i));
+			sb.append(" ");
+
+			/*
+			 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
+			 * break.
+			 */
+			if (((i + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
+				sb.append("\n");
+			} else {
+				sb.append(" ");
+			}
 		}
 
-		double penalty = 0;
-
-		/*
-		 * We don't care about the Strings themselves anymore. Just their numbers of occurrences.
-		 */
-		for (Integer numOccurrences : wordOccurrenceMap.values()) {
-			penalty += (0.01 * (numOccurrences - matchThreshold));
-		}
-
-		return penalty;
-	}
-
-	@Override
-	public void setGeneticStructure(Object cipher) {
-		this.cipher = (Cipher) cipher;
+		return sb.toString();
 	}
 
 	/**
@@ -197,18 +251,13 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 		this.wordListDao = wordListDao;
 	}
 
-	@Override
-	public String getDisplayName() {
-		return "Cipher Key Unique Indexed Word Graph";
-	}
-
 	/**
-	 * @param matchThreshold
-	 *            the matchThreshold to set
+	 * @param nGramListDao
+	 *            the nGramListDao to set
 	 */
 	@Required
-	public void setMatchThreshold(int matchThreshold) {
-		this.matchThreshold = matchThreshold;
+	public void setnGramListDao(NGramListDao nGramListDao) {
+		this.nGramListDao = nGramListDao;
 	}
 
 	/**

@@ -17,11 +17,10 @@
  * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.common;
+package com.ciphertool.zodiacengine.printer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,13 +34,16 @@ import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
+import com.ciphertool.sentencebuilder.wordgraph.Match;
+import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
+import com.ciphertool.zodiacengine.common.WordGraphUtils;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
 public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 	private Logger log = Logger.getLogger(getClass());
 
-	private int minWordLength = 4;
+	private int minWordLength;
 	private int top;
 
 	private UniqueWordListDao wordListDao;
@@ -68,89 +70,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 			}
 
 			lowerCaseWord = word.getId().getWord().toLowerCase();
-			populateMap(rootNode, lowerCaseWord, lowerCaseWord);
-		}
-	}
-
-	protected void populateMap(IndexNode currentNode, String wordPart, String terminal) {
-		Character firstLetter = wordPart.charAt(0);
-
-		if (wordPart.length() == 1) {
-			if (currentNode.containsChild(firstLetter)) {
-				currentNode.getChild(firstLetter).setTerminal(terminal);
-			} else {
-				currentNode.putChild(firstLetter, new IndexNode(terminal));
-			}
-		} else {
-			if (!currentNode.containsChild(firstLetter)) {
-				currentNode.putChild(firstLetter, new IndexNode());
-			}
-
-			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1), terminal);
-		}
-	}
-
-	protected String findLongestWordMatch(IndexNode node, int index, String solutionString, String longestMatch) {
-		if (index >= solutionString.length()) {
-			return longestMatch;
-		}
-
-		Character currentChar = solutionString.charAt(index);
-
-		if (node.getTerminal() != null) {
-			longestMatch = node.getTerminal();
-		}
-
-		if (node.containsChild(currentChar)) {
-			return findLongestWordMatch(node.getChild(currentChar), ++index, solutionString, longestMatch);
-		} else {
-			return longestMatch;
-		}
-	}
-
-	private class IndexNode {
-		private String terminal;
-		private Map<Character, IndexNode> letterMap = new HashMap<Character, IndexNode>();
-
-		/**
-		 * Default no-args constructor
-		 */
-		public IndexNode() {
-		}
-
-		/**
-		 * @param terminal
-		 */
-		public IndexNode(String terminal) {
-			super();
-			this.terminal = terminal;
-		}
-
-		public boolean containsChild(Character c) {
-			return this.letterMap.containsKey(c);
-		}
-
-		public IndexNode getChild(Character c) {
-			return this.letterMap.get(c);
-		}
-
-		public void putChild(Character c, IndexNode child) {
-			this.letterMap.put(c, child);
-		}
-
-		/**
-		 * @return the terminal
-		 */
-		public String getTerminal() {
-			return terminal;
-		}
-
-		/**
-		 * @param terminal
-		 *            the terminal to set
-		 */
-		public void setTerminal(String terminal) {
-			this.terminal = terminal;
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord, lowerCaseWord);
 		}
 	}
 
@@ -161,13 +81,13 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns() * (((CipherKeyChromosome) chromosome)
 				.getCipher().getRows() - 1));
 
-		String fullSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
+		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
 		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = findLongestWordMatch(rootNode, i, currentSolutionString, null);
+			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, i, currentSolutionString, null);
 
 			if (longestMatch != null) {
 				if (!matchMap.containsKey(i)) {
@@ -182,7 +102,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 		int beginPos;
 		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
-				if (nonOverlapping(beginPos, rootNodes)) {
+				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
 					break;
 				}
 
@@ -194,7 +114,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 
 		List<String> branches = new ArrayList<String>();
 		for (MatchNode node : rootNodes) {
-			findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
+			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
 
 			branches.addAll(node.printBranches());
 		}
@@ -293,143 +213,6 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 		}
 
 		return sb.toString();
-	}
-
-	protected void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap,
-			MatchNode currentNode) {
-		int i;
-		MatchNode newNode;
-		for (i = beginPos; i < endPos; i++) {
-			if (i <= currentNode.getSelf().getEndPos()) {
-				continue;
-			}
-
-			if (matchMap.containsKey(i)) {
-				if (nonOverlapping(i, currentNode.getChildren())) {
-					break;
-				}
-
-				Match bestMatch = null;
-				for (Match match : matchMap.get(i)) {
-					if (bestMatch == null || match.getWord().length() > bestMatch.getWord().length()) {
-						bestMatch = match;
-					}
-				}
-
-				newNode = new MatchNode(bestMatch);
-				currentNode.addChild(newNode);
-				currentNode = newNode;
-				// findOverlappingChildren(newNode.getSelf().getEndPos() + 1, endPos, matchMap, newNode);
-			}
-		}
-	}
-
-	protected boolean nonOverlapping(int beginPos, List<MatchNode> rootNodes) {
-		for (MatchNode node : rootNodes) {
-			if (beginPos > node.getSelf().getEndPos()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	protected String getSolutionAsString(CipherKeyChromosome chromosome) {
-		StringBuffer sb = new StringBuffer();
-
-		if (null == ((CipherKeyChromosome) chromosome).getCipher()) {
-			throw new IllegalStateException(
-					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
-		}
-
-		CipherKeyGene nextPlaintext = null;
-		int actualSize = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().size();
-
-		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
-					((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue());
-
-			sb.append(nextPlaintext.getValue());
-		}
-
-		return sb.toString();
-	}
-
-	private class Match {
-		private int beginPos;
-		private int endPos;
-		private String word;
-
-		/**
-		 * @param beginPos
-		 * @param endPos
-		 * @param word
-		 */
-		public Match(int beginPos, int endPos, String word) {
-			this.beginPos = beginPos;
-			this.endPos = endPos;
-			this.word = word;
-		}
-
-		public final int getEndPos() {
-			return endPos;
-		}
-
-		public final String getWord() {
-			return word;
-		}
-
-		@Override
-		public String toString() {
-			return "Match [beginPos=" + beginPos + ", endPos=" + endPos + ", word=" + word + "]";
-		}
-	}
-
-	private class MatchNode {
-		private Match self;
-		private List<MatchNode> children = new ArrayList<MatchNode>();
-
-		/**
-		 * @param self
-		 */
-		public MatchNode(Match self) {
-			this.self = self;
-		}
-
-		public final Match getSelf() {
-			return self;
-		}
-
-		public List<MatchNode> getChildren() {
-			return Collections.unmodifiableList(children);
-		}
-
-		public void addChild(MatchNode child) {
-			this.children.add(child);
-		}
-
-		public List<String> printBranches() {
-			List<String> branches = new ArrayList<String>();
-
-			walk(branches, this.self.getWord());
-
-			return branches;
-		}
-
-		private void walk(List<String> branches, String branch) {
-			if (!this.getChildren().isEmpty()) {
-				for (MatchNode child : this.children) {
-					child.walk(branches, branch + ", " + child.self.getWord());
-				}
-			}
-
-			branches.add(branch);
-		}
-
-		@Override
-		public String toString() {
-			return "MatchNode [self=" + self + "]";
-		}
 	}
 
 	/**

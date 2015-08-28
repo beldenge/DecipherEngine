@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.dao.UniqueNGramListDao" id="uniqueNGramListDao">
+	<bean class="com.ciphertool.sentencebuilder.dao.UniqueNGramListDao" id="nGramListDao">
 		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.NGramDao">
 			<ref bean="nGramDao" />
 		</constructor-arg>

@@ -48,9 +48,9 @@ import org.springframework.util.ReflectionUtils;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.genetics.entities.VariableLengthGene;
-import com.ciphertool.sentencebuilder.common.PartOfSpeechType;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.entities.WordId;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class SolutionChromosomeTest {
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();

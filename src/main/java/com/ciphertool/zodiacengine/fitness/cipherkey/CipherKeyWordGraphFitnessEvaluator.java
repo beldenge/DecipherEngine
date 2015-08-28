@@ -20,7 +20,6 @@
 package com.ciphertool.zodiacengine.fitness.cipherkey;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +33,11 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.wordgraph.Match;
+import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
+import com.ciphertool.zodiacengine.common.WordGraphUtils;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
 public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
@@ -63,7 +64,7 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		String currentSolutionString = getSolutionAsString((CipherKeyChromosome) chromosome);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
@@ -88,7 +89,7 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 		int beginPos;
 		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
-				if (nonOverlapping(beginPos, rootNodes)) {
+				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
 					break;
 				}
 
@@ -100,7 +101,7 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 		List<String> branches = new ArrayList<String>();
 		for (MatchNode node : rootNodes) {
-			findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
+			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
 
 			branches.addAll(node.printBranches());
 		}
@@ -125,143 +126,6 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 		}
 
 		return Double.valueOf(highestScore);
-	}
-
-	protected void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap,
-			MatchNode currentNode) {
-		int i;
-		MatchNode newNode;
-		for (i = beginPos; i < endPos; i++) {
-			if (i <= currentNode.getSelf().getEndPos()) {
-				continue;
-			}
-
-			if (matchMap.containsKey(i)) {
-				if (nonOverlapping(i, currentNode.getChildren())) {
-					break;
-				}
-
-				Match bestMatch = null;
-				for (Match match : matchMap.get(i)) {
-					if (bestMatch == null || match.getWord().length() > bestMatch.getWord().length()) {
-						bestMatch = match;
-					}
-				}
-
-				newNode = new MatchNode(bestMatch);
-				currentNode.addChild(newNode);
-				currentNode = newNode;
-				// findOverlappingChildren(newNode.getSelf().getEndPos() + 1, endPos, matchMap, newNode);
-			}
-		}
-	}
-
-	protected boolean nonOverlapping(int beginPos, List<MatchNode> rootNodes) {
-		for (MatchNode node : rootNodes) {
-			if (beginPos > node.getSelf().getEndPos()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	protected String getSolutionAsString(CipherKeyChromosome chromosome) {
-		StringBuffer sb = new StringBuffer();
-
-		if (null == this.cipher) {
-			throw new IllegalStateException(
-					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
-		}
-
-		CipherKeyGene nextPlaintext = null;
-		int actualSize = this.cipher.getCiphertextCharacters().size();
-
-		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
-					this.cipher.getCiphertextCharacters().get(i).getValue());
-
-			sb.append(nextPlaintext.getValue());
-		}
-
-		return sb.toString();
-	}
-
-	private class Match {
-		private int beginPos;
-		private int endPos;
-		private String word;
-
-		/**
-		 * @param beginPos
-		 * @param endPos
-		 * @param word
-		 */
-		public Match(int beginPos, int endPos, String word) {
-			this.beginPos = beginPos;
-			this.endPos = endPos;
-			this.word = word;
-		}
-
-		public final int getEndPos() {
-			return endPos;
-		}
-
-		public final String getWord() {
-			return word;
-		}
-
-		@Override
-		public String toString() {
-			return "Match [beginPos=" + beginPos + ", endPos=" + endPos + ", word=" + word + "]";
-		}
-	}
-
-	private class MatchNode {
-		private Match self;
-		private List<MatchNode> children = new ArrayList<MatchNode>();
-
-		/**
-		 * @param self
-		 */
-		public MatchNode(Match self) {
-			this.self = self;
-		}
-
-		public final Match getSelf() {
-			return self;
-		}
-
-		public List<MatchNode> getChildren() {
-			return Collections.unmodifiableList(children);
-		}
-
-		public void addChild(MatchNode child) {
-			this.children.add(child);
-		}
-
-		public List<String> printBranches() {
-			List<String> branches = new ArrayList<String>();
-
-			walk(branches, this.self.getWord());
-
-			return branches;
-		}
-
-		private void walk(List<String> branches, String branch) {
-			if (!this.getChildren().isEmpty()) {
-				for (MatchNode child : this.children) {
-					child.walk(branches, branch + ", " + child.self.getWord());
-				}
-			}
-
-			branches.add(branch);
-		}
-
-		@Override
-		public String toString() {
-			return "MatchNode [self=" + self + "]";
-		}
 	}
 
 	@Override

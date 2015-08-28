@@ -608,6 +608,8 @@ public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTest
 		solution.putGene("backc", new CipherKeyGene(solution, "v"));
 		solution.putGene("backj", new CipherKeyGene(solution, "x"));
 		solution.putGene("box", new CipherKeyGene(solution, "y"));
+
+		solution.setCipher(zodiac408);
 	}
 
 	@BeforeClass
