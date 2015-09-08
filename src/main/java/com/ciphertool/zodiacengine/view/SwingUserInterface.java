@@ -67,7 +67,7 @@ import com.ciphertool.zodiacengine.common.StrategyBuilder;
 import com.ciphertool.zodiacengine.controller.CipherSolutionController;
 import com.ciphertool.zodiacengine.dao.CipherDao;
 import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphFitnessEvaluator;
+import com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedNGramFitnessEvaluator;
 
 public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
 	private static final long serialVersionUID = -7682403631152076457L;
@@ -482,7 +482,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private void appendMutateDuringCrossoverCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
 			JPanel mainPanel) {
 		mutateDuringCrossoverCheckBox = new JCheckBox(mutateDuringCrossoverText);
-		mutateDuringCrossoverCheckBox.setSelected(true);
+		mutateDuringCrossoverCheckBox.setSelected(false);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
 		constraints.gridwidth = GridBagConstraints.RELATIVE;
@@ -513,7 +513,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
 		fitnessEvaluatorComboBox.setSelectedItem(applicationContext
-				.getBean(CipherKeyIndexedWordGraphFitnessEvaluator.class));
+				.getBean(CipherKeyIndexedNGramFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

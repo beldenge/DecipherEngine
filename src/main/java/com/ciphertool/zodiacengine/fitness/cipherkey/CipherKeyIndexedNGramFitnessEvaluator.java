@@ -24,21 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sentencebuilder.dao.NGramListDao;
-import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
-import com.ciphertool.sentencebuilder.entities.NGram;
-import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
+import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
@@ -46,45 +41,8 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
 
 	protected Cipher cipher;
-	private int minWordLength;
-	private int top;
 
-	private UniqueWordListDao wordListDao;
-	private NGramListDao nGramListDao;
-
-	private List<Word> topWords = new ArrayList<Word>();
-
-	private IndexNode rootNode = new IndexNode();
-
-	@PostConstruct
-	public void init() {
-		topWords.addAll(wordListDao.getTopWords(top));
-
-		Map<Integer, List<NGram>> mapOfNGramLists = nGramListDao.getMapOfNGramLists();
-
-		for (Integer numWords : mapOfNGramLists.keySet()) {
-			for (NGram nGram : mapOfNGramLists.get(numWords)) {
-				topWords.add(new Word(nGram));
-			}
-		}
-
-		if (topWords == null || topWords.size() < top) {
-			String message = "Attempted to get top " + top + " words from populated DAO, but only "
-					+ (topWords == null ? 0 : topWords.size()) + " words were available.";
-			log.error(message);
-			throw new IllegalStateException(message);
-		}
-
-		String lowerCaseWord;
-		for (Word word : topWords) {
-			if (word.getId().getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getId().getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord, lowerCaseWord);
-		}
-	}
+	protected TopWordsFacade topWordsFacade;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -96,8 +54,10 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 				0, lastRowBegin);
 
 		String longestMatch;
+		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, i, currentSolutionString, null);
+			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
 				if (!matchMap.containsKey(i)) {
@@ -132,7 +92,6 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 		long score;
 		long highestScore = 0;
 
-		@SuppressWarnings("unused")
 		String bestBranch = "";
 
 		for (String branch : branches) {
@@ -148,6 +107,10 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
+		}
+
 		return Double.valueOf(highestScore);
 	}
 
@@ -157,46 +120,12 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param top
-	 *            the top to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setTop(int top) {
-		if (top <= 0) {
-			String message = "Value of " + top + " is invalid for top in " + this.getClass()
-					+ ".  Value must be greater than zero.";
-			log.error(message);
-			throw new IllegalArgumentException(message);
-		}
-
-		this.top = top;
-	}
-
-	/**
-	 * @param wordListDao
-	 *            the wordListDao to set
-	 */
-	@Required
-	public void setWordListDao(UniqueWordListDao wordListDao) {
-		this.wordListDao = wordListDao;
-	}
-
-	/**
-	 * @param nGramListDao
-	 *            the nGramListDao to set
-	 */
-	@Required
-	public void setnGramListDao(NGramListDao nGramListDao) {
-		this.nGramListDao = nGramListDao;
-	}
-
-	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
-	 */
-	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	@Override

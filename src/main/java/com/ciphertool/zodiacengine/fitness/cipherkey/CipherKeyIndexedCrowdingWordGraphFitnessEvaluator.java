@@ -24,60 +24,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
-import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
+import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = Logger.getLogger(getClass());
-
 	protected Cipher cipher;
-	private int minWordLength;
-	private int top;
-
-	private UniqueWordListDao wordListDao;
-
-	private List<Word> topWords = new ArrayList<Word>();
-
-	private IndexNode rootNode = new IndexNode();
 
 	private int minCrowdSize;
 	private double penaltyFactor;
 	private double sigma;
 
-	@PostConstruct
-	public void init() {
-		topWords = wordListDao.getTopWords(top);
-
-		if (topWords == null || topWords.size() < top) {
-			String message = "Attempted to get top " + top + " words from populated DAO, but only "
-					+ (topWords == null ? 0 : topWords.size()) + " words were available.";
-			log.error(message);
-			throw new IllegalStateException(message);
-		}
-
-		String lowerCaseWord;
-		for (Word word : topWords) {
-			if (word.getId().getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getId().getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord, lowerCaseWord);
-		}
-	}
+	protected TopWordsFacade topWordsFacade;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -89,8 +55,10 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 				0, lastRowBegin);
 
 		String longestMatch;
+		IndexNode rootNode = topWordsFacade.getIndexedWords();
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, i, currentSolutionString, null);
+			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
 				if (!matchMap.containsKey(i)) {
@@ -163,31 +131,6 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 	}
 
 	/**
-	 * @param top
-	 *            the top to set
-	 */
-	@Required
-	public void setTop(int top) {
-		if (top <= 0) {
-			String message = "Value of " + top + " is invalid for top in " + this.getClass()
-					+ ".  Value must be greater than zero.";
-			log.error(message);
-			throw new IllegalArgumentException(message);
-		}
-
-		this.top = top;
-	}
-
-	/**
-	 * @param wordListDao
-	 *            the wordListDao to set
-	 */
-	@Required
-	public void setWordListDao(UniqueWordListDao wordListDao) {
-		this.wordListDao = wordListDao;
-	}
-
-	/**
 	 * @param minCrowdSize
 	 *            the minGroupSize to set
 	 */
@@ -215,12 +158,12 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	@Override

@@ -30,21 +30,21 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 
 public class WordGraphUtils {
 
-	public static void populateMap(IndexNode currentNode, String wordPart, String terminal) {
+	public static void populateMap(IndexNode currentNode, String wordPart) {
 		Character firstLetter = wordPart.charAt(0);
 
 		if (wordPart.length() == 1) {
 			if (currentNode.containsChild(firstLetter)) {
-				currentNode.getChild(firstLetter).setTerminal(terminal);
+				currentNode.getChild(firstLetter).setIsTerminal(true);
 			} else {
-				currentNode.putChild(firstLetter, new IndexNode(terminal));
+				currentNode.putChild(firstLetter, new IndexNode(true));
 			}
 		} else {
 			if (!currentNode.containsChild(firstLetter)) {
 				currentNode.putChild(firstLetter, new IndexNode());
 			}
 
-			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1), terminal);
+			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1));
 		}
 	}
 
@@ -55,8 +55,8 @@ public class WordGraphUtils {
 
 		Character currentChar = solutionString.charAt(index);
 
-		if (node.getTerminal() != null) {
-			longestMatch = node.getTerminal();
+		if (node.isTerminal()) {
+			longestMatch = solutionString.substring(0, index);
 		}
 
 		if (node.containsChild(currentChar)) {

@@ -236,7 +236,7 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 			}
 
 			lowerCaseWord = word.getId().getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord, lowerCaseWord);
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
 		}
 	}
 
@@ -253,7 +253,7 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, i, currentSolutionString, null);
+			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
 				if (!matchMap.containsKey(i)) {

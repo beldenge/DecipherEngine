@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
-		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
+		<property name="chromosomePrinter" ref="cipherKeyIndexedNGramChromosomePrinter" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
@@ -54,10 +54,15 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
+	<bean class="com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="nGramListDao" ref="nGramListDao" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+
+	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
+		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
@@ -65,9 +70,6 @@ You should have received a copy of the GNU General Public License along with Zod
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
-		<property name="top" value="${fitness.graph.words.count}" />
-		<property name="wordListDao" ref="uniqueWordListDao" />
-		<property name="nGramListDao" ref="nGramListDao" />
-		<property name="minWordLength" value="${fitness.min.word.length}" />
+		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 </beans>
