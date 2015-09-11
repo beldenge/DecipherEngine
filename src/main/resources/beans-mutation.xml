@@ -46,12 +46,21 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="maxAttempts" value="${max.mutation.attempts}" />
 	</bean>
+
+	<bean class="com.ciphertool.genetics.algorithms.mutation.MutationHelper" id="mutationHelper">
+		<property name="maxMutations" value="${max.mutations}" />
+		<property name="mutationCountFactor" value="${mutation.count.factor}" />
+	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.MultipleGuaranteedFitnessMutationAlgorithm" id="multipleGuaranteedFitnessMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="maxMutations" value="${max.mutations}" />
 		<property name="maxAttempts" value="${max.mutation.attempts}" />
-		<property name="mutationCountFactor" value="${mutation.count.factor}" />
+		<property name="mutationHelper" ref="mutationHelper" />
+	</bean>
+
+	<bean class="com.ciphertool.genetics.algorithms.mutation.cipherkey.MultipleMutationAlgorithm" id="multipleMutationAlgorithm">
+		<property name="geneDao" ref="cipherKeyGeneDao" />
+		<property name="mutationHelper" ref="mutationHelper" />
 	</bean>
 </beans>

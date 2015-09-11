@@ -37,8 +37,8 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.zodiacengine.fitness.impl.FrequencyFitnessEvaluatorTestBase;
 
-public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static CipherKeyExperimentalCorpusFitnessEvaluator fitnessEvaluator;
+public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
+	private static CipherKeyFrequencyCorpusFitnessEvaluator fitnessEvaluator;
 
 	private static CipherKeyChromosome solution = new CipherKeyChromosome();
 
@@ -104,7 +104,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFi
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyExperimentalCorpusFitnessEvaluator();
+		fitnessEvaluator = new CipherKeyFrequencyCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setMinWordLength(4);
 
@@ -125,7 +125,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFi
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyExperimentalCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(CipherKeyFrequencyCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 	}

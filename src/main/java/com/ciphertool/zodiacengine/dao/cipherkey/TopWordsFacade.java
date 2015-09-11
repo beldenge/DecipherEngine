@@ -85,6 +85,15 @@ public class TopWordsFacade {
 		}
 	}
 
+	public void addEntryToWordsAndNGramsIndex(Word word) {
+		if (word.getId().getWord().length() < minWordLength) {
+			return;
+		}
+
+		String lowerCaseWord = word.getId().getWord().toLowerCase();
+		WordGraphUtils.populateMap(rootNodeWithWordsAndNGrams, lowerCaseWord);
+	}
+
 	protected void populateWordsIndex() {
 		topWords = wordListDao.getTopWords(top);
 

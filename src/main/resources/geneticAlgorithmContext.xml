@@ -52,6 +52,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="verifyAncestry" value="${fitness.ancestry.verify}" />
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
+		<property name="elitism" value="${genetic.algorithm.elitism}" />
 	</bean>
 
 	<bean class="com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">

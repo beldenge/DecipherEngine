@@ -34,17 +34,20 @@ import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
-import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
-public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
 
-	protected Cipher cipher;
-	private static List<Word> topWords = new ArrayList<Word>();
+	private static final double FREQUENCY_DIFFERENCE_THRESHOLD = 0.05;
+	private static final double MATCHES_BONUS = 1.033;
 
-	protected TopWordsFacade topWordsFacade;
+	private Map<Character, Double> expectedLetterFrequencies;
+
+	protected Cipher cipher;
+	private int minWordLength;
+	private static List<Word> topWords = new ArrayList<Word>();
 
 	static {
 		topWords.add(new Word(new WordId("i", null)));
@@ -228,10 +231,18 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 		topWords.add(new Word(new WordId("iwillnotgiveyou", null)));
 	}
 
+	private IndexNode rootNode = new IndexNode();
+
 	@PostConstruct
 	public void init() {
+		String lowerCaseWord;
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
+			if (word.getId().getWord().length() < minWordLength) {
+				continue;
+			}
+
+			lowerCaseWord = word.getId().getWord().toLowerCase();
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
 		}
 	}
 
@@ -245,7 +256,6 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 				0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
@@ -306,7 +316,53 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		return Double.valueOf(highestScore);
+		double fitness = highestScore + Math.pow(MATCHES_BONUS, bestBranch.replaceAll("[^a-z]", "").length());
+
+		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
+
+		/*
+		 * Initialize the actualLetterFrequencies Map
+		 */
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			actualLetterFrequencies.put(letter, 0.0);
+		}
+
+		/*
+		 * Don't use the last row when calculating the oneCharacterFrequency for this evaluator
+		 */
+		Double oneCharacterFrequency = 1.0 / (double) currentSolutionString.length();
+		Double currentFrequency = 0.0;
+
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			Character currentCharacter = currentSolutionString.charAt(i);
+
+			currentFrequency = actualLetterFrequencies.get(currentCharacter);
+			if (currentFrequency != null) {
+				actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
+			} else {
+				log.debug("Found non-alpha character in Plaintext: " + currentCharacter);
+			}
+		}
+
+		Double difference = 0.0;
+		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length() / (double) currentSolutionString
+				.length());
+
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
+
+			if (difference > FREQUENCY_DIFFERENCE_THRESHOLD) {
+				/*
+				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
+				 * much of an effect in early generations
+				 */
+				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
+
+				fitness = fitness * frequencyFactor;
+			}
+		}
+
+		return Double.valueOf(fitness);
 	}
 
 	@Override
@@ -315,16 +371,25 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param minWordLength
+	 *            the minWordLength to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
+	}
+
+	/**
+	 * @param expectedLetterFrequencies
+	 *            the expectedLetterFrequencies to set
+	 */
+	@Required
+	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
+		this.expectedLetterFrequencies = expectedLetterFrequencies;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Experimental Corpus";
+		return "Cipher Key Frequency Corpus";
 	}
 }
