@@ -34,6 +34,7 @@ import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
+import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
@@ -41,8 +42,9 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 	private Logger log = Logger.getLogger(getClass());
 
 	protected Cipher cipher;
-	private int minWordLength;
 	private static List<Word> topWords = new ArrayList<Word>();
+
+	protected TopWordsFacade topWordsFacade;
 
 	static {
 		topWords.add(new Word(new WordId("i", null)));
@@ -226,18 +228,10 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 		topWords.add(new Word(new WordId("iwillnotgiveyou", null)));
 	}
 
-	private IndexNode rootNode = new IndexNode();
-
 	@PostConstruct
 	public void init() {
-		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getId().getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getId().getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
 		}
 	}
 
@@ -251,6 +245,8 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 				0, lastRowBegin);
 
 		String longestMatch;
+		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -288,6 +284,10 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 		long highestScore = 0;
 
 		String bestBranch = "";
+		// branches = Arrays
+		// .asList(new String[] {
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat, ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha, thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname, becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// });
 
 		for (String branch : branches) {
 			score = 0;
@@ -315,12 +315,12 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	@Override

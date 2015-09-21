@@ -44,7 +44,7 @@ import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.Population;
+import com.ciphertool.genetics.StandardPopulation;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.zodiacengine.dao.SolutionDao;
 import com.ciphertool.zodiacengine.entities.SolutionChromosome;
@@ -115,7 +115,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -175,7 +175,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -259,7 +259,7 @@ public class GeneticCipherSolutionServiceTest {
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
@@ -297,7 +297,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -320,7 +320,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 		doThrow(IllegalStateException.class).when(geneticAlgorithm).proceedWithNextGeneration();
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -371,7 +371,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -419,7 +419,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -477,7 +477,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -501,7 +501,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 		doThrow(IllegalStateException.class).when(geneticAlgorithm).initialize();
 
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -551,7 +551,7 @@ public class GeneticCipherSolutionServiceTest {
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
@@ -652,7 +652,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 
 		SolutionChromosome solutionChromosome = new SolutionChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
@@ -673,7 +673,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
-		Population population = new Population();
+		StandardPopulation population = new StandardPopulation();
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
 		geneticCipherSolutionService.setGeneticAlgorithm(geneticAlgorithm);
 
