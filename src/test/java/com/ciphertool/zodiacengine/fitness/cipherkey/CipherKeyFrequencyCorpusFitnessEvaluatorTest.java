@@ -128,12 +128,12 @@ public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitne
 		Field logField = ReflectionUtils.findField(CipherKeyFrequencyCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
+
+		fitnessEvaluator.init();
 	}
 
 	@Test
 	public void testEvaluate() {
-		fitnessEvaluator.init();
-
 		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 }

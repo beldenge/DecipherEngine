@@ -54,6 +54,8 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 	private double penaltyFactor;
 	private double sigma;
 
+	private int lastRowBegin;
+
 	@PostConstruct
 	public void init() {
 		topWords = wordListDao.getTopWords(top);
@@ -71,8 +73,6 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
-
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
@@ -148,6 +148,8 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**

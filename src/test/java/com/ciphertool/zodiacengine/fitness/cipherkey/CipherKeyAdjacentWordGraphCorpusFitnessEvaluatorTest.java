@@ -126,12 +126,12 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 		Field logField = ReflectionUtils.findField(CipherKeyAdjacentWordGraphCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
+
+		fitnessEvaluator.init();
 	}
 
 	@Test
 	public void testEvaluate() {
-		fitnessEvaluator.init();
-
 		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 }

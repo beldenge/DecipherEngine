@@ -49,6 +49,8 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	private int minWordLength;
 	private static List<Word> topWords = new ArrayList<Word>();
 
+	private int lastRowBegin;
+
 	static {
 		topWords.add(new Word(new WordId("i", null)));
 		topWords.add(new Word(new WordId("like", null)));
@@ -250,8 +252,6 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
-
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
 				0, lastRowBegin);
 
@@ -368,6 +368,8 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**

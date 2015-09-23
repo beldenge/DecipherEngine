@@ -17,7 +17,9 @@
 package com.ciphertool.zodiacengine.fitness.cipherkey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,17 +36,20 @@ import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 import com.ciphertool.zodiacengine.common.WordGraphUtils;
+import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.zodiacengine.entities.Cipher;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 
-public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
 
 	protected Cipher cipher;
-	private int minWordLength;
 	private static List<Word> topWords = new ArrayList<Word>();
 
-	private int lastRowBegin;
+	protected TopWordsFacade topWordsFacade;
+
+	int lastRowBegin;
+	IndexNode rootNode;
 
 	static {
 		topWords.add(new Word(new WordId("i", null)));
@@ -228,19 +233,13 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 		topWords.add(new Word(new WordId("iwillnotgiveyou", null)));
 	}
 
-	private IndexNode rootNode = new IndexNode();
-
 	@PostConstruct
 	public void init() {
-		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getId().getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getId().getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
 		}
+
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
@@ -251,6 +250,7 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 				0, lastRowBegin);
 
 		String longestMatch;
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -277,71 +277,41 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 			}
 		}
 
+		List<String> branches = new ArrayList<String>();
 		for (MatchNode node : rootNodes) {
 			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
+
+			branches.addAll(node.printBranches());
 		}
 
 		double score;
 		double highestScore = 0;
-		MatchNode currentChild;
-		MatchNode nextChild;
-		int factor;
-		int tempScore;
-		List<String> words;
 
 		String bestBranch = "";
+		// branches = Arrays
+		// .asList(new String[] {
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat, ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha, thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname, becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// });
 
-		for (MatchNode node : rootNodes) {
+		for (String branch : branches) {
 			score = 0;
-			factor = 1;
-			tempScore = 0;
-			words = new ArrayList<String>();
 
-			if (node.getChildren() == null || node.getChildren().isEmpty()) {
-				currentChild = null;
-			} else {
-				currentChild = node.getChildren().get(0);
-
-				if (node.getChildren().size() > 1) {
-					log.info("Children size was expected to be only 1 for this implementation.  Please trace through CipherKeyAdjacentWordGraphCorpusFitnessEvaluator class to find the cause of this issue.");
-				}
-			}
-
-			while (currentChild != null) {
-				if (currentChild.getChildren().size() > 1) {
-					log.info("Children size was expected to be only 1 for this implementation.  Please trace through CipherKeyAdjacentWordGraphCorpusFitnessEvaluator class to find the cause of this issue.");
-				}
-
-				nextChild = null;
-				words.add(currentChild.getSelf().getWord());
-
-				if (currentChild.getChildren() != null && !currentChild.getChildren().isEmpty()) {
-					nextChild = currentChild.getChildren().get(0);
-				}
-
-				if (nextChild != null
-						&& currentChild.getSelf().getEndPos() + nextChild.getSelf().getWord().length() == nextChild
-								.getSelf().getEndPos()) {
-					factor++;
-				} else {
-					for (String word : words) {
-						tempScore += Math.pow(2, word.length());
-					}
-
-					score += (tempScore * factor);
-
-					factor = 1;
-					tempScore = 0;
-					words = new ArrayList<String>();
-				}
-
-				currentChild = nextChild;
+			for (String word : branch.split(", ")) {
+				score += Math.pow(2, word.length());
 			}
 
 			if (score > highestScore) {
 				highestScore = score;
-				bestBranch = node.printBranches().get(0);
+				bestBranch = branch;
 			}
+		}
+
+		List<Integer> matchIndices = getMatchIndices(lastRowBegin, bestBranch, currentSolutionString);
+
+		Map<String, Integer> solutionMap = getSolutionAsMap(matchIndices, (CipherKeyChromosome) chromosome);
+
+		for (String ciphertext : solutionMap.keySet()) {
+			highestScore += Math.pow(2.15, solutionMap.get(ciphertext));
 		}
 
 		if (log.isDebugEnabled()) {
@@ -349,6 +319,70 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 		}
 
 		return highestScore;
+	}
+
+	private static List<Integer> getMatchIndices(int lastRowBegin, String bestBranch, String currentSolutionString) {
+		List<Integer> matchIndices = new ArrayList<Integer>();
+
+		// In the off chance that no words were found at all
+		if (bestBranch.isEmpty()) {
+			return matchIndices;
+		}
+
+		List<String> words = new ArrayList<String>();
+
+		words.addAll(Arrays.asList(bestBranch.split(", ")));
+
+		Iterator<String> wordIter = words.iterator();
+
+		String word = wordIter.next();
+
+		for (int i = 0; i < lastRowBegin; i++) {
+			if (word.equals(currentSolutionString.substring(i, i + word.length()))) {
+				for (int j = 0; j < word.length(); j++) {
+					matchIndices.add(i + j);
+				}
+
+				i += word.length() - 1;
+
+				if (wordIter.hasNext()) {
+					word = wordIter.next();
+				} else {
+					break;
+				}
+			}
+		}
+
+		return matchIndices;
+	}
+
+	private static Map<String, Integer> getSolutionAsMap(List<Integer> matchIndices, CipherKeyChromosome chromosome) {
+		if (null == ((CipherKeyChromosome) chromosome).getCipher()) {
+			throw new IllegalStateException(
+					"Called getSolutionAsMap(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
+		}
+
+		Map<String, Integer> ciphertextMatchMap = new HashMap<String, Integer>();
+
+		if (matchIndices == null || matchIndices.isEmpty()) {
+			return ciphertextMatchMap;
+		}
+
+		int actualSize = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().size();
+
+		for (int i = 0; i < actualSize; i++) {
+			if (matchIndices.contains(i)) {
+				String key = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue();
+
+				if (!ciphertextMatchMap.containsKey(key)) {
+					ciphertextMatchMap.put(key, 0);
+				}
+
+				ciphertextMatchMap.put(key, ciphertextMatchMap.get(key) + 1);
+			}
+		}
+
+		return ciphertextMatchMap;
 	}
 
 	@Override
@@ -359,16 +393,16 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Adjacent Word Graph Corpus";
+		return "Cipher Key Matching Word Graph Corpus";
 	}
 }

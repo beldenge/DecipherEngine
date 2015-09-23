@@ -51,6 +51,9 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 
 	protected TopWordsFacade topWordsFacade;
 
+	private int lastRowBegin;
+	private IndexNode rootNode;
+
 	static {
 		topWords.add(new Word(new WordId("i", null)));
 		topWords.add(new Word(new WordId("like", null)));
@@ -238,20 +241,18 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 		for (Word word : topWords) {
 			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
 		}
+
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
-
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
 				0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
-
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -285,8 +286,8 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0;
 
 		String bestBranch = "";
 		// branches = Arrays
@@ -298,7 +299,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 			score = 0;
 
 			for (String word : branch.split(", ")) {
-				score += Math.pow(2, word.length());
+				score += Math.pow(1.5, word.length());
 			}
 
 			if (score > highestScore) {
@@ -351,18 +352,20 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
 				 * much of an effect in early generations
 				 */
-				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
+				double frequencyFactor = (1.0 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
 
 				fitness = fitness * frequencyFactor;
 			}
 		}
 
-		return Double.valueOf(fitness);
+		return fitness;
 	}
 
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**

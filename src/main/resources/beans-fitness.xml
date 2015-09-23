@@ -174,7 +174,11 @@ You should have received a copy of the GNU General Public License along with Zod
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
-	
+
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyMatchingWordGraphCorpusFitnessEvaluator" id="cipherKeyMatchingWordGraphCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean>
+
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator" id="cipherKeyExperimentalCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 		<property name="expectedLetterFrequencies">

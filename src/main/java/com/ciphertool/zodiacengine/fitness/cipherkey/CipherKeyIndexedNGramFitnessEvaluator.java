@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -44,18 +46,22 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 
 	protected TopWordsFacade topWordsFacade;
 
+	private int lastRowBegin;
+	private IndexNode rootNode;
+
+	@PostConstruct
+	public void init() {
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+	}
+
 	@Override
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
-
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
 				0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
-
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -89,8 +95,8 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0;
 
 		String bestBranch = "";
 
@@ -111,12 +117,14 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		return Double.valueOf(highestScore);
+		return highestScore;
 	}
 
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
