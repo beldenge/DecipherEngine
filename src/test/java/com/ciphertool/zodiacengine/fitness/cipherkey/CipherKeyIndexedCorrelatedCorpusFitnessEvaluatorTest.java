@@ -38,8 +38,8 @@ import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
 
-public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static CipherKeyIndexedWordGraphCorpusFitnessEvaluator fitnessEvaluator;
+public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static CipherKeyIndexedCorrelatedCorpusFitnessEvaluator fitnessEvaluator;
 
 	private static CipherKeyChromosome solution = new CipherKeyChromosome();
 
@@ -107,7 +107,7 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends Fitness
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyIndexedWordGraphCorpusFitnessEvaluator();
+		fitnessEvaluator = new CipherKeyIndexedCorrelatedCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
@@ -121,14 +121,14 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends Fitness
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyIndexedWordGraphCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(4);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyIndexedWordGraphCorpusFitnessEvaluator.class,
+		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class,
 				"topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);

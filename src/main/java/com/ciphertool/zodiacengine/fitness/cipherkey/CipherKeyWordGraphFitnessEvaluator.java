@@ -139,13 +139,6 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	 */
 	@Required
 	public void setTop(int top) {
-		if (top <= 0) {
-			String message = "Value of " + top + " is invalid for top in " + this.getClass()
-					+ ".  Value must be greater than zero.";
-			log.error(message);
-			throw new IllegalArgumentException(message);
-		}
-
 		this.top = top;
 	}
 

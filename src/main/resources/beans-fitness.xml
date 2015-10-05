@@ -175,11 +175,13 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyMatchingWordGraphCorpusFitnessEvaluator" id="cipherKeyMatchingWordGraphCorpusFitnessEvaluator">
+	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
+	<!-- <bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyMatchingWordGraphCorpusFitnessEvaluator" id="cipherKeyMatchingWordGraphCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
-	</bean>
+	</bean> -->
 
-	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator" id="cipherKeyExperimentalCorpusFitnessEvaluator">
+	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
+	<!-- <bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator" id="cipherKeyExperimentalCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -211,7 +213,7 @@ You should have received a copy of the GNU General Public License along with Zod
 				<entry key="z" value="${language.english.frequency.z}" />
 			</map>
 		</property>
-	</bean>
+	</bean> -->
 
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyFrequencyCorpusFitnessEvaluator" id="cipherKeyFrequencyCorpusFitnessEvaluator">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
@@ -253,5 +255,9 @@ You should have received a copy of the GNU General Public License along with Zod
 
 	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator" id="cipherKeyAdjacentWordGraphCorpusFitnessEvaluator">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+	
+	<bean class="com.ciphertool.zodiacengine.fitness.cipherkey.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator" id="cipherKeyIndexedCorrelatedCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 </beans>
