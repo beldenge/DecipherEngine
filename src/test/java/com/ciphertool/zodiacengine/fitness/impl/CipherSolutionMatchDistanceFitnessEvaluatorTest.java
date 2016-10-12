@@ -1,4 +1,4 @@
-package com.ciphertool.zodiacengine.fitness.impl;
+package com.ciphertool.DecipherEngine.fitness.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.ciphertool.zodiacengine.fitness.FitnessEvaluatorTestBase;
+import com.ciphertool.DecipherEngine.fitness.FitnessEvaluatorTestBase;
 
 public class CipherSolutionMatchDistanceFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	@Test

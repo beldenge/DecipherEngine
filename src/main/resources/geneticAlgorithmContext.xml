@@ -2,13 +2,13 @@
 <!--
 Copyright 2015 George Belden
 
-This file is part of ZodiacEngine.
+This file is part of DecipherEngine.
 
-ZodiacEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
+DecipherEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
 	
-ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 	
-You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -19,11 +19,11 @@ You should have received a copy of the GNU General Public License along with Zod
 	<import resource="classpath*:beans-mutation.xml" />
 	<import resource="classpath*:beans-crossover.xml" />
 
-	<!-- <bean class="com.ciphertool.zodiacengine.SolutionBreeder" id="breeder">
+	<!-- <bean class="com.ciphertool.DecipherEngine.SolutionBreeder" id="breeder">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean> -->
 
-	<bean class="com.ciphertool.zodiacengine.CipherKeyBreeder" id="breeder">
+	<bean class="com.ciphertool.DecipherEngine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
@@ -76,22 +76,22 @@ You should have received a copy of the GNU General Public License along with Zod
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
+	<bean class="com.ciphertool.DecipherEngine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="nGramListDao" ref="nGramListDao" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
+	<bean class="com.ciphertool.DecipherEngine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
+	<bean class="com.ciphertool.DecipherEngine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
+	<bean class="com.ciphertool.DecipherEngine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 </beans>

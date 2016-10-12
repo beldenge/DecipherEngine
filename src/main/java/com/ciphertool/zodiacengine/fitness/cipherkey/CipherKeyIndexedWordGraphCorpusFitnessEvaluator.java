@@ -1,20 +1,20 @@
 /**
  * Copyright 2015 George Belden
  * 
- * This file is part of ZodiacEngine.
+ * This file is part of DecipherEngine.
  * 
- * ZodiacEngine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * DecipherEngine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  * 
- * ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see
+ * You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.fitness.cipherkey;
+package com.ciphertool.DecipherEngine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,10 +33,10 @@ import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
-import com.ciphertool.zodiacengine.common.WordGraphUtils;
-import com.ciphertool.zodiacengine.dao.cipherkey.TopWordsFacade;
-import com.ciphertool.zodiacengine.entities.Cipher;
-import com.ciphertool.zodiacengine.entities.cipherkey.CipherKeyChromosome;
+import com.ciphertool.DecipherEngine.common.WordGraphUtils;
+import com.ciphertool.DecipherEngine.dao.cipherkey.TopWordsFacade;
+import com.ciphertool.DecipherEngine.entities.Cipher;
+import com.ciphertool.DecipherEngine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());

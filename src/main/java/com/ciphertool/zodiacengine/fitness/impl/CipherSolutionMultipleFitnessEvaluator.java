@@ -1,23 +1,23 @@
 /*
  * Copyright 2015 George Belden
  * 
- * This file is part of ZodiacEngine.
+ * This file is part of DecipherEngine.
  * 
- * ZodiacEngine is free software: you can redistribute it and/or modify it under
+ * DecipherEngine is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
  * Foundation, either version 3 of the License, or (at your option) any later
  * version.
  * 
- * ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT
+ * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
  * 
  * You should have received a copy of the GNU General Public License along with
- * ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+ * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.zodiacengine.fitness.impl;
+package com.ciphertool.DecipherEngine.fitness.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
 
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.zodiacengine.entities.Ciphertext;
-import com.ciphertool.zodiacengine.entities.PlaintextSequence;
-import com.ciphertool.zodiacengine.entities.SolutionChromosome;
-import com.ciphertool.zodiacengine.fitness.SolutionTruncatedEvaluatorBase;
+import com.ciphertool.DecipherEngine.entities.Ciphertext;
+import com.ciphertool.DecipherEngine.entities.PlaintextSequence;
+import com.ciphertool.DecipherEngine.entities.SolutionChromosome;
+import com.ciphertool.DecipherEngine.fitness.SolutionTruncatedEvaluatorBase;
 
 public class CipherSolutionMultipleFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
 
@@ -48,8 +48,8 @@ public class CipherSolutionMultipleFitnessEvaluator extends SolutionTruncatedEva
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ciphertool.zodiacengine.util.SolutionEvaluator#determineConfidenceLevel
-	 * (com.ciphertool.zodiacengine.entities.Solution)
+	 * @see com.ciphertool.DecipherEngine.util.SolutionEvaluator#determineConfidenceLevel
+	 * (com.ciphertool.DecipherEngine.entities.Solution)
 	 * 
 	 * Calculates the confidence level as the number of instances that a ciphertext character has the same plaintext
 	 * character mapped to it. If a ciphertext character has multiple matches, then select the plaintext character with

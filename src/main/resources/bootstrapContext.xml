@@ -2,13 +2,13 @@
 <!--
 Copyright 2015 George Belden
 
-This file is part of ZodiacEngine.
+This file is part of DecipherEngine.
 
-ZodiacEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
+DecipherEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
 	
-ZodiacEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 	
-You should have received a copy of the GNU General Public License along with ZodiacEngine. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -40,27 +40,27 @@ You should have received a copy of the GNU General Public License along with Zod
 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
-			<value>classpath:zodiacengine.properties</value>
+			<value>classpath:DecipherEngine.properties</value>
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.service.GeneticCipherSolutionService" id="cipherSolutionService">
+	<bean class="com.ciphertool.DecipherEngine.service.GeneticCipherSolutionService" id="cipherSolutionService">
 		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
 		<property name="solutionDao" ref="solutionDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.common.GeneticStrategyBuilder" id="strategyBuilder">
+	<bean class="com.ciphertool.DecipherEngine.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="knownSolutionFitnessEvaluator" ref="cipherKeyKnownSolutionFitnessEvaluator" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">
+	<bean class="com.ciphertool.DecipherEngine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">
 		<property name="cipherSolutionService" ref="cipherSolutionService" />
 	</bean>
 
-	<bean class="com.ciphertool.zodiacengine.view.SwingUserInterface" id="userInterface" init-method="init">
+	<bean class="com.ciphertool.DecipherEngine.view.SwingUserInterface" id="userInterface" init-method="init">
 		<property name="windowTitle" value="${ui.window.title}" />
 		<property name="windowWidth" value="${ui.window.width}" />
 		<property name="windowHeight" value="${ui.window.height}" />
