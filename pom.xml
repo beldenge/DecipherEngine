@@ -51,7 +51,7 @@ You should have received a copy of the GNU General Public License along with Zod
 					<aspectLibraries>
 						<aspectLibrary>
 							<groupId>com.ciphertool.genetics</groupId>
-							<artifactId>ZodiacGenetics</artifactId>
+							<artifactId>Genie</artifactId>
 						</aspectLibrary>
 					</aspectLibraries>
 					<complianceLevel>${maven.compiler.source}</complianceLevel>
@@ -115,7 +115,7 @@ You should have received a copy of the GNU General Public License along with Zod
 		</dependency>
 		<dependency>
 			<groupId>com.ciphertool.genetics</groupId>
-			<artifactId>ZodiacGenetics</artifactId>
+			<artifactId>Genie</artifactId>
 			<version>1.2.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
