@@ -17,7 +17,7 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.DecipherEngine;
+package com.ciphertool.zodiacengine;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
