@@ -18,7 +18,7 @@
  */
 
 var conn = new Mongo();
-var db = conn.getDB("zodiacdb");
+var db = conn.getDB("DecipherEngine");
 
 var zodiac340 = { 
 	name: "zodiac340",

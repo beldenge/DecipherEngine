@@ -17,11 +17,11 @@
 -- DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
 
--- Database: "Zodiac"
+-- Database: "DecipherEngine"
 
--- DROP DATABASE "Zodiac";
+-- DROP DATABASE "DecipherEngine";
 
-CREATE DATABASE "Zodiac"
+CREATE DATABASE "DecipherEngine"
   WITH OWNER = postgres
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
