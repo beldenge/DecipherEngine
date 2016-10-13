@@ -48,13 +48,13 @@ public class WordGene implements VariableLengthGene {
 	public WordGene(Word word, SolutionChromosome solutionChromosome) {
 		this.chromosome = solutionChromosome;
 
-		if (word == null || word.getId() == null) {
-			log.error("Found null Word or WordId In full-args constructor.  Unable to construct WordGene.");
+		if (word == null || word.getWord() == null || word.getPartOfSpeech() == null) {
+			log.error("Found null Word or primary key fields In full-args constructor.  Unable to construct WordGene.");
 
 			return;
 		}
 
-		String wordString = word.getId().getWord();
+		String wordString = word.getWord();
 
 		if (wordString == null) {
 			log.error("Found null String from WordId In full-args constructor.  Unable to construct WordGene.");

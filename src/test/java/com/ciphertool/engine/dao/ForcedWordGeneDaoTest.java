@@ -36,14 +36,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.engine.entities.SolutionChromosome;
+import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
-import com.ciphertool.engine.dao.ForcedWordGeneDao;
-import com.ciphertool.engine.entities.SolutionChromosome;
-import com.ciphertool.engine.entities.WordGene;
 
 public class ForcedWordGeneDaoTest {
 	private static ForcedWordGeneDao forcedWordGeneDao;
@@ -79,7 +77,7 @@ public class ForcedWordGeneDaoTest {
 		SolutionChromosome chromosomeToCheck = new SolutionChromosome();
 		Integer arbitraryInteger = 5;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
@@ -94,7 +92,7 @@ public class ForcedWordGeneDaoTest {
 	public void testFindRandomGeneNullChromosome() {
 		Integer arbitraryInteger = 5;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene geneReturned = forcedWordGeneDao.findRandomGene(null);
@@ -109,7 +107,7 @@ public class ForcedWordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 7;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene expectedGene = new WordGene(wordToReturn, chromosomeToCheck);
@@ -125,7 +123,7 @@ public class ForcedWordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 7;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(null, wordLength);
@@ -140,7 +138,7 @@ public class ForcedWordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 0;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(chromosomeToCheck, wordLength);
@@ -155,7 +153,7 @@ public class ForcedWordGeneDaoTest {
 		Integer arbitraryInteger = 5;
 		Integer wordLength = 5;
 
-		Word wordToReturn = new Word(new WordId("testing", PartOfSpeechType.VERB_PARTICIPLE), arbitraryInteger);
+		Word wordToReturn = new Word("testing", PartOfSpeechType.VERB_PARTICIPLE, arbitraryInteger);
 		when(wordListDaoMock.findRandomWord()).thenReturn(wordToReturn);
 
 		Gene geneReturned = forcedWordGeneDao.findRandomGeneOfLength(chromosomeToCheck, wordLength);

@@ -19,11 +19,10 @@
 
 package com.ciphertool.engine.fitness;
 
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class KnownSolutionEvaluatorBase extends SolutionTruncatedEvaluatorBase {
 	protected static SolutionChromosome knownSolution;
@@ -39,310 +38,310 @@ public class KnownSolutionEvaluatorBase extends SolutionTruncatedEvaluatorBase {
 		 */
 		WordGene nextWordGene;
 
-		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("i", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("like", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("like", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("killing", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("people", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("people", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("because", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("it", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("is", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("so", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("so", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("much", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("much", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("fun", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("it", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("is", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("more", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("more", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("fun", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("fun", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("than", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("than", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killing", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("killing", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("wild", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("wild", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("game", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("game", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("in", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("in", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("the", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("forrest", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("forrest", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("because", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("man", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("man", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("is", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("the", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("moat", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("dangeroue", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("dangeroue", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("anamal", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("anamal", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("of", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("all", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("all", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("to", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("to", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("kill", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("kill", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("something", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("something", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("gives", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("gives", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("me", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("me", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("the", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("moat", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("moat", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("thrilling", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("thrilling", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("experence", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("experence", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("it", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("is", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("is", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("even", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("even", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("better", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("better", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("than", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("than", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("getting", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("getting", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("your", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("your", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("rocks", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("rocks", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("off", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("off", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("with", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("with", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("a", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("a", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("girl", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("girl", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("the", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("best", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("best", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("part", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("part", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("of", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("it", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("it", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("ia", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("ia", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("thae", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("thae", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("when", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("when", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("i", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("die", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("die", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("i", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("will", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("be", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("be", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("reborn", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("reborn", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("in", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("in", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("paradice", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("paradice", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("snd", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("snd", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("all", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("all", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("the", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("the", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("i", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("have", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("have", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("killed", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("killed", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("will", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("become", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("become", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("my", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("slaves", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("i", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("i", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("will", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("not", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("not", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("give", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("give", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("you", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("you", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("my", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("name", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("name", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("because", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("because", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("you", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("you", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("will", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("will", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("try", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("try", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("to", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("to", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("sloi", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("sloi", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("down", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("down", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("or", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("or", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("stop", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("stop", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("my", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("collecting", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("collecting", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("of", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("of", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("slaves", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("slaves", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("for", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("for", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("my", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("my", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("afterlife", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("afterlife", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("e", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("e", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 
-		nextWordGene = new WordGene(new Word(new WordId("beorietemethhpiti", PartOfSpeechType.NONE)), knownSolution);
+		nextWordGene = new WordGene(new Word("beorietemethhpiti", PartOfSpeechType.NONE), knownSolution);
 		knownSolution.addGene(nextWordGene);
 	}
 }

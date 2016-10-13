@@ -33,18 +33,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.engine.entities.PlaintextSequence;
-import com.ciphertool.engine.entities.SolutionChromosome;
-import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class WordGeneTest {
-	private static Word word = new Word(new WordId("smile", PartOfSpeechType.NOUN));
+	private static Word word = new Word("smile", PartOfSpeechType.NOUN);
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
 
 	@BeforeClass
@@ -67,7 +63,7 @@ public class WordGeneTest {
 		assertFalse(solutionChromosome.isEvaluationNeeded());
 		assertEquals(solutionChromosome.actualSize(), new Integer(0));
 		assertSame(solutionChromosome, wordGene.getChromosome());
-		assertEquals(wordGene.size(), word.getId().getWord().length());
+		assertEquals(wordGene.size(), word.getWord().length());
 
 		assertEquals("s", wordGene.getSequences().get(0).getValue());
 		assertEquals("m", wordGene.getSequences().get(1).getValue());
@@ -88,8 +84,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testConstructorNullWordId() {
-		WordId nullWordId = null;
-		Word wordWithNullId = new Word(nullWordId);
+		Word wordWithNullId = new Word(null, null);
 		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -100,7 +95,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testConstructorNullWordString() {
-		Word wordWithNullId = new Word(new WordId(null, PartOfSpeechType.NOUN));
+		Word wordWithNullId = new Word(null, PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(wordWithNullId, solutionChromosome);
 
 		assertFalse(solutionChromosome.isEvaluationNeeded());
@@ -436,7 +431,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testSize() {
-		Word george = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word george = new Word("george", PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals(6, wordGene.size());
@@ -444,7 +439,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testGetWordString() {
-		Word george = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word george = new Word("george", PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(george, solutionChromosome);
 
 		assertEquals("george", wordGene.getWordString());
@@ -452,7 +447,7 @@ public class WordGeneTest {
 
 	@Test
 	public void testCountMatches() {
-		Word newWord = new Word(new WordId("smile", PartOfSpeechType.NOUN));
+		Word newWord = new Word("smile", PartOfSpeechType.NOUN);
 		WordGene wordGeneToTest = new WordGene(newWord, null);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(1)).setHasMatch(true);
 		((PlaintextSequence) wordGeneToTest.getSequences().get(2)).setHasMatch(true);

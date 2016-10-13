@@ -24,21 +24,20 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 import com.ciphertool.engine.dao.WordGeneDao;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class WordGeneDaoMock extends WordGeneDao {
 	private static Logger log = Logger.getLogger(WordGeneDaoMock.class);
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {
-		WordGene wordGene = new WordGene(new Word(new WordId("$$$", PartOfSpeechType.NONE)),
+		WordGene wordGene = new WordGene(new Word("$$$", PartOfSpeechType.NONE),
 				(SolutionChromosome) chromosome);
 
 		return wordGene;
@@ -63,43 +62,43 @@ public class WordGeneDaoMock extends WordGeneDao {
 	public Gene findRandomGeneWithinTen(Chromosome chromosome, int length) {
 		Map<Integer, Gene> geneLengthMap = new HashMap<Integer, Gene>();
 
-		Word word1 = new Word(new WordId("I", PartOfSpeechType.NOUN));
+		Word word1 = new Word("I", PartOfSpeechType.NOUN);
 		WordGene wordGene1 = new WordGene(word1, (SolutionChromosome) chromosome);
 		geneLengthMap.put(1, wordGene1);
 
-		Word word2 = new Word(new WordId("am", PartOfSpeechType.PLURAL));
+		Word word2 = new Word("am", PartOfSpeechType.PLURAL);
 		WordGene wordGene2 = new WordGene(word2, (SolutionChromosome) chromosome);
 		geneLengthMap.put(2, wordGene2);
 
-		Word word3 = new Word(new WordId("the", PartOfSpeechType.NOUN_PHRASE));
+		Word word3 = new Word("the", PartOfSpeechType.NOUN_PHRASE);
 		WordGene wordGene3 = new WordGene(word3, (SolutionChromosome) chromosome);
 		geneLengthMap.put(3, wordGene3);
 
-		Word word4 = new Word(new WordId("best", PartOfSpeechType.VERB_PARTICIPLE));
+		Word word4 = new Word("best", PartOfSpeechType.VERB_PARTICIPLE);
 		WordGene wordGene4 = new WordGene(word4, (SolutionChromosome) chromosome);
 		geneLengthMap.put(4, wordGene4);
 
-		Word word5 = new Word(new WordId("homie", PartOfSpeechType.VERB_TRANSITIVE));
+		Word word5 = new Word("homie", PartOfSpeechType.VERB_TRANSITIVE);
 		WordGene wordGene5 = new WordGene(word5, (SolutionChromosome) chromosome);
 		geneLengthMap.put(5, wordGene5);
 
-		Word word6 = new Word(new WordId("hollah", PartOfSpeechType.VERB_INTRANSITIVE));
+		Word word6 = new Word("hollah", PartOfSpeechType.VERB_INTRANSITIVE);
 		WordGene wordGene6 = new WordGene(word6, (SolutionChromosome) chromosome);
 		geneLengthMap.put(6, wordGene6);
 
-		Word word7 = new Word(new WordId("seventy", PartOfSpeechType.ADJECTIVE));
+		Word word7 = new Word("seventy", PartOfSpeechType.ADJECTIVE);
 		WordGene wordGene7 = new WordGene(word7, (SolutionChromosome) chromosome);
 		geneLengthMap.put(7, wordGene7);
 
-		Word word8 = new Word(new WordId("trillion", PartOfSpeechType.ADVERB));
+		Word word8 = new Word("trillion", PartOfSpeechType.ADVERB);
 		WordGene wordGene8 = new WordGene(word8, (SolutionChromosome) chromosome);
 		geneLengthMap.put(8, wordGene8);
 
-		Word word9 = new Word(new WordId("benjamins", PartOfSpeechType.CONJUNCTION));
+		Word word9 = new Word("benjamins", PartOfSpeechType.CONJUNCTION);
 		WordGene wordGene9 = new WordGene(word9, (SolutionChromosome) chromosome);
 		geneLengthMap.put(9, wordGene9);
 
-		Word word10 = new Word(new WordId("investment", PartOfSpeechType.PREPOSITION));
+		Word word10 = new Word("investment", PartOfSpeechType.PREPOSITION);
 		WordGene wordGene10 = new WordGene(word10, (SolutionChromosome) chromosome);
 		geneLengthMap.put(10, wordGene10);
 
@@ -112,7 +111,7 @@ public class WordGeneDaoMock extends WordGeneDao {
 			word.append("$");
 		}
 
-		WordGene wordGene = new WordGene(new Word(new WordId(word.toString(), PartOfSpeechType.NONE)),
+		WordGene wordGene = new WordGene(new Word(word.toString(), PartOfSpeechType.NONE),
 				(SolutionChromosome) chromosome);
 
 		return wordGene;

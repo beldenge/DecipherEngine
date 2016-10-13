@@ -37,15 +37,13 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
-import com.ciphertool.engine.fitness.AbstractSolutionEvaluatorBase;
+import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class AbstractSolutionEvaluatorBaseTest {
 	/**
@@ -82,7 +80,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 		simpleSolution.setRows(1);
 		simpleSolution.setColumns(10);
 
-		WordGene simpleWordGene = new WordGene(new Word(new WordId("abcdefghij", PartOfSpeechType.NONE)),
+		WordGene simpleWordGene = new WordGene(new Word("abcdefghij", PartOfSpeechType.NONE),
 				simpleSolution);
 		simpleSolution.addGene(simpleWordGene);
 	}

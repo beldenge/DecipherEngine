@@ -28,12 +28,12 @@ import javax.annotation.PostConstruct;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.sentencebuilder.dao.NGramListDao;
 import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
 import com.ciphertool.sentencebuilder.entities.NGram;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
-import com.ciphertool.engine.common.WordGraphUtils;
 
 public class TopWordsFacade {
 	private Logger log = Logger.getLogger(getClass());
@@ -76,21 +76,21 @@ public class TopWordsFacade {
 
 		String lowerCaseWord;
 		for (Word word : topWordsAndNGrams) {
-			if (word.getId().getWord().length() < minWordLength) {
+			if (word.getWord().length() < minWordLength) {
 				continue;
 			}
 
-			lowerCaseWord = word.getId().getWord().toLowerCase();
+			lowerCaseWord = word.getWord().toLowerCase();
 			WordGraphUtils.populateMap(rootNodeWithWordsAndNGrams, lowerCaseWord);
 		}
 	}
 
 	public void addEntryToWordsAndNGramsIndex(Word word) {
-		if (word.getId().getWord().length() < minWordLength) {
+		if (word.getWord().length() < minWordLength) {
 			return;
 		}
 
-		String lowerCaseWord = word.getId().getWord().toLowerCase();
+		String lowerCaseWord = word.getWord().toLowerCase();
 		WordGraphUtils.populateMap(rootNodeWithWordsAndNGrams, lowerCaseWord);
 	}
 
@@ -106,11 +106,11 @@ public class TopWordsFacade {
 
 		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getId().getWord().length() < minWordLength) {
+			if (word.getWord().length() < minWordLength) {
 				continue;
 			}
 
-			lowerCaseWord = word.getId().getWord().toLowerCase();
+			lowerCaseWord = word.getWord().toLowerCase();
 			WordGraphUtils.populateMap(rootNodeWordsOnly, lowerCaseWord);
 		}
 	}

@@ -29,15 +29,15 @@ import javax.annotation.PostConstruct;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = Logger.getLogger(getClass());
@@ -72,15 +72,15 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
-				if (word.getId().getWord().length() >= minWordLength
-						&& lastRowBegin >= i + word.getId().getWord().length()
-						&& word.getId().getWord().toLowerCase().equals(
-								currentSolutionString.substring(i, i + word.getId().getWord().length()))) {
+				if (word.getWord().length() >= minWordLength
+						&& lastRowBegin >= i + word.getWord().length()
+						&& word.getWord().toLowerCase().equals(
+								currentSolutionString.substring(i, i + word.getWord().length()))) {
 					if (!matchMap.containsKey(i)) {
 						matchMap.put(i, new ArrayList<Match>());
 					}
 
-					matchMap.get(i).add(new Match(i, i + word.getId().getWord().length() - 1, word.getId().getWord()));
+					matchMap.get(i).add(new Match(i, i + word.getWord().length() - 1, word.getWord()));
 				}
 			}
 		}

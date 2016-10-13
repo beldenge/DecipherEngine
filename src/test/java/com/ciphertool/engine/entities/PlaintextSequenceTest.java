@@ -32,12 +32,7 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.PlaintextSequence;
-import com.ciphertool.engine.entities.SolutionChromosome;
-import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.entities.WordId;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class PlaintextSequenceTest {
@@ -53,7 +48,7 @@ public class PlaintextSequenceTest {
 	@Test
 	public void testConstructor() {
 		String valueToSet = "valueToSet";
-		Word arbitraryWord = new Word(new WordId("arbitraryWord", PartOfSpeechType.NOUN));
+		Word arbitraryWord = new Word("arbitraryWord", PartOfSpeechType.NOUN);
 		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome);
 		PlaintextSequence plaintextSequence = new PlaintextSequence(valueToSet, geneToSet);
 
@@ -63,7 +58,7 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testSetGene() {
-		Word arbitraryWord = new Word(new WordId("arbitraryWord", PartOfSpeechType.NOUN));
+		Word arbitraryWord = new Word("arbitraryWord", PartOfSpeechType.NOUN);
 		WordGene geneToSet = new WordGene(arbitraryWord, solutionChromosome);
 		PlaintextSequence plaintextSequence = new PlaintextSequence();
 		plaintextSequence.setGene(geneToSet);
@@ -131,7 +126,7 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testClonePlaintextSequence() {
-		Word word = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word word = new Word("george", PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
@@ -155,7 +150,7 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testShiftLeft() {
-		Word word = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word word = new Word("george", PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
@@ -171,7 +166,7 @@ public class PlaintextSequenceTest {
 
 	@Test
 	public void testShiftRight() {
-		Word word = new Word(new WordId("george", PartOfSpeechType.NOUN));
+		Word word = new Word("george", PartOfSpeechType.NOUN);
 		WordGene wordGene = new WordGene(word, solutionChromosome);
 
 		PlaintextSequence plaintextSequence = new PlaintextSequence("g", wordGene);
