@@ -20,6 +20,9 @@
 var conn = new Mongo();
 var db = conn.getDB("DecipherEngine");
 
+db.createCollection("ciphers");
+db.ciphers.ensureIndex( { "name": 1 }, { background: true } );
+
 var zodiac340 = { 
 	name: "zodiac340",
 	rows: 20,
@@ -789,6 +792,16 @@ var zodiac408 = {
 db.ciphers.insert(zodiac340);
 db.ciphers.insert(zodiac408);
 
-db.ciphers.ensureIndex( { "name": 1 } );
+db.createCollection("solutions");
+db.solutions.ensureIndex( { "solutionSetId": 1 }, { background: true } );
 
-db.solutions.ensureIndex( { "solutionSetId": 1 } );
+db.createCollection("partsOfSpeech");
+db.partsOfSpeech.ensureIndex( { "partOfSpeech": 1, "word": 1 }, { unique: true, background: true } );
+db.partsOfSpeech.ensureIndex( { "word": 1 }, { background: true } );
+
+db.createCollection("nGram");
+db.nGram.ensureIndex( { "nGram": 1, "numWords": 1 }, { unique: true, background: true } );
+
+db.createCollection("executionStats");
+
+db.createCollection("generationStats");
