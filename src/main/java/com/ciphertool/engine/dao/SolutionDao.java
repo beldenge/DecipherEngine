@@ -26,18 +26,15 @@ import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.genetics.entities.Chromosome;
 
 public class SolutionDao {
 	private static Logger log = Logger.getLogger(SolutionDao.class);
 
 	private MongoOperations mongoOperations;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(Chromosome chromosome) {
 		if (chromosome == null) {
 			log.warn("Attempted to insert null solution.  Returning.");
@@ -50,7 +47,6 @@ public class SolutionDao {
 		return true;
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Chromosome findBySolutionId(Integer solutionId) {
 		if (solutionId == null) {
 			log.warn("Attempted to find solution by null ID.  Returning null.");
@@ -65,7 +61,6 @@ public class SolutionDao {
 		return chromosome;
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Chromosome> findByCipherName(String cipherName) {
 		if (cipherName == null || cipherName.isEmpty()) {
 			log.warn("Attempted to find solution by cipher name with null or empty cipherName.  Returning null.");
