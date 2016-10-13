@@ -30,6 +30,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
@@ -37,7 +38,6 @@ import com.ciphertool.genetics.entities.Ancestry;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeyedChromosome;
-import com.ciphertool.engine.entities.Cipher;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {
@@ -54,7 +54,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	@Id
 	protected String id = UUID.randomUUID().toString();
 
-	@Indexed
+	@Indexed(background = true)
 	protected Integer solutionSetId;
 
 	protected Cipher cipher;

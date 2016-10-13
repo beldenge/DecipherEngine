@@ -801,6 +801,7 @@ db.partsOfSpeech.ensureIndex( { "word": 1 }, { background: true } );
 
 db.createCollection("nGram");
 db.nGram.ensureIndex( { "nGram": 1, "numWords": 1 }, { unique: true, background: true } );
+db.nGram.ensureIndex( { "frequencyWeight": 1 }, { background: true } );
 
 db.createCollection("executionStats");
 

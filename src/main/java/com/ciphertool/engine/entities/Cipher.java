@@ -36,7 +36,7 @@ public class Cipher implements Serializable {
 	@Id
 	private BigInteger id;
 
-	@Indexed
+	@Indexed(background = true)
 	private String name;
 
 	private int columns;

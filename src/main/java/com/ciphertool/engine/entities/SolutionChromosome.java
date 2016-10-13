@@ -53,7 +53,7 @@ public class SolutionChromosome implements KeylessChromosome {
 	@Id
 	protected String id = UUID.randomUUID().toString();
 
-	@Indexed
+	@Indexed(background = true)
 	protected Integer solutionSetId;
 
 	protected BigInteger cipherId;

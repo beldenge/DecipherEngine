@@ -27,8 +27,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ciphertool.engine.entities.Cipher;
 
@@ -38,7 +36,6 @@ public class CipherDao {
 
 	private MongoOperations mongoOperations;
 
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public Cipher findByCipherName(String name) {
 		if (name == null || name.isEmpty()) {
 			log.warn("Attempted to find cipher with null or empty name.  Returning null.");
@@ -53,7 +50,6 @@ public class CipherDao {
 		return cipher;
 	}
 
-	@Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
 	public List<Cipher> findAll() {
 		List<Cipher> ciphers = mongoOperations.findAll(Cipher.class);
 
