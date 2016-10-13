@@ -55,17 +55,17 @@ You should have received a copy of the GNU General Public License along with Dec
 		</constructor-arg>
 	</bean> -->
 
-	<bean class="com.ciphertool.DecipherEngine.dao.ForcedWordGeneDao" id="geneDao">
+	<bean class="com.ciphertool.engine.dao.ForcedWordGeneDao" id="geneDao">
 		<property name="wordListDao" ref="wordListDao" />
 	</bean>
 
-	<bean class="com.ciphertool.DecipherEngine.dao.PlaintextSequenceDao" id="sequenceDao" />
+	<bean class="com.ciphertool.engine.dao.PlaintextSequenceDao" id="sequenceDao" />
 
-	<bean class="com.ciphertool.DecipherEngine.dao.CipherDao" id="cipherDao">
+	<bean class="com.ciphertool.engine.dao.CipherDao" id="cipherDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
-	<bean class="com.ciphertool.DecipherEngine.dao.SolutionDao" id="solutionDao">
+	<bean class="com.ciphertool.engine.dao.SolutionDao" id="solutionDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
@@ -73,5 +73,5 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean class="com.ciphertool.DecipherEngine.dao.cipherkey.CipherKeyGeneDao" id="cipherKeyGeneDao" />
+	<bean class="com.ciphertool.engine.dao.cipherkey.CipherKeyGeneDao" id="cipherKeyGeneDao" />
 </beans>
