@@ -15,11 +15,11 @@ You should have received a copy of the GNU General Public License along with Dec
        		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
 	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
 	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao" id="wordListDao">
@@ -70,7 +70,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
-		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.dao.cipherkey.CipherKeyGeneDao" id="cipherKeyGeneDao" />
