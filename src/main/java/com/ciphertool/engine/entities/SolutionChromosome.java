@@ -26,7 +26,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -43,8 +44,7 @@ import com.ciphertool.genetics.entities.VariableLengthGene;
 
 @Document(collection = "solutions")
 public class SolutionChromosome implements KeylessChromosome {
-
-	private static Logger log = Logger.getLogger(SolutionChromosome.class);
+	private static Logger log = LoggerFactory.getLogger(SolutionChromosome.class);
 
 	/**
 	 * This initial value is only used as a unique identifier for the Chromosome's ancestry, but a different generated

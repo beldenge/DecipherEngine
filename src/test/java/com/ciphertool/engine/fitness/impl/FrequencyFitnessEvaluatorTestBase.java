@@ -22,16 +22,17 @@ package com.ciphertool.engine.fitness.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ciphertool.genetics.entities.VariableLengthGene;
-import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
 
 public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase {
-	private static Logger log = Logger.getLogger(FrequencyFitnessEvaluatorTestBase.class);
+	private static Logger log = LoggerFactory.getLogger(FrequencyFitnessEvaluatorTestBase.class);
 
 	protected static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
 	private static Map<Character, Integer> knownSolutionLetterTotals = new HashMap<Character, Integer>();

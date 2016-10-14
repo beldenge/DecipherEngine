@@ -19,7 +19,8 @@
 
 package com.ciphertool.engine.entities.cipherkey;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
@@ -27,8 +28,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 
 public class CipherKeyGene implements Gene {
-
-	private static Logger log = Logger.getLogger(CipherKeyGene.class);
+	private static Logger log = LoggerFactory.getLogger(CipherKeyGene.class);
 
 	@Transient
 	private Chromosome chromosome;

@@ -26,17 +26,16 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 
-import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator;
 import com.ciphertool.engine.fitness.impl.FrequencyFitnessEvaluatorTestBase;
 
 public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {

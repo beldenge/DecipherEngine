@@ -22,17 +22,18 @@ package com.ciphertool.engine.service;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.dao.SolutionDao;
+import com.ciphertool.engine.view.GenericCallback;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.engine.dao.SolutionDao;
-import com.ciphertool.engine.view.GenericCallback;
 
 public class GeneticCipherSolutionService implements CipherSolutionService {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 	private boolean running = false;
 
 	private GeneticAlgorithm geneticAlgorithm;

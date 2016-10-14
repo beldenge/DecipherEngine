@@ -19,19 +19,19 @@
 
 package com.ciphertool.engine;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.dao.GeneDao;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyBreeder implements Breeder {
-
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private GeneDao geneDao;
 
@@ -67,7 +67,7 @@ public class CipherKeyBreeder implements Breeder {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug(chromosome);
+			log.debug(chromosome.toString());
 		}
 
 		return chromosome;

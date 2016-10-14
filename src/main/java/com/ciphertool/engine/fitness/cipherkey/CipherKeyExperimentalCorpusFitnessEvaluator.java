@@ -23,7 +23,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -38,7 +39,7 @@ import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
 
 public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private static final double FREQUENCY_DIFFERENCE_THRESHOLD = 0.05;
 	private static final double MATCHES_BONUS = 1.033;

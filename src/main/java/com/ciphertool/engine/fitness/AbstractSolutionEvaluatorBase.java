@@ -22,7 +22,8 @@ package com.ciphertool.engine.fitness;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
@@ -30,7 +31,7 @@ import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 
 public abstract class AbstractSolutionEvaluatorBase {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	protected HashMap<String, List<Ciphertext>> ciphertextKey;
 	protected Cipher cipher;

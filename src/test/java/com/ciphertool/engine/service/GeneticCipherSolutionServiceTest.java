@@ -38,18 +38,17 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.engine.dao.SolutionDao;
+import com.ciphertool.engine.entities.SolutionChromosome;
+import com.ciphertool.engine.view.GenericCallback;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.StandardPopulation;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
-import com.ciphertool.engine.dao.SolutionDao;
-import com.ciphertool.engine.entities.SolutionChromosome;
-import com.ciphertool.engine.service.GeneticCipherSolutionService;
-import com.ciphertool.engine.view.GenericCallback;
 
 public class GeneticCipherSolutionServiceTest {
 	private static ChromosomePrinter chromosomePrinterMock = mock(ChromosomePrinter.class);

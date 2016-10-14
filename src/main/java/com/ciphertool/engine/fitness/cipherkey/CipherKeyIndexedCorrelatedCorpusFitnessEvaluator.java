@@ -23,7 +23,8 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -38,7 +39,7 @@ import com.ciphertool.sentencebuilder.wordgraph.Match;
 
 public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator {
 	@SuppressWarnings("unused")
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	protected Cipher cipher;
 	private static List<Word> topWords = new ArrayList<Word>();

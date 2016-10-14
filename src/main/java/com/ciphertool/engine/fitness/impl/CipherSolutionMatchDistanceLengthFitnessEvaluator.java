@@ -24,22 +24,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.genetics.entities.VariableLengthGene;
-import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.engine.fitness.SolutionTruncatedEvaluatorBase;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.entities.Gene;
+import com.ciphertool.genetics.entities.VariableLengthGene;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
-
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 	private static final int ACCEPTABLE_DISTANCE = 3;
 	private static final double MATCH_DISTANCE_BONUS = 2.0;
 	private static final double AVERAGE_WORD_LENGTH_BONUS = 100.0;

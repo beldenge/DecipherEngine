@@ -24,15 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.fitness.SolutionEvaluatorBase;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 /**
  * This class was modeled after CipherSolutionFrequencyFitnessEvaluator, with additional evaluation based on average
@@ -41,8 +42,8 @@ import com.ciphertool.engine.fitness.SolutionEvaluatorBase;
  * @author george
  */
 public class CipherSolutionFrequencyLengthFitnessEvaluator extends SolutionEvaluatorBase implements FitnessEvaluator {
+	private static Logger log = LoggerFactory.getLogger(CipherSolutionFrequencyLengthFitnessEvaluator.class);
 
-	private static Logger log = Logger.getLogger(CipherSolutionFrequencyLengthFitnessEvaluator.class);
 	private Map<Character, Double> expectedLetterFrequencies;
 	private Double averageWordLength;
 

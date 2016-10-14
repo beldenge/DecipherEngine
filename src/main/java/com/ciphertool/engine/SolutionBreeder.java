@@ -19,21 +19,23 @@
 
 package com.ciphertool.engine;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.SolutionChromosome;
+import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.SolutionChromosome;
-import com.ciphertool.engine.entities.WordGene;
 
 public class SolutionBreeder implements Breeder {
+	private Logger log = LoggerFactory.getLogger(getClass());
+
 	private Cipher cipher;
 	private WordListDao wordListDao;
-	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Default no-args constructor
@@ -50,7 +52,7 @@ public class SolutionBreeder implements Breeder {
 		populateGenes(solution);
 
 		if (log.isDebugEnabled()) {
-			log.debug(solution);
+			log.debug(solution.toString());
 		}
 
 		return (Chromosome) solution;

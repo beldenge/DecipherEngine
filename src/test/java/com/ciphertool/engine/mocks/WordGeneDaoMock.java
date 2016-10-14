@@ -22,7 +22,8 @@ package com.ciphertool.engine.mocks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ciphertool.engine.dao.WordGeneDao;
 import com.ciphertool.engine.entities.SolutionChromosome;
@@ -33,7 +34,7 @@ import com.ciphertool.sentencebuilder.entities.Word;
 import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
 
 public class WordGeneDaoMock extends WordGeneDao {
-	private static Logger log = Logger.getLogger(WordGeneDaoMock.class);
+	private static Logger log = LoggerFactory.getLogger(WordGeneDaoMock.class);
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {

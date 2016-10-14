@@ -21,20 +21,21 @@ package com.ciphertool.engine.common;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.dao.CipherDao;
+import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.engine.dao.CipherDao;
-import com.ciphertool.engine.entities.Cipher;
 
 public class GeneticStrategyBuilder implements StrategyBuilder {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private CipherDao cipherDao;
 	private FitnessEvaluator knownSolutionFitnessEvaluator;

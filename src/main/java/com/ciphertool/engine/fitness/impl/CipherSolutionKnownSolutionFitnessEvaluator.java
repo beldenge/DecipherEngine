@@ -19,15 +19,16 @@
 
 package com.ciphertool.engine.fitness.impl;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.fitness.KnownSolutionEvaluatorBase;
+import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase implements FitnessEvaluator {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Default no-args constructor

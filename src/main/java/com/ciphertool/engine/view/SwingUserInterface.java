@@ -46,12 +46,19 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import com.ciphertool.engine.common.ParameterConstants;
+import com.ciphertool.engine.common.StrategyBuilder;
+import com.ciphertool.engine.controller.CipherSolutionController;
+import com.ciphertool.engine.dao.CipherDao;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedNGramFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm;
@@ -62,17 +69,12 @@ import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.engine.common.ParameterConstants;
-import com.ciphertool.engine.common.StrategyBuilder;
-import com.ciphertool.engine.controller.CipherSolutionController;
-import com.ciphertool.engine.dao.CipherDao;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedNGramFitnessEvaluator;
 
 public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
 	private static final long serialVersionUID = -7682403631152076457L;
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
+
 	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
 	private static final double LAYOUT_LABEL_WEIGHT = 1.0;
 	private static final double LAYOUT_INPUT_WEIGHT = 2.0;

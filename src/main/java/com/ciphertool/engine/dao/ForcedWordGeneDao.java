@@ -19,7 +19,8 @@
 
 package com.ciphertool.engine.dao;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.entities.SolutionChromosome;
@@ -31,7 +32,7 @@ import com.ciphertool.sentencebuilder.dao.WordListDao;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class ForcedWordGeneDao implements VariableLengthGeneDao {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private WordListDao wordListDao;
 

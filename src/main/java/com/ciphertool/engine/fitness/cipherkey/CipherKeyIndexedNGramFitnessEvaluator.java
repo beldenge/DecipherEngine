@@ -26,21 +26,22 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
 import com.ciphertool.sentencebuilder.wordgraph.Match;
 import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
 	protected Cipher cipher;
 

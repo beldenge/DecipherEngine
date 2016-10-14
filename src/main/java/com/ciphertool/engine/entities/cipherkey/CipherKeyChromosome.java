@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -41,8 +42,7 @@ import com.ciphertool.genetics.entities.KeyedChromosome;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {
-
-	private static Logger log = Logger.getLogger(CipherKeyChromosome.class);
+	private static Logger log = LoggerFactory.getLogger(CipherKeyChromosome.class);
 
 	@Transient
 	private static final int KEY_SIZE = 54;

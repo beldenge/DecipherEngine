@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.annotation.Transient;
 
 import com.ciphertool.genetics.annotations.Dirty;
@@ -33,7 +34,7 @@ import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sentencebuilder.entities.Word;
 
 public class WordGene implements VariableLengthGene {
-	private static Logger log = Logger.getLogger(WordGene.class);
+	private static Logger log = LoggerFactory.getLogger(WordGene.class);
 
 	private boolean hasMatch;
 

@@ -19,16 +19,17 @@
 
 package com.ciphertool.engine.dao;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.genetics.dao.SequenceDao;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.sentencebuilder.util.LetterUtils;
-import com.ciphertool.engine.entities.PlaintextSequence;
 
 public class PlaintextSequenceDao implements SequenceDao {
-	private static Logger log = Logger.getLogger(PlaintextSequenceDao.class);
+	private static Logger log = LoggerFactory.getLogger(PlaintextSequenceDao.class);
 
 	@Override
 	public Sequence findRandomSequence(Gene gene, int sequenceIndex) {

@@ -19,15 +19,16 @@
 
 package com.ciphertool.engine.controller;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.engine.service.CipherSolutionService;
 import com.ciphertool.engine.view.GenericCallback;
+import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 
 public class ZodiacCipherSolutionController implements CipherSolutionController {
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 	private CipherSolutionService cipherSolutionService;
 
 	@Override

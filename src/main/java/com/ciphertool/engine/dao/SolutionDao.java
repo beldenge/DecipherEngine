@@ -21,7 +21,8 @@ package com.ciphertool.engine.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,7 +32,7 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.genetics.entities.Chromosome;
 
 public class SolutionDao {
-	private static Logger log = Logger.getLogger(SolutionDao.class);
+	private static Logger log = LoggerFactory.getLogger(SolutionDao.class);
 
 	private MongoOperations mongoOperations;
 
