@@ -42,8 +42,8 @@ import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class AbstractSolutionEvaluatorBaseTest {
 	/**

@@ -32,8 +32,8 @@ import java.math.BigInteger;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class PlaintextSequenceTest {
 	private static SolutionChromosome solutionChromosome = new SolutionChromosome();

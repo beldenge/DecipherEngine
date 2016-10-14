@@ -30,11 +30,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.sentencebuilder.dao.NGramListDao;
-import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
-import com.ciphertool.sentencebuilder.entities.NGram;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
+import com.ciphertool.sherlock.dao.NGramListDao;
+import com.ciphertool.sherlock.dao.UniqueWordListDao;
+import com.ciphertool.sherlock.entities.NGram;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.wordgraph.IndexNode;
 
 public class TopWordsFacade {
 	private Logger log = LoggerFactory.getLogger(getClass());

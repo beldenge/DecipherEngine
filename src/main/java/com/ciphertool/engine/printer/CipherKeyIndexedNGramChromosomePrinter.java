@@ -29,9 +29,9 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
-import com.ciphertool.sentencebuilder.wordgraph.Match;
-import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
+import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.wordgraph.Match;
+import com.ciphertool.sherlock.wordgraph.MatchNode;
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;

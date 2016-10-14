@@ -26,7 +26,7 @@ import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.genetics.dao.SequenceDao;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.Sequence;
-import com.ciphertool.sentencebuilder.util.LetterUtils;
+import com.ciphertool.sherlock.util.LetterUtils;
 
 public class PlaintextSequenceDao implements SequenceDao {
 	private static Logger log = LoggerFactory.getLogger(PlaintextSequenceDao.class);

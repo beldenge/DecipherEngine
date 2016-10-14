@@ -39,9 +39,9 @@ import org.springframework.util.ReflectionUtils;
 import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.sentencebuilder.dao.WordListDao;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+import com.ciphertool.sherlock.dao.WordListDao;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class ForcedWordGeneDaoTest {
 	private static ForcedWordGeneDao forcedWordGeneDao;

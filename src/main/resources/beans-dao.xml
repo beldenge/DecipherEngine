@@ -14,30 +14,30 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean class="com.ciphertool.sentencebuilder.dao.WordDao" id="wordDao">
+	<bean class="com.ciphertool.sherlock.dao.WordDao" id="wordDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.dao.NGramDao" id="nGramDao">
+	<bean class="com.ciphertool.sherlock.dao.NGramDao" id="nGramDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.dao.FrequencyWordListDao" id="wordListDao">
-		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.WordDao">
+	<bean class="com.ciphertool.sherlock.dao.FrequencyWordListDao" id="wordListDao">
+		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
 		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
 	</bean>
 
-	<bean class="com.ciphertool.sentencebuilder.dao.UniqueWordListDao" id="uniqueWordListDao">
-		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.WordDao">
+	<bean class="com.ciphertool.sherlock.dao.UniqueWordListDao" id="uniqueWordListDao">
+		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
 		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
 	</bean>
 	
-	<bean class="com.ciphertool.sentencebuilder.dao.UniqueNGramListDao" id="nGramListDao">
-		<constructor-arg index="0" type="com.ciphertool.sentencebuilder.dao.NGramDao">
+	<bean class="com.ciphertool.sherlock.dao.UniqueNGramListDao" id="nGramListDao">
+		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.NGramDao">
 			<ref bean="nGramDao" />
 		</constructor-arg>
 		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.ngram.two.topWords}" />
@@ -47,10 +47,10 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 	
 	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
-	<!-- <bean class="com.ciphertool.sentencebuilder.dao.BasicWordMapDao"
+	<!-- <bean class="com.ciphertool.sherlock.dao.BasicWordMapDao"
 		id="wordMapDao">
 		<constructor-arg index="0"
-			type="com.ciphertool.sentencebuilder.dao.WordDao">
+			type="com.ciphertool.sherlock.dao.WordDao">
 			<ref bean="wordDao" />
 		</constructor-arg>
 	</bean> -->

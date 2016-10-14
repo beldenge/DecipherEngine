@@ -30,8 +30,8 @@ import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.enumerations.PartOfSpeechType;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class WordGeneDaoMock extends WordGeneDao {
 	private static Logger log = LoggerFactory.getLogger(WordGeneDaoMock.class);

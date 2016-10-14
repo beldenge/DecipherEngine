@@ -33,10 +33,10 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sentencebuilder.entities.Word;
-import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
-import com.ciphertool.sentencebuilder.wordgraph.Match;
-import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
+import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.wordgraph.Match;
+import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger log = LoggerFactory.getLogger(getClass());

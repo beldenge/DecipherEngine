@@ -30,8 +30,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ciphertool.sentencebuilder.dao.UniqueWordListDao;
-import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sherlock.dao.UniqueWordListDao;
+import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;

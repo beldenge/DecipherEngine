@@ -31,7 +31,7 @@ import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Sequence;
 import com.ciphertool.genetics.entities.VariableLengthGene;
-import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sherlock.entities.Word;
 
 public class WordGene implements VariableLengthGene {
 	private static Logger log = LoggerFactory.getLogger(WordGene.class);

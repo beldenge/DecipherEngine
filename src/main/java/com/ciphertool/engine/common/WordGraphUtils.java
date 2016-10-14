@@ -22,9 +22,9 @@ package com.ciphertool.engine.common;
 import java.util.List;
 import java.util.Map;
 
-import com.ciphertool.sentencebuilder.wordgraph.IndexNode;
-import com.ciphertool.sentencebuilder.wordgraph.Match;
-import com.ciphertool.sentencebuilder.wordgraph.MatchNode;
+import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.wordgraph.Match;
+import com.ciphertool.sherlock.wordgraph.MatchNode;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 

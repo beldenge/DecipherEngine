@@ -28,8 +28,8 @@ import com.ciphertool.engine.entities.SolutionChromosome;
 import com.ciphertool.engine.entities.WordGene;
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.sentencebuilder.dao.WordListDao;
-import com.ciphertool.sentencebuilder.entities.Word;
+import com.ciphertool.sherlock.dao.WordListDao;
+import com.ciphertool.sherlock.entities.Word;
 
 public class SolutionBreeder implements Breeder {
 	private Logger log = LoggerFactory.getLogger(getClass());
