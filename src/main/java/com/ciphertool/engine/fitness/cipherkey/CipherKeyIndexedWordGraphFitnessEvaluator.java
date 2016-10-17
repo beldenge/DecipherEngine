@@ -39,12 +39,12 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher cipher;
+	protected Cipher			cipher;
 
-	protected TopWordsFacade topWordsFacade;
+	protected TopWordsFacade	topWordsFacade;
 
-	private int lastRowBegin;
-	private IndexNode rootNode;
+	private int					lastRowBegin;
+	private IndexNode			rootNode;
 
 	@PostConstruct
 	public void init() {
@@ -55,8 +55,7 @@ public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluat
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {

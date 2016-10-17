@@ -71,106 +71,106 @@ import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
-	private static final long serialVersionUID = -7682403631152076457L;
+	private static final long				serialVersionUID				= -7682403631152076457L;
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger							log								= LoggerFactory.getLogger(getClass());
 
-	private static final int PROGRAM_EXIT_SLEEP_MILLIS = 1000;
-	private static final double LAYOUT_LABEL_WEIGHT = 1.0;
-	private static final double LAYOUT_INPUT_WEIGHT = 2.0;
+	private static final int				PROGRAM_EXIT_SLEEP_MILLIS		= 1000;
+	private static final double				LAYOUT_LABEL_WEIGHT				= 1.0;
+	private static final double				LAYOUT_INPUT_WEIGHT				= 2.0;
 
-	private ApplicationContext applicationContext;
+	private ApplicationContext				applicationContext;
 
-	private static boolean inDebugMode;
+	private static boolean					inDebugMode;
 
-	private String windowTitle;
-	private int windowWidth;
-	private int windowHeight;
-	private String cipherNameText = "Cipher: ";
-	private String startButtonText = "Start";
-	private String debugButtonText = "Debug";
-	private String continueButtonText = "Continue";
-	private String stopButtonText = "Stop";
-	private String generationsText = "Generations: ";
-	private String populationText = "Population Size: ";
-	private String lifespanText = "Individual Lifespan: ";
-	private String survivalRateText = "Survival Rate: ";
-	private String mutationRateText = "Mutation Rate: ";
-	private String maxMutationsPerIndividualText = "Max Mutations Each: ";
-	private String crossoverRateText = "Crossover Rate: ";
-	private String mutateDuringCrossoverText = "Mutate during crossover";
-	private String continuousText = "Run until user stops";
-	private String fitnessEvaluatorNameText = "Fitness Evaluator: ";
-	private String crossoverAlgorithmNameText = "Crossover Algorithm: ";
-	private String mutationAlgorithmNameText = "Mutation Algorithm: ";
-	private String selectionAlgorithmNameText = "Selection Algorithm: ";
-	private String selectorNameText = "Selector Method: ";
-	private String statusRunning = "Running.";
-	private String statusNotRunning = "Not running.";
-	private String compareToKnownSolutionText = "Compare to known solution";
-	private int lifespanInitial;
-	private static final int LIFESPAN_MIN = -1;
-	private static final int LIFESPAN_MAX = 1000;
-	private static final int LIFESPAN_STEP = 1;
-	private int generationsInitial;
-	private static final int GENERATIONS_MIN = 1;
-	private static final int GENERATIONS_MAX = 100000;
-	private static final int GENERATIONS_STEP = 50;
-	private int populationInitial;
-	private static final int POPULATION_MIN = 1;
-	private static final int POPULATION_MAX = 100000;
-	private static final int POPULATION_STEP = 100;
-	private double survivalInitial;
-	private static final double SURVIVAL_MIN = 0.0;
-	private static final double SURVIVAL_MAX = 1.0;
-	private static final double SURVIVAL_STEP = 0.01;
-	private double mutationInitial;
-	private static final double MUTATION_MIN = 0.0;
-	private static final double MUTATION_MAX = 1;
-	private static final double MUTATION_STEP = 0.001;
-	private int maxMutationsPerIndividualInitial;
-	private static final int MAX_MUTATION_MIN = 1;
-	private static final int MAX_MUTATION_MAX = 100;
-	private static final int MAX_MUTATION_STEP = 1;
-	private double crossoverInitial;
-	private static final double CROSSOVER_MIN = 0.0;
-	private static final double CROSSOVER_MAX = 1.0;
-	private static final double CROSSOVER_STEP = 0.01;
+	private String							windowTitle;
+	private int								windowWidth;
+	private int								windowHeight;
+	private String							cipherNameText					= "Cipher: ";
+	private String							startButtonText					= "Start";
+	private String							debugButtonText					= "Debug";
+	private String							continueButtonText				= "Continue";
+	private String							stopButtonText					= "Stop";
+	private String							generationsText					= "Generations: ";
+	private String							populationText					= "Population Size: ";
+	private String							lifespanText					= "Individual Lifespan: ";
+	private String							survivalRateText				= "Survival Rate: ";
+	private String							mutationRateText				= "Mutation Rate: ";
+	private String							maxMutationsPerIndividualText	= "Max Mutations Each: ";
+	private String							crossoverRateText				= "Crossover Rate: ";
+	private String							mutateDuringCrossoverText		= "Mutate during crossover";
+	private String							continuousText					= "Run until user stops";
+	private String							fitnessEvaluatorNameText		= "Fitness Evaluator: ";
+	private String							crossoverAlgorithmNameText		= "Crossover Algorithm: ";
+	private String							mutationAlgorithmNameText		= "Mutation Algorithm: ";
+	private String							selectionAlgorithmNameText		= "Selection Algorithm: ";
+	private String							selectorNameText				= "Selector Method: ";
+	private String							statusRunning					= "Running.";
+	private String							statusNotRunning				= "Not running.";
+	private String							compareToKnownSolutionText		= "Compare to known solution";
+	private int								lifespanInitial;
+	private static final int				LIFESPAN_MIN					= -1;
+	private static final int				LIFESPAN_MAX					= 1000;
+	private static final int				LIFESPAN_STEP					= 1;
+	private int								generationsInitial;
+	private static final int				GENERATIONS_MIN					= 1;
+	private static final int				GENERATIONS_MAX					= 100000;
+	private static final int				GENERATIONS_STEP				= 50;
+	private int								populationInitial;
+	private static final int				POPULATION_MIN					= 1;
+	private static final int				POPULATION_MAX					= 100000;
+	private static final int				POPULATION_STEP					= 100;
+	private double							survivalInitial;
+	private static final double				SURVIVAL_MIN					= 0.0;
+	private static final double				SURVIVAL_MAX					= 1.0;
+	private static final double				SURVIVAL_STEP					= 0.01;
+	private double							mutationInitial;
+	private static final double				MUTATION_MIN					= 0.0;
+	private static final double				MUTATION_MAX					= 1;
+	private static final double				MUTATION_STEP					= 0.001;
+	private int								maxMutationsPerIndividualInitial;
+	private static final int				MAX_MUTATION_MIN				= 1;
+	private static final int				MAX_MUTATION_MAX				= 100;
+	private static final int				MAX_MUTATION_STEP				= 1;
+	private double							crossoverInitial;
+	private static final double				CROSSOVER_MIN					= 0.0;
+	private static final double				CROSSOVER_MAX					= 1.0;
+	private static final double				CROSSOVER_STEP					= 0.01;
 
-	private CipherSolutionController cipherSolutionController;
-	private CipherDao cipherDao;
-	private String defaultCipher;
+	private CipherSolutionController		cipherSolutionController;
+	private CipherDao						cipherDao;
+	private String							defaultCipher;
 
-	private JButton startButton;
-	private JButton debugButton;
-	private JButton continueButton;
-	private JButton stopButton;
-	private JComboBox<String> cipherComboBox;
-	private JComboBox<FitnessEvaluator> fitnessEvaluatorComboBox;
-
-	@SuppressWarnings("rawtypes")
-	private JComboBox<CrossoverAlgorithm> crossoverAlgorithmComboBox;
+	private JButton							startButton;
+	private JButton							debugButton;
+	private JButton							continueButton;
+	private JButton							stopButton;
+	private JComboBox<String>				cipherComboBox;
+	private JComboBox<FitnessEvaluator>		fitnessEvaluatorComboBox;
 
 	@SuppressWarnings("rawtypes")
-	private JComboBox<MutationAlgorithm> mutationAlgorithmComboBox;
+	private JComboBox<CrossoverAlgorithm>	crossoverAlgorithmComboBox;
 
-	private JComboBox<SelectionAlgorithm> selectionAlgorithmComboBox;
-	private JComboBox<Selector> selectorComboBox;
-	private JCheckBox runContinuouslyCheckBox;
-	private JSpinner generationsSpinner;
-	private JSpinner populationSpinner;
-	private JSpinner lifespanSpinner;
-	private JSpinner survivalRateSpinner;
-	private JSpinner mutationRateSpinner;
-	private JSpinner maxMutationsPerIndividualSpinner;
-	private JSpinner crossoverRateSpinner;
-	private JCheckBox mutateDuringCrossoverCheckBox;
-	private JLabel statusLabel;
-	private JCheckBox compareToKnownSolutionCheckBox;
+	@SuppressWarnings("rawtypes")
+	private JComboBox<MutationAlgorithm>	mutationAlgorithmComboBox;
 
-	private Map<String, Cipher> cipherMap;
+	private JComboBox<SelectionAlgorithm>	selectionAlgorithmComboBox;
+	private JComboBox<Selector>				selectorComboBox;
+	private JCheckBox						runContinuouslyCheckBox;
+	private JSpinner						generationsSpinner;
+	private JSpinner						populationSpinner;
+	private JSpinner						lifespanSpinner;
+	private JSpinner						survivalRateSpinner;
+	private JSpinner						mutationRateSpinner;
+	private JSpinner						maxMutationsPerIndividualSpinner;
+	private JSpinner						crossoverRateSpinner;
+	private JCheckBox						mutateDuringCrossoverCheckBox;
+	private JLabel							statusLabel;
+	private JCheckBox						compareToKnownSolutionCheckBox;
 
-	private StrategyBuilder strategyBuilder;
+	private Map<String, Cipher>				cipherMap;
+
+	private StrategyBuilder					strategyBuilder;
 
 	public SwingUserInterface() {
 	}
@@ -199,9 +199,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 									Thread.sleep(PROGRAM_EXIT_SLEEP_MILLIS);
 								}
 							} catch (InterruptedException e) {
-								log.error(
-										"Caught InterruptedException while waiting for service thread to complete after window close event.  Unable to continue.",
-										e);
+								log.error("Caught InterruptedException while waiting for service thread to complete after window close event.  Unable to continue.", e);
 							}
 						}
 
@@ -361,8 +359,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(generationsSpinner);
 	}
 
-	private void appendRunContinuouslyCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendRunContinuouslyCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		runContinuouslyCheckBox = new JCheckBox(continuousText);
 		runContinuouslyCheckBox.addActionListener(getRunContinuouslyCheckBoxActionListener());
 		runContinuouslyCheckBox.setSelected(true);
@@ -445,8 +442,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(mutationRateSpinner);
 	}
 
-	private void appendMaxMutationsPerIndividualSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendMaxMutationsPerIndividualSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel maxMutationsPerIndividualModel = new SpinnerNumberModel(maxMutationsPerIndividualInitial,
 				MAX_MUTATION_MIN, MAX_MUTATION_MAX, MAX_MUTATION_STEP);
 		maxMutationsPerIndividualSpinner = new JSpinner(maxMutationsPerIndividualModel);
@@ -463,8 +459,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(maxMutationsPerIndividualSpinner);
 	}
 
-	private void appendCrossoverRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendCrossoverRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		SpinnerModel crossoverRateModel = new SpinnerNumberModel(crossoverInitial, CROSSOVER_MIN, CROSSOVER_MAX,
 				CROSSOVER_STEP);
 		crossoverRateSpinner = new JSpinner(crossoverRateModel);
@@ -481,8 +476,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(crossoverRateSpinner);
 	}
 
-	private void appendMutateDuringCrossoverCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendMutateDuringCrossoverCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		mutateDuringCrossoverCheckBox = new JCheckBox(mutateDuringCrossoverText);
 		mutateDuringCrossoverCheckBox.setSelected(false);
 
@@ -497,8 +491,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(mutateDuringCrossoverCheckBox);
 	}
 
-	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, FitnessEvaluator> beanMap = applicationContext.getBeansOfType(FitnessEvaluator.class);
 
 		FitnessEvaluator[] beans = new FitnessEvaluator[beanMap.size()];
@@ -514,8 +507,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext
-				.getBean(CipherKeyIndexedNGramFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyIndexedNGramFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -529,8 +521,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void appendCrossoverAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendCrossoverAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, CrossoverAlgorithm> beanMap = applicationContext.getBeansOfType(CrossoverAlgorithm.class);
 
 		CrossoverAlgorithm[] beans = new CrossoverAlgorithm[beanMap.size()];
@@ -546,8 +537,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		crossoverAlgorithmComboBox = new JComboBox<CrossoverAlgorithm>(model);
 		crossoverAlgorithmComboBox.setRenderer(selectableRenderer);
-		crossoverAlgorithmComboBox.setSelectedItem(applicationContext
-				.getBean(EqualOpportunityGeneCrossoverAlgorithm.class));
+		crossoverAlgorithmComboBox.setSelectedItem(applicationContext.getBean(EqualOpportunityGeneCrossoverAlgorithm.class));
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -561,8 +551,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void appendMutationAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendMutationAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, MutationAlgorithm> beanMap = applicationContext.getBeansOfType(MutationAlgorithm.class);
 
 		MutationAlgorithm[] beans = new MutationAlgorithm[beanMap.size()];
@@ -578,8 +567,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
 		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
-		mutationAlgorithmComboBox.setSelectedItem(applicationContext
-				.getBean(MultipleGuaranteedFitnessMutationAlgorithm.class));
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(MultipleGuaranteedFitnessMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -592,8 +580,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(mutationAlgorithmComboBox);
 	}
 
-	private void appendSelectionAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendSelectionAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, SelectionAlgorithm> beanMap = applicationContext.getBeansOfType(SelectionAlgorithm.class);
 
 		SelectionAlgorithm[] beans = new SelectionAlgorithm[beanMap.size()];
@@ -651,8 +638,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(selectorComboBox);
 	}
 
-	private void appendCompareToKnownSolutionCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints,
-			JPanel mainPanel) {
+	private void appendCompareToKnownSolutionCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		compareToKnownSolutionCheckBox = new JCheckBox(compareToKnownSolutionText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -707,8 +693,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 				parameters.put(ParameterConstants.NUMBER_OF_GENERATIONS, generations);
 				parameters.put(ParameterConstants.SURVIVAL_RATE, survivalRateSpinner.getValue());
 				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
-				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL, maxMutationsPerIndividualSpinner
-						.getValue());
+				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL, maxMutationsPerIndividualSpinner.getValue());
 				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
 				parameters.put(ParameterConstants.MUTATE_DURING_CROSSOVER, mutateDuringCrossoverCheckBox.isSelected());
 				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox.getSelectedItem());
@@ -716,11 +701,9 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 				parameters.put(ParameterConstants.MUTATION_ALGORITHM, mutationAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.SELECTION_ALGORITHM, selectionAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.SELECTOR_METHOD, selectorComboBox.getSelectedItem());
-				parameters.put(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION, compareToKnownSolutionCheckBox
-						.isSelected());
+				parameters.put(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION, compareToKnownSolutionCheckBox.isSelected());
 
-				GeneticAlgorithmStrategy geneticAlgorithmStrategy = strategyBuilder.buildStrategy(Collections
-						.unmodifiableMap(parameters));
+				GeneticAlgorithmStrategy geneticAlgorithmStrategy = strategyBuilder.buildStrategy(Collections.unmodifiableMap(parameters));
 
 				GenericCallback uiCallback = new GenericCallback() {
 

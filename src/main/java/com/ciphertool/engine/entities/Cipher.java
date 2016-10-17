@@ -31,21 +31,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "ciphers")
 public class Cipher implements Serializable {
-	private static final long serialVersionUID = 3417112220260206089L;
+	private static final long	serialVersionUID		= 3417112220260206089L;
 
 	@Id
-	private BigInteger id;
+	private BigInteger			id;
 
 	@Indexed(background = true)
-	private String name;
+	private String				name;
 
-	private int columns;
+	private int					columns;
 
-	private int rows;
+	private int					rows;
 
-	private boolean hasKnownSolution;
+	private boolean				hasKnownSolution;
 
-	private List<Ciphertext> ciphertextCharacters = new ArrayList<Ciphertext>();
+	private List<Ciphertext>	ciphertextCharacters	= new ArrayList<Ciphertext>();
 
 	public Cipher() {
 	}
@@ -179,7 +179,7 @@ public class Cipher implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns + ", rows=" + rows
-				+ ", hasKnownSolution=" + hasKnownSolution + ", ciphertextCharacters=" + ciphertextCharacters + "]";
+		return "Cipher [id=" + id + ", name=" + name + ", columns=" + columns + ", rows=" + rows + ", hasKnownSolution="
+				+ hasKnownSolution + ", ciphertextCharacters=" + ciphertextCharacters + "]";
 	}
 }

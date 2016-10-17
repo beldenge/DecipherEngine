@@ -37,9 +37,10 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeylessChromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
-public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private static final double MAGIC_WORD_FACTOR = 1.25;
+public class CipherSolutionMagicWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
+		FitnessEvaluator {
+	private Logger				log					= LoggerFactory.getLogger(getClass());
+	private static final double	MAGIC_WORD_FACTOR	= 1.25;
 
 	/**
 	 * Default no-args constructor

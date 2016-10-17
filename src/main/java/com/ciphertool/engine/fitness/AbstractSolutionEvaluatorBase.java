@@ -31,10 +31,10 @@ import com.ciphertool.engine.entities.PlaintextSequence;
 import com.ciphertool.engine.entities.SolutionChromosome;
 
 public abstract class AbstractSolutionEvaluatorBase {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger								log	= LoggerFactory.getLogger(getClass());
 
-	protected HashMap<String, List<Ciphertext>> ciphertextKey;
-	protected Cipher cipher;
+	protected HashMap<String, List<Ciphertext>>	ciphertextKey;
+	protected Cipher							cipher;
 
 	/**
 	 * Creates a map with the key as the String value of the Ciphertext character and the value as a List of occurrences

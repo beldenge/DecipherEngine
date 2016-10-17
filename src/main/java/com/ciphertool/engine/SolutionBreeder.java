@@ -32,10 +32,10 @@ import com.ciphertool.sherlock.dao.WordListDao;
 import com.ciphertool.sherlock.entities.Word;
 
 public class SolutionBreeder implements Breeder {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger		log	= LoggerFactory.getLogger(getClass());
 
-	private Cipher cipher;
-	private WordListDao wordListDao;
+	private Cipher		cipher;
+	private WordListDao	wordListDao;
 
 	/**
 	 * Default no-args constructor
@@ -46,8 +46,8 @@ public class SolutionBreeder implements Breeder {
 	@Override
 	public Chromosome breed() {
 		// Set confidence levels to lowest possible
-		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(), cipher
-				.getColumns());
+		SolutionChromosome solution = new SolutionChromosome(cipher.getId(), 0, 0, 0, cipher.getRows(),
+				cipher.getColumns());
 
 		populateGenes(solution);
 

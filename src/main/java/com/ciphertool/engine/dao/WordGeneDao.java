@@ -33,10 +33,10 @@ import com.ciphertool.sherlock.dao.WordMapDao;
 import com.ciphertool.sherlock.entities.Word;
 
 public class WordGeneDao implements VariableLengthGeneDao {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger		log	= LoggerFactory.getLogger(getClass());
 
-	private WordListDao wordListDao;
-	private WordMapDao wordMapDao;
+	private WordListDao	wordListDao;
+	private WordMapDao	wordMapDao;
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {
@@ -71,7 +71,8 @@ public class WordGeneDao implements VariableLengthGeneDao {
 		Word word = wordMapDao.findRandomWordByLength(length);
 
 		if (word == null) {
-			throw new IllegalArgumentException("Attempted to find a word of length " + length + " which was not found.");
+			throw new IllegalArgumentException("Attempted to find a word of length " + length
+					+ " which was not found.");
 		}
 
 		Gene gene = new WordGene(word, (SolutionChromosome) chromosome);

@@ -28,9 +28,9 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger						log				= LoggerFactory.getLogger(getClass());
 
-	private static CipherKeyChromosome knownSolution = new CipherKeyChromosome();
+	private static CipherKeyChromosome	knownSolution	= new CipherKeyChromosome();
 
 	static {
 		knownSolution.putGene("tri", new CipherKeyGene(knownSolution, "i"));
@@ -106,13 +106,13 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 		}
 
 		for (String key : knownSolution.getGenes().keySet()) {
-			if (knownSolution.getGenes().get(key).equals(
-					((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)))) {
+			if (knownSolution.getGenes().get(key).equals(((CipherKeyGene) ((CipherKeyChromosome) chromosome).getGenes().get(key)))) {
 				total++;
 			}
 		}
 
-		double proximityToKnownSolution = (total / (double) ((CipherKeyChromosome) chromosome).getGenes().size()) * 100.0;
+		double proximityToKnownSolution = (total / (double) ((CipherKeyChromosome) chromosome).getGenes().size())
+				* 100.0;
 
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + ((CipherKeyChromosome) chromosome).getId() + " has a confidence level of: "

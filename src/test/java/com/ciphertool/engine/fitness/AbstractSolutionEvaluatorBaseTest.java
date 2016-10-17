@@ -57,8 +57,8 @@ public class AbstractSolutionEvaluatorBaseTest {
 		}
 	}
 
-	private static Cipher simpleCipher = new Cipher("simpleCipher", 1, 10);
-	private static SolutionChromosome simpleSolution = new SolutionChromosome();
+	private static Cipher				simpleCipher	= new Cipher("simpleCipher", 1, 10);
+	private static SolutionChromosome	simpleSolution	= new SolutionChromosome();
 
 	static {
 		simpleCipher.setId(BigInteger.ZERO);
@@ -80,8 +80,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 		simpleSolution.setRows(1);
 		simpleSolution.setColumns(10);
 
-		WordGene simpleWordGene = new WordGene(new Word("abcdefghij", PartOfSpeechType.NONE),
-				simpleSolution);
+		WordGene simpleWordGene = new WordGene(new Word("abcdefghij", PartOfSpeechType.NONE), simpleSolution);
 		simpleSolution.addGene(simpleWordGene);
 	}
 
@@ -105,8 +104,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 		assertEquals(0, simpleSolution.getAdjacentMatches());
 
 		abstractSolutionEvaluatorBase.setGeneticStructure(simpleCipher);
-		int adjacentMatches = abstractSolutionEvaluatorBase.calculateAdjacentMatches(simpleSolution
-				.getPlaintextCharacters());
+		int adjacentMatches = abstractSolutionEvaluatorBase.calculateAdjacentMatches(simpleSolution.getPlaintextCharacters());
 
 		/*
 		 * The adjacent match count should not be updated on the solution. It should only be returned by the method.
@@ -128,8 +126,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 
 		abstractSolutionEvaluatorBase.calculateAdjacentMatches(null);
 
-		verify(mockLogger, times(1))
-				.warn("Attempted to calculate adjacent matches, but the List of plaintextCharacters was null or empty.  Returning -1.");
+		verify(mockLogger, times(1)).warn("Attempted to calculate adjacent matches, but the List of plaintextCharacters was null or empty.  Returning -1.");
 	}
 
 	@Test
@@ -166,8 +163,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 
 		abstractSolutionEvaluatorBase.clearHasMatchValues(null);
 
-		verify(mockLogger, times(1)).warn(
-				"Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
+		verify(mockLogger, times(1)).warn("Attempted to clear hasMatch values, but the SolutionChromosome was null.  Returning early.");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -185,8 +181,7 @@ public class AbstractSolutionEvaluatorBaseTest {
 
 		Field ciphertextKeyField = ReflectionUtils.findField(ConcreteSolutionEvaluatorBase.class, "ciphertextKey");
 		ReflectionUtils.makeAccessible(ciphertextKeyField);
-		HashMap<String, List<Ciphertext>> ciphertextKeyFromObject = (HashMap<String, List<Ciphertext>>) ReflectionUtils
-				.getField(ciphertextKeyField, abstractSolutionEvaluatorBase);
+		HashMap<String, List<Ciphertext>> ciphertextKeyFromObject = (HashMap<String, List<Ciphertext>>) ReflectionUtils.getField(ciphertextKeyField, abstractSolutionEvaluatorBase);
 
 		assertNotNull(ciphertextKeyFromObject);
 	}

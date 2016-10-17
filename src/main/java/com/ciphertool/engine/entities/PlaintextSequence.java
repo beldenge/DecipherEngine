@@ -27,17 +27,17 @@ import com.ciphertool.genetics.entities.Sequence;
 
 public class PlaintextSequence implements Sequence {
 	@Transient
-	private Gene gene;
+	private Gene		gene;
 
-	protected Integer sequenceId;
+	protected Integer	sequenceId;
 
 	/*
 	 * TODO: Change this to a char or Character instead of String, as it should always be only one character for this
 	 * implementation.
 	 */
-	protected String value;
+	protected String	value;
 
-	protected boolean hasMatch;
+	protected boolean	hasMatch;
 
 	public PlaintextSequence() {
 	}

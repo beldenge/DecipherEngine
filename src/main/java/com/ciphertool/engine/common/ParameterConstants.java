@@ -20,33 +20,33 @@
 package com.ciphertool.engine.common;
 
 public class ParameterConstants {
-	public static final String CIPHER_NAME = "cipherName";
+	public static final String	CIPHER_NAME						= "cipherName";
 
-	public static final String FITNESS_EVALUATOR = "fitnessEvaluator";
+	public static final String	FITNESS_EVALUATOR				= "fitnessEvaluator";
 
-	public static final String CROSSOVER_ALGORITHM = "crossoverAlgorithm";
+	public static final String	CROSSOVER_ALGORITHM				= "crossoverAlgorithm";
 
-	public static final String MUTATION_ALGORITHM = "mutationAlgorithm";
+	public static final String	MUTATION_ALGORITHM				= "mutationAlgorithm";
 
-	public static final String SELECTION_ALGORITHM = "selectionAlgorithm";
+	public static final String	SELECTION_ALGORITHM				= "selectionAlgorithm";
 
-	public static final String SELECTOR_METHOD = "selectorMethod";
+	public static final String	SELECTOR_METHOD					= "selectorMethod";
 
-	public static final String POPULATION_SIZE = "populationSize";
+	public static final String	POPULATION_SIZE					= "populationSize";
 
-	public static final String LIFESPAN = "lifespan";
+	public static final String	LIFESPAN						= "lifespan";
 
-	public static final String NUMBER_OF_GENERATIONS = "numGenerations";
+	public static final String	NUMBER_OF_GENERATIONS			= "numGenerations";
 
-	public static final String SURVIVAL_RATE = "survivalRate";
+	public static final String	SURVIVAL_RATE					= "survivalRate";
 
-	public static final String MUTATION_RATE = "mutationRate";
+	public static final String	MUTATION_RATE					= "mutationRate";
 
-	public static final String MAX_MUTATIONS_PER_INDIVIDUAL = "maxMutations";
+	public static final String	MAX_MUTATIONS_PER_INDIVIDUAL	= "maxMutations";
 
-	public static final String CROSSOVER_RATE = "crossoverRate";
+	public static final String	CROSSOVER_RATE					= "crossoverRate";
 
-	public static final String COMPARE_TO_KNOWN_SOLUTION = "compareToKnownSolution";
+	public static final String	COMPARE_TO_KNOWN_SOLUTION		= "compareToKnownSolution";
 
-	public static final String MUTATE_DURING_CROSSOVER = "mutateDuringCrossover";
+	public static final String	MUTATE_DURING_CROSSOVER			= "mutateDuringCrossover";
 }

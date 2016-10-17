@@ -24,9 +24,9 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.genetics.entities.Chromosome;
 
 public class CipherKeyKnownSolutionCrowdingFitnessEvaluator extends CipherKeyKnownSolutionFitnessEvaluator {
-	private int minCrowdSize;
-	private double penaltyFactor;
-	private double sigma;
+	private int		minCrowdSize;
+	private double	penaltyFactor;
+	private double	sigma;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {

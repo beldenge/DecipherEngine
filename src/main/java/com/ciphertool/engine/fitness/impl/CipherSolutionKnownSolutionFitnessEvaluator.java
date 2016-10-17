@@ -27,7 +27,8 @@ import com.ciphertool.engine.fitness.KnownSolutionEvaluatorBase;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
-public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase implements FitnessEvaluator {
+public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEvaluatorBase implements
+		FitnessEvaluator {
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
@@ -55,8 +56,7 @@ public class CipherSolutionKnownSolutionFitnessEvaluator extends KnownSolutionEv
 		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (int i = 0; i < lastRowBegin; i++) {
-			if (knownSolution.getPlaintextCharacters().get(i).getValue().equals(
-					solution.getPlaintextCharacters().get(i).getValue().toLowerCase())) {
+			if (knownSolution.getPlaintextCharacters().get(i).getValue().equals(solution.getPlaintextCharacters().get(i).getValue().toLowerCase())) {
 				solution.getPlaintextCharacters().get(i).setHasMatch(true);
 				total++;
 			}

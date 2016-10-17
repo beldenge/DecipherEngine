@@ -61,8 +61,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Field geneticAlgorithmField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "geneticAlgorithm");
 		ReflectionUtils.makeAccessible(geneticAlgorithmField);
-		GeneticAlgorithm geneticAlgorithmFromObject = (GeneticAlgorithm) ReflectionUtils.getField(
-				geneticAlgorithmField, geneticCipherSolutionService);
+		GeneticAlgorithm geneticAlgorithmFromObject = (GeneticAlgorithm) ReflectionUtils.getField(geneticAlgorithmField, geneticCipherSolutionService);
 
 		assertSame(geneticAlgorithmToSet, geneticAlgorithmFromObject);
 	}
@@ -75,8 +74,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Field commandsBeforeField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "commandsBefore");
 		ReflectionUtils.makeAccessible(commandsBeforeField);
-		String[] commandsBeforeFromObject = (String[]) ReflectionUtils.getField(commandsBeforeField,
-				geneticCipherSolutionService);
+		String[] commandsBeforeFromObject = (String[]) ReflectionUtils.getField(commandsBeforeField, geneticCipherSolutionService);
 
 		assertSame(commandsBeforeToSet, commandsBeforeFromObject);
 	}
@@ -89,8 +87,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Field commandsAfterField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "commandsAfter");
 		ReflectionUtils.makeAccessible(commandsAfterField);
-		String[] commandsAfterFromObject = (String[]) ReflectionUtils.getField(commandsAfterField,
-				geneticCipherSolutionService);
+		String[] commandsAfterFromObject = (String[]) ReflectionUtils.getField(commandsAfterField, geneticCipherSolutionService);
 
 		assertSame(commandsAfterToSet, commandsAfterFromObject);
 	}
@@ -103,8 +100,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		Field solutionDaoField = ReflectionUtils.findField(GeneticCipherSolutionService.class, "solutionDao");
 		ReflectionUtils.makeAccessible(solutionDaoField);
-		SolutionDao solutionDaoFromObject = (SolutionDao) ReflectionUtils.getField(solutionDaoField,
-				geneticCipherSolutionService);
+		SolutionDao solutionDaoFromObject = (SolutionDao) ReflectionUtils.getField(solutionDaoField, geneticCipherSolutionService);
 
 		assertSame(solutionDaoToSet, solutionDaoFromObject);
 	}

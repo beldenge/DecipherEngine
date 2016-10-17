@@ -52,11 +52,11 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class SolutionChromosomeTest {
-	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
-	private static Cipher cipher = new Cipher("zodiac", 24, 17);
-	private static Logger logMock;
+	private static SolutionChromosome	solutionChromosome	= new SolutionChromosome();
+	private static Cipher				cipher				= new Cipher("zodiac", 24, 17);
+	private static Logger				logMock;
 
-	private static final int CIPHER_SIZE = 408;
+	private static final int			CIPHER_SIZE			= 408;
 
 	@BeforeClass
 	public static void setUp() {
@@ -761,16 +761,14 @@ public class SolutionChromosomeTest {
 		 * Make sure the Sequences reference different memory addresses.
 		 */
 		for (int i = 0; i < solutionChromosome.actualSize(); i++) {
-			assertNotSame(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome
-					.getPlaintextCharacters().get(i));
+			assertNotSame(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome.getPlaintextCharacters().get(i));
 		}
 
 		/*
 		 * Make sure the content of the Sequences are equal.
 		 */
 		for (int i = 0; i < solutionChromosome.actualSize(); i++) {
-			assertEquals(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome
-					.getPlaintextCharacters().get(i));
+			assertEquals(solutionChromosome.getPlaintextCharacters().get(i), clonedSolutionChromosome.getPlaintextCharacters().get(i));
 		}
 
 		assertEquals(solutionChromosome.actualSize().intValue(), solutionChromosome.getPlaintextCharacters().size());
@@ -829,14 +827,12 @@ public class SolutionChromosomeTest {
 		Integer count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < ((VariableLengthGene) gene).size(); j++) {
-				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene)
-						.getSequences().get(j));
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene).getSequences().get(j));
 
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId(), count);
 
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getSequenceId(), count);
-				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome
-						.getPlaintextCharacters().get(count).getValue());
+				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome.getPlaintextCharacters().get(count).getValue());
 
 				count++;
 			}

@@ -45,9 +45,9 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class WordGeneDaoTest {
-	private static WordGeneDao wordGeneDao;
-	private static WordListDao wordListDaoMock;
-	private static WordMapDao wordMapDaoMock;
+	private static WordGeneDao	wordGeneDao;
+	private static WordListDao	wordListDaoMock;
+	private static WordMapDao	wordMapDaoMock;
 
 	@BeforeClass
 	public static void setUp() {

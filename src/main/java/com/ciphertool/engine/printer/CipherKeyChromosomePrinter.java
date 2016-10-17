@@ -43,8 +43,8 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 	public String print(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns() * (((CipherKeyChromosome) chromosome)
-				.getCipher().getRows() - 1));
+		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
+				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
 
 		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
@@ -121,7 +121,8 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 
 		String word = words.isEmpty() ? null : words.get(0);
 		for (int i = 0; i < fullSolutionString.length(); i++) {
-			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i + word.length()))) {
+			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i
+					+ word.length()))) {
 				sb.append("[");
 
 				for (int j = 0; j < word.length(); j++) {

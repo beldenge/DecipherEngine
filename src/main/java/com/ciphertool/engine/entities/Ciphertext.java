@@ -21,9 +21,9 @@ package com.ciphertool.engine.entities;
 
 public class Ciphertext {
 
-	private Integer ciphertextId;
+	private Integer	ciphertextId;
 
-	private String value;
+	private String	value;
 
 	public Ciphertext() {
 	}

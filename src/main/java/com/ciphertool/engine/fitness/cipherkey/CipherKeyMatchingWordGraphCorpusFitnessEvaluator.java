@@ -41,15 +41,15 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log			= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
-	private static List<Word> topWords = new ArrayList<Word>();
+	protected Cipher			cipher;
+	private static List<Word>	topWords	= new ArrayList<Word>();
 
-	protected TopWordsFacade topWordsFacade;
+	protected TopWordsFacade	topWordsFacade;
 
-	int lastRowBegin;
-	IndexNode rootNode;
+	int							lastRowBegin;
+	IndexNode					rootNode;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -246,8 +246,7 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 
@@ -290,7 +289,10 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 		String bestBranch = "";
 		// branches = Arrays
 		// .asList(new String[] {
-		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat, ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha, thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname, becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
+		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
+		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
+		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
 		// });
 
 		for (String branch : branches) {

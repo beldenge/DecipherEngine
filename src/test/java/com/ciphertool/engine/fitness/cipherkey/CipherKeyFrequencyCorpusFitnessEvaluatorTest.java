@@ -38,9 +38,9 @@ import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.impl.FrequencyFitnessEvaluatorTestBase;
 
 public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static CipherKeyFrequencyCorpusFitnessEvaluator fitnessEvaluator;
+	private static CipherKeyFrequencyCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome solution = new CipherKeyChromosome();
+	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

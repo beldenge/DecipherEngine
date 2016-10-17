@@ -41,14 +41,14 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log	= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
+	protected Cipher			cipher;
 
-	protected TopWordsFacade topWordsFacade;
+	protected TopWordsFacade	topWordsFacade;
 
-	private int lastRowBegin;
-	private IndexNode rootNode;
+	private int					lastRowBegin;
+	private IndexNode			rootNode;
 
 	@PostConstruct
 	public void init() {
@@ -59,8 +59,7 @@ public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {

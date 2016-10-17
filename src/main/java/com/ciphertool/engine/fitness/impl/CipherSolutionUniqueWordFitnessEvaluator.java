@@ -38,8 +38,8 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 public class CipherSolutionUniqueWordFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private static final double MATCH_THRESHOLD = 0.0;
+	private Logger				log				= LoggerFactory.getLogger(getClass());
+	private static final double	MATCH_THRESHOLD	= 0.0;
 
 	/**
 	 * Default no-args constructor

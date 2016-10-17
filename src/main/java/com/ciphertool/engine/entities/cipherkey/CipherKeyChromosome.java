@@ -42,41 +42,41 @@ import com.ciphertool.genetics.entities.KeyedChromosome;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {
-	private static Logger log = LoggerFactory.getLogger(CipherKeyChromosome.class);
+	private static Logger		log					= LoggerFactory.getLogger(CipherKeyChromosome.class);
 
 	@Transient
-	private static final int KEY_SIZE = 54;
+	private static final int	KEY_SIZE			= 54;
 
 	/**
 	 * This initial value is only used as a unique identifier for the Chromosome's ancestry, but a different generated
 	 * ID is persisted to database.
 	 */
 	@Id
-	protected String id = UUID.randomUUID().toString();
+	protected String			id					= UUID.randomUUID().toString();
 
 	@Indexed(background = true)
-	protected Integer solutionSetId;
+	protected Integer			solutionSetId;
 
-	protected Cipher cipher;
+	protected Cipher			cipher;
 
-	private Ancestry ancestry;
-
-	@Transient
-	protected boolean evaluationNeeded = true;
+	private Ancestry			ancestry;
 
 	@Transient
-	private Double fitness = 0.0;
+	protected boolean			evaluationNeeded	= true;
 
 	@Transient
-	private int age = 0;
+	private Double				fitness				= 0.0;
 
 	@Transient
-	private int numberOfChildren = 0;
-
-	private Map<String, Gene> genes = new HashMap<String, Gene>();
+	private int					age					= 0;
 
 	@Transient
-	private Population population;
+	private int					numberOfChildren	= 0;
+
+	private Map<String, Gene>	genes				= new HashMap<String, Gene>();
+
+	@Transient
+	private Population			population;
 
 	public CipherKeyChromosome() {
 	}
@@ -210,8 +210,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		}
 
 		if (this.genes.get(key) != null) {
-			log.warn("Attempted to insert a Gene to CipherKeyChromosome with key "
-					+ key
+			log.warn("Attempted to insert a Gene to CipherKeyChromosome with key " + key
 					+ ", but the key already exists.  If this was intentional, please use replaceGene() instead.  Returning. "
 					+ this);
 
@@ -403,8 +402,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		int total = 0;
 
 		for (Object key : this.genes.keySet()) {
-			if (((CipherKeyGene) this.genes.get(key)).getValue().equals(
-					((CipherKeyGene) ((CipherKeyChromosome) other).genes.get(key)).getValue())) {
+			if (((CipherKeyGene) this.genes.get(key)).getValue().equals(((CipherKeyGene) ((CipherKeyChromosome) other).genes.get(key)).getValue())) {
 				total++;
 			}
 		}

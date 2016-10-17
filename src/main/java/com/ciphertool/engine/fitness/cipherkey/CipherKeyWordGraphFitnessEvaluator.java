@@ -41,15 +41,15 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log			= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
-	private int minWordLength;
-	private int top;
+	protected Cipher			cipher;
+	private int					minWordLength;
+	private int					top;
 
-	private UniqueWordListDao wordListDao;
+	private UniqueWordListDao	wordListDao;
 
-	private List<Word> topWords = new ArrayList<Word>();
+	private List<Word>			topWords	= new ArrayList<Word>();
 
 	@PostConstruct
 	public void init() {
@@ -73,10 +73,9 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
-				if (word.getWord().length() >= minWordLength
-						&& lastRowBegin >= i + word.getWord().length()
-						&& word.getWord().toLowerCase().equals(
-								currentSolutionString.substring(i, i + word.getWord().length()))) {
+				if (word.getWord().length() >= minWordLength && lastRowBegin >= i + word.getWord().length()
+						&& word.getWord().toLowerCase().equals(currentSolutionString.substring(i, i
+								+ word.getWord().length()))) {
 					if (!matchMap.containsKey(i)) {
 						matchMap.put(i, new ArrayList<Match>());
 					}

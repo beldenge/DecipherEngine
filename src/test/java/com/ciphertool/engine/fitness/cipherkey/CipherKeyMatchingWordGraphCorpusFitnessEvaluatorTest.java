@@ -39,9 +39,9 @@ import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 
 public class CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static CipherKeyMatchingWordGraphCorpusFitnessEvaluator fitnessEvaluator;
+	private static CipherKeyMatchingWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome solution = new CipherKeyChromosome();
+	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -129,8 +129,7 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(4);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyMatchingWordGraphCorpusFitnessEvaluator.class,
-				"topWordsFacade");
+		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyMatchingWordGraphCorpusFitnessEvaluator.class, "topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 

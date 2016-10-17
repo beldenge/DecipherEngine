@@ -37,10 +37,10 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 
 public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
-	private int matchThreshold = 2;
-	protected Cipher cipher;
+	private int					matchThreshold	= 2;
+	protected Cipher			cipher;
 
-	protected TopWordsFacade topWordsFacade;
+	protected TopWordsFacade	topWordsFacade;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -48,8 +48,7 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 
 		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		IndexNode rootNode = topWordsFacade.getIndexedWords();

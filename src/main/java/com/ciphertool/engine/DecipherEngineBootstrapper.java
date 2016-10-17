@@ -25,10 +25,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DecipherEngineBootstrapper {
-	private static Logger log = LoggerFactory.getLogger(DecipherEngineBootstrapper.class);
+	private static Logger				log	= LoggerFactory.getLogger(DecipherEngineBootstrapper.class);
 
 	@SuppressWarnings("unused")
-	private static ApplicationContext context;
+	private static ApplicationContext	context;
 
 	public static void main(String[] args) {
 		initializeContext();

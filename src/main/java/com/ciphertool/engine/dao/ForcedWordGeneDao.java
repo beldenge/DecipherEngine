@@ -32,11 +32,11 @@ import com.ciphertool.sherlock.dao.WordListDao;
 import com.ciphertool.sherlock.entities.Word;
 
 public class ForcedWordGeneDao implements VariableLengthGeneDao {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log					= LoggerFactory.getLogger(getClass());
 
-	private WordListDao wordListDao;
+	private WordListDao			wordListDao;
 
-	private static final int MAX_FIND_ATTEMPTS = 10000;
+	private static final int	MAX_FIND_ATTEMPTS	= 10000;
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {

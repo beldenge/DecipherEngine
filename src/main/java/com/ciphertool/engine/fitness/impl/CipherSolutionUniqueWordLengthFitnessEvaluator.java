@@ -40,13 +40,13 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 public class CipherSolutionUniqueWordLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
 
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private static final double UNIQUE_WORD_BONUS = 5.0;
-	private static final double DOUBLE_MATCH_BONUS = 2.5;
-	private static final double TRIPLE_MATCH_BONUS = 1.25;
-	private static final double AVERAGE_WORD_LENGTH_BONUS = 100.0;
-	private static final double WORD_LENGTH_LOW_AVERAGE = 3.5;
-	private static final double WORD_LENGTH_HIGH_AVERAGE = 6.5;
+	private Logger				log							= LoggerFactory.getLogger(getClass());
+	private static final double	UNIQUE_WORD_BONUS			= 5.0;
+	private static final double	DOUBLE_MATCH_BONUS			= 2.5;
+	private static final double	TRIPLE_MATCH_BONUS			= 1.25;
+	private static final double	AVERAGE_WORD_LENGTH_BONUS	= 100.0;
+	private static final double	WORD_LENGTH_LOW_AVERAGE		= 3.5;
+	private static final double	WORD_LENGTH_HIGH_AVERAGE	= 6.5;
 
 	/**
 	 * Default no-args constructor

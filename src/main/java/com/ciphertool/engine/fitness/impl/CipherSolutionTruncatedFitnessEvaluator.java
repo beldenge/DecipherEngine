@@ -34,7 +34,8 @@ import com.ciphertool.engine.fitness.SolutionTruncatedEvaluatorBase;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
-public class CipherSolutionTruncatedFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
+public class CipherSolutionTruncatedFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
+		FitnessEvaluator {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 

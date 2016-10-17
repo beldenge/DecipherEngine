@@ -39,11 +39,11 @@ import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 
 public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static CipherKeyIndexedCorrelatedCorpusFitnessEvaluator fitnessEvaluator;
+	private static CipherKeyIndexedCorrelatedCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome solution = new CipherKeyChromosome();
+	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
-	private static Logger logMock = mock(Logger.class);
+	private static Logger											logMock		= mock(Logger.class);
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -128,8 +128,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(4);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class,
-				"topWordsFacade");
+		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class, "topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 

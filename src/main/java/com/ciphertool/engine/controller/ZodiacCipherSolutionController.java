@@ -28,12 +28,11 @@ import com.ciphertool.engine.view.GenericCallback;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 
 public class ZodiacCipherSolutionController implements CipherSolutionController {
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private CipherSolutionService cipherSolutionService;
+	private Logger					log	= LoggerFactory.getLogger(getClass());
+	private CipherSolutionService	cipherSolutionService;
 
 	@Override
-	public void startServiceThread(final GeneticAlgorithmStrategy geneticAlgorithmStrategy,
-			final GenericCallback uiCallback, final boolean debugMode) {
+	public void startServiceThread(final GeneticAlgorithmStrategy geneticAlgorithmStrategy, final GenericCallback uiCallback, final boolean debugMode) {
 		if (cipherSolutionService.isRunning()) {
 			log.info("Cipher solution service is already running.  Cannot start until current process completes.");
 		} else {

@@ -39,8 +39,8 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
-	private int minWordLength;
-	private static List<Word> topWords = new ArrayList<Word>();
+	private int					minWordLength;
+	private static List<Word>	topWords	= new ArrayList<Word>();
 
 	static {
 		topWords.add(new Word("i", null));
@@ -243,8 +243,8 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 	public String print(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns() * (((CipherKeyChromosome) chromosome)
-				.getCipher().getRows() - 1));
+		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
+				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
 
 		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
@@ -319,7 +319,8 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 
 		String word = words.isEmpty() ? null : words.get(0);
 		for (int i = 0; i < fullSolutionString.length(); i++) {
-			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i + word.length()))) {
+			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i
+					+ word.length()))) {
 				sb.append("[");
 
 				for (int j = 0; j < word.length(); j++) {

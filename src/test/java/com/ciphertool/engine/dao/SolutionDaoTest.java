@@ -52,8 +52,8 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.SolutionChromosome;
 
 public class SolutionDaoTest {
-	private static SolutionDao solutionDao;
-	private static MongoOperations mongoTemplateMock;
+	private static SolutionDao		solutionDao;
+	private static MongoOperations	mongoTemplateMock;
 
 	@BeforeClass
 	public static void setUp() {
@@ -75,8 +75,7 @@ public class SolutionDaoTest {
 
 		Field mongoOperationsField = ReflectionUtils.findField(SolutionDao.class, "mongoOperations");
 		ReflectionUtils.makeAccessible(mongoOperationsField);
-		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField,
-				solutionDao);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField, solutionDao);
 
 		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}

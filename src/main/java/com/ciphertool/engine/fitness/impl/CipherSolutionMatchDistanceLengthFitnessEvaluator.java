@@ -39,12 +39,12 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherSolutionMatchDistanceLengthFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private static final int ACCEPTABLE_DISTANCE = 3;
-	private static final double MATCH_DISTANCE_BONUS = 2.0;
-	private static final double AVERAGE_WORD_LENGTH_BONUS = 100.0;
-	private static final double WORD_LENGTH_LOW_AVERAGE = 3.5;
-	private static final double WORD_LENGTH_HIGH_AVERAGE = 6.5;
+	private Logger				log							= LoggerFactory.getLogger(getClass());
+	private static final int	ACCEPTABLE_DISTANCE			= 3;
+	private static final double	MATCH_DISTANCE_BONUS		= 2.0;
+	private static final double	AVERAGE_WORD_LENGTH_BONUS	= 100.0;
+	private static final double	WORD_LENGTH_LOW_AVERAGE		= 3.5;
+	private static final double	WORD_LENGTH_HIGH_AVERAGE	= 6.5;
 
 	/**
 	 * Default no-args constructor

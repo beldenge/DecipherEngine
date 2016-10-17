@@ -33,9 +33,9 @@ import com.ciphertool.engine.entities.Cipher;
 
 @Component
 public class CipherDao {
-	private static Logger log = LoggerFactory.getLogger(CipherDao.class);
+	private static Logger	log	= LoggerFactory.getLogger(CipherDao.class);
 
-	private MongoOperations mongoOperations;
+	private MongoOperations	mongoOperations;
 
 	public Cipher findByCipherName(String name) {
 		if (name == null || name.isEmpty()) {

@@ -66,8 +66,7 @@ public class WordGraphUtils {
 		}
 	}
 
-	public static void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap,
-			MatchNode currentNode) {
+	public static void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap, MatchNode currentNode) {
 		int i;
 		MatchNode newNode;
 		for (i = beginPos; i < endPos; i++) {
@@ -116,8 +115,7 @@ public class WordGraphUtils {
 		int actualSize = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().size();
 
 		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(
-					((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue());
+			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue());
 
 			sb.append(nextPlaintext.getValue());
 		}

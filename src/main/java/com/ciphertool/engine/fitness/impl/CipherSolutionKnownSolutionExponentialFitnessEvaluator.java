@@ -56,8 +56,7 @@ public class CipherSolutionKnownSolutionExponentialFitnessEvaluator extends Know
 		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (int i = 0; i < lastRowBegin; i++) {
-			if (knownSolution.getPlaintextCharacters().get(i).getValue().equals(
-					solution.getPlaintextCharacters().get(i).getValue().toLowerCase())) {
+			if (knownSolution.getPlaintextCharacters().get(i).getValue().equals(solution.getPlaintextCharacters().get(i).getValue().toLowerCase())) {
 				solution.getPlaintextCharacters().get(i).setHasMatch(true);
 				total++;
 			}

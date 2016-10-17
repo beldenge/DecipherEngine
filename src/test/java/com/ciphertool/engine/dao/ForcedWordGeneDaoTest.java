@@ -44,8 +44,8 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class ForcedWordGeneDaoTest {
-	private static ForcedWordGeneDao forcedWordGeneDao;
-	private static WordListDao wordListDaoMock;
+	private static ForcedWordGeneDao	forcedWordGeneDao;
+	private static WordListDao			wordListDaoMock;
 
 	@BeforeClass
 	public static void setUp() {

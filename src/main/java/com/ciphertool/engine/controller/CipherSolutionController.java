@@ -23,8 +23,7 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.engine.view.GenericCallback;
 
 public interface CipherSolutionController {
-	public void startServiceThread(GeneticAlgorithmStrategy geneticAlgorithmStrategy, GenericCallback uiCallback,
-			boolean debugMode);
+	public void startServiceThread(GeneticAlgorithmStrategy geneticAlgorithmStrategy, GenericCallback uiCallback, boolean debugMode);
 
 	/**
 	 * @param inDebugMode

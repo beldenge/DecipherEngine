@@ -45,8 +45,8 @@ import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
 
 public class CipherDaoTest {
-	private static CipherDao cipherDao;
-	private static MongoOperations mongoTemplateMock;
+	private static CipherDao		cipherDao;
+	private static MongoOperations	mongoTemplateMock;
 
 	@BeforeClass
 	public static void setUp() {
@@ -68,8 +68,7 @@ public class CipherDaoTest {
 
 		Field mongoOperationsField = ReflectionUtils.findField(CipherDao.class, "mongoOperations");
 		ReflectionUtils.makeAccessible(mongoOperationsField);
-		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField,
-				cipherDao);
+		MongoOperations mongoOperationsFromObject = (MongoOperations) ReflectionUtils.getField(mongoOperationsField, cipherDao);
 
 		assertSame(mongoTemplateMock, mongoOperationsFromObject);
 	}

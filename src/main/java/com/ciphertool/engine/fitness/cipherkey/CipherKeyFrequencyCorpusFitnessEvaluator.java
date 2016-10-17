@@ -38,18 +38,18 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger					log								= LoggerFactory.getLogger(getClass());
 
-	private static final double FREQUENCY_DIFFERENCE_THRESHOLD = 0.05;
-	private static final double MATCHES_BONUS = 1.033;
+	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
+	private static final double		MATCHES_BONUS					= 1.033;
 
-	private Map<Character, Double> expectedLetterFrequencies;
+	private Map<Character, Double>	expectedLetterFrequencies;
 
-	protected Cipher cipher;
-	private int minWordLength;
-	private static List<Word> topWords = new ArrayList<Word>();
+	protected Cipher				cipher;
+	private int						minWordLength;
+	private static List<Word>		topWords						= new ArrayList<Word>();
 
-	private int lastRowBegin;
+	private int						lastRowBegin;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -252,8 +252,7 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 
@@ -296,7 +295,10 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 		String bestBranch = "";
 		// branches = Arrays
 		// .asList(new String[] {
-		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat, ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha, thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname, becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
+		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
+		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
+		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
 		// });
 
 		for (String branch : branches) {
@@ -345,8 +347,8 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 		}
 
 		Double difference = 0.0;
-		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length() / (double) currentSolutionString
-				.length());
+		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length()
+				/ (double) currentSolutionString.length());
 
 		for (Character letter : expectedLetterFrequencies.keySet()) {
 			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));

@@ -38,13 +38,13 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log			= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
-	private int minWordLength;
-	private static List<Word> topWords = new ArrayList<Word>();
+	protected Cipher			cipher;
+	private int					minWordLength;
+	private static List<Word>	topWords	= new ArrayList<Word>();
 
-	private int lastRowBegin;
+	private int					lastRowBegin;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -247,8 +247,7 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
@@ -319,9 +318,8 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements Fitness
 					nextChild = currentChild.getChildren().get(0);
 				}
 
-				if (nextChild != null
-						&& currentChild.getSelf().getEndPos() + nextChild.getSelf().getWord().length() == nextChild
-								.getSelf().getEndPos()) {
+				if (nextChild != null && currentChild.getSelf().getEndPos()
+						+ nextChild.getSelf().getWord().length() == nextChild.getSelf().getEndPos()) {
 					factor++;
 				} else {
 					for (String word : words) {

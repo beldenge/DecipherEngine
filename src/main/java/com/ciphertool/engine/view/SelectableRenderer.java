@@ -37,8 +37,7 @@ public class SelectableRenderer extends JLabel implements ListCellRenderer<Selec
 	}
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Selectable> list, Selectable value, int index,
-			boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends Selectable> list, Selectable value, int index, boolean isSelected, boolean cellHasFocus) {
 
 		if (isSelected) {
 			setBackground(list.getSelectionBackground());

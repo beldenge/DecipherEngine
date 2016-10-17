@@ -38,9 +38,9 @@ import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 
 public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static CipherKeyAdjacentWordGraphCorpusFitnessEvaluator fitnessEvaluator;
+	private static CipherKeyAdjacentWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome solution = new CipherKeyChromosome();
+	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

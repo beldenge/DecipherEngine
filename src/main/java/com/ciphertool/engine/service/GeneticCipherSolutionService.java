@@ -33,17 +33,17 @@ import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
 import com.ciphertool.genetics.entities.Chromosome;
 
 public class GeneticCipherSolutionService implements CipherSolutionService {
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private boolean running = false;
+	private Logger				log		= LoggerFactory.getLogger(getClass());
+	private boolean				running	= false;
 
-	private GeneticAlgorithm geneticAlgorithm;
-	private String[] commandsBefore;
-	private String[] commandsAfter;
-	private SolutionDao solutionDao;
-	private long start;
+	private GeneticAlgorithm	geneticAlgorithm;
+	private String[]			commandsBefore;
+	private String[]			commandsAfter;
+	private SolutionDao			solutionDao;
+	private long				start;
 
 	// This is instantiated here to support unit testability
-	private Runtime runtime = Runtime.getRuntime();
+	private Runtime				runtime	= Runtime.getRuntime();
 
 	@Override
 	public void begin(GeneticAlgorithmStrategy geneticAlgorithmStrategy, GenericCallback uiCallback, boolean debugMode) {

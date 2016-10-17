@@ -35,9 +35,9 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherSolutionMultipleFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log						= LoggerFactory.getLogger(getClass());
 
-	private static final int UNIQUE_MATCH_MULTIPLIER = 5;
+	private static final int	UNIQUE_MATCH_MULTIPLIER	= 5;
 
 	/**
 	 * Default no-args constructor

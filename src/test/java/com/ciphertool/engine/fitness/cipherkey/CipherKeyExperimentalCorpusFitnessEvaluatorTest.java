@@ -39,9 +39,9 @@ import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 import com.ciphertool.engine.fitness.impl.FrequencyFitnessEvaluatorTestBase;
 
 public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static CipherKeyExperimentalCorpusFitnessEvaluator fitnessEvaluator;
+	private static CipherKeyExperimentalCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome solution = new CipherKeyChromosome();
+	private static CipherKeyChromosome							solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -133,8 +133,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFi
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(5);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyExperimentalCorpusFitnessEvaluator.class,
-				"topWordsFacade");
+		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyExperimentalCorpusFitnessEvaluator.class, "topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 

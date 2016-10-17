@@ -31,17 +31,17 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 
 public class CipherKeyBreeder implements Breeder {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger					log		= LoggerFactory.getLogger(getClass());
 
-	private GeneDao geneDao;
+	private GeneDao					geneDao;
 
-	private static final String[] KEYS = { "a", "anchor", "b", "backc", "backd", "backe", "backf", "backj", "backk",
-			"backl", "backp", "backq", "backr", "backslash", "box", "boxdot", "carrot", "circledot", "d", "e", "f",
-			"flipt", "forslash", "fullbox", "fullcircle", "fulltri", "g", "h", "horstrike", "i", "j", "k", "l",
-			"lrbox", "m", "n", "o", "p", "pi", "plus", "q", "r", "s", "t", "tri", "tridot", "u", "v", "vertstrike",
-			"w", "x", "y", "z", "zodiac" };
+	private static final String[]	KEYS	= { "a", "anchor", "b", "backc", "backd", "backe", "backf", "backj",
+			"backk", "backl", "backp", "backq", "backr", "backslash", "box", "boxdot", "carrot", "circledot", "d", "e",
+			"f", "flipt", "forslash", "fullbox", "fullcircle", "fulltri", "g", "h", "horstrike", "i", "j", "k", "l",
+			"lrbox", "m", "n", "o", "p", "pi", "plus", "q", "r", "s", "t", "tri", "tridot", "u", "v", "vertstrike", "w",
+			"x", "y", "z", "zodiac" };
 
-	private Cipher cipher;
+	private Cipher					cipher;
 
 	/**
 	 * Default no-args constructor

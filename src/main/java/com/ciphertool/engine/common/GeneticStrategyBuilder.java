@@ -35,10 +35,10 @@ import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class GeneticStrategyBuilder implements StrategyBuilder {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log	= LoggerFactory.getLogger(getClass());
 
-	private CipherDao cipherDao;
-	private FitnessEvaluator knownSolutionFitnessEvaluator;
+	private CipherDao			cipherDao;
+	private FitnessEvaluator	knownSolutionFitnessEvaluator;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -263,7 +263,8 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		Object survivalRate = parameters.get(ParameterConstants.SURVIVAL_RATE);
 
 		if (survivalRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE
+					+ " cannot be null.");
 		}
 
 		if (!(survivalRate instanceof Double)) {
@@ -278,7 +279,8 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		Object mutationRate = parameters.get(ParameterConstants.MUTATION_RATE);
 
 		if (mutationRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_RATE + " cannot be null.");
+			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATION_RATE
+					+ " cannot be null.");
 		}
 
 		if (!(mutationRate instanceof Double)) {

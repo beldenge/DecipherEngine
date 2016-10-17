@@ -32,13 +32,13 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.VariableLengthGene;
 
 public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase {
-	private static Logger log = LoggerFactory.getLogger(FrequencyFitnessEvaluatorTestBase.class);
+	private static Logger					log							= LoggerFactory.getLogger(FrequencyFitnessEvaluatorTestBase.class);
 
-	protected static Map<Character, Double> expectedLetterFrequencies = new HashMap<Character, Double>();
-	private static Map<Character, Integer> knownSolutionLetterTotals = new HashMap<Character, Integer>();
-	private static Map<Character, Integer> expectedLetterTotals = new HashMap<Character, Integer>();
+	protected static Map<Character, Double>	expectedLetterFrequencies	= new HashMap<Character, Double>();
+	private static Map<Character, Integer>	knownSolutionLetterTotals	= new HashMap<Character, Integer>();
+	private static Map<Character, Integer>	expectedLetterTotals		= new HashMap<Character, Integer>();
 
-	protected static Double averageWordLength = 5.1;
+	protected static Double					averageWordLength			= 5.1;
 
 	@BeforeClass
 	public static void setUpFrequencies() {
@@ -79,58 +79,58 @@ public class FrequencyFitnessEvaluatorTestBase extends FitnessEvaluatorTestBase 
 	private static void populateExpectedLetterTotals() {
 		int numCharsToEvaluate = zodiac408.getColumns() * (zodiac408.getRows() - 1);
 
-		expectedLetterTotals.put('a', ((Long) Math.round(expectedLetterFrequencies.get('a') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('b', ((Long) Math.round(expectedLetterFrequencies.get('b') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('c', ((Long) Math.round(expectedLetterFrequencies.get('c') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('d', ((Long) Math.round(expectedLetterFrequencies.get('d') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('e', ((Long) Math.round(expectedLetterFrequencies.get('e') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('f', ((Long) Math.round(expectedLetterFrequencies.get('f') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('g', ((Long) Math.round(expectedLetterFrequencies.get('g') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('h', ((Long) Math.round(expectedLetterFrequencies.get('h') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('i', ((Long) Math.round(expectedLetterFrequencies.get('i') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('j', ((Long) Math.round(expectedLetterFrequencies.get('j') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('k', ((Long) Math.round(expectedLetterFrequencies.get('k') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('l', ((Long) Math.round(expectedLetterFrequencies.get('l') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('m', ((Long) Math.round(expectedLetterFrequencies.get('m') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('n', ((Long) Math.round(expectedLetterFrequencies.get('n') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('o', ((Long) Math.round(expectedLetterFrequencies.get('o') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('p', ((Long) Math.round(expectedLetterFrequencies.get('p') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('q', ((Long) Math.round(expectedLetterFrequencies.get('q') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('r', ((Long) Math.round(expectedLetterFrequencies.get('r') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('s', ((Long) Math.round(expectedLetterFrequencies.get('s') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('t', ((Long) Math.round(expectedLetterFrequencies.get('t') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('u', ((Long) Math.round(expectedLetterFrequencies.get('u') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('v', ((Long) Math.round(expectedLetterFrequencies.get('v') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('w', ((Long) Math.round(expectedLetterFrequencies.get('w') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('x', ((Long) Math.round(expectedLetterFrequencies.get('x') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('y', ((Long) Math.round(expectedLetterFrequencies.get('y') * numCharsToEvaluate))
-				.intValue());
-		expectedLetterTotals.put('z', ((Long) Math.round(expectedLetterFrequencies.get('z') * numCharsToEvaluate))
-				.intValue());
+		expectedLetterTotals.put('a', ((Long) Math.round(expectedLetterFrequencies.get('a')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('b', ((Long) Math.round(expectedLetterFrequencies.get('b')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('c', ((Long) Math.round(expectedLetterFrequencies.get('c')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('d', ((Long) Math.round(expectedLetterFrequencies.get('d')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('e', ((Long) Math.round(expectedLetterFrequencies.get('e')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('f', ((Long) Math.round(expectedLetterFrequencies.get('f')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('g', ((Long) Math.round(expectedLetterFrequencies.get('g')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('h', ((Long) Math.round(expectedLetterFrequencies.get('h')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('i', ((Long) Math.round(expectedLetterFrequencies.get('i')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('j', ((Long) Math.round(expectedLetterFrequencies.get('j')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('k', ((Long) Math.round(expectedLetterFrequencies.get('k')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('l', ((Long) Math.round(expectedLetterFrequencies.get('l')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('m', ((Long) Math.round(expectedLetterFrequencies.get('m')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('n', ((Long) Math.round(expectedLetterFrequencies.get('n')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('o', ((Long) Math.round(expectedLetterFrequencies.get('o')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('p', ((Long) Math.round(expectedLetterFrequencies.get('p')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('q', ((Long) Math.round(expectedLetterFrequencies.get('q')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('r', ((Long) Math.round(expectedLetterFrequencies.get('r')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('s', ((Long) Math.round(expectedLetterFrequencies.get('s')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('t', ((Long) Math.round(expectedLetterFrequencies.get('t')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('u', ((Long) Math.round(expectedLetterFrequencies.get('u')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('v', ((Long) Math.round(expectedLetterFrequencies.get('v')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('w', ((Long) Math.round(expectedLetterFrequencies.get('w')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('x', ((Long) Math.round(expectedLetterFrequencies.get('x')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('y', ((Long) Math.round(expectedLetterFrequencies.get('y')
+				* numCharsToEvaluate)).intValue());
+		expectedLetterTotals.put('z', ((Long) Math.round(expectedLetterFrequencies.get('z')
+				* numCharsToEvaluate)).intValue());
 
 		log.info("ExpectedLetterTotals:      " + expectedLetterTotals);
 		int letterSum = 0;

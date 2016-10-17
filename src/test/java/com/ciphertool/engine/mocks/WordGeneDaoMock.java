@@ -38,8 +38,7 @@ public class WordGeneDaoMock extends WordGeneDao {
 
 	@Override
 	public Gene findRandomGene(Chromosome chromosome) {
-		WordGene wordGene = new WordGene(new Word("$$$", PartOfSpeechType.NONE),
-				(SolutionChromosome) chromosome);
+		WordGene wordGene = new WordGene(new Word("$$$", PartOfSpeechType.NONE), (SolutionChromosome) chromosome);
 
 		return wordGene;
 	}

@@ -34,14 +34,14 @@ import com.ciphertool.genetics.entities.VariableLengthGene;
 import com.ciphertool.sherlock.entities.Word;
 
 public class WordGene implements VariableLengthGene {
-	private static Logger log = LoggerFactory.getLogger(WordGene.class);
+	private static Logger	log			= LoggerFactory.getLogger(WordGene.class);
 
-	private boolean hasMatch;
+	private boolean			hasMatch;
 
 	@Transient
-	private Chromosome chromosome;
+	private Chromosome		chromosome;
 
-	private List<Sequence> sequences = new ArrayList<Sequence>();
+	private List<Sequence>	sequences	= new ArrayList<Sequence>();
 
 	public WordGene() {
 	}
@@ -66,8 +66,8 @@ public class WordGene implements VariableLengthGene {
 		int wordLength = wordString.length();
 
 		for (int i = 0; i < wordLength; i++) {
-			PlaintextSequence plaintextSequence = new PlaintextSequence(String.valueOf(wordString.charAt(i))
-					.toLowerCase(), this);
+			PlaintextSequence plaintextSequence = new PlaintextSequence(
+					String.valueOf(wordString.charAt(i)).toLowerCase(), this);
 
 			this.sequences.add(plaintextSequence);
 		}

@@ -37,19 +37,19 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 
 public class TopWordsFacade {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log							= LoggerFactory.getLogger(getClass());
 
-	private int minWordLength;
-	private int top;
+	private int					minWordLength;
+	private int					top;
 
-	private UniqueWordListDao wordListDao;
-	private NGramListDao nGramListDao;
+	private UniqueWordListDao	wordListDao;
+	private NGramListDao		nGramListDao;
 
-	private List<Word> topWords = new ArrayList<Word>();
-	private List<Word> topWordsAndNGrams = new ArrayList<Word>();
+	private List<Word>			topWords					= new ArrayList<Word>();
+	private List<Word>			topWordsAndNGrams			= new ArrayList<Word>();
 
-	private IndexNode rootNodeWithWordsAndNGrams = new IndexNode();
-	private IndexNode rootNodeWordsOnly = new IndexNode();
+	private IndexNode			rootNodeWithWordsAndNGrams	= new IndexNode();
+	private IndexNode			rootNodeWordsOnly			= new IndexNode();
 
 	@PostConstruct
 	public void init() {

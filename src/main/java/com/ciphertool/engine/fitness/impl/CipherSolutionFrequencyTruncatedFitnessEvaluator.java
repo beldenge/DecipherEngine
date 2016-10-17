@@ -42,9 +42,9 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
  */
 public class CipherSolutionFrequencyTruncatedFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
-	private static Logger log = LoggerFactory.getLogger(CipherSolutionFrequencyTruncatedFitnessEvaluator.class);
+	private static Logger			log	= LoggerFactory.getLogger(CipherSolutionFrequencyTruncatedFitnessEvaluator.class);
 
-	private Map<Character, Double> expectedLetterFrequencies;
+	private Map<Character, Double>	expectedLetterFrequencies;
 
 	/**
 	 * Default no-args constructor
@@ -115,10 +115,9 @@ public class CipherSolutionFrequencyTruncatedFitnessEvaluator extends SolutionTr
 				try {
 					plaintext = plaintextCharacters.get(ciphertextIndice.getCiphertextId());
 				} catch (IndexOutOfBoundsException ioobe) {
-					log.error(
-							"Caught IndexOutOfBoundsException for index " + (ciphertextIndice.getCiphertextId())
-									+ " and size " + plaintextCharacters.size() + " while evaluating Chromosome: "
-									+ chromosome, ioobe);
+					log.error("Caught IndexOutOfBoundsException for index " + (ciphertextIndice.getCiphertextId())
+							+ " and size " + plaintextCharacters.size() + " while evaluating Chromosome: "
+							+ chromosome, ioobe);
 				}
 
 				currentValue = plaintext.getValue().toLowerCase();

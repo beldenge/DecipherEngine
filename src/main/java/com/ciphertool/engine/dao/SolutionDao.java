@@ -32,9 +32,9 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.genetics.entities.Chromosome;
 
 public class SolutionDao {
-	private static Logger log = LoggerFactory.getLogger(SolutionDao.class);
+	private static Logger	log	= LoggerFactory.getLogger(SolutionDao.class);
 
-	private MongoOperations mongoOperations;
+	private MongoOperations	mongoOperations;
 
 	public boolean insert(Chromosome chromosome) {
 		if (chromosome == null) {

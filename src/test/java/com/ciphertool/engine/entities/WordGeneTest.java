@@ -40,8 +40,8 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class WordGeneTest {
-	private static Word word = new Word("smile", PartOfSpeechType.NOUN);
-	private static SolutionChromosome solutionChromosome = new SolutionChromosome();
+	private static Word					word				= new Word("smile", PartOfSpeechType.NOUN);
+	private static SolutionChromosome	solutionChromosome	= new SolutionChromosome();
 
 	@BeforeClass
 	public static void setUp() {
@@ -371,14 +371,12 @@ public class WordGeneTest {
 		int count = 0;
 		for (Gene gene : solutionChromosome.getGenes()) {
 			for (int j = 0; j < ((VariableLengthGene) gene).size(); j++) {
-				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene)
-						.getSequences().get(j));
+				assertSame(solutionChromosome.getPlaintextCharacters().get(count), ((VariableLengthGene) gene).getSequences().get(j));
 
 				assertEquals(solutionChromosome.getPlaintextCharacters().get(count).getSequenceId().intValue(), count);
 
 				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getSequenceId().intValue(), count);
-				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome
-						.getPlaintextCharacters().get(count).getValue());
+				assertEquals(((VariableLengthGene) gene).getSequences().get(j).getValue(), solutionChromosome.getPlaintextCharacters().get(count).getValue());
 
 				count++;
 			}

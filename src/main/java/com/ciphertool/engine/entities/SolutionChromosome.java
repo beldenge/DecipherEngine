@@ -44,50 +44,50 @@ import com.ciphertool.genetics.entities.VariableLengthGene;
 
 @Document(collection = "solutions")
 public class SolutionChromosome implements KeylessChromosome {
-	private static Logger log = LoggerFactory.getLogger(SolutionChromosome.class);
+	private static Logger				log					= LoggerFactory.getLogger(SolutionChromosome.class);
 
 	/**
 	 * This initial value is only used as a unique identifier for the Chromosome's ancestry, but a different generated
 	 * ID is persisted to database.
 	 */
 	@Id
-	protected String id = UUID.randomUUID().toString();
+	protected String					id					= UUID.randomUUID().toString();
 
 	@Indexed(background = true)
-	protected Integer solutionSetId;
+	protected Integer					solutionSetId;
 
-	protected BigInteger cipherId;
+	protected BigInteger				cipherId;
 
-	private Date databaseCreatedDate;
+	private Date						databaseCreatedDate;
 
-	private int rows;
+	private int							rows;
 
-	private int columns;
+	private int							columns;
 
-	protected int totalMatches;
+	protected int						totalMatches;
 
-	protected int uniqueMatches;
+	protected int						uniqueMatches;
 
-	protected int adjacentMatches;
-
-	@Transient
-	protected boolean evaluationNeeded = true;
+	protected int						adjacentMatches;
 
 	@Transient
-	private Double fitness = 0.0;
+	protected boolean					evaluationNeeded	= true;
 
 	@Transient
-	private int age = 0;
+	private Double						fitness				= 0.0;
 
 	@Transient
-	private int numberOfChildren = 0;
-
-	private List<Gene> genes = new ArrayList<Gene>();
-
-	private Population population;
+	private int							age					= 0;
 
 	@Transient
-	protected List<PlaintextSequence> plaintextCharacters = new ArrayList<PlaintextSequence>();
+	private int							numberOfChildren	= 0;
+
+	private List<Gene>					genes				= new ArrayList<Gene>();
+
+	private Population					population;
+
+	@Transient
+	protected List<PlaintextSequence>	plaintextCharacters	= new ArrayList<PlaintextSequence>();
 
 	public SolutionChromosome() {
 	}
@@ -370,8 +370,9 @@ public class SolutionChromosome implements KeylessChromosome {
 		 * Sequence ID.
 		 */
 		if (index > 0) {
-			beginIndex = ((PlaintextSequence) ((VariableLengthGene) this.genes.get(index - 1)).getSequences().get(
-					((VariableLengthGene) this.genes.get(index - 1)).size() - 1)).getSequenceId() + 1;
+			beginIndex = ((PlaintextSequence) ((VariableLengthGene) this.genes.get(index
+					- 1)).getSequences().get(((VariableLengthGene) this.genes.get(index - 1)).size()
+							- 1)).getSequenceId() + 1;
 		}
 
 		int actualSize = this.plaintextCharacters.size();
@@ -414,8 +415,8 @@ public class SolutionChromosome implements KeylessChromosome {
 		/*
 		 * We want the next Sequence ID to be one greater than the current Gene's greatest Sequence ID.
 		 */
-		int beginIndex = ((PlaintextSequence) ((VariableLengthGene) geneToRemove).getSequences().get(
-				((VariableLengthGene) geneToRemove).getSequences().size() - 1)).getSequenceId() + 1;
+		int beginIndex = ((PlaintextSequence) ((VariableLengthGene) geneToRemove).getSequences().get(((VariableLengthGene) geneToRemove).getSequences().size()
+				- 1)).getSequenceId() + 1;
 
 		int actualSize = this.plaintextCharacters.size();
 
@@ -431,8 +432,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		 * an element is removed.
 		 */
 		for (int i = ((VariableLengthGene) geneToRemove).size() - 1; i >= 0; i--) {
-			plaintextCharacters.remove(((VariableLengthGene) geneToRemove).getSequences().get(i).getSequenceId()
-					.intValue());
+			plaintextCharacters.remove(((VariableLengthGene) geneToRemove).getSequences().get(i).getSequenceId().intValue());
 		}
 
 		return this.genes.remove(index);
@@ -703,8 +703,7 @@ public class SolutionChromosome implements KeylessChromosome {
 		int total = 0;
 
 		for (int i = 0; i < this.plaintextCharacters.size(); i++) {
-			if (this.getPlaintextCharacters().get(i).getValue().toLowerCase().equals(
-					((SolutionChromosome) other).getPlaintextCharacters().get(i).getValue().toLowerCase())) {
+			if (this.getPlaintextCharacters().get(i).getValue().toLowerCase().equals(((SolutionChromosome) other).getPlaintextCharacters().get(i).getValue().toLowerCase())) {
 				total++;
 			}
 		}

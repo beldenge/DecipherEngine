@@ -39,15 +39,15 @@ import com.ciphertool.sherlock.wordgraph.Match;
 
 public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator {
 	@SuppressWarnings("unused")
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log			= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
-	private static List<Word> topWords = new ArrayList<Word>();
+	protected Cipher			cipher;
+	private static List<Word>	topWords	= new ArrayList<Word>();
 
-	protected TopWordsFacade topWordsFacade;
+	protected TopWordsFacade	topWordsFacade;
 
-	private int lastRowBegin;
-	private IndexNode rootNode;
+	private int					lastRowBegin;
+	private IndexNode			rootNode;
 
 	static {
 		// topWords.add(new Word("i", null));
@@ -254,8 +254,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(
-				0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
@@ -293,8 +292,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 					break;
 				}
 
-				innerCiphertextCharacters = getCorrespondingCiphertexts(innerKey, matchMap.get(innerKey).get(0)
-						.getWord().length());
+				innerCiphertextCharacters = getCorrespondingCiphertexts(innerKey, matchMap.get(innerKey).get(0).getWord().length());
 
 				for (String innerCiphertext : innerCiphertextCharacters) {
 					if (ciphertextCharacters.contains(innerCiphertext)) {

@@ -36,8 +36,8 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.enumerations.PartOfSpeechType;
 
 public class FitnessEvaluatorTestBase {
-	protected static Cipher zodiac408 = new Cipher("zodiac408", 24, 17);
-	protected static SolutionChromosome knownSolution = new SolutionChromosome();
+	protected static Cipher				zodiac408		= new Cipher("zodiac408", 24, 17);
+	protected static SolutionChromosome	knownSolution	= new SolutionChromosome();
 
 	static {
 		zodiac408.setId(BigInteger.ZERO);

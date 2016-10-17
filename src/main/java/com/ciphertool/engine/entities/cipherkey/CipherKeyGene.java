@@ -28,14 +28,14 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 
 public class CipherKeyGene implements Gene {
-	private static Logger log = LoggerFactory.getLogger(CipherKeyGene.class);
+	private static Logger	log	= LoggerFactory.getLogger(CipherKeyGene.class);
 
 	@Transient
-	private Chromosome chromosome;
+	private Chromosome		chromosome;
 
-	private String value;
+	private String			value;
 
-	private boolean hasMatch;
+	private boolean			hasMatch;
 
 	public CipherKeyGene() {
 	}

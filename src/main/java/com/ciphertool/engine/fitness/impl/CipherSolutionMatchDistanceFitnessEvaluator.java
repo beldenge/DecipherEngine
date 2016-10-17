@@ -37,9 +37,9 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
 public class CipherSolutionMatchDistanceFitnessEvaluator extends SolutionTruncatedEvaluatorBase implements
 		FitnessEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
-	private static final int ACCEPTABLE_DISTANCE = 3;
-	private static final double MATCH_DISTANCE_BONUS = 0.005;
+	private Logger				log						= LoggerFactory.getLogger(getClass());
+	private static final int	ACCEPTABLE_DISTANCE		= 3;
+	private static final double	MATCH_DISTANCE_BONUS	= 0.005;
 
 	/**
 	 * Default no-args constructor
