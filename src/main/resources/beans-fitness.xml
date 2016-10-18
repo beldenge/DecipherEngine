@@ -260,4 +260,8 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator" id="cipherKeyIndexedCorrelatedCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
+
+	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovModelFitnessEvaluator" id="cipherKeyMarkovModelFitnessEvaluator">
+		<property name="markovModelDao" ref="markovModelDao" />
+	</bean>
 </beans>

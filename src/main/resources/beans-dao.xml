@@ -74,4 +74,13 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.engine.dao.cipherkey.CipherKeyGeneDao" id="cipherKeyGeneDao" />
+
+	<bean class="com.ciphertool.engine.dao.cipherkey.MarkovModelDao" id="markovModelDao">
+		<property name="importer" ref="markovImporterImpl" />
+	</bean>
+
+	<bean class="com.ciphertool.sherlock.etl.importers.MarkovImporterImpl" id="markovImporterImpl">
+		<property name="corpusDirectory" value="${markov.corpus.directory}" />
+		<property name="order" value="${markov.order}" />
+	</bean>
 </beans>
