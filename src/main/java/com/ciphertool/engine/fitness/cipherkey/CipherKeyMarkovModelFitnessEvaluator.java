@@ -52,8 +52,8 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			if (transitions != null && !transitions.isEmpty()) {
 				int transitionIndex = transitions.indexOf(new Transition(currentSolutionString.charAt(i + order)));
 
-				if (transitionIndex > 0) {
-					total += Math.pow(order, 2.0) * transitions.get(transitionIndex).getFrequencyRatio().doubleValue();
+				if (transitionIndex >= 0) {
+					total += Math.pow(2.0, order) * transitions.get(transitionIndex).getFrequencyRatio().doubleValue();
 				}
 			}
 		}
