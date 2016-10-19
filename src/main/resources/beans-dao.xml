@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 	
-	<bean class="com.ciphertool.sherlock.dao.NGramDao" id="nGramDao">
+	<!-- <bean class="com.ciphertool.sherlock.dao.NGramDao" id="nGramDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean>
+	</bean> -->
 	
 	<bean class="com.ciphertool.sherlock.dao.FrequencyWordListDao" id="wordListDao">
 		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.WordDao">
@@ -36,7 +36,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
 	</bean>
 	
-	<bean class="com.ciphertool.sherlock.dao.UniqueNGramListDao" id="nGramListDao">
+	<!-- <bean class="com.ciphertool.sherlock.dao.UniqueNGramListDao" id="nGramListDao">
 		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.NGramDao">
 			<ref bean="nGramDao" />
 		</constructor-arg>
@@ -44,7 +44,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<constructor-arg index="2" type="java.lang.Integer" value="${fitness.ngram.three.topWords}" />
 		<constructor-arg index="3" type="java.lang.Integer" value="${fitness.ngram.four.topWords}" />
 		<constructor-arg index="4" type="java.lang.Integer" value="${fitness.ngram.five.topWords}" />
-	</bean>
+	</bean> -->
 	
 	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
 	<!-- <bean class="com.ciphertool.sherlock.dao.BasicWordMapDao"

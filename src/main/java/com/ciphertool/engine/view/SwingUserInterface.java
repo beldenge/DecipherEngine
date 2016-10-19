@@ -58,7 +58,7 @@ import com.ciphertool.engine.common.StrategyBuilder;
 import com.ciphertool.engine.controller.CipherSolutionController;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedNGramFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm;
@@ -507,7 +507,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyIndexedNGramFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyMarkovModelFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

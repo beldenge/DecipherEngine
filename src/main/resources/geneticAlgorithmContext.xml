@@ -27,27 +27,27 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
-	<!-- <bean class="com.ciphertool.genetics.StandardPopulation" id="population">
+	<bean class="com.ciphertool.genetics.StandardPopulation" id="population">
 		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
-		<property name="chromosomePrinter" ref="cipherKeyIndexedNGramChromosomePrinter" />
-	</bean> -->
-	
-	<bean class="com.ciphertool.genetics.LatticePopulation" id="population">
+		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
+	</bean>
+
+	<!-- <bean class="com.ciphertool.genetics.LatticePopulation" id="population">
 		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="lifespan" value="${genetic.algorithm.lifespan}" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
-		<property name="chromosomePrinter" ref="cipherKeyIndexedNGramChromosomePrinter" />
+		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 		<property name="latticeRows" value="${population.lattice.rows}" />
 		<property name="latticeColumns" value="${population.lattice.columns}" />
-	</bean>
+	</bean> -->
 
 	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
 		<property name="geneDao" ref="geneDao" />
@@ -57,7 +57,7 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.genetics.util.RandomListElementSelector" id="randomListElementSelector" />
 
-	<!-- <bean class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm" id="geneticAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm" id="geneticAlgorithm">
 		<property name="population" ref="population" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
@@ -65,33 +65,33 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 		<property name="elitism" value="${genetic.algorithm.elitism}" />
-	</bean> -->
-	
-	<bean class="com.ciphertool.genetics.algorithms.LatticeGeneticAlgorithm" id="geneticAlgorithm">
+	</bean>
+
+	<!-- <bean class="com.ciphertool.genetics.algorithms.LatticeGeneticAlgorithm" id="geneticAlgorithm">
 		<property name="population" ref="population" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
 		<property name="verifyAncestry" value="${fitness.ancestry.verify}" />
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
-	</bean>
+	</bean> -->
 
-	<bean class="com.ciphertool.engine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
+	<!-- <bean class="com.ciphertool.engine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="nGramListDao" ref="nGramListDao" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
-	</bean>
+	</bean> -->
 
-	<bean class="com.ciphertool.engine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
+	<!-- <bean class="com.ciphertool.engine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
 		<property name="topWordsFacade" ref="topWordsFacade" />
-	</bean>
+	</bean> -->
 
 	<bean class="com.ciphertool.engine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 
-	<bean class="com.ciphertool.engine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
+	<!-- <bean class="com.ciphertool.engine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
 		<property name="topWordsFacade" ref="topWordsFacade" />
-	</bean>
+	</bean> -->
 </beans>
