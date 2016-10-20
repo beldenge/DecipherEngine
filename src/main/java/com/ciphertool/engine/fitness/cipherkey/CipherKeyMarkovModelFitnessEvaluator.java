@@ -1,6 +1,6 @@
 package com.ciphertool.engine.fitness.cipherkey;
 
-import java.util.ArrayList;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -12,9 +12,8 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.KGram;
+import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.Transition;
 
 public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
@@ -39,21 +38,17 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			String kGramString = currentSolutionString.substring(i, i + order);
 
-			char[] kGramChars = kGramString.toCharArray();
-
-			Character[] kGram = new Character[order];
-
-			for (int j = 0; j < kGramChars.length; j++) {
-				kGram[j] = kGramChars[j];
-			}
-
-			ArrayList<Transition> transitions = model.getModel().get(new KGram(kGram));
+			Map<Character, KGramIndexNode> transitions = model.getTransitions(kGramString);
 
 			if (transitions != null && !transitions.isEmpty()) {
-				int transitionIndex = transitions.indexOf(new Transition(currentSolutionString.charAt(i + order)));
+				KGramIndexNode transition = transitions.get(currentSolutionString.charAt(i + order));
 
-				if (transitionIndex >= 0) {
-					total += Math.pow(2.0, order) * transitions.get(transitionIndex).getFrequencyRatio().doubleValue();
+				if (transition != null) {
+					/*
+					 * I'm not sure it makes sense to scale the weight by the frequency -- perhaps the count would be
+					 * better?
+					 */
+					total += Math.pow(2.0, order);
 				}
 			}
 		}
