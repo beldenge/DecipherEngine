@@ -59,6 +59,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 	protected Cipher			cipher;
 
+	@Transient
 	private Ancestry			ancestry;
 
 	@Transient
