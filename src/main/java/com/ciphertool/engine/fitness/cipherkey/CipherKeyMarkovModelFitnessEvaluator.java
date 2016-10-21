@@ -35,6 +35,7 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		Double total = 1.0;
+		Double matches = 0.0;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			String kGramString = currentSolutionString.substring(i, i + order);
 
@@ -48,7 +49,8 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 					 * I'm not sure it makes sense to scale the weight by the frequency -- perhaps the count would be
 					 * better?
 					 */
-					total += Math.pow(2.0, order);
+					matches += 1.0;
+					total += (100.0 * (matches / (lastRowBegin - order)));
 				}
 			}
 		}
