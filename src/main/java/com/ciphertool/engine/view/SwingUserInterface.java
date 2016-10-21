@@ -61,7 +61,7 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.cipherkey.MultipleGuaranteedFitnessMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
@@ -537,7 +537,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		crossoverAlgorithmComboBox = new JComboBox<CrossoverAlgorithm>(model);
 		crossoverAlgorithmComboBox.setRenderer(selectableRenderer);
-		crossoverAlgorithmComboBox.setSelectedItem(applicationContext.getBean(EqualOpportunityGeneCrossoverAlgorithm.class));
+		crossoverAlgorithmComboBox.setSelectedItem(applicationContext.getBean(EqualOpportunityGuaranteedCrossoverAlgorithm.class));
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

@@ -57,12 +57,12 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
 	
-	<!-- <bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.RandomSinglePointGuaranteedCrossoverAlgorithm" id="randomSinglePointGuaranteedCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.RandomSinglePointGuaranteedCrossoverAlgorithm" id="randomSinglePointGuaranteedCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 		<property name="maxAttempts" value="${max.mutation.attempts}" />
-		<property name="fitnessEvaluator" ref="cipherKeyIndexedWordGraphCorpusFitnessEvaluator" />
-	</bean> -->
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
+	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm" id="equalOpportunityGeneCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
@@ -76,13 +76,13 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
 	
-	<!-- <bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
-		<property name="fitnessEvaluator" ref="cipherKeyIndexedWordGraphCorpusFitnessEvaluator" />
+		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="maxAttempts" value="${max.mutation.attempts}" />
-	</bean> -->
+	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedSwapCrossoverAlgorithm" id="equalOpportunityGuaranteedSwapCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
