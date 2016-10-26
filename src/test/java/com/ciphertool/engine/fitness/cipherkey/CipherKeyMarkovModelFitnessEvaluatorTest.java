@@ -26,7 +26,7 @@ import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
 public class CipherKeyMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static final int							ORDER		= 7;
+	private static final int							ORDER		= 6;
 
 	private static MarkovModelDao						markovModelDao;
 	private static MarkovImporterImpl					importer;

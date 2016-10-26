@@ -36,22 +36,36 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		Double total = 1.0;
 		Double matches = 0.0;
+		KGramIndexNode transition = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			String kGramString = currentSolutionString.substring(i, i + order);
 
-			Map<Character, KGramIndexNode> transitions = model.getTransitions(kGramString);
+			KGramIndexNode match = null;
+			if (transition != null) {
+				match = transition.getChild(currentSolutionString.charAt(i + order));
+			}
+
+			if (match == null) {
+				match = model.find(kGramString);
+			}
+
+			Map<Character, KGramIndexNode> transitions = null;
+			if (match != null) {
+				transitions = match.getTransitionMap();
+			}
 
 			if (transitions != null && !transitions.isEmpty()) {
-				KGramIndexNode transition = transitions.get(currentSolutionString.charAt(i + order));
+				transition = transitions.get(currentSolutionString.charAt(i + order));
+			}
 
-				if (transition != null) {
-					/*
-					 * I'm not sure it makes sense to scale the weight by the frequency -- perhaps the count would be
-					 * better?
-					 */
-					matches += 1.0;
-					total += (100.0 * (matches / (lastRowBegin - order)));
-				}
+			if (transition != null) {
+				/*
+				 * I'm not sure it makes sense to scale the weight by the frequency -- perhaps the count would be
+				 * better?
+				 */
+				matches += 1.0;
+				total += (100.0 * (matches / (lastRowBegin - order)));
+				transition = null;
 			}
 		}
 
