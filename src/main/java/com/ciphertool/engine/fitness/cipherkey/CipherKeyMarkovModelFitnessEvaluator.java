@@ -42,6 +42,7 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 			KGramIndexNode match = null;
 			if (transition != null) {
+				// TODO: something wasn't done correctly here... transition is always null, so we never get here...
 				match = transition.getChild(currentSolutionString.charAt(i + order));
 			}
 
@@ -59,10 +60,6 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			if (transition != null) {
-				/*
-				 * I'm not sure it makes sense to scale the weight by the frequency -- perhaps the count would be
-				 * better?
-				 */
 				matches += 1.0;
 				total += (100.0 * (matches / (lastRowBegin - order)));
 				transition = null;
