@@ -1,7 +1,5 @@
 package com.ciphertool.engine.fitness.cipherkey;
 
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -26,6 +24,7 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	@PostConstruct
 	public void init() {
 		model = markovModelDao.getModel();
+		model.postProcess();
 	}
 
 	@Override
@@ -38,32 +37,26 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		Double matches = 0.0;
 		KGramIndexNode transition = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
-			String kGramString = currentSolutionString.substring(i, i + order);
-
 			KGramIndexNode match = null;
-			if (transition != null) {
-				// TODO: something wasn't done correctly here... transition is always null, so we never get here...
-				match = transition.getChild(currentSolutionString.charAt(i + order));
-			}
-
-			if (match == null) {
-				match = model.find(kGramString);
-			}
-
-			Map<Character, KGramIndexNode> transitions = null;
-			if (match != null) {
-				transitions = match.getTransitionMap();
-			}
-
-			if (transitions != null && !transitions.isEmpty()) {
-				transition = transitions.get(currentSolutionString.charAt(i + order));
-			}
 
 			if (transition != null) {
-				matches += 1.0;
-				total += (100.0 * (matches / (lastRowBegin - order)));
-				transition = null;
+				transition = transition.getChild(currentSolutionString.charAt(i + order));
+			} else {
+				match = model.find(currentSolutionString.substring(i, i + order));
+
+				if (match == null) {
+					continue;
+				}
+
+				transition = match.getChild(currentSolutionString.charAt(i + order));
 			}
+
+			if (transition == null) {
+				continue;
+			}
+
+			matches += 1.0;
+			total += (100.0 * (matches / (lastRowBegin - order)));
 		}
 
 		return total;
