@@ -24,7 +24,6 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	@PostConstruct
 	public void init() {
 		model = markovModelDao.getModel();
-		model.postProcess();
 	}
 
 	@Override
