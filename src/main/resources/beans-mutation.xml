@@ -14,16 +14,16 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean class="com.ciphertool.genetics.algorithms.mutation.keyed.RandomValueMutationAlgorithm" id="randomValueMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.RandomValueMutationAlgorithm" id="randomValueMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.algorithms.mutation.keyed.StandardMutationAlgorithm" id="defaultMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.StandardMutationAlgorithm" id="defaultMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.mutation.keyed.StandardGuaranteedFitnessMutationAlgorithm" id="standardGuaranteedFitnessMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.StandardGuaranteedFitnessMutationAlgorithm" id="standardGuaranteedFitnessMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="mutationRate" value="${genetic.algorithm.mutationRate}" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
@@ -35,14 +35,14 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="mutationCountFactor" value="${mutation.count.factor}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.mutation.keyed.MultipleGuaranteedFitnessMutationAlgorithm" id="multipleGuaranteedFitnessMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.MultipleGuaranteedFitnessMutationAlgorithm" id="multipleGuaranteedFitnessMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="maxAttempts" value="${max.mutation.attempts}" />
 		<property name="mutationHelper" ref="mutationHelper" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.algorithms.mutation.keyed.MultipleMutationAlgorithm" id="multipleMutationAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.MultipleMutationAlgorithm" id="multipleMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 		<property name="mutationHelper" ref="mutationHelper" />
 	</bean>
