@@ -40,9 +40,9 @@ import com.ciphertool.engine.fitness.impl.CipherKeyKnownSolutionFitnessEvaluator
 import com.ciphertool.engine.fitness.impl.CipherKeyUniqueIndexedWordGraphFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.keyless.LowestCommonGroupCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.keyed.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.keyless.ConservativeMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.keyed.MultipleMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
@@ -138,7 +138,7 @@ public class GeneticStrategyBuilderTest {
 	public void testGetCrossoverAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
-		CrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
+		CrossoverAlgorithm crossoverAlgorithmToReturn = new EqualOpportunityGeneCrossoverAlgorithm();
 
 		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmToReturn);
 
@@ -177,7 +177,7 @@ public class GeneticStrategyBuilderTest {
 	public void testGetMutationAlgorithm() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String mutationAlgorithmParameter = ParameterConstants.MUTATION_ALGORITHM;
-		ConservativeMutationAlgorithm mutationAlgorithmToReturn = new ConservativeMutationAlgorithm();
+		MultipleMutationAlgorithm mutationAlgorithmToReturn = new MultipleMutationAlgorithm();
 
 		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmToReturn);
 
@@ -647,11 +647,11 @@ public class GeneticStrategyBuilderTest {
 		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
-		CrossoverAlgorithm crossoverAlgorithmToReturn = new LowestCommonGroupCrossoverAlgorithm();
+		CrossoverAlgorithm crossoverAlgorithmToReturn = new EqualOpportunityGeneCrossoverAlgorithm();
 		parametersMap.put(crossoverAlgorithmParameter, crossoverAlgorithmToReturn);
 
 		String mutationAlgorithmParameter = ParameterConstants.MUTATION_ALGORITHM;
-		MutationAlgorithm mutationAlgorithmToReturn = new ConservativeMutationAlgorithm();
+		MutationAlgorithm mutationAlgorithmToReturn = new MultipleMutationAlgorithm();
 		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmToReturn);
 
 		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
