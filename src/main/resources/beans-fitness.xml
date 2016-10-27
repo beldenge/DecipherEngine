@@ -264,4 +264,8 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovModelFitnessEvaluator" id="defaultFitnessEvaluator">
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
+
+	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyTieredMarkovModelFitnessEvaluator" id="cipherKeyTieredMarkovModelFitnessEvaluator">
+		<property name="markovModelDao" ref="markovModelDao" />
+	</bean>
 </beans>

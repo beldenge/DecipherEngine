@@ -106,14 +106,12 @@ public class CipherKeyMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTe
 
 		fitnessEvaluator = new CipherKeyMarkovModelFitnessEvaluator();
 		fitnessEvaluator.setMarkovModelDao(markovModelDao);
-
 		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.init();
 	}
 
 	// @Test
 	public void testEvaluate() {
-		fitnessEvaluator.init();
-
 		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 }
