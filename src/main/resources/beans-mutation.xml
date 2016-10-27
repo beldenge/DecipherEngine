@@ -48,7 +48,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.mutation.MutationHelper" id="mutationHelper">
-		<property name="maxMutations" value="${max.mutations}" />
+		<property name="maxMutations" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 		<property name="mutationCountFactor" value="${mutation.count.factor}" />
 	</bean>
 	
