@@ -34,22 +34,20 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.ciphertool.engine.dao.CipherDao;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.fitness.impl.CipherKeyKnownSolutionFitnessEvaluator;
+import com.ciphertool.engine.fitness.impl.CipherKeyUniqueIndexedWordGraphFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.ConservativeMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.keyless.LowestCommonGroupCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.keyless.ConservativeMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.engine.common.GeneticStrategyBuilder;
-import com.ciphertool.engine.common.ParameterConstants;
-import com.ciphertool.engine.dao.CipherDao;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.impl.CipherSolutionKnownSolutionFitnessEvaluator;
-import com.ciphertool.engine.fitness.impl.CipherSolutionUniqueWordFitnessEvaluator;
 
 public class GeneticStrategyBuilderTest {
 	@Test
@@ -101,7 +99,7 @@ public class GeneticStrategyBuilderTest {
 	public void testGetFitnessEvaluator() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		FitnessEvaluator fitnessEvaluatorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
+		FitnessEvaluator fitnessEvaluatorToReturn = new CipherKeyUniqueIndexedWordGraphFitnessEvaluator();
 
 		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
@@ -645,7 +643,7 @@ public class GeneticStrategyBuilderTest {
 		parametersMap.put(cipherNameParameter, cipherNameValue);
 
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		FitnessEvaluator fitnessEvaluatorToReturn = new CipherSolutionUniqueWordFitnessEvaluator();
+		FitnessEvaluator fitnessEvaluatorToReturn = new CipherKeyUniqueIndexedWordGraphFitnessEvaluator();
 		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
@@ -709,7 +707,7 @@ public class GeneticStrategyBuilderTest {
 		when(cipherDaoMock.findByCipherName(eq(cipherNameValue))).thenReturn(cipher);
 		geneticStrategyBuilder.setCipherDao(cipherDaoMock);
 
-		CipherSolutionKnownSolutionFitnessEvaluator knownSolutionfitnessEvalutorToSet = new CipherSolutionKnownSolutionFitnessEvaluator();
+		CipherKeyKnownSolutionFitnessEvaluator knownSolutionfitnessEvalutorToSet = new CipherKeyKnownSolutionFitnessEvaluator();
 		geneticStrategyBuilder.setKnownSolutionFitnessEvaluator(knownSolutionfitnessEvalutorToSet);
 
 		/*

@@ -19,10 +19,6 @@ You should have received a copy of the GNU General Public License along with Dec
 	<import resource="classpath*:beans-mutation.xml" />
 	<import resource="classpath*:beans-crossover.xml" />
 
-	<!-- <bean class="com.ciphertool.engine.SolutionBreeder" id="breeder">
-		<property name="wordListDao" ref="wordListDao" />
-	</bean> -->
-
 	<bean class="com.ciphertool.engine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
@@ -49,10 +45,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="latticeColumns" value="${population.lattice.columns}" />
 	</bean> -->
 
-	<bean class="com.ciphertool.genetics.util.KeylessChromosomeHelper" id="chromosomeHelper">
-		<property name="geneDao" ref="geneDao" />
-	</bean>
-
 	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />
 
 	<bean class="com.ciphertool.genetics.util.RandomListElementSelector" id="randomListElementSelector" />
@@ -78,7 +70,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 	</bean> -->
 
-	<!-- <bean class="com.ciphertool.engine.dao.cipherkey.TopWordsFacade" id="topWordsFacade">
+	<!-- <bean class="com.ciphertool.engine.dao.TopWordsFacade" id="topWordsFacade">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="nGramListDao" ref="nGramListDao" />

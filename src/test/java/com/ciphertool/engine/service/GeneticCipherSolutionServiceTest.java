@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.engine.dao.SolutionDao;
-import com.ciphertool.engine.entities.SolutionChromosome;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.view.GenericCallback;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
@@ -113,7 +113,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -173,7 +173,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -258,7 +258,7 @@ public class GeneticCipherSolutionServiceTest {
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -295,7 +295,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -318,7 +318,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -369,7 +369,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -417,7 +417,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -475,7 +475,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -499,7 +499,7 @@ public class GeneticCipherSolutionServiceTest {
 
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -550,7 +550,7 @@ public class GeneticCipherSolutionServiceTest {
 		StandardPopulation population = new StandardPopulation();
 		population.setChromosomePrinter(chromosomePrinterMock);
 
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);
@@ -650,7 +650,7 @@ public class GeneticCipherSolutionServiceTest {
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 		StandardPopulation population = new StandardPopulation();
 
-		SolutionChromosome solutionChromosome = new SolutionChromosome();
+		CipherKeyChromosome solutionChromosome = new CipherKeyChromosome();
 		solutionChromosome.setEvaluationNeeded(false);
 		population.addIndividual(solutionChromosome);
 		when(geneticAlgorithm.getPopulation()).thenReturn(population);

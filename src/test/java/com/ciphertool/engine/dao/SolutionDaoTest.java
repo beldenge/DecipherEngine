@@ -35,7 +35,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +45,9 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.engine.dao.SolutionDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.SolutionChromosome;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.genetics.entities.Chromosome;
 
 public class SolutionDaoTest {
 	private static SolutionDao		solutionDao;
@@ -82,7 +80,7 @@ public class SolutionDaoTest {
 
 	@Test
 	public void testFindBySolutionId() {
-		SolutionChromosome solutionToReturn = new SolutionChromosome();
+		CipherKeyChromosome solutionToReturn = new CipherKeyChromosome();
 		when(mongoTemplateMock.findOne(any(Query.class), eq(Chromosome.class))).thenReturn(solutionToReturn);
 
 		int arbitraryInteger = 1;
@@ -101,9 +99,9 @@ public class SolutionDaoTest {
 	@Test
 	public void testFindByCipherName() {
 		List<Chromosome> solutionsToReturn = new ArrayList<Chromosome>();
-		SolutionChromosome solution1 = new SolutionChromosome(new BigInteger("1"), 0, 0, 0, 5, 5);
+		CipherKeyChromosome solution1 = new CipherKeyChromosome();
 		solutionsToReturn.add(solution1);
-		SolutionChromosome solution2 = new SolutionChromosome(new BigInteger("1"), 1, 1, 1, 10, 10);
+		CipherKeyChromosome solution2 = new CipherKeyChromosome();
 		solutionsToReturn.add(solution2);
 
 		Cipher dummyCipherToReturn = new Cipher();
@@ -122,7 +120,7 @@ public class SolutionDaoTest {
 		List<Chromosome> solutionsReturned = solutionDao.findByCipherName(null);
 
 		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
-		verify(mongoTemplateMock, never()).find(any(Query.class), eq(SolutionChromosome.class));
+		verify(mongoTemplateMock, never()).find(any(Query.class), eq(CipherKeyChromosome.class));
 		assertNull(solutionsReturned);
 	}
 
@@ -131,13 +129,13 @@ public class SolutionDaoTest {
 		List<Chromosome> solutionsReturned = solutionDao.findByCipherName("");
 
 		verify(mongoTemplateMock, never()).findOne(any(Query.class), eq(Cipher.class));
-		verify(mongoTemplateMock, never()).find(any(Query.class), eq(SolutionChromosome.class));
+		verify(mongoTemplateMock, never()).find(any(Query.class), eq(CipherKeyChromosome.class));
 		assertNull(solutionsReturned);
 	}
 
 	@Test
 	public void testInsert() {
-		SolutionChromosome solutionToInsert = new SolutionChromosome(new BigInteger("1"), 1, 1, 1, 10, 10);
+		CipherKeyChromosome solutionToInsert = new CipherKeyChromosome();
 
 		boolean result = solutionDao.insert(solutionToInsert);
 
@@ -149,7 +147,7 @@ public class SolutionDaoTest {
 	public void testInsertNull() {
 		boolean result = solutionDao.insert(null);
 
-		verify(mongoTemplateMock, never()).insert(any(SolutionChromosome.class));
+		verify(mongoTemplateMock, never()).insert(any(CipherKeyChromosome.class));
 		assertFalse(result);
 	}
 }

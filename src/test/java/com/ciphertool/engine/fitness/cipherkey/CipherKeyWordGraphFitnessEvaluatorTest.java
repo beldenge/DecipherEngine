@@ -32,10 +32,10 @@ import org.junit.Test;
 
 import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
+import com.ciphertool.engine.fitness.impl.CipherKeyWordGraphFitnessEvaluator;
 
 public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static CipherKeyWordGraphFitnessEvaluator	fitnessEvaluator;

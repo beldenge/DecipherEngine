@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.Breeder;
 import com.ciphertool.genetics.dao.GeneDao;
 import com.ciphertool.genetics.entities.Chromosome;

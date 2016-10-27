@@ -33,8 +33,8 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 
 public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 	protected TopWordsFacade topWordsFacade;

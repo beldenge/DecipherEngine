@@ -33,9 +33,10 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
+import com.ciphertool.engine.fitness.impl.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator;
 
 public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static CipherKeyAdjacentWordGraphCorpusFitnessEvaluator	fitnessEvaluator;

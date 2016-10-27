@@ -17,41 +17,41 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.printer;
+package com.ciphertool.engine.fitness.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 
-public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter {
-	protected TopWordsFacade topWordsFacade;
+public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
+	private int					matchThreshold	= 2;
+	protected Cipher			cipher;
+
+	protected TopWordsFacade	topWordsFacade;
 
 	@Override
-	public String print(Chromosome chromosome) {
+	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
-				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
+		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
-		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
-
-		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+		IndexNode rootNode = topWordsFacade.getIndexedWords();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
@@ -104,83 +104,49 @@ public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter
 			}
 		}
 
-		StringBuffer sb = new StringBuffer();
+		double uniquenessPenalty = highestScore * determineUniquenessPenalty(bestBranch.split(", "));
 
-		sb.append("Solution [id=" + chromosome.getId() + ", cipherId="
-				+ ((CipherKeyChromosome) chromosome).getCipher().getId() + ", fitness="
-				+ String.format("%1$,.2f", chromosome.getFitness()) + ", age=" + chromosome.getAge()
-				+ ", numberOfChildren=" + chromosome.getNumberOfChildren() + ", evaluationNeeded="
-				+ chromosome.isEvaluationNeeded() + "]\n");
+		return ((double) (highestScore)) - uniquenessPenalty;
+	}
 
-		List<String> words = new ArrayList<String>();
+	private double determineUniquenessPenalty(String[] words) {
+		Map<String, Integer> wordOccurrenceMap = new HashMap<String, Integer>();
 
-		// In the off chance that no words were found at all
-		if (!bestBranch.isEmpty()) {
-			words.addAll(Arrays.asList(bestBranch.split(", ")));
-		}
-
-		String word = words.isEmpty() ? null : words.get(0);
-		for (int i = 0; i < fullSolutionString.length(); i++) {
-			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i
-					+ word.length()))) {
-				sb.append("[");
-
-				for (int j = 0; j < word.length(); j++) {
-					if (j > 0) {
-						sb.append(" ");
-					}
-
-					sb.append(fullSolutionString.charAt(i + j));
-
-					if (j < word.length() - 1) {
-						sb.append(" ");
-					} else if (j == word.length() - 1) {
-						sb.append("]");
-					}
-
-					/*
-					 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function
-					 * doesn't break.
-					 */
-					if (((i + j + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-						sb.append("\n");
-					} else {
-						sb.append(" ");
-					}
-
-					// Prevent ArrayIndexOutOfBoundsException
-					if (i + j >= fullSolutionString.length()) {
-						break;
-					}
-				}
-
-				i += word.length() - 1;
-
-				words.remove(0);
-
-				if (!words.isEmpty()) {
-					word = words.get(0);
-				}
-
-				continue;
+		/*
+		 * Count the number of occurrences of each word and stick it in a map.
+		 */
+		for (String word : words) {
+			if (!wordOccurrenceMap.containsKey(word)) {
+				wordOccurrenceMap.put(word, 0);
 			}
 
-			sb.append(" ");
-			sb.append(fullSolutionString.charAt(i));
-			sb.append(" ");
-
-			/*
-			 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
-			 * break.
-			 */
-			if (((i + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-				sb.append("\n");
-			} else {
-				sb.append(" ");
-			}
+			wordOccurrenceMap.put(word, wordOccurrenceMap.get(word) + 1);
 		}
 
-		return sb.toString();
+		double penalty = 0;
+
+		/*
+		 * We don't care about the Strings themselves anymore. Just their numbers of occurrences.
+		 */
+		for (Integer numOccurrences : wordOccurrenceMap.values()) {
+			penalty += (0.01 * (numOccurrences - matchThreshold));
+		}
+
+		return penalty;
+	}
+
+	/**
+	 * @param matchThreshold
+	 *            the matchThreshold to set
+	 */
+	@Required
+	public void setMatchThreshold(int matchThreshold) {
+		this.matchThreshold = matchThreshold;
+	}
+
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
 	}
 
 	/**
@@ -190,5 +156,10 @@ public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter
 	@Required
 	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
 		this.topWordsFacade = topWordsFacade;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Unique Indexed Word Graph";
 	}
 }

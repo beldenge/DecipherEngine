@@ -3,44 +3,53 @@
  * 
  * This file is part of DecipherEngine.
  * 
- * DecipherEngine is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ * DecipherEngine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  * 
- * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.printer;
+package com.ciphertool.engine.fitness.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
-import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
-	private int					minWordLength;
-	private static List<Word>	topWords	= new ArrayList<Word>();
+public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger					log								= LoggerFactory.getLogger(getClass());
+
+	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
+	private static final double		MATCHES_BONUS					= 1.033;
+
+	private Map<Character, Double>	expectedLetterFrequencies;
+
+	protected Cipher				cipher;
+	private int						minWordLength;
+	private static List<Word>		topWords						= new ArrayList<Word>();
+
+	private int						lastRowBegin;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -240,17 +249,13 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 	}
 
 	@Override
-	public String print(Chromosome chromosome) {
+	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
-				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
-
-		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
-
-		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -288,6 +293,13 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 		long highestScore = 0;
 
 		String bestBranch = "";
+		// branches = Arrays
+		// .asList(new String[] {
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
+		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
+		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
+		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// });
 
 		for (String branch : branches) {
 			score = 0;
@@ -302,83 +314,64 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 			}
 		}
 
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("Solution [id=" + chromosome.getId() + ", cipherId="
-				+ ((CipherKeyChromosome) chromosome).getCipher().getId() + ", fitness="
-				+ String.format("%1$,.2f", chromosome.getFitness()) + ", age=" + chromosome.getAge()
-				+ ", numberOfChildren=" + chromosome.getNumberOfChildren() + ", evaluationNeeded="
-				+ chromosome.isEvaluationNeeded() + "]\n");
-
-		List<String> words = new ArrayList<String>();
-
-		// In the off chance that no words were found at all
-		if (!bestBranch.isEmpty()) {
-			words.addAll(Arrays.asList(bestBranch.split(", ")));
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
 		}
 
-		String word = words.isEmpty() ? null : words.get(0);
-		for (int i = 0; i < fullSolutionString.length(); i++) {
-			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i
-					+ word.length()))) {
-				sb.append("[");
+		double fitness = highestScore + Math.pow(MATCHES_BONUS, bestBranch.replaceAll("[^a-z]", "").length());
 
-				for (int j = 0; j < word.length(); j++) {
-					if (j > 0) {
-						sb.append(" ");
-					}
+		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
 
-					sb.append(fullSolutionString.charAt(i + j));
+		/*
+		 * Initialize the actualLetterFrequencies Map
+		 */
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			actualLetterFrequencies.put(letter, 0.0);
+		}
 
-					if (j < word.length() - 1) {
-						sb.append(" ");
-					} else if (j == word.length() - 1) {
-						sb.append("]");
-					}
+		/*
+		 * Don't use the last row when calculating the oneCharacterFrequency for this evaluator
+		 */
+		Double oneCharacterFrequency = 1.0 / (double) currentSolutionString.length();
+		Double currentFrequency = 0.0;
 
-					/*
-					 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function
-					 * doesn't break.
-					 */
-					if (((i + j + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-						sb.append("\n");
-					} else {
-						sb.append(" ");
-					}
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			Character currentCharacter = currentSolutionString.charAt(i);
 
-					// Prevent ArrayIndexOutOfBoundsException
-					if (i + j >= fullSolutionString.length()) {
-						break;
-					}
-				}
-
-				i += word.length() - 1;
-
-				words.remove(0);
-
-				if (!words.isEmpty()) {
-					word = words.get(0);
-				}
-
-				continue;
-			}
-
-			sb.append(" ");
-			sb.append(fullSolutionString.charAt(i));
-			sb.append(" ");
-
-			/*
-			 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
-			 * break.
-			 */
-			if (((i + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-				sb.append("\n");
+			currentFrequency = actualLetterFrequencies.get(currentCharacter);
+			if (currentFrequency != null) {
+				actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
 			} else {
-				sb.append(" ");
+				log.debug("Found non-alpha character in Plaintext: " + currentCharacter);
 			}
 		}
 
-		return sb.toString();
+		Double difference = 0.0;
+		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length()
+				/ (double) currentSolutionString.length());
+
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
+
+			if (difference > FREQUENCY_DIFFERENCE_THRESHOLD) {
+				/*
+				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
+				 * much of an effect in early generations
+				 */
+				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
+
+				fitness = fitness * frequencyFactor;
+			}
+		}
+
+		return Double.valueOf(fitness);
+	}
+
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
@@ -388,5 +381,19 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 	@Required
 	public void setMinWordLength(int minWordLength) {
 		this.minWordLength = minWordLength;
+	}
+
+	/**
+	 * @param expectedLetterFrequencies
+	 *            the expectedLetterFrequencies to set
+	 */
+	@Required
+	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
+		this.expectedLetterFrequencies = expectedLetterFrequencies;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Frequency Corpus";
 	}
 }

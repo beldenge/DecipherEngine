@@ -3,112 +3,119 @@
  * 
  * This file is part of DecipherEngine.
  * 
- * DecipherEngine is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
+ * DecipherEngine is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
  * version.
  * 
- * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see
+ * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.printer;
+package com.ciphertool.engine.fitness.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
-import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
+import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
-	private int					minWordLength;
+public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger				log			= LoggerFactory.getLogger(getClass());
+
+	protected Cipher			cipher;
 	private static List<Word>	topWords	= new ArrayList<Word>();
 
+	protected TopWordsFacade	topWordsFacade;
+
+	private int					lastRowBegin;
+	private IndexNode			rootNode;
+
 	static {
-		topWords.add(new Word("i", null));
-		topWords.add(new Word("like", null));
-		topWords.add(new Word("killing", null));
-		topWords.add(new Word("people", null));
-		topWords.add(new Word("because", null));
-		topWords.add(new Word("it", null));
-		topWords.add(new Word("is", null));
-		topWords.add(new Word("so", null));
-		topWords.add(new Word("much", null));
-		topWords.add(new Word("fun", null));
-		topWords.add(new Word("more", null));
-		topWords.add(new Word("than", null));
-		topWords.add(new Word("wild", null));
-		topWords.add(new Word("game", null));
-		topWords.add(new Word("the", null));
-		topWords.add(new Word("forrest", null));
-		topWords.add(new Word("because", null));
-		topWords.add(new Word("man", null));
-		topWords.add(new Word("most", null));
-		topWords.add(new Word("moat", null)); // this misspelling is repeated twice
-		topWords.add(new Word("animal", null));
-		topWords.add(new Word("of", null));
-		topWords.add(new Word("all", null));
-		topWords.add(new Word("to", null));
-		topWords.add(new Word("kill", null));
-		topWords.add(new Word("something", null));
-		topWords.add(new Word("gives", null));
-		topWords.add(new Word("me", null));
-		topWords.add(new Word("thrilling", null));
-		topWords.add(new Word("even", null));
-		topWords.add(new Word("better", null));
-		topWords.add(new Word("than", null));
-		topWords.add(new Word("getting", null));
-		topWords.add(new Word("your", null));
-		topWords.add(new Word("rocks", null));
-		topWords.add(new Word("off", null));
-		topWords.add(new Word("with", null));
-		topWords.add(new Word("a", null));
-		topWords.add(new Word("girl", null));
-		topWords.add(new Word("best", null));
-		topWords.add(new Word("part", null));
-		topWords.add(new Word("that", null));
-		topWords.add(new Word("when", null));
-		topWords.add(new Word("die", null));
-		topWords.add(new Word("will", null));
-		topWords.add(new Word("be", null));
-		topWords.add(new Word("reborn", null));
-		topWords.add(new Word("in", null));
-		topWords.add(new Word("paradise", null));
-		topWords.add(new Word("and", null));
-		topWords.add(new Word("killed", null));
-		topWords.add(new Word("become", null));
-		topWords.add(new Word("my", null));
-		topWords.add(new Word("slaves", null));
-		topWords.add(new Word("not", null));
-		topWords.add(new Word("give", null));
-		topWords.add(new Word("you", null));
-		topWords.add(new Word("name", null));
-		topWords.add(new Word("try", null));
-		topWords.add(new Word("slow", null));
-		topWords.add(new Word("down", null));
-		topWords.add(new Word("or", null));
-		topWords.add(new Word("stop", null));
-		topWords.add(new Word("collecting", null));
-		topWords.add(new Word("for", null));
-		topWords.add(new Word("afterlife", null));
+		// topWords.add(new Word("i", null));
+		// topWords.add(new Word("like", null));
+		// topWords.add(new Word("killing", null));
+		// topWords.add(new Word("people", null));
+		// topWords.add(new Word("because", null));
+		// topWords.add(new Word("it", null));
+		// topWords.add(new Word("is", null));
+		// topWords.add(new Word("so", null));
+		// topWords.add(new Word("much", null));
+		// topWords.add(new Word("fun", null));
+		// topWords.add(new Word("more", null));
+		// topWords.add(new Word("than", null));
+		// topWords.add(new Word("wild", null));
+		// topWords.add(new Word("game", null));
+		// topWords.add(new Word("the", null));
+		// topWords.add(new Word("forrest", null));
+		// topWords.add(new Word("because", null));
+		// topWords.add(new Word("man", null));
+		// topWords.add(new Word("most", null));
+		// topWords.add(new Word("moat", null)); // this misspelling is repeated twice
+		// topWords.add(new Word("animal", null));
+		// topWords.add(new Word("of", null));
+		// topWords.add(new Word("all", null));
+		// topWords.add(new Word("to", null));
+		// topWords.add(new Word("kill", null));
+		// topWords.add(new Word("something", null));
+		// topWords.add(new Word("gives", null));
+		// topWords.add(new Word("me", null));
+		// topWords.add(new Word("thrilling", null));
+		// topWords.add(new Word("even", null));
+		// topWords.add(new Word("better", null));
+		// topWords.add(new Word("than", null));
+		// topWords.add(new Word("getting", null));
+		// topWords.add(new Word("your", null));
+		// topWords.add(new Word("rocks", null));
+		// topWords.add(new Word("off", null));
+		// topWords.add(new Word("with", null));
+		// topWords.add(new Word("a", null));
+		// topWords.add(new Word("girl", null));
+		// topWords.add(new Word("best", null));
+		// topWords.add(new Word("part", null));
+		// topWords.add(new Word("that", null));
+		// topWords.add(new Word("when", null));
+		// topWords.add(new Word("die", null));
+		// topWords.add(new Word("will", null));
+		// topWords.add(new Word("be", null));
+		// topWords.add(new Word("reborn", null));
+		// topWords.add(new Word("in", null));
+		// topWords.add(new Word("paradise", null));
+		// topWords.add(new Word("and", null));
+		// topWords.add(new Word("killed", null));
+		// topWords.add(new Word("become", null));
+		// topWords.add(new Word("my", null));
+		// topWords.add(new Word("slaves", null));
+		// topWords.add(new Word("not", null));
+		// topWords.add(new Word("give", null));
+		// topWords.add(new Word("you", null));
+		// topWords.add(new Word("name", null));
+		// topWords.add(new Word("try", null));
+		// topWords.add(new Word("slow", null));
+		// topWords.add(new Word("down", null));
+		// topWords.add(new Word("or", null));
+		// topWords.add(new Word("stop", null));
+		// topWords.add(new Word("collecting", null));
+		// topWords.add(new Word("for", null));
+		// topWords.add(new Word("afterlife", null));
 
 		// 2-grams
 		topWords.add(new Word("ilike", null));
@@ -224,31 +231,20 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
-	private IndexNode rootNode = new IndexNode();
-
 	@PostConstruct
 	public void init() {
-		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
 		}
+
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
-	public String print(Chromosome chromosome) {
+	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
-				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
-
-		String fullSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
-
-		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
@@ -284,10 +280,17 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0;
 
 		String bestBranch = "";
+		// branches = Arrays
+		// .asList(new String[] {
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
+		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
+		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
+		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// });
 
 		for (String branch : branches) {
 			score = 0;
@@ -302,91 +305,31 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 			}
 		}
 
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("Solution [id=" + chromosome.getId() + ", cipherId="
-				+ ((CipherKeyChromosome) chromosome).getCipher().getId() + ", fitness="
-				+ String.format("%1$,.2f", chromosome.getFitness()) + ", age=" + chromosome.getAge()
-				+ ", numberOfChildren=" + chromosome.getNumberOfChildren() + ", evaluationNeeded="
-				+ chromosome.isEvaluationNeeded() + "]\n");
-
-		List<String> words = new ArrayList<String>();
-
-		// In the off chance that no words were found at all
-		if (!bestBranch.isEmpty()) {
-			words.addAll(Arrays.asList(bestBranch.split(", ")));
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
 		}
 
-		String word = words.isEmpty() ? null : words.get(0);
-		for (int i = 0; i < fullSolutionString.length(); i++) {
-			if (!words.isEmpty() && i < lastRowBegin && word.equals(fullSolutionString.substring(i, i
-					+ word.length()))) {
-				sb.append("[");
+		return highestScore;
+	}
 
-				for (int j = 0; j < word.length(); j++) {
-					if (j > 0) {
-						sb.append(" ");
-					}
+	@Override
+	public void setGeneticStructure(Object cipher) {
+		this.cipher = (Cipher) cipher;
 
-					sb.append(fullSolutionString.charAt(i + j));
-
-					if (j < word.length() - 1) {
-						sb.append(" ");
-					} else if (j == word.length() - 1) {
-						sb.append("]");
-					}
-
-					/*
-					 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function
-					 * doesn't break.
-					 */
-					if (((i + j + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-						sb.append("\n");
-					} else {
-						sb.append(" ");
-					}
-
-					// Prevent ArrayIndexOutOfBoundsException
-					if (i + j >= fullSolutionString.length()) {
-						break;
-					}
-				}
-
-				i += word.length() - 1;
-
-				words.remove(0);
-
-				if (!words.isEmpty()) {
-					word = words.get(0);
-				}
-
-				continue;
-			}
-
-			sb.append(" ");
-			sb.append(fullSolutionString.charAt(i));
-			sb.append(" ");
-
-			/*
-			 * Print a newline if we are at the end of the row. Add 1 to the index so the modulus function doesn't
-			 * break.
-			 */
-			if (((i + 1) % ((CipherKeyChromosome) chromosome).getCipher().getColumns()) == 0) {
-				sb.append("\n");
-			} else {
-				sb.append(" ");
-			}
-		}
-
-		return sb.toString();
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return "Cipher Key Indexed Word Graph Corpus";
 	}
 }

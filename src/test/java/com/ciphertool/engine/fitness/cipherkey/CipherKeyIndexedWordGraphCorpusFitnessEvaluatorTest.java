@@ -33,10 +33,11 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.engine.dao.cipherkey.TopWordsFacade;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
+import com.ciphertool.engine.fitness.impl.CipherKeyIndexedWordGraphCorpusFitnessEvaluator;
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static CipherKeyIndexedWordGraphCorpusFitnessEvaluator	fitnessEvaluator;

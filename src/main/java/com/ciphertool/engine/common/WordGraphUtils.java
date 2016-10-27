@@ -22,11 +22,11 @@ package com.ciphertool.engine.common;
 import java.util.List;
 import java.util.Map;
 
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyChromosome;
-import com.ciphertool.engine.entities.cipherkey.CipherKeyGene;
 
 public class WordGraphUtils {
 

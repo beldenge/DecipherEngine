@@ -14,69 +14,31 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
        		http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean class="com.ciphertool.genetics.algorithms.crossover.LiberalCrossoverAlgorithm" id="liberalCrossoverAlgorithm">
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="geneDao" ref="geneDao" />
-		<property name="chromosomeHelper" ref="chromosomeHelper" />
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.LiberalUnevaluatedCrossoverAlgorithm" id="liberalUnevaluatedCrossoverAlgorithm">
-		<property name="geneDao" ref="geneDao" />
-		<property name="chromosomeHelper" ref="chromosomeHelper" />
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-		<property name="coin" ref="coin" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.ConservativeCrossoverAlgorithm" id="conservativeCrossoverAlgorithm">
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.ConservativeUnevaluatedCrossoverAlgorithm" id="conservativeUnevaluatedCrossoverAlgorithm">
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupCrossoverAlgorithm" id="lowestCommonGroupCrossoverAlgorithm">
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.LowestCommonGroupUnevaluatedCrossoverAlgorithm" id="lowestCommonGroupUnevaluatedCrossoverAlgorithm">
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-		<property name="coin" ref="coin" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.ConservativeSinglePointCrossoverAlgorithm" id="conservativeSinglePointCrossoverAlgorithm">
-		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
-		<property name="randomListElementSelector" ref="randomListElementSelector" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.RandomSinglePointCrossoverAlgorithm" id="defaultCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.RandomSinglePointCrossoverAlgorithm" id="defaultCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.RandomSinglePointGuaranteedCrossoverAlgorithm" id="randomSinglePointGuaranteedCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.RandomSinglePointGuaranteedCrossoverAlgorithm" id="randomSinglePointGuaranteedCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 		<property name="maxAttempts" value="${max.crossover.attempts}" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGeneCrossoverAlgorithm" id="equalOpportunityGeneCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.EqualOpportunityGeneCrossoverAlgorithm" id="equalOpportunityGeneCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunitySwapCrossoverAlgorithm" id="equalOpportunitySwapCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.EqualOpportunitySwapCrossoverAlgorithm" id="equalOpportunitySwapCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
@@ -84,7 +46,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="maxAttempts" value="${max.crossover.attempts}" />
 	</bean>
 	
-	<bean class="com.ciphertool.genetics.algorithms.crossover.cipherkey.EqualOpportunityGuaranteedSwapCrossoverAlgorithm" id="equalOpportunityGuaranteedSwapCrossoverAlgorithm">
+	<bean class="com.ciphertool.genetics.algorithms.crossover.keyed.EqualOpportunityGuaranteedSwapCrossoverAlgorithm" id="equalOpportunityGuaranteedSwapCrossoverAlgorithm">
 		<property name="mutationAlgorithm" ref="defaultMutationAlgorithm" />
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
