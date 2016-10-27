@@ -35,23 +35,15 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		Double total = 1.0;
 		Double matches = 0.0;
-		KGramIndexNode transition = null;
+		KGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
-			KGramIndexNode match = null;
-
-			if (transition != null) {
-				transition = transition.getChild(currentSolutionString.charAt(i + order));
+			if (match != null) {
+				match = match.getChild(currentSolutionString.charAt(i + order));
 			} else {
-				match = model.find(currentSolutionString.substring(i, i + order));
-
-				if (match == null) {
-					continue;
-				}
-
-				transition = match.getChild(currentSolutionString.charAt(i + order));
+				match = model.find(currentSolutionString.substring(i, i + order + 1));
 			}
 
-			if (transition == null) {
+			if (match == null) {
 				continue;
 			}
 

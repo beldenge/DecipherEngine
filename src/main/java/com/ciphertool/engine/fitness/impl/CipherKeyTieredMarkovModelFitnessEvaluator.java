@@ -24,6 +24,7 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 	@PostConstruct
 	public void init() {
 		model = markovModelDao.getModel();
+		model.postProcess();
 	}
 
 	@Override
@@ -33,28 +34,28 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 		int order = model.getOrder();
 
 		Double total = 1.0;
-		Double matches = 0.0;
-		KGramIndexNode transition = null;
+		KGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
-			KGramIndexNode match = null;
+			if (match != null) {
+				match = match.getChild(currentSolutionString.charAt(i + order));
+			}
 
-			match = model.findLongest(currentSolutionString.substring(i, i + order));
+			if (match == null) {
+				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
+			}
 
 			if (match == null) {
 				continue;
 			}
 
-			transition = match.getChild(currentSolutionString.charAt(i + order));
+			total += match.getLevel() == 1 ? 0 : Math.pow(4, match.getLevel() - 1);
 
-			if (transition == null) {
-				continue;
+			if (!(match.getLevel() > order)) {
+				match = null;
 			}
-
-			matches += 1.0;
-			total += Math.pow(4, transition.getLevel());
 		}
 
-		return total * (matches / (lastRowBegin - order));
+		return total;
 	}
 
 	@Override

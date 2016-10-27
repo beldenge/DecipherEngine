@@ -23,18 +23,18 @@ import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.impl.CipherKeyTieredMarkovModelFitnessEvaluator;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
-public class CipherKeyMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static final int							ORDER		= 6;
+public class CipherKeyTieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static final int									ORDER		= 6;
 
-	private static MarkovModelDao						markovModelDao;
-	private static MarkovImporterImpl					importer;
+	private static MarkovModelDao								markovModelDao;
+	private static MarkovImporterImpl							importer;
 
-	private static CipherKeyMarkovModelFitnessEvaluator	fitnessEvaluator;
+	private static CipherKeyTieredMarkovModelFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome							solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -105,7 +105,7 @@ public class CipherKeyMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTe
 		markovModelDao.setImporter(importer);
 		markovModelDao.init();
 
-		fitnessEvaluator = new CipherKeyMarkovModelFitnessEvaluator();
+		fitnessEvaluator = new CipherKeyTieredMarkovModelFitnessEvaluator();
 		fitnessEvaluator.setMarkovModelDao(markovModelDao);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 		fitnessEvaluator.init();
