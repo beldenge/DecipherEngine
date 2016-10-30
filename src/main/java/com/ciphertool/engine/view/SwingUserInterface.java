@@ -61,9 +61,9 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.fitness.impl.CipherKeyMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
-import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGuaranteedCrossoverAlgorithm;
+import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.impl.MultipleGuaranteedFitnessMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.impl.MultipleMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
@@ -537,7 +537,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		crossoverAlgorithmComboBox = new JComboBox<CrossoverAlgorithm>(model);
 		crossoverAlgorithmComboBox.setRenderer(selectableRenderer);
-		crossoverAlgorithmComboBox.setSelectedItem(applicationContext.getBean(EqualOpportunityGuaranteedCrossoverAlgorithm.class));
+		crossoverAlgorithmComboBox.setSelectedItem(applicationContext.getBean(EqualOpportunityGeneCrossoverAlgorithm.class));
 		JLabel crossoverAlgorithmNameLabel = new JLabel(crossoverAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -567,7 +567,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
 		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
-		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(MultipleGuaranteedFitnessMutationAlgorithm.class));
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(MultipleMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

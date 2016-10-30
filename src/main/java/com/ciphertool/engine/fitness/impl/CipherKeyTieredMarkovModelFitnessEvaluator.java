@@ -32,7 +32,7 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 
 		int order = model.getOrder();
 
-		Double total = 1.0;
+		double total = 0.0;
 		KGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
@@ -47,7 +47,7 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 				continue;
 			}
 
-			total += match.getLevel() == 1 ? 0 : Math.pow(4, match.getLevel() - 1);
+			total += match.getLevel() == 1 ? 0 : Math.pow(4, match.getLevel() - 1) * match.getRatio();
 
 			if (!(match.getLevel() > order)) {
 				match = null;
