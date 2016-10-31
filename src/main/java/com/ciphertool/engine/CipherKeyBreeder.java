@@ -51,7 +51,7 @@ public class CipherKeyBreeder implements Breeder {
 
 	@Override
 	public Chromosome breed() {
-		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher);
+		CipherKeyChromosome chromosome = new CipherKeyChromosome(cipher, KEYS.length);
 
 		for (int i = 0; i < KEYS.length; i++) {
 			// Should never happen, but we check just in case

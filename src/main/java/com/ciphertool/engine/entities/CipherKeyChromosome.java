@@ -73,12 +73,13 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	@Transient
 	private int					numberOfChildren	= 0;
 
-	private Map<String, Gene>	genes				= new HashMap<String, Gene>();
+	private Map<String, Gene>	genes;
 
 	@Transient
 	private Population			population;
 
 	public CipherKeyChromosome() {
+		genes = new HashMap<String, Gene>();
 	}
 
 	/**
@@ -89,12 +90,14 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	 * @param columns
 	 *            the columns to set
 	 */
-	public CipherKeyChromosome(Cipher cipher) {
+	public CipherKeyChromosome(Cipher cipher, int numGenes) {
 		if (cipher == null) {
 			throw new IllegalArgumentException("Cannot construct CipherKeyChromosome with null cipher.");
 		}
 
 		this.cipher = cipher;
+
+		genes = new HashMap<String, Gene>(numGenes);
 	}
 
 	/**
@@ -272,13 +275,11 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 	@Override
 	public Chromosome clone() {
-		CipherKeyChromosome copyChromosome = new CipherKeyChromosome();
+		CipherKeyChromosome copyChromosome = new CipherKeyChromosome(this.cipher, this.genes.size());
 
-		copyChromosome.genes = new HashMap<String, Gene>();
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.setSolutionSetId(this.solutionSetId);
-		copyChromosome.setCipher(this.cipher);
 		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		/*
