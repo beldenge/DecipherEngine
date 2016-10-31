@@ -324,6 +324,16 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		if (age != other.age) {
 			return false;
 		}
+		if (numberOfChildren != other.numberOfChildren) {
+			return false;
+		}
+		if (solutionSetId == null) {
+			if (other.solutionSetId != null) {
+				return false;
+			}
+		} else if (!solutionSetId.equals(other.solutionSetId)) {
+			return false;
+		}
 		if (cipher == null) {
 			if (other.cipher != null) {
 				return false;
@@ -336,16 +346,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 				return false;
 			}
 		} else if (!genes.equals(other.genes)) {
-			return false;
-		}
-		if (numberOfChildren != other.numberOfChildren) {
-			return false;
-		}
-		if (solutionSetId == null) {
-			if (other.solutionSetId != null) {
-				return false;
-			}
-		} else if (!solutionSetId.equals(other.solutionSetId)) {
 			return false;
 		}
 		return true;
