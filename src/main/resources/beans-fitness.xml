@@ -145,11 +145,16 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean> -->
 
-	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyMarkovModelFitnessEvaluator" id="defaultFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyMarkovModelFitnessEvaluator" id="cipherKeyMarkovModelFitnessEvaluator">
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyTieredMarkovModelFitnessEvaluator" id="cipherKeyTieredMarkovModelFitnessEvaluator">
+		<property name="markovModelDao" ref="markovModelDao" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeySamplingMarkovModelFitnessEvaluator" id="defaultFitnessEvaluator">
+		<property name="sampleStepSize" value="${markov.model.sample.step.size}" />
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 </beans>

@@ -58,12 +58,12 @@ import com.ciphertool.engine.common.StrategyBuilder;
 import com.ciphertool.engine.controller.CipherSolutionController;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.impl.CipherKeyMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.impl.CipherKeySamplingMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.impl.MultipleMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.impl.StandardGuaranteedFitnessMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
@@ -507,7 +507,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeyMarkovModelFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(CipherKeySamplingMarkovModelFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -567,7 +567,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
 		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
-		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(MultipleMutationAlgorithm.class));
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(StandardGuaranteedFitnessMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
