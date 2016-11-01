@@ -82,9 +82,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		Double crossoverRate = getCrossoverRate(parameters);
 		log.info("Crossover rate: " + crossoverRate);
 
-		Boolean mutateDuringCrossover = getMutateDuringCrossover(parameters);
-		log.info("Mutate during crossover: " + mutateDuringCrossover);
-
 		Boolean compareToKnownSolution = getCompareToKnown(parameters);
 		log.info("Compare to known solution: " + compareToKnownSolution);
 
@@ -103,9 +100,8 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return new GeneticAlgorithmStrategy(cipher, populationSize, lifespan, numGenerations, survivalRate,
-				mutationRate, maxMutationsPerIndividual, crossoverRate, mutateDuringCrossover, fitnessEvaluator,
-				crossoverAlgorithm, mutationAlgorithm, selectionAlgorithm, selector, knownSolutionFitnessEvaluator,
-				compareToKnownSolution);
+				mutationRate, maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
+				mutationAlgorithm, selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
 	}
 
 	protected Cipher getCipher(Map<String, Object> parameters) {
@@ -321,22 +317,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return (Double) crossoverRate;
-	}
-
-	protected Boolean getMutateDuringCrossover(Map<String, Object> parameters) {
-		Object mutateDuringCrossover = parameters.get(ParameterConstants.MUTATE_DURING_CROSSOVER);
-
-		if (mutateDuringCrossover == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATE_DURING_CROSSOVER
-					+ " cannot be null.");
-		}
-
-		if (!(mutateDuringCrossover instanceof Boolean)) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.MUTATE_DURING_CROSSOVER
-					+ " must be of type Boolean.");
-		}
-
-		return (Boolean) mutateDuringCrossover;
 	}
 
 	protected Boolean getCompareToKnown(Map<String, Object> parameters) {

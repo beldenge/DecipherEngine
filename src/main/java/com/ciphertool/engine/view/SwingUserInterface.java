@@ -63,7 +63,7 @@ import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.mutation.impl.StandardGuaranteedFitnessMutationAlgorithm;
+import com.ciphertool.genetics.algorithms.mutation.impl.StandardMutationAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
@@ -98,7 +98,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private String							mutationRateText				= "Mutation Rate: ";
 	private String							maxMutationsPerIndividualText	= "Max Mutations Each: ";
 	private String							crossoverRateText				= "Crossover Rate: ";
-	private String							mutateDuringCrossoverText		= "Mutate during crossover";
 	private String							continuousText					= "Run until user stops";
 	private String							fitnessEvaluatorNameText		= "Fitness Evaluator: ";
 	private String							crossoverAlgorithmNameText		= "Crossover Algorithm: ";
@@ -164,7 +163,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private JSpinner						mutationRateSpinner;
 	private JSpinner						maxMutationsPerIndividualSpinner;
 	private JSpinner						crossoverRateSpinner;
-	private JCheckBox						mutateDuringCrossoverCheckBox;
 	private JLabel							statusLabel;
 	private JCheckBox						compareToKnownSolutionCheckBox;
 
@@ -318,8 +316,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		appendMaxMutationsPerIndividualSpinner(gridBagLayout, constraints, mainPanel);
 
 		appendCrossoverRateSpinner(gridBagLayout, constraints, mainPanel);
-
-		appendMutateDuringCrossoverCheckBox(gridBagLayout, constraints, mainPanel);
 
 		appendFitnessEvaluatorComboBox(gridBagLayout, constraints, mainPanel);
 
@@ -476,21 +472,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		mainPanel.add(crossoverRateSpinner);
 	}
 
-	private void appendMutateDuringCrossoverCheckBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		mutateDuringCrossoverCheckBox = new JCheckBox(mutateDuringCrossoverText);
-		mutateDuringCrossoverCheckBox.setSelected(false);
-
-		constraints.weightx = LAYOUT_LABEL_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		JLabel dummyJLabel = new JLabel();
-		gridBagLayout.setConstraints(dummyJLabel, constraints);
-		mainPanel.add(dummyJLabel);
-		constraints.weightx = LAYOUT_INPUT_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(mutateDuringCrossoverCheckBox, constraints);
-		mainPanel.add(mutateDuringCrossoverCheckBox);
-	}
-
 	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, FitnessEvaluator> beanMap = applicationContext.getBeansOfType(FitnessEvaluator.class);
 
@@ -567,7 +548,7 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		mutationAlgorithmComboBox = new JComboBox<MutationAlgorithm>(model);
 		mutationAlgorithmComboBox.setRenderer(selectableRenderer);
-		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(StandardGuaranteedFitnessMutationAlgorithm.class));
+		mutationAlgorithmComboBox.setSelectedItem(applicationContext.getBean(StandardMutationAlgorithm.class));
 		JLabel mutationAlgorithmNameLabel = new JLabel(mutationAlgorithmNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -695,7 +676,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
 				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL, maxMutationsPerIndividualSpinner.getValue());
 				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
-				parameters.put(ParameterConstants.MUTATE_DURING_CROSSOVER, mutateDuringCrossoverCheckBox.isSelected());
 				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.CROSSOVER_ALGORITHM, crossoverAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.MUTATION_ALGORITHM, mutationAlgorithmComboBox.getSelectedItem());

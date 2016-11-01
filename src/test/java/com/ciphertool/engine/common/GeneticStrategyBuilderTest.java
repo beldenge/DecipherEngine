@@ -554,44 +554,6 @@ public class GeneticStrategyBuilderTest {
 	}
 
 	@Test
-	public void testGetMutateDuringCrossover() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String mutateDuringCrossoverParameter = ParameterConstants.MUTATE_DURING_CROSSOVER;
-		Boolean mutateDuringCrossoverValue = true;
-
-		parametersMap.put(mutateDuringCrossoverParameter, mutateDuringCrossoverValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-
-		Boolean mutateDuringCrossoverReturned = geneticStrategyBuilder.getMutateDuringCrossover(parametersMap);
-
-		assertSame(mutateDuringCrossoverValue, mutateDuringCrossoverReturned);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetMutateDuringCrossoverNullParameter() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String mutateDuringCrossoverParameter = ParameterConstants.MUTATE_DURING_CROSSOVER;
-
-		parametersMap.put(mutateDuringCrossoverParameter, null);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getMutateDuringCrossover(parametersMap);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetMutateDuringCrossoverIncorrectType() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String mutateDuringCrossoverParameter = ParameterConstants.MUTATE_DURING_CROSSOVER;
-		Object incorrectlyTypedValue = new Object();
-
-		parametersMap.put(mutateDuringCrossoverParameter, incorrectlyTypedValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getMutateDuringCrossover(parametersMap);
-	}
-
-	@Test
 	public void testGetCompareToKnown() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String compareToKnownParameter = ParameterConstants.COMPARE_TO_KNOWN_SOLUTION;
@@ -690,10 +652,6 @@ public class GeneticStrategyBuilderTest {
 		Double crossoverRateValue = 0.1;
 		parametersMap.put(crossoverRateParameter, crossoverRateValue);
 
-		String mutateDuringCrossoverParameter = ParameterConstants.MUTATE_DURING_CROSSOVER;
-		Boolean mutateDuringCrossoverValue = true;
-		parametersMap.put(mutateDuringCrossoverParameter, mutateDuringCrossoverValue);
-
 		String compareToKnownParameter = ParameterConstants.COMPARE_TO_KNOWN_SOLUTION;
 		Boolean compareToKnownValue = true;
 		parametersMap.put(compareToKnownParameter, compareToKnownValue);
@@ -732,7 +690,6 @@ public class GeneticStrategyBuilderTest {
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());
 		assertSame(maxMutationsPerIndividualValue, geneticAlgorithmStrategy.getMaxMutationsPerIndividual());
 		assertSame(crossoverRateValue, geneticAlgorithmStrategy.getCrossoverRate());
-		assertSame(mutateDuringCrossoverValue, geneticAlgorithmStrategy.getMutateDuringCrossover());
 		assertSame(compareToKnownValue, geneticAlgorithmStrategy.getCompareToKnownSolution());
 
 		/*
@@ -756,7 +713,6 @@ public class GeneticStrategyBuilderTest {
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());
 		assertSame(maxMutationsPerIndividualValue, geneticAlgorithmStrategy.getMaxMutationsPerIndividual());
 		assertSame(crossoverRateValue, geneticAlgorithmStrategy.getCrossoverRate());
-		assertSame(mutateDuringCrossoverValue, geneticAlgorithmStrategy.getMutateDuringCrossover());
 		assertFalse(geneticAlgorithmStrategy.getCompareToKnownSolution());
 
 		/*

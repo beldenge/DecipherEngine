@@ -47,6 +47,4 @@ public class ParameterConstants {
 	public static final String	CROSSOVER_RATE					= "crossoverRate";
 
 	public static final String	COMPARE_TO_KNOWN_SOLUTION		= "compareToKnownSolution";
-
-	public static final String	MUTATE_DURING_CROSSOVER			= "mutateDuringCrossover";
 }
