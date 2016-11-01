@@ -100,6 +100,7 @@ public class CipherKeyMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTe
 		importer = new MarkovImporterImpl();
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setOrder(ORDER);
+		importer.setMinCount(1);
 
 		markovModelDao = new MarkovModelDao();
 		markovModelDao.setImporter(importer);
