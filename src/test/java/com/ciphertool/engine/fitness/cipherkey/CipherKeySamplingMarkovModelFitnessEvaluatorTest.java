@@ -81,7 +81,7 @@ public class CipherKeySamplingMarkovModelFitnessEvaluatorTest extends FitnessEva
 		importer = new MarkovImporterImpl();
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setOrder(ORDER);
-		importer.setMinCount(1);
+		importer.setMinCount(2);
 
 		markovModelDao = new MarkovModelDao();
 		markovModelDao.setImporter(importer);
@@ -90,6 +90,7 @@ public class CipherKeySamplingMarkovModelFitnessEvaluatorTest extends FitnessEva
 		fitnessEvaluator = new CipherKeySamplingMarkovModelFitnessEvaluator();
 		fitnessEvaluator.setMarkovModelDao(markovModelDao);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.setSampleStepSize(4);
 		fitnessEvaluator.init();
 	}
 
