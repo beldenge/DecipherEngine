@@ -280,13 +280,6 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		copyChromosome.setAge(0);
 		copyChromosome.setNumberOfChildren(0);
 		copyChromosome.setSolutionSetId(this.solutionSetId);
-		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
-
-		/*
-		 * Since we are copying over the fitness value, we don't need to reset the evaluationNeeded flag because the
-		 * cloned default is correct.
-		 */
-		copyChromosome.setFitness(this.fitness.doubleValue());
 
 		Gene nextGene = null;
 		for (String key : this.genes.keySet()) {
@@ -294,6 +287,10 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 
 			copyChromosome.putGene(key, nextGene);
 		}
+
+		// We need to set these values last to maintain whether evaluation is needed on the clone
+		copyChromosome.setFitness(this.fitness.doubleValue());
+		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		return copyChromosome;
 	}
