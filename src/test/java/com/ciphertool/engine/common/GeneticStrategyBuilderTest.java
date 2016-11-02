@@ -43,8 +43,6 @@ import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.impl.MultipleMutationAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
@@ -212,44 +210,6 @@ public class GeneticStrategyBuilderTest {
 	}
 
 	@Test
-	public void testGetSelectionAlgorithm() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-		ProbabilisticSelectionAlgorithm selectionAlgorithmToReturn = new ProbabilisticSelectionAlgorithm();
-
-		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmToReturn);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-
-		SelectionAlgorithm selectionAlgorithmReturned = geneticStrategyBuilder.getSelectionAlgorithm(parametersMap);
-
-		assertSame(selectionAlgorithmToReturn, selectionAlgorithmReturned);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetSelectionAlgorithmNullParameter() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-
-		parametersMap.put(selectionAlgorithmParameter, null);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getSelectionAlgorithm(parametersMap);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetSelectionAlgorithmIncorrectType() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-		Object incorrectlyTypedValue = new Object();
-
-		parametersMap.put(selectionAlgorithmParameter, incorrectlyTypedValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getSelectionAlgorithm(parametersMap);
-	}
-
-	@Test
 	public void testGetSelectorMethod() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String selectorMethodParameter = ParameterConstants.SELECTOR_METHOD;
@@ -361,44 +321,6 @@ public class GeneticStrategyBuilderTest {
 
 		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
 		geneticStrategyBuilder.getNumGenerations(parametersMap);
-	}
-
-	@Test
-	public void testGetSurvivalRate() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String survivalRateParameter = ParameterConstants.SURVIVAL_RATE;
-		Double survivalRateValue = 0.9;
-
-		parametersMap.put(survivalRateParameter, survivalRateValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-
-		Double survivalRateReturned = geneticStrategyBuilder.getSurvivalRate(parametersMap);
-
-		assertSame(survivalRateValue, survivalRateReturned);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetSurvivalRateNullParameter() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String survivalRateParameter = ParameterConstants.SURVIVAL_RATE;
-
-		parametersMap.put(survivalRateParameter, null);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getSurvivalRate(parametersMap);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetSurvivalRateIncorrectType() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String survivalRateParameter = ParameterConstants.SURVIVAL_RATE;
-		Object incorrectlyTypedValue = new Object();
-
-		parametersMap.put(survivalRateParameter, incorrectlyTypedValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getSurvivalRate(parametersMap);
 	}
 
 	@Test
@@ -578,10 +500,6 @@ public class GeneticStrategyBuilderTest {
 		MutationAlgorithm mutationAlgorithmToReturn = new MultipleMutationAlgorithm();
 		parametersMap.put(mutationAlgorithmParameter, mutationAlgorithmToReturn);
 
-		String selectionAlgorithmParameter = ParameterConstants.SELECTION_ALGORITHM;
-		ProbabilisticSelectionAlgorithm selectionAlgorithmToReturn = new ProbabilisticSelectionAlgorithm();
-		parametersMap.put(selectionAlgorithmParameter, selectionAlgorithmToReturn);
-
 		String selectorMethodParameter = ParameterConstants.SELECTOR_METHOD;
 		TournamentSelector selectorToReturn = new TournamentSelector();
 		parametersMap.put(selectorMethodParameter, selectorToReturn);
@@ -593,10 +511,6 @@ public class GeneticStrategyBuilderTest {
 		String numGenerationsParameter = ParameterConstants.NUMBER_OF_GENERATIONS;
 		Integer numGenerationsValue = 50;
 		parametersMap.put(numGenerationsParameter, numGenerationsValue);
-
-		String survivalRateParameter = ParameterConstants.SURVIVAL_RATE;
-		Double survivalRateValue = 0.9;
-		parametersMap.put(survivalRateParameter, survivalRateValue);
 
 		String mutationRateParameter = ParameterConstants.MUTATION_RATE;
 		Double mutationRateValue = 0.05;
@@ -638,12 +552,10 @@ public class GeneticStrategyBuilderTest {
 		assertSame(fitnessEvaluatorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
 		assertSame(crossoverAlgorithmToReturn, geneticAlgorithmStrategy.getCrossoverAlgorithm());
 		assertSame(mutationAlgorithmToReturn, geneticAlgorithmStrategy.getMutationAlgorithm());
-		assertSame(selectionAlgorithmToReturn, geneticAlgorithmStrategy.getSelectionAlgorithm());
 		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
 		assertSame(numGenerationsValue, geneticAlgorithmStrategy.getMaxGenerations());
-		assertSame(survivalRateValue, geneticAlgorithmStrategy.getSurvivalRate());
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());
 		assertSame(maxMutationsPerIndividualValue, geneticAlgorithmStrategy.getMaxMutationsPerIndividual());
 		assertSame(crossoverRateValue, geneticAlgorithmStrategy.getCrossoverRate());
@@ -660,12 +572,10 @@ public class GeneticStrategyBuilderTest {
 		assertSame(fitnessEvaluatorToReturn, geneticAlgorithmStrategy.getFitnessEvaluator());
 		assertSame(crossoverAlgorithmToReturn, geneticAlgorithmStrategy.getCrossoverAlgorithm());
 		assertSame(mutationAlgorithmToReturn, geneticAlgorithmStrategy.getMutationAlgorithm());
-		assertSame(selectionAlgorithmToReturn, geneticAlgorithmStrategy.getSelectionAlgorithm());
 		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
 		assertSame(numGenerationsValue, geneticAlgorithmStrategy.getMaxGenerations());
-		assertSame(survivalRateValue, geneticAlgorithmStrategy.getSurvivalRate());
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());
 		assertSame(maxMutationsPerIndividualValue, geneticAlgorithmStrategy.getMaxMutationsPerIndividual());
 		assertSame(crossoverRateValue, geneticAlgorithmStrategy.getCrossoverRate());

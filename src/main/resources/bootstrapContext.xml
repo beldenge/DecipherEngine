@@ -69,7 +69,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="cipherSolutionController" ref="cipherSolutionController" />
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="populationInitial" value="${genetic.population.size}" />
-		<property name="survivalInitial" value="${genetic.algorithm.survivalRate}" />
 		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
 		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
 		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />

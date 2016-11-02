@@ -23,7 +23,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.StandardPopulation" id="population">
+	<bean class="com.ciphertool.genetics.StandardPopulation" id="standardPopulation">
 		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
@@ -32,15 +32,13 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 	</bean>
 
-	<!-- <bean class="com.ciphertool.genetics.LatticePopulation" id="population">
+	<!-- <bean class="com.ciphertool.genetics.LatticePopulation" id="latticePopulation">
 		<property name="breeder" ref="breeder" />
 		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
-		<property name="latticeRows" value="${population.lattice.rows}" />
-		<property name="latticeColumns" value="${population.lattice.columns}" />
 	</bean> -->
 
 	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />
@@ -48,7 +46,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.util.RandomListElementSelector" id="randomListElementSelector" />
 
 	<bean class="com.ciphertool.genetics.algorithms.StandardGeneticAlgorithm" id="geneticAlgorithm">
-		<property name="population" ref="population" />
+		<property name="population" ref="standardPopulation" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
 		<property name="generationStatisticsDao" ref="generationStatisticsDao" />
@@ -59,7 +57,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<!-- <bean class="com.ciphertool.genetics.algorithms.LatticeGeneticAlgorithm" id="geneticAlgorithm">
-		<property name="population" ref="population" />
+		<property name="population" ref="latticePopulation" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="executionStatisticsDao" ref="executionStatisticsDao" />
 		<property name="generationStatisticsDao" ref="generationStatisticsDao" />

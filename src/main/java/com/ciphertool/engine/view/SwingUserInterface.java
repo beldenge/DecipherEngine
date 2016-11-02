@@ -64,8 +64,6 @@ import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.impl.StandardMutationAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
@@ -93,7 +91,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private String							stopButtonText					= "Stop";
 	private String							generationsText					= "Generations: ";
 	private String							populationText					= "Population Size: ";
-	private String							survivalRateText				= "Survival Rate: ";
 	private String							mutationRateText				= "Mutation Rate: ";
 	private String							maxMutationsPerIndividualText	= "Max Mutations Each: ";
 	private String							crossoverRateText				= "Crossover Rate: ";
@@ -101,7 +98,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private String							fitnessEvaluatorNameText		= "Fitness Evaluator: ";
 	private String							crossoverAlgorithmNameText		= "Crossover Algorithm: ";
 	private String							mutationAlgorithmNameText		= "Mutation Algorithm: ";
-	private String							selectionAlgorithmNameText		= "Selection Algorithm: ";
 	private String							selectorNameText				= "Selector Method: ";
 	private String							statusRunning					= "Running.";
 	private String							statusNotRunning				= "Not running.";
@@ -114,10 +110,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private static final int				POPULATION_MIN					= 1;
 	private static final int				POPULATION_MAX					= 100000;
 	private static final int				POPULATION_STEP					= 100;
-	private double							survivalInitial;
-	private static final double				SURVIVAL_MIN					= 0.0;
-	private static final double				SURVIVAL_MAX					= 1.0;
-	private static final double				SURVIVAL_STEP					= 0.01;
 	private double							mutationInitial;
 	private static final double				MUTATION_MIN					= 0.0;
 	private static final double				MUTATION_MAX					= 1;
@@ -148,12 +140,10 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	@SuppressWarnings("rawtypes")
 	private JComboBox<MutationAlgorithm>	mutationAlgorithmComboBox;
 
-	private JComboBox<SelectionAlgorithm>	selectionAlgorithmComboBox;
 	private JComboBox<Selector>				selectorComboBox;
 	private JCheckBox						runContinuouslyCheckBox;
 	private JSpinner						generationsSpinner;
 	private JSpinner						populationSpinner;
-	private JSpinner						survivalRateSpinner;
 	private JSpinner						mutationRateSpinner;
 	private JSpinner						maxMutationsPerIndividualSpinner;
 	private JSpinner						crossoverRateSpinner;
@@ -301,8 +291,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 
 		appendPopulationSpinner(gridBagLayout, constraints, mainPanel);
 
-		appendSurvivalRateSpinner(gridBagLayout, constraints, mainPanel);
-
 		appendMutationRateSpinner(gridBagLayout, constraints, mainPanel);
 
 		appendMaxMutationsPerIndividualSpinner(gridBagLayout, constraints, mainPanel);
@@ -314,8 +302,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		appendCrossoverAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
 
 		appendMutationAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
-
-		appendSelectionAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
 
 		appendSelectorComboBox(gridBagLayout, constraints, mainPanel);
 
@@ -378,23 +364,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(populationSpinner, constraints);
 		mainPanel.add(populationSpinner);
-	}
-
-	private void appendSurvivalRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		SpinnerModel survivalRateModel = new SpinnerNumberModel(survivalInitial, SURVIVAL_MIN, SURVIVAL_MAX,
-				SURVIVAL_STEP);
-		survivalRateSpinner = new JSpinner(survivalRateModel);
-		JLabel survivalRateLabel = new JLabel(survivalRateText);
-		survivalRateLabel.setLabelFor(survivalRateSpinner);
-
-		constraints.weightx = LAYOUT_LABEL_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		gridBagLayout.setConstraints(survivalRateLabel, constraints);
-		mainPanel.add(survivalRateLabel);
-		constraints.weightx = LAYOUT_INPUT_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(survivalRateSpinner, constraints);
-		mainPanel.add(survivalRateSpinner);
 	}
 
 	private void appendMutationRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
@@ -537,35 +506,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		mainPanel.add(mutationAlgorithmComboBox);
 	}
 
-	private void appendSelectionAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		Map<String, SelectionAlgorithm> beanMap = applicationContext.getBeansOfType(SelectionAlgorithm.class);
-
-		SelectionAlgorithm[] beans = new SelectionAlgorithm[beanMap.size()];
-
-		int i = 0;
-		for (String key : beanMap.keySet()) {
-			beans[i] = beanMap.get(key);
-			i++;
-		}
-
-		SelectableRenderer selectableRenderer = new SelectableRenderer();
-		DefaultComboBoxModel<SelectionAlgorithm> model = new DefaultComboBoxModel<SelectionAlgorithm>(beans);
-
-		selectionAlgorithmComboBox = new JComboBox<SelectionAlgorithm>(model);
-		selectionAlgorithmComboBox.setRenderer(selectableRenderer);
-		selectionAlgorithmComboBox.setSelectedItem(applicationContext.getBean(ProbabilisticSelectionAlgorithm.class));
-		JLabel selectionAlgorithmNameLabel = new JLabel(selectionAlgorithmNameText);
-
-		constraints.weightx = LAYOUT_LABEL_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		gridBagLayout.setConstraints(selectionAlgorithmNameLabel, constraints);
-		mainPanel.add(selectionAlgorithmNameLabel);
-		constraints.weightx = LAYOUT_INPUT_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(selectionAlgorithmComboBox, constraints);
-		mainPanel.add(selectionAlgorithmComboBox);
-	}
-
 	private void appendSelectorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, Selector> beanMap = applicationContext.getBeansOfType(Selector.class);
 
@@ -647,14 +587,12 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 				parameters.put(ParameterConstants.CIPHER_NAME, cipherComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.POPULATION_SIZE, populationSpinner.getValue());
 				parameters.put(ParameterConstants.NUMBER_OF_GENERATIONS, generations);
-				parameters.put(ParameterConstants.SURVIVAL_RATE, survivalRateSpinner.getValue());
 				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
 				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL, maxMutationsPerIndividualSpinner.getValue());
 				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
 				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.CROSSOVER_ALGORITHM, crossoverAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.MUTATION_ALGORITHM, mutationAlgorithmComboBox.getSelectedItem());
-				parameters.put(ParameterConstants.SELECTION_ALGORITHM, selectionAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.SELECTOR_METHOD, selectorComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.COMPARE_TO_KNOWN_SOLUTION, compareToKnownSolutionCheckBox.isSelected());
 
@@ -798,20 +736,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		}
 
 		this.populationInitial = populationInitial;
-	}
-
-	/**
-	 * @param survivalInitial
-	 *            the survivalInitial to set
-	 */
-	@Required
-	public void setSurvivalInitial(double survivalInitial) {
-		if (survivalInitial < 0.0 || survivalInitial > 1.0) {
-			throw new IllegalArgumentException("Tried to set a survivalInitial of " + survivalInitial
-					+ ", but SwingUserInterface requires a survivalInitial between 0.0 and 1.0 inclusive.");
-		}
-
-		this.survivalInitial = survivalInitial;
 	}
 
 	/**

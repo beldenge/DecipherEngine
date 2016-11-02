@@ -30,7 +30,6 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
-import com.ciphertool.genetics.algorithms.selection.SelectionAlgorithm;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
@@ -55,9 +54,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		MutationAlgorithm mutationAlgorithm = getMutationAlgorithm(parameters);
 		log.info("MutationAlgorithm implementation: " + mutationAlgorithm.getClass());
 
-		SelectionAlgorithm selectionAlgorithm = getSelectionAlgorithm(parameters);
-		log.info("SelectionAlgorithm implementation: " + selectionAlgorithm.getClass());
-
 		Selector selector = getSelector(parameters);
 		log.info("Selector implementation: " + selector.getClass());
 
@@ -66,9 +62,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 
 		Integer numGenerations = getNumGenerations(parameters);
 		log.info("Number of generations: " + numGenerations);
-
-		Double survivalRate = getSurvivalRate(parameters);
-		log.info("Survival rate: " + survivalRate);
 
 		Double mutationRate = getMutationRate(parameters);
 		log.info("Mutation rate: " + mutationRate);
@@ -96,9 +89,9 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 			}
 		}
 
-		return new GeneticAlgorithmStrategy(cipher, populationSize, numGenerations, survivalRate, mutationRate,
+		return new GeneticAlgorithmStrategy(cipher, populationSize, numGenerations, mutationRate,
 				maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
-				selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
+				selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
 	}
 
 	protected Cipher getCipher(Map<String, Object> parameters) {
@@ -173,22 +166,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		return (MutationAlgorithm) selectedMutationAlgorithm;
 	}
 
-	protected SelectionAlgorithm getSelectionAlgorithm(Map<String, Object> parameters) {
-		Object selectedSelectionAlgorithm = parameters.get(ParameterConstants.SELECTION_ALGORITHM);
-
-		if (selectedSelectionAlgorithm == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
-					+ " cannot be null.");
-		}
-
-		if (!(selectedSelectionAlgorithm instanceof SelectionAlgorithm)) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SELECTION_ALGORITHM
-					+ " must be of type SelectionAlgorithm.");
-		}
-
-		return (SelectionAlgorithm) selectedSelectionAlgorithm;
-	}
-
 	protected Selector getSelector(Map<String, Object> parameters) {
 		Object selectedSelector = parameters.get(ParameterConstants.SELECTOR_METHOD);
 
@@ -235,22 +212,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return (Integer) numGenerations;
-	}
-
-	protected Double getSurvivalRate(Map<String, Object> parameters) {
-		Object survivalRate = parameters.get(ParameterConstants.SURVIVAL_RATE);
-
-		if (survivalRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE
-					+ " cannot be null.");
-		}
-
-		if (!(survivalRate instanceof Double)) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.SURVIVAL_RATE
-					+ " must be of type Double.");
-		}
-
-		return (Double) survivalRate;
 	}
 
 	protected Double getMutationRate(Map<String, Object> parameters) {

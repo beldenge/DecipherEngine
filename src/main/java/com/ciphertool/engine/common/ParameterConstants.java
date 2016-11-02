@@ -28,15 +28,11 @@ public class ParameterConstants {
 
 	public static final String	MUTATION_ALGORITHM				= "mutationAlgorithm";
 
-	public static final String	SELECTION_ALGORITHM				= "selectionAlgorithm";
-
 	public static final String	SELECTOR_METHOD					= "selectorMethod";
 
 	public static final String	POPULATION_SIZE					= "populationSize";
 
 	public static final String	NUMBER_OF_GENERATIONS			= "numGenerations";
-
-	public static final String	SURVIVAL_RATE					= "survivalRate";
 
 	public static final String	MUTATION_RATE					= "mutationRate";
 
