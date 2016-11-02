@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2015 George Belden
+
+This file is part of DecipherEngine.
+
+DecipherEngine is free software: you can redistribute it and/or modify it under the terms	of the GNU General Public License as published by the Free Software Foundation,	either version 3 of the License, or (at your option) any later version.
+	
+DecipherEngine is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+	
+You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	profile="dictionary">
+
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyWordGraphFitnessEvaluator" id="cipherKeyWordGraphFitnessEvaluator">
+		<property name="top" value="${fitness.graph.words.count}" />
+		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyCrowdingFitnessEvaluator" id="cipherKeyCrowdingFitnessEvaluator">
+		<property name="top" value="${fitness.graph.words.count}" />
+		<property name="wordListDao" ref="uniqueWordListDao" />
+		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
+		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
+		<property name="sigma" value="${fitness.sharing.sigma}" />
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyIndexedWordGraphFitnessEvaluator" id="cipherKeyIndexedWordGraphFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyIndexedCrowdingWordGraphFitnessEvaluator" id="cipherKeyIndexedCrowdingWordGraphFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
+		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
+		<property name="sigma" value="${fitness.sharing.sigma}" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyUniqueIndexedWordGraphFitnessEvaluator" id="cipherKeyUniqueIndexedWordGraphFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+		<property name="matchThreshold" value="${fitness.match.threshold}" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean>
+
+	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
+	<!-- <bean class="com.ciphertool.engine.fitness.impl.CipherKeyMatchingWordGraphCorpusFitnessEvaluator" id="cipherKeyMatchingWordGraphCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean> -->
+
+	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
+	<!-- <bean class="com.ciphertool.engine.fitness.impl.CipherKeyExperimentalCorpusFitnessEvaluator" id="cipherKeyExperimentalCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+		<property name="expectedLetterFrequencies">
+			<map>
+				<entry key="a" value="${language.english.frequency.a}" />
+				<entry key="b" value="${language.english.frequency.b}" />
+				<entry key="c" value="${language.english.frequency.c}" />
+				<entry key="d" value="${language.english.frequency.d}" />
+				<entry key="e" value="${language.english.frequency.e}" />
+				<entry key="f" value="${language.english.frequency.f}" />
+				<entry key="g" value="${language.english.frequency.g}" />
+				<entry key="h" value="${language.english.frequency.h}" />
+				<entry key="i" value="${language.english.frequency.i}" />
+				<entry key="j" value="${language.english.frequency.j}" />
+				<entry key="k" value="${language.english.frequency.k}" />
+				<entry key="l" value="${language.english.frequency.l}" />
+				<entry key="m" value="${language.english.frequency.m}" />
+				<entry key="n" value="${language.english.frequency.n}" />
+				<entry key="o" value="${language.english.frequency.o}" />
+				<entry key="p" value="${language.english.frequency.p}" />
+				<entry key="q" value="${language.english.frequency.q}" />
+				<entry key="r" value="${language.english.frequency.r}" />
+				<entry key="s" value="${language.english.frequency.s}" />
+				<entry key="t" value="${language.english.frequency.t}" />
+				<entry key="u" value="${language.english.frequency.u}" />
+				<entry key="v" value="${language.english.frequency.v}" />
+				<entry key="w" value="${language.english.frequency.w}" />
+				<entry key="x" value="${language.english.frequency.x}" />
+				<entry key="y" value="${language.english.frequency.y}" />
+				<entry key="z" value="${language.english.frequency.z}" />
+			</map>
+		</property>
+	</bean> -->
+
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyFrequencyCorpusFitnessEvaluator" id="cipherKeyFrequencyCorpusFitnessEvaluator">
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+		<property name="expectedLetterFrequencies">
+			<map>
+				<entry key="a" value="${language.english.frequency.a}" />
+				<entry key="b" value="${language.english.frequency.b}" />
+				<entry key="c" value="${language.english.frequency.c}" />
+				<entry key="d" value="${language.english.frequency.d}" />
+				<entry key="e" value="${language.english.frequency.e}" />
+				<entry key="f" value="${language.english.frequency.f}" />
+				<entry key="g" value="${language.english.frequency.g}" />
+				<entry key="h" value="${language.english.frequency.h}" />
+				<entry key="i" value="${language.english.frequency.i}" />
+				<entry key="j" value="${language.english.frequency.j}" />
+				<entry key="k" value="${language.english.frequency.k}" />
+				<entry key="l" value="${language.english.frequency.l}" />
+				<entry key="m" value="${language.english.frequency.m}" />
+				<entry key="n" value="${language.english.frequency.n}" />
+				<entry key="o" value="${language.english.frequency.o}" />
+				<entry key="p" value="${language.english.frequency.p}" />
+				<entry key="q" value="${language.english.frequency.q}" />
+				<entry key="r" value="${language.english.frequency.r}" />
+				<entry key="s" value="${language.english.frequency.s}" />
+				<entry key="t" value="${language.english.frequency.t}" />
+				<entry key="u" value="${language.english.frequency.u}" />
+				<entry key="v" value="${language.english.frequency.v}" />
+				<entry key="w" value="${language.english.frequency.w}" />
+				<entry key="x" value="${language.english.frequency.x}" />
+				<entry key="y" value="${language.english.frequency.y}" />
+				<entry key="z" value="${language.english.frequency.z}" />
+			</map>
+		</property>
+	</bean>
+
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyIndexedNGramFitnessEvaluator" id="cipherKeyIndexedNGramFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator" id="cipherKeyAdjacentWordGraphCorpusFitnessEvaluator">
+		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+	
+	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator" id="cipherKeyIndexedCorrelatedCorpusFitnessEvaluator">
+		<property name="topWordsFacade" ref="topWordsFacade" />
+	</bean>
+</beans>

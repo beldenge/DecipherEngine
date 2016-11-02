@@ -19,28 +19,44 @@
 
 package com.ciphertool.engine;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class DecipherEngineBootstrapper {
-	private static Logger				log	= LoggerFactory.getLogger(DecipherEngineBootstrapper.class);
+	private static Logger				log							= LoggerFactory.getLogger(DecipherEngineBootstrapper.class);
+
+	private static final String			SPRING_PROFILES_ACTIVE_KEY	= "spring.profiles.active";
 
 	@SuppressWarnings("unused")
 	private static ApplicationContext	context;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException, IOException {
 		initializeContext();
 	}
 
 	/**
 	 * Spins up the Spring application context
+	 * 
+	 * @throws IOException
+	 *             if the properties file cannot be read
+	 * @throws FileNotFoundException
+	 *             if the properties file does not exist
 	 */
-	protected static void initializeContext() {
+	protected static void initializeContext() throws FileNotFoundException, IOException {
 		log.info("Starting Spring application context");
 
 		long start = System.currentTimeMillis();
+
+		Properties props = new Properties();
+		props.load(new FileInputStream("src/main/resources/DecipherEngine.properties"));
+		System.setProperty(SPRING_PROFILES_ACTIVE_KEY, props.getProperty(SPRING_PROFILES_ACTIVE_KEY));
 
 		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
 

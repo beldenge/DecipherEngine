@@ -11,49 +11,10 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-       		http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean class="com.ciphertool.sherlock.dao.WordDao" id="wordDao">
-		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean>
-	
-	<!-- <bean class="com.ciphertool.sherlock.dao.NGramDao" id="nGramDao">
-		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean> -->
-	
-	<bean class="com.ciphertool.sherlock.dao.FrequencyWordListDao" id="wordListDao">
-		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.WordDao">
-			<ref bean="wordDao" />
-		</constructor-arg>
-		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
-	</bean>
-
-	<bean class="com.ciphertool.sherlock.dao.UniqueWordListDao" id="uniqueWordListDao">
-		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.WordDao">
-			<ref bean="wordDao" />
-		</constructor-arg>
-		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.graph.words.count}" />
-	</bean>
-	
-	<!-- <bean class="com.ciphertool.sherlock.dao.UniqueNGramListDao" id="nGramListDao">
-		<constructor-arg index="0" type="com.ciphertool.sherlock.dao.NGramDao">
-			<ref bean="nGramDao" />
-		</constructor-arg>
-		<constructor-arg index="1" type="java.lang.Integer" value="${fitness.ngram.two.topWords}" />
-		<constructor-arg index="2" type="java.lang.Integer" value="${fitness.ngram.three.topWords}" />
-		<constructor-arg index="3" type="java.lang.Integer" value="${fitness.ngram.four.topWords}" />
-		<constructor-arg index="4" type="java.lang.Integer" value="${fitness.ngram.five.topWords}" />
-	</bean> -->
-	
-	<!-- As of now, this DAO is too high memory utilization and slows down the app too much. -->
-	<!-- <bean class="com.ciphertool.sherlock.dao.BasicWordMapDao"
-		id="wordMapDao">
-		<constructor-arg index="0"
-			type="com.ciphertool.sherlock.dao.WordDao">
-			<ref bean="wordDao" />
-		</constructor-arg>
-	</bean> -->
+	<import resource="classpath:dict/beans-dao-dict.xml" />
+	<import resource="classpath:markov/beans-dao-markov.xml" />
 
 	<bean class="com.ciphertool.engine.dao.CipherDao" id="cipherDao">
 		<property name="mongoTemplate" ref="mongoTemplate" />
@@ -72,14 +33,4 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.engine.dao.CipherKeyGeneDao" id="cipherKeyGeneDao" />
-
-	<bean class="com.ciphertool.engine.dao.MarkovModelDao" id="markovModelDao">
-		<property name="importer" ref="markovImporterImpl" />
-	</bean>
-
-	<bean class="com.ciphertool.sherlock.etl.importers.MarkovImporterImpl" id="markovImporterImpl">
-		<property name="corpusDirectory" value="${markov.corpus.directory}" />
-		<property name="order" value="${markov.order}" />
-		<property name="minCount" value="${markov.min.count}" />
-	</bean>
 </beans>

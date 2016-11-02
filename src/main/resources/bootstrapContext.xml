@@ -25,11 +25,17 @@ You should have received a copy of the GNU General Public License along with Dec
      		http://www.springframework.org/schema/data/mongo
             http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
-	<import resource="classpath*:beans-dao.xml" />
-	<import resource="classpath*:geneticAlgorithmContext.xml" />
-
 	<context:annotation-config />
 	<tx:annotation-driven />
+
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:DecipherEngine.properties</value>
+		</property>
+	</bean>
+	
+	<import resource="classpath:beans-dao.xml" />
+	<import resource="classpath:geneticAlgorithmContext.xml" />
 
 	<mongo:mongo host="${mongodb.host}" port="${mongodb.port}" />
 	<mongo:db-factory dbname="${mongodb.database}" />
@@ -38,14 +44,8 @@ You should have received a copy of the GNU General Public License along with Dec
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
 	</bean>
 
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:DecipherEngine.properties</value>
-		</property>
-	</bean>
-
 	<bean class="com.ciphertool.engine.service.GeneticCipherSolutionService" id="cipherSolutionService">
-		<property name="geneticAlgorithm" ref="geneticAlgorithm" />
+		<property name="geneticAlgorithm" ref="standardGeneticAlgorithm" />
 		<property name="solutionDao" ref="solutionDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
