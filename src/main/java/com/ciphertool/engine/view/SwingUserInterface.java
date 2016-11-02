@@ -70,7 +70,7 @@ import com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector;
 import com.ciphertool.genetics.algorithms.selection.modes.Selector;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
-public class SwingUserInterface extends JFrame implements UserInterface, ApplicationContextAware {
+public class SwingUserInterface extends JFrame implements ApplicationContextAware {
 	private static final long				serialVersionUID				= -7682403631152076457L;
 
 	private Logger							log								= LoggerFactory.getLogger(getClass());

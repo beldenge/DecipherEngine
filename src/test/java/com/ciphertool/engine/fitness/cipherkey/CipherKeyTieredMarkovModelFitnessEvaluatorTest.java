@@ -19,6 +19,9 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
@@ -27,6 +30,8 @@ import com.ciphertool.engine.fitness.impl.CipherKeyTieredMarkovModelFitnessEvalu
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
 public class CipherKeyTieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger										log			= LoggerFactory.getLogger(CipherKeyTieredMarkovModelFitnessEvaluatorTest.class);
+
 	private static final int									ORDER		= 6;
 
 	private static MarkovModelDao								markovModelDao;
@@ -113,7 +118,7 @@ public class CipherKeyTieredMarkovModelFitnessEvaluatorTest extends FitnessEvalu
 
 	// @Test
 	public void testEvaluate() {
-		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	// @Test
@@ -125,6 +130,6 @@ public class CipherKeyTieredMarkovModelFitnessEvaluatorTest extends FitnessEvalu
 			fitnessEvaluator.evaluate(solution);
 		}
 
-		System.out.println(evaluations + " evaluations took: " + (System.currentTimeMillis() - start) + "ms.");
+		log.info(evaluations + " evaluations took: " + (System.currentTimeMillis() - start) + "ms.");
 	}
 }

@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.engine.entities.CipherKeyChromosome;
@@ -39,6 +40,8 @@ import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
 import com.ciphertool.engine.fitness.impl.CipherKeyFrequencyCorpusFitnessEvaluator;
 
 public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
+	private static Logger									log			= LoggerFactory.getLogger(CipherKeyFrequencyCorpusFitnessEvaluatorTest.class);
+
 	private static CipherKeyFrequencyCorpusFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
@@ -120,7 +123,7 @@ public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitne
 			public Object answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
 
-				System.out.println(args[0]);
+				log.info(args[0].toString());
 
 				return null;
 			}
@@ -135,6 +138,6 @@ public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitne
 
 	@Test
 	public void testEvaluate() {
-		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 }

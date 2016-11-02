@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.engine.dao.TopWordsFacade;
@@ -40,6 +41,8 @@ import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.engine.fitness.impl.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator;
 
 public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger											log			= LoggerFactory.getLogger(CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest.class);
+
 	private static CipherKeyIndexedCorrelatedCorpusFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
@@ -116,7 +119,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 			public Object answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
 
-				System.out.println(args[0]);
+				log.info(args[0].toString());
 
 				return null;
 			}
@@ -140,7 +143,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 	public void testEvaluate() {
 		when(logMock.isDebugEnabled()).thenReturn(true);
 
-		System.out.println("fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	// @Test
@@ -153,6 +156,6 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 			fitnessEvaluator.evaluate(solution);
 		}
 
-		System.out.println("Perf Result: " + (System.currentTimeMillis() - start) + "ms.");
+		log.info("Perf Result: " + (System.currentTimeMillis() - start) + "ms.");
 	}
 }

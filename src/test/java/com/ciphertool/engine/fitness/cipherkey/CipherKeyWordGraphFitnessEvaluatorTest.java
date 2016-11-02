@@ -29,15 +29,19 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.ciphertool.sherlock.dao.UniqueWordListDao;
-import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.engine.fitness.impl.CipherKeyWordGraphFitnessEvaluator;
+import com.ciphertool.sherlock.dao.UniqueWordListDao;
+import com.ciphertool.sherlock.entities.Word;
 
 public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger								log			= LoggerFactory.getLogger(CipherKeyWordGraphFitnessEvaluatorTest.class);
+
 	private static CipherKeyWordGraphFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
@@ -628,7 +632,7 @@ public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTest
 		when(mockUniqueWordListDao.getTopWords(1000)).thenReturn(wordList.subList(0, 1000));
 		fitnessEvaluator.init();
 
-		System.out.println("top1000 fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("top1000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	@Test
@@ -637,6 +641,6 @@ public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTest
 		when(mockUniqueWordListDao.getTopWords(5000)).thenReturn(wordList);
 		fitnessEvaluator.init();
 
-		System.out.println("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 }
