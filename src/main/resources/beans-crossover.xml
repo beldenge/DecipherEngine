@@ -20,7 +20,6 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.algorithms.crossover.impl.RandomSinglePointGuaranteedCrossoverAlgorithm" id="randomSinglePointGuaranteedCrossoverAlgorithm">
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
 		<property name="maxAttempts" value="${max.crossover.attempts}" />
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm" id="equalOpportunityGeneCrossoverAlgorithm">
@@ -36,14 +35,12 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGuaranteedCrossoverAlgorithm" id="equalOpportunityGuaranteedCrossoverAlgorithm">
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="maxAttempts" value="${max.crossover.attempts}" />
 	</bean>
 	
 	<bean class="com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGuaranteedSwapCrossoverAlgorithm" id="equalOpportunityGuaranteedSwapCrossoverAlgorithm">
 		<property name="coin" ref="coin" />
 		<property name="maxGenerations" value="${fitness.ancestry.max}" />
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="maxAttempts" value="${max.crossover.attempts}" />
 	</bean>
 </beans>

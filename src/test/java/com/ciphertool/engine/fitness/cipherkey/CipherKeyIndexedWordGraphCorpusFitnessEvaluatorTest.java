@@ -38,7 +38,7 @@ import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyIndexedWordGraphCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator;
 
 public class CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger											log			= LoggerFactory.getLogger(CipherKeyIndexedWordGraphCorpusFitnessEvaluatorTest.class);

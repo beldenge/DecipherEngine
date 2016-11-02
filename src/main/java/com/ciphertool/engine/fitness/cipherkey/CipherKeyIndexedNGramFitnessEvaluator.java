@@ -17,7 +17,7 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,24 +26,24 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
 
-public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyIndexedNGramFitnessEvaluator implements FitnessEvaluator {
+	private Logger				log	= LoggerFactory.getLogger(getClass());
+
 	protected Cipher			cipher;
-
-	private int					minCrowdSize;
-	private double				penaltyFactor;
-	private double				sigma;
 
 	protected TopWordsFacade	topWordsFacade;
 
@@ -98,7 +98,6 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 		double score;
 		double highestScore = 0;
 
-		@SuppressWarnings("unused")
 		String bestBranch = "";
 
 		for (String branch : branches) {
@@ -114,20 +113,11 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 			}
 		}
 
-		double fitness = highestScore;
-
-		int crowdSize = 1;
-		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
-			if (chromosome.similarityTo(other) > sigma) {
-				crowdSize++;
-			}
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
 		}
 
-		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness = fitness * penaltyFactor;
-		}
-
-		return fitness;
+		return highestScore;
 	}
 
 	@Override
@@ -135,33 +125,6 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 		this.cipher = (Cipher) cipher;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
-	}
-
-	/**
-	 * @param minCrowdSize
-	 *            the minGroupSize to set
-	 */
-	@Required
-	public void setMinCrowdSize(int minCrowdSize) {
-		this.minCrowdSize = minCrowdSize;
-	}
-
-	/**
-	 * @param penaltyFactor
-	 *            the penaltyFactor to set
-	 */
-	@Required
-	public void setPenaltyFactor(double penaltyFactor) {
-		this.penaltyFactor = penaltyFactor;
-	}
-
-	/**
-	 * @param sigma
-	 *            the sigma to set
-	 */
-	@Required
-	public void setSigma(double sigma) {
-		this.sigma = sigma;
 	}
 
 	/**
@@ -175,6 +138,6 @@ public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements Fitnes
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Indexed Crowding Word Graph";
+		return "Cipher Key Indexed N-Gram";
 	}
 }

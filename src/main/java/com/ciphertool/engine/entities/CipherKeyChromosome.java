@@ -31,13 +31,13 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.ciphertool.genetics.Population;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Ancestry;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.entities.KeyedChromosome;
+import com.ciphertool.genetics.population.Population;
 
 @Document(collection = "solutions")
 public class CipherKeyChromosome implements KeyedChromosome<String> {

@@ -14,7 +14,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -36,86 +35,89 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
+import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator {
-	@SuppressWarnings("unused")
-	private Logger				log			= LoggerFactory.getLogger(getClass());
+public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger					log								= LoggerFactory.getLogger(getClass());
 
-	protected Cipher			cipher;
-	private static List<Word>	topWords	= new ArrayList<Word>();
+	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
+	private static final double		MATCHES_BONUS					= 1.033;
 
-	protected TopWordsFacade	topWordsFacade;
+	private Map<Character, Double>	expectedLetterFrequencies;
 
-	private int					lastRowBegin;
-	private IndexNode			rootNode;
+	protected Cipher				cipher;
+	private int						minWordLength;
+	private static List<Word>		topWords						= new ArrayList<Word>();
+
+	private int						lastRowBegin;
 
 	static {
-		// topWords.add(new Word("i", null));
-		// topWords.add(new Word("like", null));
+		topWords.add(new Word("i", null));
+		topWords.add(new Word("like", null));
 		topWords.add(new Word("killing", null));
-		// topWords.add(new Word("people", null));
+		topWords.add(new Word("people", null));
 		topWords.add(new Word("because", null));
-		// topWords.add(new Word("it", null));
-		// topWords.add(new Word("is", null));
-		// topWords.add(new Word("so", null));
-		// topWords.add(new Word("much", null));
-		// topWords.add(new Word("fun", null));
-		// topWords.add(new Word("more", null));
-		// topWords.add(new Word("than", null));
-		// topWords.add(new Word("wild", null));
-		// topWords.add(new Word("game", null));
-		// topWords.add(new Word("the", null));
-		// topWords.add(new Word("forrest", null));
-		// topWords.add(new Word("because", null));
-		// topWords.add(new Word("man", null));
-		// topWords.add(new Word("most", null));
-		// topWords.add(new Word("moat", null)); // this misspelling is repeated twice
-		// topWords.add(new Word("animal", null));
-		// topWords.add(new Word("of", null));
-		// topWords.add(new Word("all", null));
-		// topWords.add(new Word("to", null));
-		// topWords.add(new Word("kill", null));
-		// topWords.add(new Word("something", null));
-		// topWords.add(new Word("gives", null));
-		// topWords.add(new Word("me", null));
-		// topWords.add(new Word("thrilling", null));
-		// topWords.add(new Word("even", null));
-		// topWords.add(new Word("better", null));
-		// topWords.add(new Word("than", null));
-		// topWords.add(new Word("getting", null));
-		// topWords.add(new Word("your", null));
-		// topWords.add(new Word("rocks", null));
-		// topWords.add(new Word("off", null));
-		// topWords.add(new Word("with", null));
-		// topWords.add(new Word("a", null));
-		// topWords.add(new Word("girl", null));
-		// topWords.add(new Word("best", null));
-		// topWords.add(new Word("part", null));
-		// topWords.add(new Word("that", null));
-		// topWords.add(new Word("when", null));
-		// topWords.add(new Word("die", null));
-		// topWords.add(new Word("will", null));
-		// topWords.add(new Word("be", null));
-		// topWords.add(new Word("reborn", null));
-		// topWords.add(new Word("in", null));
-		// topWords.add(new Word("paradise", null));
-		// topWords.add(new Word("and", null));
+		topWords.add(new Word("it", null));
+		topWords.add(new Word("is", null));
+		topWords.add(new Word("so", null));
+		topWords.add(new Word("much", null));
+		topWords.add(new Word("fun", null));
+		topWords.add(new Word("more", null));
+		topWords.add(new Word("than", null));
+		topWords.add(new Word("wild", null));
+		topWords.add(new Word("game", null));
+		topWords.add(new Word("the", null));
+		topWords.add(new Word("forrest", null));
+		topWords.add(new Word("because", null));
+		topWords.add(new Word("man", null));
+		topWords.add(new Word("most", null));
+		topWords.add(new Word("moat", null)); // this misspelling is repeated twice
+		topWords.add(new Word("animal", null));
+		topWords.add(new Word("of", null));
+		topWords.add(new Word("all", null));
+		topWords.add(new Word("to", null));
+		topWords.add(new Word("kill", null));
+		topWords.add(new Word("something", null));
+		topWords.add(new Word("gives", null));
+		topWords.add(new Word("me", null));
+		topWords.add(new Word("thrilling", null));
+		topWords.add(new Word("even", null));
+		topWords.add(new Word("better", null));
+		topWords.add(new Word("than", null));
+		topWords.add(new Word("getting", null));
+		topWords.add(new Word("your", null));
+		topWords.add(new Word("rocks", null));
+		topWords.add(new Word("off", null));
+		topWords.add(new Word("with", null));
+		topWords.add(new Word("a", null));
+		topWords.add(new Word("girl", null));
+		topWords.add(new Word("best", null));
+		topWords.add(new Word("part", null));
+		topWords.add(new Word("that", null));
+		topWords.add(new Word("when", null));
+		topWords.add(new Word("die", null));
+		topWords.add(new Word("will", null));
+		topWords.add(new Word("be", null));
+		topWords.add(new Word("reborn", null));
+		topWords.add(new Word("in", null));
+		topWords.add(new Word("paradise", null));
+		topWords.add(new Word("and", null));
 		topWords.add(new Word("killed", null));
-		// topWords.add(new Word("become", null));
-		// topWords.add(new Word("my", null));
+		topWords.add(new Word("become", null));
+		topWords.add(new Word("my", null));
 		topWords.add(new Word("slaves", null));
-		// topWords.add(new Word("not", null));
-		// topWords.add(new Word("give", null));
-		// topWords.add(new Word("you", null));
-		// topWords.add(new Word("name", null));
-		// topWords.add(new Word("try", null));
-		// topWords.add(new Word("slow", null));
-		// topWords.add(new Word("down", null));
-		// topWords.add(new Word("or", null));
-		// topWords.add(new Word("stop", null));
-		// topWords.add(new Word("collecting", null));
-		// topWords.add(new Word("for", null));
-		// topWords.add(new Word("afterlife", null));
+		topWords.add(new Word("not", null));
+		topWords.add(new Word("give", null));
+		topWords.add(new Word("you", null));
+		topWords.add(new Word("name", null));
+		topWords.add(new Word("try", null));
+		topWords.add(new Word("slow", null));
+		topWords.add(new Word("down", null));
+		topWords.add(new Word("or", null));
+		topWords.add(new Word("stop", null));
+		topWords.add(new Word("collecting", null));
+		topWords.add(new Word("for", null));
+		topWords.add(new Word("afterlife", null));
 
 		// 2-grams
 		topWords.add(new Word("ilike", null));
@@ -231,23 +233,19 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
+	private IndexNode rootNode = new IndexNode();
+
 	@PostConstruct
 	public void init() {
+		String lowerCaseWord;
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
+			if (word.getWord().length() < minWordLength) {
+				continue;
+			}
+
+			lowerCaseWord = word.getWord().toLowerCase();
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
 		}
-
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
-	}
-
-	protected List<String> getCorrespondingCiphertexts(int index, int wordLength) {
-		List<String> ciphertextCharacters = new ArrayList<String>();
-
-		for (int i = index; i < index + wordLength; i++) {
-			ciphertextCharacters.add(cipher.getCiphertextCharacters().get(i).getValue());
-		}
-
-		return ciphertextCharacters;
 	}
 
 	@Override
@@ -257,6 +255,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
+
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -266,52 +265,106 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 				}
 
 				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
-
-				i += longestMatch.length() - 1;
 			}
 		}
 
-		double betterFitness = 0.0;
-		List<String> ciphertextCharacters;
-		List<String> innerCiphertextCharacters;
-		Map<String, Integer> countOfMatchesMap;
-		for (int key : matchMap.keySet()) {
-			ciphertextCharacters = getCorrespondingCiphertexts(key, matchMap.get(key).get(0).getWord().length());
-			countOfMatchesMap = new HashMap<String, Integer>();
-
-			for (String ciphertextCharacter : ciphertextCharacters) {
-				countOfMatchesMap.put(ciphertextCharacter, 0);
-			}
-
-			for (int innerKey : matchMap.keySet()) {
-				if (innerKey == key) {
-					continue;
-				}
-
-				if (ciphertextCharacters.isEmpty()) {
+		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
+		int beginPos;
+		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
+			if (matchMap.containsKey(beginPos)) {
+				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
 					break;
 				}
 
-				innerCiphertextCharacters = getCorrespondingCiphertexts(innerKey, matchMap.get(innerKey).get(0).getWord().length());
-
-				for (String innerCiphertext : innerCiphertextCharacters) {
-					if (ciphertextCharacters.contains(innerCiphertext)) {
-						countOfMatchesMap.put(innerCiphertext, countOfMatchesMap.get(innerCiphertext) + 1);
-					}
+				for (Match match : matchMap.get(beginPos)) {
+					rootNodes.add(new MatchNode(match));
 				}
 			}
-
-			int numCiphertextMatches = 0;
-			for (String ciphertext : ciphertextCharacters) {
-				if (countOfMatchesMap.get(ciphertext) > 1) {
-					numCiphertextMatches++;
-				}
-			}
-
-			betterFitness += Math.pow(2, numCiphertextMatches);
 		}
 
-		return betterFitness;
+		List<String> branches = new ArrayList<String>();
+		for (MatchNode node : rootNodes) {
+			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
+
+			branches.addAll(node.printBranches());
+		}
+
+		long score;
+		long highestScore = 0;
+
+		String bestBranch = "";
+		// branches = Arrays
+		// .asList(new String[] {
+		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
+		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
+		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
+		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
+		// });
+
+		for (String branch : branches) {
+			score = 0;
+
+			for (String word : branch.split(", ")) {
+				score += Math.pow(2, word.length());
+			}
+
+			if (score > highestScore) {
+				highestScore = score;
+				bestBranch = branch;
+			}
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
+		}
+
+		double fitness = highestScore + Math.pow(MATCHES_BONUS, bestBranch.replaceAll("[^a-z]", "").length());
+
+		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
+
+		/*
+		 * Initialize the actualLetterFrequencies Map
+		 */
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			actualLetterFrequencies.put(letter, 0.0);
+		}
+
+		/*
+		 * Don't use the last row when calculating the oneCharacterFrequency for this evaluator
+		 */
+		Double oneCharacterFrequency = 1.0 / (double) currentSolutionString.length();
+		Double currentFrequency = 0.0;
+
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			Character currentCharacter = currentSolutionString.charAt(i);
+
+			currentFrequency = actualLetterFrequencies.get(currentCharacter);
+			if (currentFrequency != null) {
+				actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
+			} else {
+				log.debug("Found non-alpha character in Plaintext: " + currentCharacter);
+			}
+		}
+
+		Double difference = 0.0;
+		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length()
+				/ (double) currentSolutionString.length());
+
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
+
+			if (difference > FREQUENCY_DIFFERENCE_THRESHOLD) {
+				/*
+				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
+				 * much of an effect in early generations
+				 */
+				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
+
+				fitness = fitness * frequencyFactor;
+			}
+		}
+
+		return Double.valueOf(fitness);
 	}
 
 	@Override
@@ -322,16 +375,25 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param minWordLength
+	 *            the minWordLength to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
+	}
+
+	/**
+	 * @param expectedLetterFrequencies
+	 *            the expectedLetterFrequencies to set
+	 */
+	@Required
+	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
+		this.expectedLetterFrequencies = expectedLetterFrequencies;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Indexed Correlated Graph Corpus";
+		return "Cipher Key Frequency Corpus";
 	}
 }

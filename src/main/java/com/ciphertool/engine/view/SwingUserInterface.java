@@ -58,7 +58,7 @@ import com.ciphertool.engine.common.StrategyBuilder;
 import com.ciphertool.engine.controller.CipherSolutionController;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.impl.CipherKeySamplingMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeySamplingMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;

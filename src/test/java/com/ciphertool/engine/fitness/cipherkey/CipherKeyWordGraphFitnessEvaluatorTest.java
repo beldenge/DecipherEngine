@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyWordGraphFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
 import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.Word;
 

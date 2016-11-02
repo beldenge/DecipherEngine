@@ -26,7 +26,7 @@ import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyTieredMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyTieredMarkovModelFitnessEvaluator;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
 public class CipherKeyTieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {

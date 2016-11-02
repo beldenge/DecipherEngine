@@ -1,3 +1,22 @@
+/**
+ * Copyright 2015 George Belden
+ * 
+ * This file is part of DecipherEngine.
+ * 
+ * DecipherEngine is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.ciphertool.engine.fitness.cipherkey;
 
 import org.slf4j.Logger;
@@ -7,7 +26,7 @@ import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeySamplingMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeySamplingMarkovModelFitnessEvaluator;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
 public class CipherKeySamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {

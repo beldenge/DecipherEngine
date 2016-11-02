@@ -14,7 +14,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -37,7 +38,7 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger					log								= LoggerFactory.getLogger(getClass());
 
 	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
@@ -46,10 +47,12 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	private Map<Character, Double>	expectedLetterFrequencies;
 
 	protected Cipher				cipher;
-	private int						minWordLength;
 	private static List<Word>		topWords						= new ArrayList<Word>();
 
+	protected TopWordsFacade		topWordsFacade;
+
 	private int						lastRowBegin;
+	private IndexNode				rootNode;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -233,19 +236,13 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
-	private IndexNode rootNode = new IndexNode();
-
 	@PostConstruct
 	public void init() {
-		String lowerCaseWord;
 		for (Word word : topWords) {
-			if (word.getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
 		}
+
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
@@ -255,7 +252,6 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
-
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -265,6 +261,8 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 				}
 
 				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
+
+				i += longestMatch.length() - 1;
 			}
 		}
 
@@ -289,8 +287,8 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0;
 
 		String bestBranch = "";
 		// branches = Arrays
@@ -358,13 +356,13 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
 				 * much of an effect in early generations
 				 */
-				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
+				double frequencyFactor = (1.0 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
 
 				fitness = fitness * frequencyFactor;
 			}
 		}
 
-		return Double.valueOf(fitness);
+		return fitness;
 	}
 
 	@Override
@@ -375,12 +373,12 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	/**
@@ -394,6 +392,6 @@ public class CipherKeyFrequencyCorpusFitnessEvaluator implements FitnessEvaluato
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Frequency Corpus";
+		return "Cipher Key Experimental Corpus";
 	}
 }

@@ -37,7 +37,7 @@ import org.springframework.util.ReflectionUtils;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator;
 
 public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger											log			= LoggerFactory.getLogger(CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest.class);

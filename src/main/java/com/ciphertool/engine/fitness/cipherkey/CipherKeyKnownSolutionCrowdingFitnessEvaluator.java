@@ -17,7 +17,7 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import org.springframework.beans.factory.annotation.Required;
 

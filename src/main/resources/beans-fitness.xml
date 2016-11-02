@@ -18,9 +18,9 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="defaultFitnessComparator" />
 
-	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyKnownSolutionFitnessEvaluator" id="cipherKeyKnownSolutionFitnessEvaluator" />
+	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator" id="cipherKeyKnownSolutionFitnessEvaluator" />
 
-	<bean class="com.ciphertool.engine.fitness.impl.CipherKeyKnownSolutionCrowdingFitnessEvaluator" id="cipherKeyKnownSolutionCrowdingFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionCrowdingFitnessEvaluator" id="cipherKeyKnownSolutionCrowdingFitnessEvaluator">
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />

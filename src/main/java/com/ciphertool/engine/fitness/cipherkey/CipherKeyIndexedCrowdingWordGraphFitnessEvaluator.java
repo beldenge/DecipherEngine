@@ -17,7 +17,7 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,66 +26,51 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.dao.UniqueWordListDao;
-import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 
-public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
-	private Logger				log			= LoggerFactory.getLogger(getClass());
-
+public class CipherKeyIndexedCrowdingWordGraphFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
-	private int					minWordLength;
-	private int					top;
-
-	private UniqueWordListDao	wordListDao;
-
-	private List<Word>			topWords	= new ArrayList<Word>();
 
 	private int					minCrowdSize;
 	private double				penaltyFactor;
 	private double				sigma;
 
+	protected TopWordsFacade	topWordsFacade;
+
 	private int					lastRowBegin;
+	private IndexNode			rootNode;
 
 	@PostConstruct
 	public void init() {
-		topWords = wordListDao.getTopWords(top);
-
-		if (topWords == null || topWords.size() < top) {
-			String message = "Attempted to get top " + top + " words from populated DAO, but only "
-					+ (topWords == null ? 0 : topWords.size()) + " words were available.";
-			log.error(message);
-			throw new IllegalStateException(message);
-		}
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
-
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
-		for (int i = 0; i < lastRowBegin; i++) {
-			for (Word word : topWords) {
-				if (word.getWord().length() >= minWordLength && lastRowBegin >= i + word.getWord().length()
-						&& word.getWord().toLowerCase().equals(currentSolutionString.substring(i, i
-								+ word.getWord().length()))) {
-					if (!matchMap.containsKey(i)) {
-						matchMap.put(i, new ArrayList<Match>());
-					}
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-					matchMap.get(i).add(new Match(i, i + word.getWord().length() - 1, word.getWord()));
+		String longestMatch;
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+
+			if (longestMatch != null) {
+				if (!matchMap.containsKey(i)) {
+					matchMap.put(i, new ArrayList<Match>());
 				}
+
+				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
@@ -110,8 +95,8 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0;
 
 		@SuppressWarnings("unused")
 		String bestBranch = "";
@@ -129,7 +114,7 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
-		double fitness = Double.valueOf(highestScore);
+		double fitness = highestScore;
 
 		int crowdSize = 1;
 		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
@@ -150,24 +135,6 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 		this.cipher = (Cipher) cipher;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
-	}
-
-	/**
-	 * @param top
-	 *            the top to set
-	 */
-	@Required
-	public void setTop(int top) {
-		this.top = top;
-	}
-
-	/**
-	 * @param wordListDao
-	 *            the wordListDao to set
-	 */
-	@Required
-	public void setWordListDao(UniqueWordListDao wordListDao) {
-		this.wordListDao = wordListDao;
 	}
 
 	/**
@@ -198,16 +165,16 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param minWordLength
-	 *            the minWordLength to set
+	 * @param topWordsFacade
+	 *            the topWordsFacade to set
 	 */
 	@Required
-	public void setMinWordLength(int minWordLength) {
-		this.minWordLength = minWordLength;
+	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
+		this.topWordsFacade = topWordsFacade;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Crowding";
+		return "Cipher Key Indexed Crowding Word Graph";
 	}
 }

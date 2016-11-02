@@ -37,7 +37,7 @@ import org.springframework.util.ReflectionUtils;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.impl.CipherKeyFrequencyCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyFrequencyCorpusFitnessEvaluator;
 
 public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
 	private static Logger									log			= LoggerFactory.getLogger(CipherKeyFrequencyCorpusFitnessEvaluatorTest.class);

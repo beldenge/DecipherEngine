@@ -23,18 +23,16 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="geneDao" ref="cipherKeyGeneDao" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.StandardPopulation" id="standardPopulation">
+	<bean class="com.ciphertool.genetics.population.StandardPopulation" id="standardPopulation">
 		<property name="breeder" ref="breeder" />
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.LatticePopulation" id="latticePopulation">
+	<bean class="com.ciphertool.genetics.population.LatticePopulation" id="latticePopulation">
 		<property name="breeder" ref="breeder" />
-		<property name="fitnessEvaluator" ref="defaultFitnessEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="fitnessComparator" ref="defaultFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />

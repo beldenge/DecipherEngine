@@ -47,8 +47,8 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.view.GenericCallback;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
-import com.ciphertool.genetics.StandardPopulation;
 import com.ciphertool.genetics.algorithms.GeneticAlgorithm;
+import com.ciphertool.genetics.population.StandardPopulation;
 
 public class GeneticCipherSolutionServiceTest {
 	private static ChromosomePrinter chromosomePrinterMock = mock(ChromosomePrinter.class);

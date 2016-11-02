@@ -17,7 +17,7 @@
  * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
+public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 	private Logger				log			= LoggerFactory.getLogger(getClass());
 
 	protected Cipher			cipher;
@@ -50,6 +50,12 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private UniqueWordListDao	wordListDao;
 
 	private List<Word>			topWords	= new ArrayList<Word>();
+
+	private int					minCrowdSize;
+	private double				penaltyFactor;
+	private double				sigma;
+
+	private int					lastRowBegin;
 
 	@PostConstruct
 	public void init() {
@@ -68,8 +74,6 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
-
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
@@ -125,12 +129,27 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
-		return Double.valueOf(highestScore);
+		double fitness = Double.valueOf(highestScore);
+
+		int crowdSize = 1;
+		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
+			if (chromosome.similarityTo(other) > sigma) {
+				crowdSize++;
+			}
+		}
+
+		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
+			fitness = fitness * penaltyFactor;
+		}
+
+		return fitness;
 	}
 
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
@@ -152,6 +171,33 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
+	 * @param minCrowdSize
+	 *            the minGroupSize to set
+	 */
+	@Required
+	public void setMinCrowdSize(int minCrowdSize) {
+		this.minCrowdSize = minCrowdSize;
+	}
+
+	/**
+	 * @param penaltyFactor
+	 *            the penaltyFactor to set
+	 */
+	@Required
+	public void setPenaltyFactor(double penaltyFactor) {
+		this.penaltyFactor = penaltyFactor;
+	}
+
+	/**
+	 * @param sigma
+	 *            the sigma to set
+	 */
+	@Required
+	public void setSigma(double sigma) {
+		this.sigma = sigma;
+	}
+
+	/**
 	 * @param minWordLength
 	 *            the minWordLength to set
 	 */
@@ -162,6 +208,6 @@ public class CipherKeyWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Word Graph";
+		return "Cipher Key Crowding";
 	}
 }

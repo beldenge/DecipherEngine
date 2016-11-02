@@ -36,8 +36,8 @@ import org.junit.Test;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.impl.CipherKeyKnownSolutionFitnessEvaluator;
-import com.ciphertool.engine.fitness.impl.CipherKeyUniqueIndexedWordGraphFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.CipherKeyUniqueIndexedWordGraphFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;

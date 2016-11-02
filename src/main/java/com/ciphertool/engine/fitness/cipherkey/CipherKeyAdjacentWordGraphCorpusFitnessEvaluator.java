@@ -14,7 +14,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package com.ciphertool.engine.fitness.impl;
+package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -38,21 +37,14 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger					log								= LoggerFactory.getLogger(getClass());
+public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger				log			= LoggerFactory.getLogger(getClass());
 
-	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
-	private static final double		MATCHES_BONUS					= 1.033;
+	protected Cipher			cipher;
+	private int					minWordLength;
+	private static List<Word>	topWords	= new ArrayList<Word>();
 
-	private Map<Character, Double>	expectedLetterFrequencies;
-
-	protected Cipher				cipher;
-	private static List<Word>		topWords						= new ArrayList<Word>();
-
-	protected TopWordsFacade		topWordsFacade;
-
-	private int						lastRowBegin;
-	private IndexNode				rootNode;
+	private int					lastRowBegin;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -236,13 +228,19 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
+	private IndexNode rootNode = new IndexNode();
+
 	@PostConstruct
 	public void init() {
+		String lowerCaseWord;
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
-		}
+			if (word.getWord().length() < minWordLength) {
+				continue;
+			}
 
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+			lowerCaseWord = word.getWord().toLowerCase();
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+		}
 	}
 
 	@Override
@@ -261,8 +259,6 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 				}
 
 				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
-
-				i += longestMatch.length() - 1;
 			}
 		}
 
@@ -280,35 +276,69 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 			}
 		}
 
-		List<String> branches = new ArrayList<String>();
 		for (MatchNode node : rootNodes) {
 			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
-
-			branches.addAll(node.printBranches());
 		}
 
 		double score;
 		double highestScore = 0;
+		MatchNode currentChild;
+		MatchNode nextChild;
+		int factor;
+		int tempScore;
+		List<String> words;
 
 		String bestBranch = "";
-		// branches = Arrays
-		// .asList(new String[] {
-		// "ilike, people, becauseitissomuch, ismorefunthan, killing, game, inthe, forrest, becauseman, isthe, moat,
-		// ofall, tokill, methe, givesmethe, moat, thrilling, isevenbetterthan, gettingyour, rocksoff, witha,
-		// thebestpartofit, wheni, iwillbe, rebornin, allthe, ihavekilled, willbecome, myslave, iwillnot, youmyname,
-		// becauseyouwill, tryto, downor, stopmy, collectingof, slaves, formy, afterlife"
-		// });
 
-		for (String branch : branches) {
+		for (MatchNode node : rootNodes) {
 			score = 0;
+			factor = 1;
+			tempScore = 0;
+			words = new ArrayList<String>();
 
-			for (String word : branch.split(", ")) {
-				score += Math.pow(2, word.length());
+			if (node.getChildren() == null || node.getChildren().isEmpty()) {
+				currentChild = null;
+			} else {
+				currentChild = node.getChildren().get(0);
+
+				if (node.getChildren().size() > 1) {
+					log.info("Children size was expected to be only 1 for this implementation.  Please trace through CipherKeyAdjacentWordGraphCorpusFitnessEvaluator class to find the cause of this issue.");
+				}
+			}
+
+			while (currentChild != null) {
+				if (currentChild.getChildren().size() > 1) {
+					log.info("Children size was expected to be only 1 for this implementation.  Please trace through CipherKeyAdjacentWordGraphCorpusFitnessEvaluator class to find the cause of this issue.");
+				}
+
+				nextChild = null;
+				words.add(currentChild.getSelf().getWord());
+
+				if (currentChild.getChildren() != null && !currentChild.getChildren().isEmpty()) {
+					nextChild = currentChild.getChildren().get(0);
+				}
+
+				if (nextChild != null && currentChild.getSelf().getEndPos()
+						+ nextChild.getSelf().getWord().length() == nextChild.getSelf().getEndPos()) {
+					factor++;
+				} else {
+					for (String word : words) {
+						tempScore += Math.pow(2, word.length());
+					}
+
+					score += (tempScore * factor);
+
+					factor = 1;
+					tempScore = 0;
+					words = new ArrayList<String>();
+				}
+
+				currentChild = nextChild;
 			}
 
 			if (score > highestScore) {
 				highestScore = score;
-				bestBranch = branch;
+				bestBranch = node.printBranches().get(0);
 			}
 		}
 
@@ -316,53 +346,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		double fitness = highestScore + Math.pow(MATCHES_BONUS, bestBranch.replaceAll("[^a-z]", "").length());
-
-		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
-
-		/*
-		 * Initialize the actualLetterFrequencies Map
-		 */
-		for (Character letter : expectedLetterFrequencies.keySet()) {
-			actualLetterFrequencies.put(letter, 0.0);
-		}
-
-		/*
-		 * Don't use the last row when calculating the oneCharacterFrequency for this evaluator
-		 */
-		Double oneCharacterFrequency = 1.0 / (double) currentSolutionString.length();
-		Double currentFrequency = 0.0;
-
-		for (int i = 0; i < currentSolutionString.length(); i++) {
-			Character currentCharacter = currentSolutionString.charAt(i);
-
-			currentFrequency = actualLetterFrequencies.get(currentCharacter);
-			if (currentFrequency != null) {
-				actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
-			} else {
-				log.debug("Found non-alpha character in Plaintext: " + currentCharacter);
-			}
-		}
-
-		Double difference = 0.0;
-		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length()
-				/ (double) currentSolutionString.length());
-
-		for (Character letter : expectedLetterFrequencies.keySet()) {
-			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
-
-			if (difference > FREQUENCY_DIFFERENCE_THRESHOLD) {
-				/*
-				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
-				 * much of an effect in early generations
-				 */
-				double frequencyFactor = (1.0 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
-
-				fitness = fitness * frequencyFactor;
-			}
-		}
-
-		return fitness;
+		return highestScore;
 	}
 
 	@Override
@@ -373,25 +357,16 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param minWordLength
+	 *            the minWordLength to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
-	}
-
-	/**
-	 * @param expectedLetterFrequencies
-	 *            the expectedLetterFrequencies to set
-	 */
-	@Required
-	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
-		this.expectedLetterFrequencies = expectedLetterFrequencies;
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Experimental Corpus";
+		return "Cipher Key Adjacent Word Graph Corpus";
 	}
 }
