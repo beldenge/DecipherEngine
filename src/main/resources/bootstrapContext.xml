@@ -53,7 +53,7 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.engine.common.GeneticStrategyBuilder" id="strategyBuilder">
 		<property name="cipherDao" ref="cipherDao" />
-		<property name="knownSolutionFitnessEvaluator" ref="cipherKeyKnownSolutionFitnessEvaluator" />
+		<property name="knownSolutionFitnessEvaluator" ref="knownSolutionFitnessEvaluator" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">
