@@ -43,7 +43,7 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyMarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
+public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	private Logger				log	= LoggerFactory.getLogger(getClass());
 
 	protected Cipher			cipher;
@@ -188,6 +188,6 @@ public class CipherKeyMarkovAndNGramFitnessEvaluator implements FitnessEvaluator
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Markov And N-Gram";
+		return "Markov And N-Gram";
 	}
 }

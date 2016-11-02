@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
 
-public class CipherKeyKnownSolutionCrowdingFitnessEvaluator extends CipherKeyKnownSolutionFitnessEvaluator {
+public class KnownSolutionCrowdingFitnessEvaluator extends KnownSolutionFitnessEvaluator {
 	private int		minCrowdSize;
 	private double	penaltyFactor;
 	private double	sigma;
@@ -77,6 +77,6 @@ public class CipherKeyKnownSolutionCrowdingFitnessEvaluator extends CipherKeyKno
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Known Solution Crowding";
+		return "Known Solution Crowding";
 	}
 }

@@ -36,8 +36,8 @@ import org.junit.Test;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyUniqueIndexedWordGraphFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.KnownSolutionFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.UniqueIndexedWordGraphFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
@@ -97,7 +97,7 @@ public class GeneticStrategyBuilderTest {
 	public void testGetFitnessEvaluator() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		FitnessEvaluator fitnessEvaluatorToReturn = new CipherKeyUniqueIndexedWordGraphFitnessEvaluator();
+		FitnessEvaluator fitnessEvaluatorToReturn = new UniqueIndexedWordGraphFitnessEvaluator();
 
 		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
@@ -489,7 +489,7 @@ public class GeneticStrategyBuilderTest {
 		parametersMap.put(cipherNameParameter, cipherNameValue);
 
 		String fitnessEvaluatorParameter = ParameterConstants.FITNESS_EVALUATOR;
-		FitnessEvaluator fitnessEvaluatorToReturn = new CipherKeyUniqueIndexedWordGraphFitnessEvaluator();
+		FitnessEvaluator fitnessEvaluatorToReturn = new UniqueIndexedWordGraphFitnessEvaluator();
 		parametersMap.put(fitnessEvaluatorParameter, fitnessEvaluatorToReturn);
 
 		String crossoverAlgorithmParameter = ParameterConstants.CROSSOVER_ALGORITHM;
@@ -537,7 +537,7 @@ public class GeneticStrategyBuilderTest {
 		when(cipherDaoMock.findByCipherName(eq(cipherNameValue))).thenReturn(cipher);
 		geneticStrategyBuilder.setCipherDao(cipherDaoMock);
 
-		CipherKeyKnownSolutionFitnessEvaluator knownSolutionfitnessEvalutorToSet = new CipherKeyKnownSolutionFitnessEvaluator();
+		KnownSolutionFitnessEvaluator knownSolutionfitnessEvalutorToSet = new KnownSolutionFitnessEvaluator();
 		geneticStrategyBuilder.setKnownSolutionFitnessEvaluator(knownSolutionfitnessEvalutorToSet);
 
 		/*

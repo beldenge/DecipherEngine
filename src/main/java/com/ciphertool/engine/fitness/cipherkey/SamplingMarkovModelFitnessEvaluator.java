@@ -19,6 +19,8 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -32,13 +34,14 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
-public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
+public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
 
 	protected MarkovModelDao	markovModelDao;
 	private MarkovModel			model;
 
 	private int					lastRowBegin;
+	private int					sampleStepSize;
 
 	@PostConstruct
 	public void init() {
@@ -52,25 +55,21 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 		int order = model.getOrder();
 
 		double total = 0.0;
+		double matches = 0.0;
+		double weight = 0.0;
 		KGramIndexNode match = null;
-		for (int i = 0; i < currentSolutionString.length() - order; i++) {
-			if (match != null) {
-				match = match.getChild(currentSolutionString.charAt(i + order));
-			}
+		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
-			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
-			}
+		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
+			match = model.find(currentSolutionString.substring(i, i + order + 1));
 
 			if (match == null) {
 				continue;
 			}
 
-			total += match.getLevel() == 1 ? 0 : Math.pow(4, match.getLevel() - 1) * match.getRatio();
-
-			if (!(match.getLevel() > order)) {
-				match = null;
-			}
+			matches += 1.0;
+			weight = (matches / ((lastRowBegin - order) / sampleStepSize));
+			total += (100.0 * weight);
 		}
 
 		return total;
@@ -92,8 +91,17 @@ public class CipherKeyTieredMarkovModelFitnessEvaluator implements FitnessEvalua
 		this.markovModelDao = markovModelDao;
 	}
 
+	/**
+	 * @param sampleStepSize
+	 *            the sampleStepSize to set
+	 */
+	@Required
+	public void setSampleStepSize(int sampleStepSize) {
+		this.sampleStepSize = sampleStepSize;
+	}
+
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Tiered Markov Model";
+		return "Sampling Markov Model";
 	}
 }

@@ -14,21 +14,21 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
 	profile="markov">
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovModelFitnessEvaluator" id="cipherKeyMarkovModelFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.MarkovModelFitnessEvaluator" id="markovModelFitnessEvaluator">
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyTieredMarkovModelFitnessEvaluator" id="cipherKeyTieredMarkovModelFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.TieredMarkovModelFitnessEvaluator" id="tieredMarkovModelFitnessEvaluator">
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeySamplingMarkovModelFitnessEvaluator" id="cipherKeySamplingMarkovModelFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.SamplingMarkovModelFitnessEvaluator" id="samplingMarkovModelFitnessEvaluator">
 		<property name="sampleStepSize" value="${markov.model.sample.step.size}" />
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
 	<beans profile="dictionary">
-		<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyMarkovAndNGramFitnessEvaluator" id="cipherKeyMarkovAndNGramFitnessEvaluator">
+		<bean class="com.ciphertool.engine.fitness.cipherkey.MarkovAndNGramFitnessEvaluator" id="markovAndNGramFitnessEvaluator">
 			<property name="markovModelDao" ref="markovModelDao" />
 			<property name="topWordsFacade" ref="topWordsFacade" />
 		</bean>

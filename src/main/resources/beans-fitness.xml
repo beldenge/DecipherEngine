@@ -16,11 +16,11 @@ You should have received a copy of the GNU General Public License along with Dec
 	<import resource="classpath:dict/beans-fitness-dict.xml" />
 	<import resource="classpath:markov/beans-fitness-markov.xml" />
 
-	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="defaultFitnessComparator" />
+	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="ascendingFitnessComparator" />
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionFitnessEvaluator" id="cipherKeyKnownSolutionFitnessEvaluator" />
+	<bean class="com.ciphertool.engine.fitness.cipherkey.KnownSolutionFitnessEvaluator" id="knownSolutionFitnessEvaluator" />
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyKnownSolutionCrowdingFitnessEvaluator" id="cipherKeyKnownSolutionCrowdingFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.KnownSolutionCrowdingFitnessEvaluator" id="knownSolutionCrowdingFitnessEvaluator">
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />

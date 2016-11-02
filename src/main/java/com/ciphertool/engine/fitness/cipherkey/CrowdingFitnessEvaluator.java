@@ -40,7 +40,7 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
+public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	private Logger				log			= LoggerFactory.getLogger(getClass());
 
 	protected Cipher			cipher;
@@ -208,6 +208,6 @@ public class CipherKeyCrowdingFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Crowding";
+		return "Crowding";
 	}
 }

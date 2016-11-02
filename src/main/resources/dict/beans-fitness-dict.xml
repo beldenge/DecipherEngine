@@ -14,13 +14,13 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
 	profile="dictionary">
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator" id="cipherKeyWordGraphFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.WordGraphFitnessEvaluator" id="wordGraphFitnessEvaluator">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyCrowdingFitnessEvaluator" id="cipherKeyCrowdingFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.CrowdingFitnessEvaluator" id="crowdingFitnessEvaluator">
 		<property name="top" value="${fitness.graph.words.count}" />
 		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
@@ -29,33 +29,33 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedWordGraphFitnessEvaluator" id="cipherKeyIndexedWordGraphFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedWordGraphFitnessEvaluator" id="indexedWordGraphFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedCrowdingWordGraphFitnessEvaluator" id="cipherKeyIndexedCrowdingWordGraphFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedCrowdingWordGraphFitnessEvaluator" id="indexedCrowdingWordGraphFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyUniqueIndexedWordGraphFitnessEvaluator" id="cipherKeyUniqueIndexedWordGraphFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.UniqueIndexedWordGraphFitnessEvaluator" id="uniqueIndexedWordGraphFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 		<property name="matchThreshold" value="${fitness.match.threshold}" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedWordGraphCorpusFitnessEvaluator" id="cipherKeyIndexedWordGraphCorpusFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedWordGraphCorpusFitnessEvaluator" id="indexedWordGraphCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 
 	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
-	<!-- <bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyMatchingWordGraphCorpusFitnessEvaluator" id="cipherKeyMatchingWordGraphCorpusFitnessEvaluator">
+	<!-- <bean class="com.ciphertool.engine.fitness.cipherkey.MatchingWordGraphCorpusFitnessEvaluator" id="matchingWordGraphCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean> -->
 
 	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
-	<!-- <bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator" id="cipherKeyExperimentalCorpusFitnessEvaluator">
+	<!-- <bean class="com.ciphertool.engine.fitness.cipherkey.ExperimentalCorpusFitnessEvaluator" id="experimentalCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -89,7 +89,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		</property>
 	</bean> -->
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyFrequencyCorpusFitnessEvaluator" id="cipherKeyFrequencyCorpusFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.FrequencyCorpusFitnessEvaluator" id="frequencyCorpusFitnessEvaluator">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 		<property name="expectedLetterFrequencies">
 			<map>
@@ -123,15 +123,15 @@ You should have received a copy of the GNU General Public License along with Dec
 		</property>
 	</bean>
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedNGramFitnessEvaluator" id="cipherKeyIndexedNGramFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedNGramFitnessEvaluator" id="indexedNGramFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator" id="cipherKeyAdjacentWordGraphCorpusFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.AdjacentWordGraphCorpusFitnessEvaluator" id="adjacentWordGraphCorpusFitnessEvaluator">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>
 	
-	<bean class="com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator" id="cipherKeyIndexedCorrelatedCorpusFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedCorrelatedCorpusFitnessEvaluator" id="indexedCorrelatedCorpusFitnessEvaluator">
 		<property name="topWordsFacade" ref="topWordsFacade" />
 	</bean>
 </beans>

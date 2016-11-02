@@ -35,14 +35,14 @@ import org.slf4j.LoggerFactory;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyWordGraphFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.WordGraphFitnessEvaluator;
 import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.Word;
 
-public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger								log			= LoggerFactory.getLogger(CipherKeyWordGraphFitnessEvaluatorTest.class);
+public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger								log			= LoggerFactory.getLogger(WordGraphFitnessEvaluatorTest.class);
 
-	private static CipherKeyWordGraphFitnessEvaluator	fitnessEvaluator;
+	private static WordGraphFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
 
@@ -613,7 +613,7 @@ public class CipherKeyWordGraphFitnessEvaluatorTest extends FitnessEvaluatorTest
 
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyWordGraphFitnessEvaluator();
+		fitnessEvaluator = new WordGraphFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 

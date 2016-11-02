@@ -37,7 +37,7 @@ import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 
-public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator {
+public class IndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator {
 	@SuppressWarnings("unused")
 	private Logger				log			= LoggerFactory.getLogger(getClass());
 
@@ -332,6 +332,6 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluator implements Fitness
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Indexed Correlated Graph Corpus";
+		return "Indexed Correlated Graph Corpus";
 	}
 }

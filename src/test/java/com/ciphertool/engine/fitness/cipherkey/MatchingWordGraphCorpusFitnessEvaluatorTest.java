@@ -34,17 +34,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
+import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
-import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyFrequencyCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
+import com.ciphertool.engine.fitness.cipherkey.MatchingWordGraphCorpusFitnessEvaluator;
 
-public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static Logger									log			= LoggerFactory.getLogger(CipherKeyFrequencyCorpusFitnessEvaluatorTest.class);
+public class MatchingWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger											log			= LoggerFactory.getLogger(MatchingWordGraphCorpusFitnessEvaluatorTest.class);
 
-	private static CipherKeyFrequencyCorpusFitnessEvaluator	fitnessEvaluator;
+	private static MatchingWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -108,13 +109,9 @@ public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitne
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyFrequencyCorpusFitnessEvaluator();
-
-		fitnessEvaluator.setMinWordLength(4);
+		fitnessEvaluator = new MatchingWordGraphCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 
 		Logger logMock = mock(Logger.class);
 		when(logMock.isDebugEnabled()).thenReturn(true);
@@ -129,9 +126,16 @@ public class CipherKeyFrequencyCorpusFitnessEvaluatorTest extends FrequencyFitne
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyFrequencyCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(MatchingWordGraphCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
+
+		TopWordsFacade topWordsFacade = new TopWordsFacade();
+		topWordsFacade.setMinWordLength(4);
+
+		Field topWordsFacadeField = ReflectionUtils.findField(MatchingWordGraphCorpusFitnessEvaluator.class, "topWordsFacade");
+		ReflectionUtils.makeAccessible(topWordsFacadeField);
+		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 
 		fitnessEvaluator.init();
 	}

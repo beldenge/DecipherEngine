@@ -34,16 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyMatchingWordGraphCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.AdjacentWordGraphCorpusFitnessEvaluator;
 
-public class CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger											log			= LoggerFactory.getLogger(CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest.class);
+public class AdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger											log			= LoggerFactory.getLogger(AdjacentWordGraphCorpusFitnessEvaluatorTest.class);
 
-	private static CipherKeyMatchingWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
+	private static AdjacentWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
@@ -109,7 +108,9 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyMatchingWordGraphCorpusFitnessEvaluator();
+		fitnessEvaluator = new AdjacentWordGraphCorpusFitnessEvaluator();
+
+		fitnessEvaluator.setMinWordLength(4);
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
@@ -126,16 +127,9 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyMatchingWordGraphCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(AdjacentWordGraphCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
-
-		TopWordsFacade topWordsFacade = new TopWordsFacade();
-		topWordsFacade.setMinWordLength(4);
-
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyMatchingWordGraphCorpusFitnessEvaluator.class, "topWordsFacade");
-		ReflectionUtils.makeAccessible(topWordsFacadeField);
-		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 
 		fitnessEvaluator.init();
 	}

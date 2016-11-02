@@ -38,7 +38,7 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
+public class IndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger				log			= LoggerFactory.getLogger(getClass());
 
 	protected Cipher			cipher;
@@ -330,6 +330,6 @@ public class CipherKeyIndexedWordGraphCorpusFitnessEvaluator implements FitnessE
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Indexed Word Graph Corpus";
+		return "Indexed Word Graph Corpus";
 	}
 }

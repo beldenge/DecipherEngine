@@ -38,12 +38,12 @@ import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyExperimentalCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.ExperimentalCorpusFitnessEvaluator;
 
-public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static Logger										log			= LoggerFactory.getLogger(CipherKeyExperimentalCorpusFitnessEvaluatorTest.class);
+public class ExperimentalCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
+	private static Logger										log			= LoggerFactory.getLogger(ExperimentalCorpusFitnessEvaluatorTest.class);
 
-	private static CipherKeyExperimentalCorpusFitnessEvaluator	fitnessEvaluator;
+	private static ExperimentalCorpusFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome							solution	= new CipherKeyChromosome();
 
@@ -109,7 +109,7 @@ public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFi
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyExperimentalCorpusFitnessEvaluator();
+		fitnessEvaluator = new ExperimentalCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
@@ -130,14 +130,14 @@ public class CipherKeyExperimentalCorpusFitnessEvaluatorTest extends FrequencyFi
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyExperimentalCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(ExperimentalCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(5);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyExperimentalCorpusFitnessEvaluator.class, "topWordsFacade");
+		Field topWordsFacadeField = ReflectionUtils.findField(ExperimentalCorpusFitnessEvaluator.class, "topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 

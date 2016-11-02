@@ -32,7 +32,7 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
-public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
+public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
 
 	protected MarkovModelDao	markovModelDao;
@@ -92,6 +92,6 @@ public class CipherKeyMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Markov Model";
+		return "Markov Model";
 	}
 }

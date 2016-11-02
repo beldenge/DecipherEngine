@@ -26,17 +26,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
 
-public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
+public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
 	private int					matchThreshold	= 2;
 	protected Cipher			cipher;
 
@@ -160,6 +160,6 @@ public class CipherKeyUniqueIndexedWordGraphFitnessEvaluator implements FitnessE
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Unique Indexed Word Graph";
+		return "Unique Indexed Word Graph";
 	}
 }

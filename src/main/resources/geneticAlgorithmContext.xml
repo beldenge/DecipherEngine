@@ -26,7 +26,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.population.StandardPopulation" id="standardPopulation">
 		<property name="breeder" ref="breeder" />
 		<property name="taskExecutor" ref="taskExecutor" />
-		<property name="fitnessComparator" ref="defaultFitnessComparator" />
+		<property name="fitnessComparator" ref="ascendingFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 	</bean>
@@ -34,7 +34,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.population.LatticePopulation" id="latticePopulation">
 		<property name="breeder" ref="breeder" />
 		<property name="taskExecutor" ref="taskExecutor" />
-		<property name="fitnessComparator" ref="defaultFitnessComparator" />
+		<property name="fitnessComparator" ref="ascendingFitnessComparator" />
 		<property name="selector" ref="defaultSelector" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 	</bean>

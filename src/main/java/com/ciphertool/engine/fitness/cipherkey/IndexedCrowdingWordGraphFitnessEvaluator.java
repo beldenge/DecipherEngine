@@ -28,18 +28,22 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
-import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
 
-public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
+public class IndexedCrowdingWordGraphFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
+
+	private int					minCrowdSize;
+	private double				penaltyFactor;
+	private double				sigma;
 
 	protected TopWordsFacade	topWordsFacade;
 
@@ -110,7 +114,20 @@ public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluat
 			}
 		}
 
-		return highestScore;
+		double fitness = highestScore;
+
+		int crowdSize = 1;
+		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
+			if (chromosome.similarityTo(other) > sigma) {
+				crowdSize++;
+			}
+		}
+
+		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
+			fitness = fitness * penaltyFactor;
+		}
+
+		return fitness;
 	}
 
 	@Override
@@ -118,6 +135,33 @@ public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluat
 		this.cipher = (Cipher) cipher;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
+	}
+
+	/**
+	 * @param minCrowdSize
+	 *            the minGroupSize to set
+	 */
+	@Required
+	public void setMinCrowdSize(int minCrowdSize) {
+		this.minCrowdSize = minCrowdSize;
+	}
+
+	/**
+	 * @param penaltyFactor
+	 *            the penaltyFactor to set
+	 */
+	@Required
+	public void setPenaltyFactor(double penaltyFactor) {
+		this.penaltyFactor = penaltyFactor;
+	}
+
+	/**
+	 * @param sigma
+	 *            the sigma to set
+	 */
+	@Required
+	public void setSigma(double sigma) {
+		this.sigma = sigma;
 	}
 
 	/**
@@ -131,6 +175,6 @@ public class CipherKeyIndexedWordGraphFitnessEvaluator implements FitnessEvaluat
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Indexed Word Graph";
+		return "Indexed Crowding Word Graph";
 	}
 }

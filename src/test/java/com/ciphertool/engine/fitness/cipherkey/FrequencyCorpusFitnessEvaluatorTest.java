@@ -36,15 +36,15 @@ import org.springframework.util.ReflectionUtils;
 
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
-import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyAdjacentWordGraphCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
+import com.ciphertool.engine.fitness.cipherkey.FrequencyCorpusFitnessEvaluator;
 
-public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger											log			= LoggerFactory.getLogger(CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest.class);
+public class FrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
+	private static Logger									log			= LoggerFactory.getLogger(FrequencyCorpusFitnessEvaluatorTest.class);
 
-	private static CipherKeyAdjacentWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
+	private static FrequencyCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -108,11 +108,13 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyAdjacentWordGraphCorpusFitnessEvaluator();
+		fitnessEvaluator = new FrequencyCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setMinWordLength(4);
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
+
+		fitnessEvaluator.setExpectedLetterFrequencies(expectedLetterFrequencies);
 
 		Logger logMock = mock(Logger.class);
 		when(logMock.isDebugEnabled()).thenReturn(true);
@@ -127,7 +129,7 @@ public class CipherKeyAdjacentWordGraphCorpusFitnessEvaluatorTest extends Fitnes
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyAdjacentWordGraphCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(FrequencyCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 

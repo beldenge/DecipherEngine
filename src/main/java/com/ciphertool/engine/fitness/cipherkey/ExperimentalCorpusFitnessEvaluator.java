@@ -38,7 +38,7 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
+public class ExperimentalCorpusFitnessEvaluator implements FitnessEvaluator {
 	private Logger					log								= LoggerFactory.getLogger(getClass());
 
 	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
@@ -392,6 +392,6 @@ public class CipherKeyExperimentalCorpusFitnessEvaluator implements FitnessEvalu
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Experimental Corpus";
+		return "Experimental Corpus";
 	}
 }

@@ -38,12 +38,12 @@ import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.CipherKeyIndexedCorrelatedCorpusFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.IndexedCorrelatedCorpusFitnessEvaluator;
 
-public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger											log			= LoggerFactory.getLogger(CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest.class);
+public class IndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger											log			= LoggerFactory.getLogger(IndexedCorrelatedCorpusFitnessEvaluatorTest.class);
 
-	private static CipherKeyIndexedCorrelatedCorpusFitnessEvaluator	fitnessEvaluator;
+	private static IndexedCorrelatedCorpusFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
@@ -111,7 +111,7 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 	@SuppressWarnings("rawtypes")
 	@BeforeClass
 	public static void setUp() {
-		fitnessEvaluator = new CipherKeyIndexedCorrelatedCorpusFitnessEvaluator();
+		fitnessEvaluator = new IndexedCorrelatedCorpusFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 
@@ -125,14 +125,14 @@ public class CipherKeyIndexedCorrelatedCorpusFitnessEvaluatorTest extends Fitnes
 			}
 		}).when(logMock).debug(anyString());
 
-		Field logField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class, "log");
+		Field logField = ReflectionUtils.findField(IndexedCorrelatedCorpusFitnessEvaluator.class, "log");
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
 		topWordsFacade.setMinWordLength(4);
 
-		Field topWordsFacadeField = ReflectionUtils.findField(CipherKeyIndexedCorrelatedCorpusFitnessEvaluator.class, "topWordsFacade");
+		Field topWordsFacadeField = ReflectionUtils.findField(IndexedCorrelatedCorpusFitnessEvaluator.class, "topWordsFacade");
 		ReflectionUtils.makeAccessible(topWordsFacadeField);
 		ReflectionUtils.setField(topWordsFacadeField, fitnessEvaluator, topWordsFacade);
 

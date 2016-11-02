@@ -27,7 +27,7 @@ import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 
-public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator {
+public class KnownSolutionFitnessEvaluator implements FitnessEvaluator {
 	private Logger						log				= LoggerFactory.getLogger(getClass());
 
 	private static CipherKeyChromosome	knownSolution	= new CipherKeyChromosome();
@@ -92,7 +92,7 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 	/**
 	 * Default no-args constructor
 	 */
-	public CipherKeyKnownSolutionFitnessEvaluator() {
+	public KnownSolutionFitnessEvaluator() {
 	}
 
 	@Override
@@ -129,6 +129,6 @@ public class CipherKeyKnownSolutionFitnessEvaluator implements FitnessEvaluator 
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Known Solution";
+		return "Known Solution";
 	}
 }

@@ -17,9 +17,7 @@
 package com.ciphertool.engine.fitness.cipherkey;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -40,16 +37,19 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator {
-	private Logger				log			= LoggerFactory.getLogger(getClass());
+public class FrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
+	private Logger					log								= LoggerFactory.getLogger(getClass());
 
-	protected Cipher			cipher;
-	private static List<Word>	topWords	= new ArrayList<Word>();
+	private static final double		FREQUENCY_DIFFERENCE_THRESHOLD	= 0.05;
+	private static final double		MATCHES_BONUS					= 1.033;
 
-	protected TopWordsFacade	topWordsFacade;
+	private Map<Character, Double>	expectedLetterFrequencies;
 
-	int							lastRowBegin;
-	IndexNode					rootNode;
+	protected Cipher				cipher;
+	private int						minWordLength;
+	private static List<Word>		topWords						= new ArrayList<Word>();
+
+	private int						lastRowBegin;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -233,13 +233,19 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
+	private IndexNode rootNode = new IndexNode();
+
 	@PostConstruct
 	public void init() {
+		String lowerCaseWord;
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
-		}
+			if (word.getWord().length() < minWordLength) {
+				continue;
+			}
 
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+			lowerCaseWord = word.getWord().toLowerCase();
+			WordGraphUtils.populateMap(rootNode, lowerCaseWord);
+		}
 	}
 
 	@Override
@@ -283,8 +289,8 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 			branches.addAll(node.printBranches());
 		}
 
-		double score;
-		double highestScore = 0;
+		long score;
+		long highestScore = 0;
 
 		String bestBranch = "";
 		// branches = Arrays
@@ -308,83 +314,57 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 			}
 		}
 
-		List<Integer> matchIndices = getMatchIndices(lastRowBegin, bestBranch, currentSolutionString);
-
-		Map<String, Integer> solutionMap = getSolutionAsMap(matchIndices, (CipherKeyChromosome) chromosome);
-
-		for (String ciphertext : solutionMap.keySet()) {
-			highestScore += Math.pow(2.15, solutionMap.get(ciphertext));
-		}
-
 		if (log.isDebugEnabled()) {
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		return highestScore;
-	}
+		double fitness = highestScore + Math.pow(MATCHES_BONUS, bestBranch.replaceAll("[^a-z]", "").length());
 
-	private static List<Integer> getMatchIndices(int lastRowBegin, String bestBranch, String currentSolutionString) {
-		List<Integer> matchIndices = new ArrayList<Integer>();
+		Map<Character, Double> actualLetterFrequencies = new HashMap<Character, Double>();
 
-		// In the off chance that no words were found at all
-		if (bestBranch.isEmpty()) {
-			return matchIndices;
+		/*
+		 * Initialize the actualLetterFrequencies Map
+		 */
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			actualLetterFrequencies.put(letter, 0.0);
 		}
 
-		List<String> words = new ArrayList<String>();
+		/*
+		 * Don't use the last row when calculating the oneCharacterFrequency for this evaluator
+		 */
+		Double oneCharacterFrequency = 1.0 / (double) currentSolutionString.length();
+		Double currentFrequency = 0.0;
 
-		words.addAll(Arrays.asList(bestBranch.split(", ")));
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			Character currentCharacter = currentSolutionString.charAt(i);
 
-		Iterator<String> wordIter = words.iterator();
-
-		String word = wordIter.next();
-
-		for (int i = 0; i < lastRowBegin; i++) {
-			if (word.equals(currentSolutionString.substring(i, i + word.length()))) {
-				for (int j = 0; j < word.length(); j++) {
-					matchIndices.add(i + j);
-				}
-
-				i += word.length() - 1;
-
-				if (wordIter.hasNext()) {
-					word = wordIter.next();
-				} else {
-					break;
-				}
+			currentFrequency = actualLetterFrequencies.get(currentCharacter);
+			if (currentFrequency != null) {
+				actualLetterFrequencies.put(currentCharacter, currentFrequency + oneCharacterFrequency);
+			} else {
+				log.debug("Found non-alpha character in Plaintext: " + currentCharacter);
 			}
 		}
 
-		return matchIndices;
-	}
+		Double difference = 0.0;
+		Double lengthRatio = ((double) bestBranch.replaceAll("[^a-z]", "").length()
+				/ (double) currentSolutionString.length());
 
-	private static Map<String, Integer> getSolutionAsMap(List<Integer> matchIndices, CipherKeyChromosome chromosome) {
-		if (null == ((CipherKeyChromosome) chromosome).getCipher()) {
-			throw new IllegalStateException(
-					"Called getSolutionAsMap(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
-		}
+		for (Character letter : expectedLetterFrequencies.keySet()) {
+			difference = Math.abs(expectedLetterFrequencies.get(letter) - actualLetterFrequencies.get(letter));
 
-		Map<String, Integer> ciphertextMatchMap = new HashMap<String, Integer>();
+			if (difference > FREQUENCY_DIFFERENCE_THRESHOLD) {
+				/*
+				 * Scale the difference by the current solution's length, so that the frequencyFactor doesn't have as
+				 * much of an effect in early generations
+				 */
+				double frequencyFactor = (1 - ((difference - FREQUENCY_DIFFERENCE_THRESHOLD) * lengthRatio));
 
-		if (matchIndices == null || matchIndices.isEmpty()) {
-			return ciphertextMatchMap;
-		}
-
-		int actualSize = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().size();
-
-		for (int i = 0; i < actualSize; i++) {
-			if (matchIndices.contains(i)) {
-				String key = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue();
-
-				if (!ciphertextMatchMap.containsKey(key)) {
-					ciphertextMatchMap.put(key, 0);
-				}
-
-				ciphertextMatchMap.put(key, ciphertextMatchMap.get(key) + 1);
+				fitness = fitness * frequencyFactor;
 			}
 		}
 
-		return ciphertextMatchMap;
+		return Double.valueOf(fitness);
 	}
 
 	@Override
@@ -395,16 +375,25 @@ public class CipherKeyMatchingWordGraphCorpusFitnessEvaluator implements Fitness
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param minWordLength
+	 *            the minWordLength to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setMinWordLength(int minWordLength) {
+		this.minWordLength = minWordLength;
+	}
+
+	/**
+	 * @param expectedLetterFrequencies
+	 *            the expectedLetterFrequencies to set
+	 */
+	@Required
+	public void setExpectedLetterFrequencies(Map<Character, Double> expectedLetterFrequencies) {
+		this.expectedLetterFrequencies = expectedLetterFrequencies;
 	}
 
 	@Override
 	public String getDisplayName() {
-		return "Cipher Key Matching Word Graph Corpus";
+		return "Frequency Corpus";
 	}
 }
