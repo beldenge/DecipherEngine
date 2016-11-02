@@ -19,11 +19,11 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.AlphaSelector" id="alphaSelector" />
 
-	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="defaultSelector" />
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="rouletteSelector" />
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RandomSelector" id="randomSelector" />
 
-	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="defaultSelectionAlgorithm" />
+	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="probabilisticSelectionAlgorithm" />
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.TruncationSelectionAlgorithm" id="truncationSelectionAlgorithm" />
 
