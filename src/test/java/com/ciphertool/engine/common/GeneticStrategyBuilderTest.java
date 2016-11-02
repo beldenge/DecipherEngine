@@ -326,44 +326,6 @@ public class GeneticStrategyBuilderTest {
 	}
 
 	@Test
-	public void testGetLifespan() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String lifespanParameter = ParameterConstants.LIFESPAN;
-		Integer lifespanValue = 15;
-
-		parametersMap.put(lifespanParameter, lifespanValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-
-		Integer lifespanReturned = geneticStrategyBuilder.getLifespan(parametersMap);
-
-		assertSame(lifespanValue, lifespanReturned);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetLifespanNullParameter() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String lifespanParameter = ParameterConstants.LIFESPAN;
-
-		parametersMap.put(lifespanParameter, null);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getLifespan(parametersMap);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testGetLifespanIncorrectType() {
-		Map<String, Object> parametersMap = new HashMap<String, Object>();
-		String lifespanParameter = ParameterConstants.LIFESPAN;
-		Object incorrectlyTypedValue = new Object();
-
-		parametersMap.put(lifespanParameter, incorrectlyTypedValue);
-
-		GeneticStrategyBuilder geneticStrategyBuilder = new GeneticStrategyBuilder();
-		geneticStrategyBuilder.getLifespan(parametersMap);
-	}
-
-	@Test
 	public void testGetNumGenerations() {
 		Map<String, Object> parametersMap = new HashMap<String, Object>();
 		String numGenerationsParameter = ParameterConstants.NUMBER_OF_GENERATIONS;
@@ -628,10 +590,6 @@ public class GeneticStrategyBuilderTest {
 		Integer populationSizeValue = 1000;
 		parametersMap.put(populationSizeParameter, populationSizeValue);
 
-		String lifespanParameter = ParameterConstants.LIFESPAN;
-		Integer lifespanValue = 15;
-		parametersMap.put(lifespanParameter, lifespanValue);
-
 		String numGenerationsParameter = ParameterConstants.NUMBER_OF_GENERATIONS;
 		Integer numGenerationsValue = 50;
 		parametersMap.put(numGenerationsParameter, numGenerationsValue);
@@ -684,7 +642,6 @@ public class GeneticStrategyBuilderTest {
 		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
-		assertSame(lifespanValue, geneticAlgorithmStrategy.getLifespan());
 		assertSame(numGenerationsValue, geneticAlgorithmStrategy.getMaxGenerations());
 		assertSame(survivalRateValue, geneticAlgorithmStrategy.getSurvivalRate());
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());
@@ -707,7 +664,6 @@ public class GeneticStrategyBuilderTest {
 		assertSame(selectorToReturn, geneticAlgorithmStrategy.getSelector());
 		assertSame(knownSolutionfitnessEvalutorToSet, geneticAlgorithmStrategy.getKnownSolutionFitnessEvaluator());
 		assertSame(populationSizeValue, geneticAlgorithmStrategy.getPopulationSize());
-		assertSame(lifespanValue, geneticAlgorithmStrategy.getLifespan());
 		assertSame(numGenerationsValue, geneticAlgorithmStrategy.getMaxGenerations());
 		assertSame(survivalRateValue, geneticAlgorithmStrategy.getSurvivalRate());
 		assertSame(mutationRateValue, geneticAlgorithmStrategy.getMutationRate());

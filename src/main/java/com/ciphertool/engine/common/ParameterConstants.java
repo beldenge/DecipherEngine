@@ -34,8 +34,6 @@ public class ParameterConstants {
 
 	public static final String	POPULATION_SIZE					= "populationSize";
 
-	public static final String	LIFESPAN						= "lifespan";
-
 	public static final String	NUMBER_OF_GENERATIONS			= "numGenerations";
 
 	public static final String	SURVIVAL_RATE					= "survivalRate";

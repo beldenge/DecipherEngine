@@ -93,7 +93,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private String							stopButtonText					= "Stop";
 	private String							generationsText					= "Generations: ";
 	private String							populationText					= "Population Size: ";
-	private String							lifespanText					= "Individual Lifespan: ";
 	private String							survivalRateText				= "Survival Rate: ";
 	private String							mutationRateText				= "Mutation Rate: ";
 	private String							maxMutationsPerIndividualText	= "Max Mutations Each: ";
@@ -107,10 +106,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private String							statusRunning					= "Running.";
 	private String							statusNotRunning				= "Not running.";
 	private String							compareToKnownSolutionText		= "Compare to known solution";
-	private int								lifespanInitial;
-	private static final int				LIFESPAN_MIN					= -1;
-	private static final int				LIFESPAN_MAX					= 1000;
-	private static final int				LIFESPAN_STEP					= 1;
 	private int								generationsInitial;
 	private static final int				GENERATIONS_MIN					= 1;
 	private static final int				GENERATIONS_MAX					= 100000;
@@ -158,7 +153,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 	private JCheckBox						runContinuouslyCheckBox;
 	private JSpinner						generationsSpinner;
 	private JSpinner						populationSpinner;
-	private JSpinner						lifespanSpinner;
 	private JSpinner						survivalRateSpinner;
 	private JSpinner						mutationRateSpinner;
 	private JSpinner						maxMutationsPerIndividualSpinner;
@@ -307,8 +301,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 		appendPopulationSpinner(gridBagLayout, constraints, mainPanel);
 
-		appendLifespanSpinner(gridBagLayout, constraints, mainPanel);
-
 		appendSurvivalRateSpinner(gridBagLayout, constraints, mainPanel);
 
 		appendMutationRateSpinner(gridBagLayout, constraints, mainPanel);
@@ -386,22 +378,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(populationSpinner, constraints);
 		mainPanel.add(populationSpinner);
-	}
-
-	private void appendLifespanSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		SpinnerModel lifespanModel = new SpinnerNumberModel(lifespanInitial, LIFESPAN_MIN, LIFESPAN_MAX, LIFESPAN_STEP);
-		lifespanSpinner = new JSpinner(lifespanModel);
-		JLabel lifespanLabel = new JLabel(lifespanText);
-		lifespanLabel.setLabelFor(lifespanSpinner);
-
-		constraints.weightx = LAYOUT_LABEL_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		gridBagLayout.setConstraints(lifespanLabel, constraints);
-		mainPanel.add(lifespanLabel);
-		constraints.weightx = LAYOUT_INPUT_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(lifespanSpinner, constraints);
-		mainPanel.add(lifespanSpinner);
 	}
 
 	private void appendSurvivalRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
@@ -670,7 +646,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 
 				parameters.put(ParameterConstants.CIPHER_NAME, cipherComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.POPULATION_SIZE, populationSpinner.getValue());
-				parameters.put(ParameterConstants.LIFESPAN, lifespanSpinner.getValue());
 				parameters.put(ParameterConstants.NUMBER_OF_GENERATIONS, generations);
 				parameters.put(ParameterConstants.SURVIVAL_RATE, survivalRateSpinner.getValue());
 				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
@@ -823,15 +798,6 @@ public class SwingUserInterface extends JFrame implements UserInterface, Applica
 		}
 
 		this.populationInitial = populationInitial;
-	}
-
-	/**
-	 * @param lifespanInitial
-	 *            the lifespanInitial to set
-	 */
-	@Required
-	public void setLifespanInitial(int lifespanInitial) {
-		this.lifespanInitial = lifespanInitial;
 	}
 
 	/**

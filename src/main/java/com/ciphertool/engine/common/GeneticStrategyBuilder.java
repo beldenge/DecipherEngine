@@ -64,9 +64,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		Integer populationSize = getPopulationSize(parameters);
 		log.info("Population size: " + populationSize);
 
-		Integer lifespan = getLifespan(parameters);
-		log.info("Lifespan: " + lifespan);
-
 		Integer numGenerations = getNumGenerations(parameters);
 		log.info("Number of generations: " + numGenerations);
 
@@ -99,9 +96,9 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 			}
 		}
 
-		return new GeneticAlgorithmStrategy(cipher, populationSize, lifespan, numGenerations, survivalRate,
-				mutationRate, maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm,
-				mutationAlgorithm, selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
+		return new GeneticAlgorithmStrategy(cipher, populationSize, numGenerations, survivalRate, mutationRate,
+				maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
+				selectionAlgorithm, selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
 	}
 
 	protected Cipher getCipher(Map<String, Object> parameters) {
@@ -222,21 +219,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return (Integer) populationSize;
-	}
-
-	protected Integer getLifespan(Map<String, Object> parameters) {
-		Object lifespan = parameters.get(ParameterConstants.LIFESPAN);
-
-		if (lifespan == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.LIFESPAN + " cannot be null.");
-		}
-
-		if (!(lifespan instanceof Integer)) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.LIFESPAN
-					+ " must be of type Integer.");
-		}
-
-		return (Integer) lifespan;
 	}
 
 	protected Integer getNumGenerations(Map<String, Object> parameters) {
