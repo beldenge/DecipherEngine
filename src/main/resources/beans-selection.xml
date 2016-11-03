@@ -22,13 +22,4 @@ You should have received a copy of the GNU General Public License along with Dec
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="rouletteSelector" />
 
 	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RandomSelector" id="randomSelector" />
-
-	<bean class="com.ciphertool.genetics.algorithms.selection.ProbabilisticSelectionAlgorithm" id="probabilisticSelectionAlgorithm" />
-
-	<bean class="com.ciphertool.genetics.algorithms.selection.TruncationSelectionAlgorithm" id="truncationSelectionAlgorithm" />
-
-	<bean class="com.ciphertool.genetics.algorithms.selection.TournamentSelectionAlgorithm" id="tournamentSelectionAlgorithm">
-		<property name="groupSize" value="${genetic.algorithm.tournament.groupSize}" />
-		<property name="groupSelector" ref="tournamentSelector" />
-	</bean>
 </beans>
