@@ -93,7 +93,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private String							populationText					= "Population Size: ";
 	private String							mutationRateText				= "Mutation Rate: ";
 	private String							maxMutationsPerIndividualText	= "Max Mutations Each: ";
-	private String							crossoverRateText				= "Crossover Rate: ";
 	private String							continuousText					= "Run until user stops";
 	private String							fitnessEvaluatorNameText		= "Fitness Evaluator: ";
 	private String							crossoverAlgorithmNameText		= "Crossover Algorithm: ";
@@ -118,10 +117,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private static final int				MAX_MUTATION_MIN				= 1;
 	private static final int				MAX_MUTATION_MAX				= 100;
 	private static final int				MAX_MUTATION_STEP				= 1;
-	private double							crossoverInitial;
-	private static final double				CROSSOVER_MIN					= 0.0;
-	private static final double				CROSSOVER_MAX					= 1.0;
-	private static final double				CROSSOVER_STEP					= 0.01;
 
 	private CipherSolutionController		cipherSolutionController;
 	private CipherDao						cipherDao;
@@ -146,7 +141,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private JSpinner						populationSpinner;
 	private JSpinner						mutationRateSpinner;
 	private JSpinner						maxMutationsPerIndividualSpinner;
-	private JSpinner						crossoverRateSpinner;
 	private JLabel							statusLabel;
 	private JCheckBox						compareToKnownSolutionCheckBox;
 
@@ -295,8 +289,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 
 		appendMaxMutationsPerIndividualSpinner(gridBagLayout, constraints, mainPanel);
 
-		appendCrossoverRateSpinner(gridBagLayout, constraints, mainPanel);
-
 		appendFitnessEvaluatorComboBox(gridBagLayout, constraints, mainPanel);
 
 		appendCrossoverAlgorithmComboBox(gridBagLayout, constraints, mainPanel);
@@ -398,23 +390,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagLayout.setConstraints(maxMutationsPerIndividualSpinner, constraints);
 		mainPanel.add(maxMutationsPerIndividualSpinner);
-	}
-
-	private void appendCrossoverRateSpinner(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
-		SpinnerModel crossoverRateModel = new SpinnerNumberModel(crossoverInitial, CROSSOVER_MIN, CROSSOVER_MAX,
-				CROSSOVER_STEP);
-		crossoverRateSpinner = new JSpinner(crossoverRateModel);
-		JLabel crossoverRateLabel = new JLabel(crossoverRateText);
-		crossoverRateLabel.setLabelFor(crossoverRateSpinner);
-
-		constraints.weightx = LAYOUT_LABEL_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		gridBagLayout.setConstraints(crossoverRateLabel, constraints);
-		mainPanel.add(crossoverRateLabel);
-		constraints.weightx = LAYOUT_INPUT_WEIGHT;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(crossoverRateSpinner, constraints);
-		mainPanel.add(crossoverRateSpinner);
 	}
 
 	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
@@ -589,7 +564,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 				parameters.put(ParameterConstants.NUMBER_OF_GENERATIONS, generations);
 				parameters.put(ParameterConstants.MUTATION_RATE, mutationRateSpinner.getValue());
 				parameters.put(ParameterConstants.MAX_MUTATIONS_PER_INDIVIDUAL, maxMutationsPerIndividualSpinner.getValue());
-				parameters.put(ParameterConstants.CROSSOVER_RATE, crossoverRateSpinner.getValue());
 				parameters.put(ParameterConstants.FITNESS_EVALUATOR, fitnessEvaluatorComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.CROSSOVER_ALGORITHM, crossoverAlgorithmComboBox.getSelectedItem());
 				parameters.put(ParameterConstants.MUTATION_ALGORITHM, mutationAlgorithmComboBox.getSelectedItem());
@@ -764,20 +738,6 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 		}
 
 		this.maxMutationsPerIndividualInitial = maxMutationsPerIndividualInitial;
-	}
-
-	/**
-	 * @param crossoverInitial
-	 *            the crossoverInitial to set
-	 */
-	@Required
-	public void setCrossoverInitial(double crossoverInitial) {
-		if (crossoverInitial < 0.0 || crossoverInitial > 1.0) {
-			throw new IllegalArgumentException("Tried to set a crossoverInitial of " + crossoverInitial
-					+ ", but SwingUserInterface requires a crossoverInitial between 0.0 and 1.0 inclusive.");
-		}
-
-		this.crossoverInitial = crossoverInitial;
 	}
 
 	/**

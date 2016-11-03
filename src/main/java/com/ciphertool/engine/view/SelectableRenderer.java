@@ -25,7 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import com.ciphertool.genetics.entities.Selectable;
+import com.ciphertool.genetics.Selectable;
 
 public class SelectableRenderer extends JLabel implements ListCellRenderer<Selectable> {
 	private static final long serialVersionUID = -7130121186853430479L;

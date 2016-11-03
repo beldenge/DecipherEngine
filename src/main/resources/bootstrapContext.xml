@@ -71,7 +71,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="populationInitial" value="${genetic.population.size}" />
 		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
 		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
-		<property name="crossoverInitial" value="${genetic.algorithm.crossoverRate}" />
 		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
 		<property name="defaultCipher" value="${cipher.name}" />
 		<property name="strategyBuilder" ref="strategyBuilder" />

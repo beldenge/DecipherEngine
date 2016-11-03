@@ -38,7 +38,5 @@ public class ParameterConstants {
 
 	public static final String	MAX_MUTATIONS_PER_INDIVIDUAL	= "maxMutations";
 
-	public static final String	CROSSOVER_RATE					= "crossoverRate";
-
 	public static final String	COMPARE_TO_KNOWN_SOLUTION		= "compareToKnownSolution";
 }

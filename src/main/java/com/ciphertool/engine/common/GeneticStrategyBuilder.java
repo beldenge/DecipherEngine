@@ -69,9 +69,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		Integer maxMutationsPerIndividual = getMaxMutationsPerIndividual(parameters);
 		log.info("Max mutations per individual: " + maxMutationsPerIndividual);
 
-		Double crossoverRate = getCrossoverRate(parameters);
-		log.info("Crossover rate: " + crossoverRate);
-
 		Boolean compareToKnownSolution = getCompareToKnown(parameters);
 		log.info("Compare to known solution: " + compareToKnownSolution);
 
@@ -90,8 +87,8 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return new GeneticAlgorithmStrategy(cipher, populationSize, numGenerations, mutationRate,
-				maxMutationsPerIndividual, crossoverRate, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm,
-				selector, knownSolutionFitnessEvaluator, compareToKnownSolution);
+				maxMutationsPerIndividual, fitnessEvaluator, crossoverAlgorithm, mutationAlgorithm, selector,
+				knownSolutionFitnessEvaluator, compareToKnownSolution);
 	}
 
 	protected Cipher getCipher(Map<String, Object> parameters) {
@@ -244,22 +241,6 @@ public class GeneticStrategyBuilder implements StrategyBuilder {
 		}
 
 		return (Integer) maxMutationsPerIndividual;
-	}
-
-	protected Double getCrossoverRate(Map<String, Object> parameters) {
-		Object crossoverRate = parameters.get(ParameterConstants.CROSSOVER_RATE);
-
-		if (crossoverRate == null) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_RATE
-					+ " cannot be null.");
-		}
-
-		if (!(crossoverRate instanceof Double)) {
-			throw new IllegalArgumentException("The parameter " + ParameterConstants.CROSSOVER_RATE
-					+ " must be of type Double.");
-		}
-
-		return (Double) crossoverRate;
 	}
 
 	protected Boolean getCompareToKnown(Map<String, Object> parameters) {
