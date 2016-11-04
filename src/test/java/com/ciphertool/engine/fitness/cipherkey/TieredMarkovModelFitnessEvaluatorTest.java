@@ -26,20 +26,19 @@ import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.TieredMarkovModelFitnessEvaluator;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
 
 public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger										log			= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluatorTest.class);
+	private static Logger								log			= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluatorTest.class);
 
-	private static final int									ORDER		= 6;
+	private static final int							ORDER		= 7;
 
-	private static MarkovModelDao								markovModelDao;
-	private static MarkovImporterImpl							importer;
+	private static MarkovModelDao						markovModelDao;
+	private static MarkovImporterImpl					importer;
 
 	private static TieredMarkovModelFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome							solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -105,6 +104,7 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		importer = new MarkovImporterImpl();
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setOrder(ORDER);
+		importer.setMinCount(1);
 
 		markovModelDao = new MarkovModelDao();
 		markovModelDao.setImporter(importer);

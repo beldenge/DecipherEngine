@@ -51,9 +51,7 @@ public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		int order = model.getOrder();
 
-		double total = 0.0;
 		double matches = 0.0;
-		double weight = 0.0;
 		KGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
@@ -67,11 +65,9 @@ public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			matches += 1.0;
-			weight = (matches / (lastRowBegin - order));
-			total += (100.0 * weight * weight);
 		}
 
-		return total;
+		return (matches / (lastRowBegin - order - 1));
 	}
 
 	@Override

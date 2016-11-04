@@ -90,7 +90,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			matches += 1.0;
-			weight = (matches / (lastRowBegin - order));
+			weight = (matches / (lastRowBegin - order - 1));
 			total += (100.0 * weight * weight);
 		}
 

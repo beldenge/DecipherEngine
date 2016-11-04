@@ -54,9 +54,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		int order = model.getOrder();
 
-		double total = 0.0;
 		double matches = 0.0;
-		double weight = 0.0;
 		KGramIndexNode match = null;
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
@@ -68,11 +66,9 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			matches += 1.0;
-			weight = (matches / ((lastRowBegin - order) / sampleStepSize));
-			total += (100.0 * weight);
 		}
 
-		return total;
+		return (matches / ((lastRowBegin - order - 1) / sampleStepSize));
 	}
 
 	@Override

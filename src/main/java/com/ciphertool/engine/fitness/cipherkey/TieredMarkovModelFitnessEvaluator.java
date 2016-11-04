@@ -33,6 +33,8 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
+	private static final int	MINIMUM_ORDER	= 9;
+
 	protected Cipher			cipher;
 
 	protected MarkovModelDao	markovModelDao;
@@ -51,7 +53,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		int order = model.getOrder();
 
-		double total = 0.0;
+		double matches = 0.0;
 		KGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
@@ -66,14 +68,16 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 				continue;
 			}
 
-			total += match.getLevel() == 1 ? 0 : Math.pow(4, match.getLevel() - 1) * match.getRatio();
+			if (match.getLevel() >= MINIMUM_ORDER) {
+				matches += (double) match.getLevel() / (double) (order + 1);
+			}
 
 			if (!(match.getLevel() > order)) {
 				match = null;
 			}
 		}
 
-		return total;
+		return (matches / (lastRowBegin - order - 1));
 	}
 
 	@Override
