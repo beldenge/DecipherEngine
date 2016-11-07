@@ -107,7 +107,7 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private static final int				GENERATIONS_STEP				= 50;
 	private int								populationInitial;
 	private static final int				POPULATION_MIN					= 1;
-	private static final int				POPULATION_MAX					= 100000;
+	private static final int				POPULATION_MAX					= 1000000;
 	private static final int				POPULATION_STEP					= 100;
 	private double							mutationInitial;
 	private static final double				MUTATION_MIN					= 0.0;

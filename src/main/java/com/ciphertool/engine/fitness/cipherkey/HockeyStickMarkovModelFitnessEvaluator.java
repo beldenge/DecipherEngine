@@ -32,23 +32,17 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
-public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
+public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher			cipher;
 
 	protected MarkovModelDao	markovModelDao;
 	private MarkovModel			model;
 
 	private int					lastRowBegin;
-	private int					minimumOrder;
 
 	@PostConstruct
 	public void init() {
 		model = markovModelDao.getModel();
-
-		if (minimumOrder > model.getOrder()) {
-			throw new IllegalArgumentException("Minimum order is set to " + minimumOrder
-					+ ", but it must be less than or equal to the Markov model order of " + model.getOrder() + ".");
-		}
 	}
 
 	@Override
@@ -62,26 +56,20 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order));
-			}
-
-			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
+			} else {
+				match = model.find(currentSolutionString.substring(i, i + order + 1));
 			}
 
 			if (match == null) {
 				continue;
 			}
 
-			if (match.getLevel() >= minimumOrder) {
-				matches += (double) match.getLevel() / (double) (order + 1);
-			}
-
-			if (!(match.getLevel() > order)) {
-				match = null;
-			}
+			matches += 1.0;
 		}
 
-		return (matches / (lastRowBegin - order - 1));
+		double weight = (matches / (lastRowBegin - order - 1));
+
+		return weight * weight;
 	}
 
 	@Override
@@ -100,17 +88,8 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		this.markovModelDao = markovModelDao;
 	}
 
-	/**
-	 * @param minimumOrder
-	 *            the minimumOrder to set
-	 */
-	@Required
-	public void setMinimumOrder(int minimumOrder) {
-		this.minimumOrder = minimumOrder;
-	}
-
 	@Override
 	public String getDisplayName() {
-		return "Tiered Markov Model";
+		return "Hockey Stick Markov Model";
 	}
 }

@@ -18,7 +18,12 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
+	<bean class="com.ciphertool.engine.fitness.cipherkey.HockeyStickMarkovModelFitnessEvaluator" id="hockeyStickMarkovModelFitnessEvaluator">
+		<property name="markovModelDao" ref="markovModelDao" />
+	</bean>
+
 	<bean class="com.ciphertool.engine.fitness.cipherkey.TieredMarkovModelFitnessEvaluator" id="tieredMarkovModelFitnessEvaluator">
+		<property name="minimumOrder" value="${markov.model.min.order}" />
 		<property name="markovModelDao" ref="markovModelDao" />
 	</bean>
 
