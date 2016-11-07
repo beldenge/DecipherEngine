@@ -28,6 +28,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="fitnessComparator" ref="ascendingFitnessComparator" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
+		<property name="maxToPrint" value="${max.individuals.to.print}" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.population.LatticePopulation" id="latticePopulation">
@@ -35,6 +36,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="fitnessComparator" ref="ascendingFitnessComparator" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
+		<property name="maxToPrint" value="${max.individuals.to.print}" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.util.Coin" id="coin" />
