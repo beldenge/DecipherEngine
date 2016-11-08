@@ -113,6 +113,7 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		fitnessEvaluator = new TieredMarkovModelFitnessEvaluator();
 		fitnessEvaluator.setMarkovModelDao(markovModelDao);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
+		fitnessEvaluator.setMinimumOrder(3);
 		fitnessEvaluator.init();
 	}
 
