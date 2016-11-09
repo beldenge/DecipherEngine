@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +60,9 @@ import com.ciphertool.engine.common.StrategyBuilder;
 import com.ciphertool.engine.controller.CipherSolutionController;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.cipherkey.SamplingMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.ConstrainedMarkovModelFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
+import com.ciphertool.genetics.Selectable;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.crossover.impl.EqualOpportunityGeneCrossoverAlgorithm;
 import com.ciphertool.genetics.algorithms.mutation.MutationAlgorithm;
@@ -395,6 +398,8 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private void appendFitnessEvaluatorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, FitnessEvaluator> beanMap = applicationContext.getBeansOfType(FitnessEvaluator.class);
 
+		checkForDuplicateNames(beanMap.values());
+
 		FitnessEvaluator[] beans = new FitnessEvaluator[beanMap.size()];
 
 		int i = 0;
@@ -408,7 +413,7 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(SamplingMarkovModelFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(ConstrainedMarkovModelFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;
@@ -424,6 +429,8 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	@SuppressWarnings("rawtypes")
 	private void appendCrossoverAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, CrossoverAlgorithm> beanMap = applicationContext.getBeansOfType(CrossoverAlgorithm.class);
+
+		checkForDuplicateNames(beanMap.values());
 
 		CrossoverAlgorithm[] beans = new CrossoverAlgorithm[beanMap.size()];
 
@@ -455,6 +462,8 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 	private void appendMutationAlgorithmComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, MutationAlgorithm> beanMap = applicationContext.getBeansOfType(MutationAlgorithm.class);
 
+		checkForDuplicateNames(beanMap.values());
+
 		MutationAlgorithm[] beans = new MutationAlgorithm[beanMap.size()];
 
 		int i = 0;
@@ -483,6 +492,8 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 
 	private void appendSelectorComboBox(GridBagLayout gridBagLayout, GridBagConstraints constraints, JPanel mainPanel) {
 		Map<String, Selector> beanMap = applicationContext.getBeansOfType(Selector.class);
+
+		checkForDuplicateNames(beanMap.values());
 
 		Selector[] beans = new Selector[beanMap.size()];
 
@@ -628,6 +639,23 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	private void checkForDuplicateNames(Collection<? extends Selectable> beanMap) {
+		List<String> names = new ArrayList<String>(beanMap.size());
+
+		String name = "";
+
+		for (Selectable entry : beanMap) {
+			name = entry.getDisplayName();
+
+			if (names.contains(name)) {
+				throw new IllegalStateException("Duplicate bean name found for: \"" + name
+						+ "\".  Please check the getDisplayName() method for instances returning this name.");
+			}
+
+			names.add(name);
 		}
 	}
 
