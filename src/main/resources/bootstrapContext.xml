@@ -49,6 +49,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="solutionDao" ref="solutionDao" />
 		<property name="commandsBefore" value="${app.commands.before}" />
 		<property name="commandsAfter" value="${app.commands.after}" />
+		<property name="persistPopulation" value="${persist.population}" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.common.GeneticStrategyBuilder" id="strategyBuilder">

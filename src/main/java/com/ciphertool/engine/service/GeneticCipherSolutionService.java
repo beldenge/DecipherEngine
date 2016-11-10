@@ -41,6 +41,7 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 	private String[]			commandsAfter;
 	private SolutionDao			solutionDao;
 	private long				start;
+	private boolean				persistPopulation;
 
 	// This is instantiated here to support unit testability
 	private Runtime				runtime	= Runtime.getRuntime();
@@ -147,7 +148,9 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 
 			this.geneticAlgorithm.getPopulation().printAscending();
 
-			persistPopulation();
+			if (this.persistPopulation) {
+				persistPopulation();
+			}
 		} catch (Throwable t) {
 			log.error("Caught Throwable while attempting to stop service.  " + "Performing tear-down tasks.", t);
 		} finally {
@@ -242,5 +245,14 @@ public class GeneticCipherSolutionService implements CipherSolutionService {
 	@Required
 	public void setSolutionDao(SolutionDao solutionDao) {
 		this.solutionDao = solutionDao;
+	}
+
+	/**
+	 * @param persistPopulation
+	 *            the persistPopulation to set
+	 */
+	@Required
+	public void setPersistPopulation(boolean persistPopulation) {
+		this.persistPopulation = persistPopulation;
 	}
 }

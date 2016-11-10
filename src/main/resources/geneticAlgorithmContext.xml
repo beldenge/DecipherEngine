@@ -52,6 +52,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 		<property name="elitism" value="${genetic.algorithm.elitism}" />
+		<property name="persistStatistics" value="${persist.statistics}" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.LatticeGeneticAlgorithm" id="latticeGeneticAlgorithm">
@@ -62,6 +63,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="verifyAncestry" value="${fitness.ancestry.verify}" />
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
+		<property name="persistStatistics" value="${persist.statistics}" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
