@@ -22,5 +22,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="corpusDirectory" value="${markov.corpus.directory}" />
 		<property name="order" value="${markov.order}" />
 		<property name="minCount" value="${markov.min.count}" />
+		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 </beans>
