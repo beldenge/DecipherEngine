@@ -19,12 +19,9 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -33,17 +30,11 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher			cipher;
+	protected Cipher	cipher;
 
-	protected MarkovModelDao	markovModelDao;
-	private MarkovModel			model;
+	private MarkovModel	model;
 
-	private int					lastRowBegin;
-
-	@PostConstruct
-	public void init() {
-		model = markovModelDao.getModel();
-	}
+	private int			lastRowBegin;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -78,12 +69,12 @@ public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param markovModelDao
-	 *            the markovModelDao to set
+	 * @param model
+	 *            the model to set
 	 */
 	@Required
-	public void setMarkovModelDao(MarkovModelDao markovModelDao) {
-		this.markovModelDao = markovModelDao;
+	public void setModel(MarkovModel model) {
+		this.model = model;
 	}
 
 	@Override

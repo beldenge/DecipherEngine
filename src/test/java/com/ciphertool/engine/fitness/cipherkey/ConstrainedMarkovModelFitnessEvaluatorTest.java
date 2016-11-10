@@ -19,25 +19,28 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import static org.mockito.Mockito.spy;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
+import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger									log			= LoggerFactory.getLogger(ConstrainedMarkovModelFitnessEvaluatorTest.class);
 
 	private static final int								ORDER		= 5;
 
-	private static MarkovModelDao							markovModelDao;
 	private static MarkovImporterImpl						importer;
+	private static MarkovModel								markovModel;
 
 	private static ConstrainedMarkovModelFitnessEvaluator	fitnessEvaluator;
 
@@ -104,17 +107,27 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 
 	// @BeforeClass
 	public static void setUp() {
-		importer = new MarkovImporterImpl();
-		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
-		importer.setOrder(ORDER);
-		importer.setMinCount(1);
+		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
+		taskExecutorSpy.setCorePoolSize(4);
+		taskExecutorSpy.setMaxPoolSize(4);
+		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setKeepAliveSeconds(1);
+		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
+		taskExecutorSpy.initialize();
 
-		markovModelDao = new MarkovModelDao();
-		markovModelDao.setImporter(importer);
-		markovModelDao.init();
+		markovModel = new MarkovModel();
+		markovModel.setOrder(ORDER);
+		markovModel.setTaskExecutor(taskExecutorSpy);
+
+		importer = new MarkovImporterImpl();
+		importer.setModel(markovModel);
+		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		importer.setMinCount(1);
+		importer.setTaskExecutor(taskExecutorSpy);
+		importer.importCorpus();
 
 		fitnessEvaluator = new ConstrainedMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setMarkovModelDao(markovModelDao);
+		fitnessEvaluator.setModel(markovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);
 		frequenciesToSet.put('a', 0.0812);

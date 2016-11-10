@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -33,21 +32,19 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher			cipher;
+	protected Cipher	cipher;
 
-	protected MarkovModelDao	markovModelDao;
-	private MarkovModel			model;
+	private MarkovModel	model;
 
-	private int					lastRowBegin;
-	private int					minimumOrder;
+	private int			lastRowBegin;
+	private int			minimumOrder;
 
 	@PostConstruct
 	public void init() {
-		model = markovModelDao.getModel();
-
-		if (minimumOrder > model.getOrder()) {
-			throw new IllegalArgumentException("Minimum order is set to " + minimumOrder
-					+ ", but it must be less than or equal to the Markov model order of " + model.getOrder() + ".");
+		if (this.minimumOrder > this.model.getOrder()) {
+			throw new IllegalArgumentException("Minimum order is set to " + this.minimumOrder
+					+ ", but it must be less than or equal to the Markov model order of " + this.model.getOrder()
+					+ ".");
 		}
 	}
 
@@ -92,12 +89,12 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param markovModelDao
-	 *            the markovModelDao to set
+	 * @param model
+	 *            the model to set
 	 */
 	@Required
-	public void setMarkovModelDao(MarkovModelDao markovModelDao) {
-		this.markovModelDao = markovModelDao;
+	public void setModel(MarkovModel model) {
+		this.model = model;
 	}
 
 	/**

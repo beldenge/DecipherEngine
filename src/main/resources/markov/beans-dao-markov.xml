@@ -14,13 +14,14 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
 	profile="markov">
 
-	<bean class="com.ciphertool.engine.dao.MarkovModelDao" id="markovModelDao">
-		<property name="importer" ref="markovImporterImpl" />
+	<bean class="com.ciphertool.sherlock.markov.MarkovModel" id="markovModel">
+		<property name="order" value="${markov.order}" />
+		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
 	<bean class="com.ciphertool.sherlock.etl.importers.MarkovImporterImpl" id="markovImporterImpl">
+		<property name="model" ref="markovModel" />
 		<property name="corpusDirectory" value="${markov.corpus.directory}" />
-		<property name="order" value="${markov.order}" />
 		<property name="minCount" value="${markov.min.count}" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>

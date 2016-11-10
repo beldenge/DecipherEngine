@@ -19,12 +19,9 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
@@ -33,17 +30,11 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher			cipher;
+	protected Cipher	cipher;
 
-	protected MarkovModelDao	markovModelDao;
-	private MarkovModel			model;
+	private MarkovModel	model;
 
-	private int					lastRowBegin;
-
-	@PostConstruct
-	public void init() {
-		model = markovModelDao.getModel();
-	}
+	private int			lastRowBegin;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -72,20 +63,20 @@ public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator 
 		return weight * weight;
 	}
 
+	/**
+	 * @param model
+	 *            the model to set
+	 */
+	@Required
+	public void setModel(MarkovModel model) {
+		this.model = model;
+	}
+
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
-	}
-
-	/**
-	 * @param markovModelDao
-	 *            the markovModelDao to set
-	 */
-	@Required
-	public void setMarkovModelDao(MarkovModelDao markovModelDao) {
-		this.markovModelDao = markovModelDao;
 	}
 
 	@Override

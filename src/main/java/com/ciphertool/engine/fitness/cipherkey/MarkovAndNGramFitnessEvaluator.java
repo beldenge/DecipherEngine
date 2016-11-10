@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
@@ -48,7 +47,6 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 	protected Cipher			cipher;
 
-	protected MarkovModelDao	markovModelDao;
 	private MarkovModel			model;
 	protected TopWordsFacade	topWordsFacade;
 
@@ -57,7 +55,6 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 	@PostConstruct
 	public void init() {
-		model = markovModelDao.getModel();
 		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
@@ -169,12 +166,12 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param markovModelDao
-	 *            the markovModelDao to set
+	 * @param model
+	 *            the model to set
 	 */
 	@Required
-	public void setMarkovModelDao(MarkovModelDao markovModelDao) {
-		this.markovModelDao = markovModelDao;
+	public void setModel(MarkovModel model) {
+		this.model = model;
 	}
 
 	/**

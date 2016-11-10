@@ -19,27 +19,29 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import static org.mockito.Mockito.spy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.ciphertool.engine.dao.MarkovModelDao;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.SamplingMarkovModelFitnessEvaluator;
 import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
+import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger										log			= LoggerFactory.getLogger(SamplingMarkovModelFitnessEvaluatorTest.class);
+	private static Logger								log			= LoggerFactory.getLogger(SamplingMarkovModelFitnessEvaluatorTest.class);
 
-	private static final int									ORDER		= 6;
+	private static final int							ORDER		= 6;
 
-	private static MarkovModelDao								markovModelDao;
-	private static MarkovImporterImpl							importer;
+	private static MarkovImporterImpl					importer;
+	private static MarkovModel							markovModel;
 
 	private static SamplingMarkovModelFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome							solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -102,20 +104,29 @@ public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTes
 
 	// @BeforeClass
 	public static void setUp() {
-		importer = new MarkovImporterImpl();
-		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
-		importer.setOrder(ORDER);
-		importer.setMinCount(2);
+		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
+		taskExecutorSpy.setCorePoolSize(4);
+		taskExecutorSpy.setMaxPoolSize(4);
+		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setKeepAliveSeconds(1);
+		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
+		taskExecutorSpy.initialize();
 
-		markovModelDao = new MarkovModelDao();
-		markovModelDao.setImporter(importer);
-		markovModelDao.init();
+		markovModel = new MarkovModel();
+		markovModel.setOrder(ORDER);
+		markovModel.setTaskExecutor(taskExecutorSpy);
+
+		importer = new MarkovImporterImpl();
+		importer.setModel(markovModel);
+		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		importer.setMinCount(2);
+		importer.setTaskExecutor(taskExecutorSpy);
+		importer.importCorpus();
 
 		fitnessEvaluator = new SamplingMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setMarkovModelDao(markovModelDao);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 		fitnessEvaluator.setSampleStepSize(4);
-		fitnessEvaluator.init();
+		fitnessEvaluator.setModel(markovModel);
 	}
 
 	// @Test
