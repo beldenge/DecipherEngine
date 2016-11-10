@@ -108,6 +108,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testBegin() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
 
@@ -252,6 +253,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testEndImmediately_DebugMode() throws IOException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -311,6 +313,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testResume_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -363,6 +366,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testRunAlgorithmAutonomously() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -411,6 +415,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testRunAlgorithmAutonomously_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -492,6 +497,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testRunAlgorithmStepwise_ExceptionThrown() throws IOException, InterruptedException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
@@ -544,6 +550,7 @@ public class GeneticCipherSolutionServiceTest {
 	@Test
 	public void testEnd() throws IOException {
 		GeneticCipherSolutionService geneticCipherSolutionService = new GeneticCipherSolutionService();
+		geneticCipherSolutionService.setPersistPopulation(true);
 		geneticCipherSolutionService.toggleRunning();
 
 		GeneticAlgorithm geneticAlgorithm = mock(GeneticAlgorithm.class);
