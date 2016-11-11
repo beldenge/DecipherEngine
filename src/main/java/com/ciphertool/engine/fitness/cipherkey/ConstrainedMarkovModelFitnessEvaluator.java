@@ -39,12 +39,13 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator {
-	private static final int				GRACE_WINDOW_SIZE		= 1;
-	private double							kGramWeight;
-	private double							frequencyWeight;
 	private static final List<Character>	LOWERCASE_LETTERS		= Arrays.asList(new Character[] { 'a', 'b', 'c',
 			'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
 			'y', 'z' });
+	private static final int				GRACE_WINDOW_SIZE		= 1;
+
+	private double							kGramWeight;
+	private double							frequencyWeight;
 
 	protected Cipher						cipher;
 
@@ -171,6 +172,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	 * @param kGramWeight
 	 *            the kGramWeight to set
 	 */
+	@Required
 	public void setkGramWeight(double kGramWeight) {
 		this.kGramWeight = kGramWeight;
 	}
@@ -179,6 +181,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	 * @param frequencyWeight
 	 *            the frequencyWeight to set
 	 */
+	@Required
 	public void setFrequencyWeight(double frequencyWeight) {
 		this.frequencyWeight = frequencyWeight;
 	}
