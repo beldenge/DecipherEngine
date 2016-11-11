@@ -26,7 +26,6 @@ You should have received a copy of the GNU General Public License along with Dec
             http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
 
 	<context:annotation-config />
-	<tx:annotation-driven />
 
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
