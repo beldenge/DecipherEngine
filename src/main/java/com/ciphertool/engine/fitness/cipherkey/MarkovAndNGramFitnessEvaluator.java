@@ -132,7 +132,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			frequencyProbability = 0.0;
 		}
 
-		return frequencyProbability * frequencyWeight;
+		return frequencyProbability;
 	}
 
 	public Double evaluateMarkovModel(Chromosome chromosome) {
@@ -226,6 +226,10 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 		if (log.isDebugEnabled()) {
 			log.debug("Best branch: " + bestBranch);
+		}
+
+		if (bestBranch.length() > currentSolutionString.length()) {
+			return 1.0;
 		}
 
 		return (double) bestBranch.length() / (double) currentSolutionString.length();

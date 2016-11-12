@@ -21,6 +21,8 @@ package com.ciphertool.engine.fitness.cipherkey;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -32,19 +34,23 @@ import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher	cipher;
+	protected static Logger	log	= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluator.class);
 
-	private MarkovModel	model;
+	protected Cipher		cipher;
 
-	private int			lastRowBegin;
-	private int			minimumOrder;
+	private MarkovModel		model;
+
+	private int				lastRowBegin;
+	private int				minimumOrder;
 
 	@PostConstruct
 	public void init() {
 		if (this.minimumOrder > this.model.getOrder()) {
-			throw new IllegalArgumentException("Minimum order is set to " + this.minimumOrder
-					+ ", but it must be less than or equal to the Markov model order of " + this.model.getOrder()
-					+ ".");
+			log.warn("Minimum order is set to " + this.minimumOrder
+					+ ", which is greater than the Markov model order of " + this.model.getOrder()
+					+ ".  Reducing minimumOrder to " + this.model.getOrder());
+
+			this.minimumOrder = this.model.getOrder();
 		}
 	}
 

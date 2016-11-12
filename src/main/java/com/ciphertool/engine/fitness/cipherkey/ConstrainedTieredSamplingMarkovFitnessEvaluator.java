@@ -61,11 +61,12 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 	@PostConstruct
 	public void init() {
-		if (kGramWeight + frequencyWeight != 1.0) {
+		double weightTotal = (kGramWeight + frequencyWeight);
+
+		if (Math.abs(1.0 - weightTotal) > 0.0001) {
 			throw new IllegalArgumentException(
 					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + kGramWeight
-							+ " and frequencyWeight=" + frequencyWeight + " sums to " + (kGramWeight
-									+ frequencyWeight));
+							+ " and frequencyWeight=" + frequencyWeight + " sums to " + weightTotal);
 		}
 	}
 
