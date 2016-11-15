@@ -139,7 +139,7 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 		}
 
 		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness = fitness * penaltyFactor;
+			fitness *= penaltyFactor;
 		}
 
 		return fitness;

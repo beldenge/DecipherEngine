@@ -40,7 +40,7 @@ public class KnownSolutionCrowdingFitnessEvaluator extends KnownSolutionFitnessE
 		}
 
 		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness = fitness * penaltyFactor;
+			fitness *= penaltyFactor;
 		}
 
 		return fitness;

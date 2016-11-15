@@ -124,7 +124,7 @@ public class IndexedCrowdingWordGraphFitnessEvaluator implements FitnessEvaluato
 		}
 
 		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness = fitness * penaltyFactor;
+			fitness *= penaltyFactor;
 		}
 
 		return fitness;
