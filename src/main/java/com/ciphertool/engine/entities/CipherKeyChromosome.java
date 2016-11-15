@@ -399,8 +399,8 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	public double similarityTo(Chromosome other) {
 		int total = 0;
 
-		for (Object key : this.genes.keySet()) {
-			if (((CipherKeyGene) this.genes.get(key)).getValue().equals(((CipherKeyGene) ((CipherKeyChromosome) other).genes.get(key)).getValue())) {
+		for (Map.Entry<String, Gene> entry : this.genes.entrySet()) {
+			if (((CipherKeyGene) entry.getValue()).getValue().equals(((CipherKeyGene) ((CipherKeyChromosome) other).genes.get(entry.getKey())).getValue())) {
 				total++;
 			}
 		}

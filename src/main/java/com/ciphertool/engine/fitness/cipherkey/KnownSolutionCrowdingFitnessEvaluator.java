@@ -30,9 +30,7 @@ public class KnownSolutionCrowdingFitnessEvaluator extends KnownSolutionFitnessE
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		double highestScore = super.evaluate(chromosome);
-
-		double fitness = Double.valueOf(highestScore);
+		double fitness = super.evaluate(chromosome);
 
 		int crowdSize = 1;
 		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
