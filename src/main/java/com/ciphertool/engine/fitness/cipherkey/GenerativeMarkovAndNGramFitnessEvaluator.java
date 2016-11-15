@@ -45,7 +45,7 @@ import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
+public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	private Logger							log						= LoggerFactory.getLogger(getClass());
 
 	private static final List<Character>	LOWERCASE_LETTERS		= Arrays.asList(new Character[] { 'a', 'b', 'c',
@@ -63,6 +63,8 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	private double							frequencyWeight;
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
+	private double							minimumProbability;
+	private int								minimumOrder;
 
 	private Map<Character, Double>			expectedLetterFrequencies;
 	private Map<Character, Integer>			expectedLetterCounts	= new HashMap<Character, Integer>(
@@ -79,6 +81,14 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but letterNGramWeight="
 							+ letterNGramWeight + " and frequencyWeight=" + frequencyWeight + " and wordNGramWeight="
 							+ wordNGramWeight + " sums to " + weightTotal);
+		}
+
+		if (this.minimumOrder > this.model.getOrder()) {
+			log.warn("Minimum order is set to " + this.minimumOrder
+					+ ", which is greater than the Markov model order of " + this.model.getOrder()
+					+ ".  Reducing minimumOrder to " + this.model.getOrder());
+
+			this.minimumOrder = this.model.getOrder();
 		}
 	}
 
@@ -147,18 +157,26 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order));
-			} else {
-				match = model.find(currentSolutionString.substring(i, i + order + 1));
 			}
 
 			if (match == null) {
-				continue;
+				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
 			}
 
-			matches += 1.0;
+			if (match != null && match.getLevel() >= minimumOrder) {
+				matches += (double) match.getLevel() / (double) (order + 1);
+			}
+
+			if ((matches / (double) i) < minimumProbability) {
+				break;
+			}
+
+			if (!(match.getLevel() > order)) {
+				match = null;
+			}
 		}
 
-		double letterNGramProbability = (matches / (lastRowBegin - order - 1));
+		double letterNGramProbability = (matches / (double) (lastRowBegin - order - 1));
 
 		if (letterNGramProbability < 0.0) {
 			letterNGramProbability = 0.0;
@@ -302,8 +320,26 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		this.frequencyWeight = frequencyWeight;
 	}
 
+	/**
+	 * @param minimumProbability
+	 *            the minimumProbability to set
+	 */
+	@Required
+	public void setMinimumProbability(double minimumProbability) {
+		this.minimumProbability = minimumProbability;
+	}
+
+	/**
+	 * @param minimumOrder
+	 *            the minimumOrder to set
+	 */
+	@Required
+	public void setMinimumOrder(int minimumOrder) {
+		this.minimumOrder = minimumOrder;
+	}
+
 	@Override
 	public String getDisplayName() {
-		return "Markov And N-Gram";
+		return "Generative Markov And N-Gram";
 	}
 }
