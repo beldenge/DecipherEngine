@@ -29,6 +29,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="fitnessComparator" ref="ascendingFitnessComparator" />
 		<property name="chromosomePrinter" ref="cipherKeyCorpusChromosomePrinter" />
 		<property name="maxToPrint" value="${max.individuals.to.print}" />
+		<property name="majorFitnessEvaluator" ref="constrainedMarkovModelFitnessEvaluator" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.population.LatticePopulation" id="latticePopulation">
@@ -53,6 +54,8 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 		<property name="elitism" value="${genetic.algorithm.elitism}" />
 		<property name="persistStatistics" value="${persist.statistics}" />
+		<property name="majorEvaluationPercentage" value="${major.evaluation.percentage}" />
+		<property name="majorEvaluationStepSize" value="${major.evaluation.step.size}" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.algorithms.LatticeGeneticAlgorithm" id="latticeGeneticAlgorithm">
@@ -64,6 +67,8 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="generationsToSkip" value="${fitness.ancestry.min}" />
 		<property name="generationsToKeep" value="${fitness.ancestry.max}" />
 		<property name="persistStatistics" value="${persist.statistics}" />
+		<property name="majorEvaluationPercentage" value="${major.evaluation.percentage}" />
+		<property name="majorEvaluationStepSize" value="${major.evaluation.step.size}" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">

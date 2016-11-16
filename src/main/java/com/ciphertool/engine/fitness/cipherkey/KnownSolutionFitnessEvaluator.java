@@ -111,8 +111,7 @@ public class KnownSolutionFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
-		double proximityToKnownSolution = (total / (double) ((CipherKeyChromosome) chromosome).getGenes().size())
-				* 100.0;
+		double proximityToKnownSolution = (total / (double) ((CipherKeyChromosome) chromosome).getGenes().size());
 
 		if (log.isDebugEnabled()) {
 			log.debug("Solution " + ((CipherKeyChromosome) chromosome).getId() + " has a confidence level of: "
