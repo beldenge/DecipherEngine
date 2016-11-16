@@ -241,7 +241,7 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 
 	@Override
 	public String print(Chromosome chromosome) {
-		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 
 		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
 				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
@@ -255,11 +255,7 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
-				if (!matchMap.containsKey(i)) {
-					matchMap.put(i, new ArrayList<Match>());
-				}
-
-				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
+				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
@@ -271,9 +267,7 @@ public class CipherKeyCorpusChromosomePrinter implements ChromosomePrinter {
 					break;
 				}
 
-				for (Match match : matchMap.get(beginPos)) {
-					rootNodes.add(new MatchNode(match));
-				}
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 

@@ -24,12 +24,12 @@ import java.util.Map;
 
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
+import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class WordGraphUtils {
-
 	public static void populateMap(IndexNode currentNode, String wordPart) {
 		Character firstLetter = wordPart.charAt(0);
 
@@ -49,7 +49,7 @@ public class WordGraphUtils {
 	}
 
 	public static String findLongestWordMatch(IndexNode node, int index, String solutionString, String longestMatch) {
-		if (index >= solutionString.length()) {
+		if (node == null || index >= solutionString.length()) {
 			return longestMatch;
 		}
 
@@ -59,34 +59,19 @@ public class WordGraphUtils {
 			longestMatch = solutionString.substring(0, index);
 		}
 
-		if (node.containsChild(currentChar)) {
-			return findLongestWordMatch(node.getChild(currentChar), ++index, solutionString, longestMatch);
-		} else {
-			return longestMatch;
-		}
+		return findLongestWordMatch(node.getChild(currentChar), ++index, solutionString, longestMatch);
 	}
 
-	public static void findOverlappingChildren(int beginPos, int endPos, Map<Integer, List<Match>> matchMap, MatchNode currentNode) {
-		int i;
+	public static void findOverlappingChildren(int beginPos, int endPos, Map<Integer, Match> matchMap, MatchNode currentNode) {
 		MatchNode newNode;
-		for (i = beginPos; i < endPos; i++) {
+
+		for (int i = beginPos; i < endPos; i++) {
 			if (i <= currentNode.getSelf().getEndPos()) {
-				continue;
+				i = currentNode.getSelf().getEndPos() + 1;
 			}
 
 			if (matchMap.containsKey(i)) {
-				if (nonOverlapping(i, currentNode.getChildren())) {
-					break;
-				}
-
-				Match bestMatch = null;
-				for (Match match : matchMap.get(i)) {
-					if (bestMatch == null || match.getWord().length() > bestMatch.getWord().length()) {
-						bestMatch = match;
-					}
-				}
-
-				newNode = new MatchNode(bestMatch);
+				newNode = new MatchNode(matchMap.get(i));
 				currentNode.addChild(newNode);
 				currentNode = newNode;
 			}
@@ -112,10 +97,9 @@ public class WordGraphUtils {
 		}
 
 		CipherKeyGene nextPlaintext = null;
-		int actualSize = ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().size();
 
-		for (int i = 0; i < actualSize; i++) {
-			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters().get(i).getValue());
+		for (Ciphertext ciphertext : ((CipherKeyChromosome) chromosome).getCipher().getCiphertextCharacters()) {
+			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(ciphertext.getValue());
 
 			sb.append(nextPlaintext.getValue());
 		}

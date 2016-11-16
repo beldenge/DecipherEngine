@@ -73,18 +73,15 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome);
 
-		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 
 		for (int i = 0; i < lastRowBegin; i++) {
 			for (Word word : topWords) {
 				if (word.getWord().length() >= minWordLength && lastRowBegin >= i + word.getWord().length()
 						&& word.getWord().toLowerCase().equals(currentSolutionString.substring(i, i
 								+ word.getWord().length()))) {
-					if (!matchMap.containsKey(i)) {
-						matchMap.put(i, new ArrayList<Match>());
-					}
 
-					matchMap.get(i).add(new Match(i, i + word.getWord().length() - 1, word.getWord()));
+					matchMap.put(i, new Match(i, i + word.getWord().length() - 1, word.getWord()));
 				}
 			}
 		}
@@ -97,9 +94,7 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 					break;
 				}
 
-				for (Match match : matchMap.get(beginPos)) {
-					rootNodes.add(new MatchNode(match));
-				}
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 

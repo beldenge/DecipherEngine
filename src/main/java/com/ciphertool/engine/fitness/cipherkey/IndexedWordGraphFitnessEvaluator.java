@@ -53,34 +53,38 @@ public class IndexedWordGraphFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
-
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
 		String longestMatch;
+
+		/*
+		 * Find the longest match at each indice. This helps to prevent short matches from precluding longer subsequent
+		 * matches from being found.
+		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
-				if (!matchMap.containsKey(i)) {
-					matchMap.put(i, new ArrayList<Match>());
-				}
-
-				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
+				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
 		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
-		int beginPos;
-		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
+
+		/*
+		 * Find all the starting matches (first match from the beginning of the solution string) which overlap with one
+		 * another. These are the candidate root matches. This must be done in order, hence why we cannot iterate over
+		 * the Map's entry set.
+		 */
+		for (int beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
 				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
+					// Fail fast -- there are no candidates beyond this point
 					break;
 				}
 
-				for (Match match : matchMap.get(beginPos)) {
-					rootNodes.add(new MatchNode(match));
-				}
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 

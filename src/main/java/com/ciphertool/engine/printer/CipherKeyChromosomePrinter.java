@@ -27,21 +27,21 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.ciphertool.engine.common.WordGraphUtils;
+import com.ciphertool.engine.dao.TopWordsFacade;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
-import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
 
 public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 	protected TopWordsFacade topWordsFacade;
 
 	@Override
 	public String print(Chromosome chromosome) {
-		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 
 		int lastRowBegin = (((CipherKeyChromosome) chromosome).getCipher().getColumns()
 				* (((CipherKeyChromosome) chromosome).getCipher().getRows() - 1));
@@ -57,11 +57,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
-				if (!matchMap.containsKey(i)) {
-					matchMap.put(i, new ArrayList<Match>());
-				}
-
-				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
+				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
@@ -73,9 +69,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 					break;
 				}
 
-				for (Match match : matchMap.get(beginPos)) {
-					rootNodes.add(new MatchNode(match));
-				}
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 

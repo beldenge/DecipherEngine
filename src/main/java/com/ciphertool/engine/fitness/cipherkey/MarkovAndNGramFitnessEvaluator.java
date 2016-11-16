@@ -358,36 +358,45 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluateNGram(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>(currentSolutionString.length());
-
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
 		String longestMatch;
+
+		/*
+		 * Find the longest match at each indice. This helps to prevent short matches from precluding longer subsequent
+		 * matches from being found.
+		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
 			if (longestMatch != null) {
-				if (!matchMap.containsKey(i)) {
-					matchMap.put(i, new ArrayList<Match>());
-				}
-
-				matchMap.get(i).add(new Match(i, i + longestMatch.length() - 1, longestMatch));
+				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
 			}
 		}
 
 		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
-		int beginPos;
-		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
+
+		/*
+		 * Find all the starting matches (first match from the beginning of the solution string) which overlap with one
+		 * another. These are the candidate root matches. This must be done in order, hence why we cannot iterate over
+		 * the Map's entry set.
+		 */
+		for (int beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
 				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
+					// Fail fast -- there are no candidates beyond this point
 					break;
 				}
 
-				for (Match match : matchMap.get(beginPos)) {
-					rootNodes.add(new MatchNode(match));
-				}
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 
 		List<String> branches = new ArrayList<String>();
+
+		/*
+		 * Beginning with each candidate root node, find all possible branches of overlapping matches from the initial
+		 * map of matches.
+		 */
 		for (MatchNode node : rootNodes) {
 			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
 
@@ -395,16 +404,13 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		}
 
 		double score;
-		double highestScore = 0;
+		double highestScore = 0.0;
 
 		String bestBranch = "";
 
+		// Find the longest branch by number of characters. Ties are skipped.
 		for (String branch : branches) {
-			score = 0;
-
-			for (String word : branch.split(", ")) {
-				score += word.length();
-			}
+			score = branch.replaceAll(", ", "").length();
 
 			if (score > highestScore) {
 				highestScore = score;
@@ -416,11 +422,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		if (bestBranch.length() > currentSolutionString.length()) {
-			return 1.0;
-		}
-
-		return (double) bestBranch.length() / (double) currentSolutionString.length();
+		return (double) highestScore / (double) currentSolutionString.length();
 	}
 
 	@Override
