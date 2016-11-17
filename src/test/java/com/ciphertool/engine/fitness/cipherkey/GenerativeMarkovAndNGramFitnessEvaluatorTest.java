@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -113,7 +111,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		solution.setCipher(zodiac408);
 	}
 
-	@BeforeClass
+	// @BeforeClass
 	public static void setUp() throws InterruptedException, ExecutionException {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
@@ -206,7 +204,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		fitnessEvaluator.init();
 	}
 
-	@Test
+	// @Test
 	public void testEvaluate() {
 		log.info("fitness: " + fitnessEvaluator.evaluate(solution));
 	}
