@@ -436,7 +436,11 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 			}
 		}
 
-		int length = root.printBranches().get(0).replaceAll(", ", "").length();
+		int length = 0;
+
+		if (root != null) {
+			length = root.printBranches().get(0).replaceAll(", ", "").length();
+		}
 
 		double wordNGramProbability = (double) length / (double) currentSolutionString.length();
 
