@@ -89,7 +89,7 @@ public class WordGraphUtils {
 	}
 
 	public static String getSolutionAsString(CipherKeyChromosome chromosome) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		if (null == ((CipherKeyChromosome) chromosome).getCipher()) {
 			throw new IllegalStateException(

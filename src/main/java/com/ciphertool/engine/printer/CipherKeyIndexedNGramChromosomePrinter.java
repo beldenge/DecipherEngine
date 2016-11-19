@@ -98,7 +98,7 @@ public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter
 			}
 		}
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		sb.append("Solution [id=" + chromosome.getId() + ", cipherId="
 				+ ((CipherKeyChromosome) chromosome).getCipher().getId() + ", fitness="

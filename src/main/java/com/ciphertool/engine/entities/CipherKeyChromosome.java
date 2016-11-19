@@ -358,7 +358,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
 				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren=" + numberOfChildren
 				+ ", evaluationNeeded=" + evaluationNeeded + "]\n");
