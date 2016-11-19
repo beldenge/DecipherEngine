@@ -36,8 +36,8 @@ import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessEvaluator {
 	private static final int				GRACE_WINDOW_SIZE		= 1;
@@ -117,14 +117,14 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		double matches = 0.0;
-		KGramIndexNode match = null;
+		NGramIndexNode match = null;
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
 			if (match != null) {
-				match = match.getChild(currentSolutionString.charAt(i + order));
+				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			}
 
 			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
+				match = model.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -132,15 +132,15 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			}
 
 			if (match.getLevel() >= minimumOrder) {
-				matches += (double) match.getLevel() / (double) (order + 1);
+				matches += (double) match.getLevel() / (double) order;
 			}
 
-			if (!(match.getLevel() > order)) {
+			if (match.getLevel() != order) {
 				match = null;
 			}
 		}
 
-		double kGramProbability = (matches / ((lastRowBegin - order - 1) / sampleStepSize));
+		double kGramProbability = (matches / ((lastRowBegin - order) / sampleStepSize));
 
 		if (kGramProbability < 0.0) {
 			kGramProbability = 0.0;

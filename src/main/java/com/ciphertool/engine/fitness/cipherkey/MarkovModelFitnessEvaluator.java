@@ -26,8 +26,8 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher	cipher;
@@ -43,12 +43,12 @@ public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		KGramIndexNode match = null;
+		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
-				match = match.getChild(currentSolutionString.charAt(i + order));
+				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = model.find(currentSolutionString.substring(i, i + order + 1));
+				match = model.find(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -58,7 +58,7 @@ public class MarkovModelFitnessEvaluator implements FitnessEvaluator {
 			matches += 1.0;
 		}
 
-		return (matches / (lastRowBegin - order - 1));
+		return (matches / (lastRowBegin - order));
 	}
 
 	@Override

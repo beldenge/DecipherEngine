@@ -30,8 +30,8 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected static Logger	log	= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluator.class);
@@ -61,14 +61,14 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		KGramIndexNode match = null;
+		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
-				match = match.getChild(currentSolutionString.charAt(i + order));
+				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			}
 
 			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order + 1));
+				match = model.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -76,15 +76,15 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			if (match.getLevel() >= minimumOrder) {
-				matches += (double) match.getLevel() / (double) (order + 1);
+				matches += (double) match.getLevel() / (double) order;
 			}
 
-			if (!(match.getLevel() > order)) {
+			if (match.getLevel() != order) {
 				match = null;
 			}
 		}
 
-		return (matches / (lastRowBegin - order - 1));
+		return (matches / (lastRowBegin - order));
 	}
 
 	@Override

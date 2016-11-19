@@ -40,8 +40,8 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.markov.KGramIndexNode;
 import com.ciphertool.sherlock.markov.MarkovModel;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.IndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
@@ -331,12 +331,12 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		KGramIndexNode match = null;
+		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
-				match = match.getChild(currentSolutionString.charAt(i + order));
+				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = model.find(currentSolutionString.substring(i, i + order + 1));
+				match = model.find(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -346,7 +346,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			matches += 1.0;
 		}
 
-		double letterNGramProbability = (matches / (lastRowBegin - order - 1));
+		double letterNGramProbability = (matches / (lastRowBegin - order));
 
 		if (letterNGramProbability < 0.0) {
 			letterNGramProbability = 0.0;
