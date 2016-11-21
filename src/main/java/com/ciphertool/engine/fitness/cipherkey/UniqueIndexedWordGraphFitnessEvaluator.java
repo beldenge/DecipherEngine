@@ -32,7 +32,7 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -51,7 +51,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWords();
+		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWords();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);

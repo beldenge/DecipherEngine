@@ -34,7 +34,7 @@ import com.ciphertool.sherlock.dao.NGramListDao;
 import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.NGram;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 
 public class TopWordsFacade {
 	private Logger				log							= LoggerFactory.getLogger(getClass());
@@ -48,8 +48,8 @@ public class TopWordsFacade {
 	private List<Word>			topWords					= new ArrayList<Word>();
 	private List<Word>			topWordsAndNGrams			= new ArrayList<Word>();
 
-	private IndexNode			rootNodeWithWordsAndNGrams	= new IndexNode();
-	private IndexNode			rootNodeWordsOnly			= new IndexNode();
+	private WordNGramIndexNode			rootNodeWithWordsAndNGrams	= new WordNGramIndexNode();
+	private WordNGramIndexNode			rootNodeWordsOnly			= new WordNGramIndexNode();
 
 	@PostConstruct
 	public void init() {
@@ -155,14 +155,14 @@ public class TopWordsFacade {
 	/**
 	 * @return the root node of the combined word and n-gram index
 	 */
-	public IndexNode getIndexedWordsAndNGrams() {
+	public WordNGramIndexNode getIndexedWordsAndNGrams() {
 		return rootNodeWithWordsAndNGrams;
 	}
 
 	/**
 	 * @return the root node of the word index
 	 */
-	public IndexNode getIndexedWords() {
+	public WordNGramIndexNode getIndexedWords() {
 		return rootNodeWordsOnly;
 	}
 }

@@ -36,7 +36,7 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -49,7 +49,7 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	protected TopWordsFacade	topWordsFacade;
 
 	int							lastRowBegin;
-	IndexNode					rootNode;
+	WordNGramIndexNode					rootNode;
 
 	static {
 		topWords.add(new Word("i", null));

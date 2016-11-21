@@ -33,7 +33,7 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -228,7 +228,7 @@ public class AdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
-	private IndexNode rootNode = new IndexNode();
+	private WordNGramIndexNode rootNode = new WordNGramIndexNode();
 
 	@PostConstruct
 	public void init() {

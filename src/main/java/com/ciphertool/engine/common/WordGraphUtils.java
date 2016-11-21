@@ -25,30 +25,30 @@ import java.util.Map;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.entities.Ciphertext;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class WordGraphUtils {
-	public static void populateMap(IndexNode currentNode, String wordPart) {
+	public static void populateMap(WordNGramIndexNode currentNode, String wordPart) {
 		Character firstLetter = wordPart.charAt(0);
 
 		if (wordPart.length() == 1) {
 			if (currentNode.containsChild(firstLetter)) {
 				currentNode.getChild(firstLetter).setIsTerminal(true);
 			} else {
-				currentNode.putChild(firstLetter, new IndexNode(true));
+				currentNode.putChild(firstLetter, new WordNGramIndexNode(true));
 			}
 		} else {
 			if (!currentNode.containsChild(firstLetter)) {
-				currentNode.putChild(firstLetter, new IndexNode());
+				currentNode.putChild(firstLetter, new WordNGramIndexNode());
 			}
 
 			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1));
 		}
 	}
 
-	public static String findLongestWordMatch(IndexNode node, int index, String solutionString, String longestMatch) {
+	public static String findLongestWordMatch(WordNGramIndexNode node, int index, String solutionString, String longestMatch) {
 		if (node == null || index >= solutionString.length()) {
 			return longestMatch;
 		}

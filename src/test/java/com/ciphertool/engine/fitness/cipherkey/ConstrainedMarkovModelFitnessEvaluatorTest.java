@@ -31,7 +31,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
+import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
@@ -39,7 +39,7 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 
 	private static final int								ORDER		= 5;
 
-	private static MarkovImporterImpl						importer;
+	private static LetterNGramMarkovImporter						importer;
 	private static MarkovModel								markovModel;
 
 	private static ConstrainedMarkovModelFitnessEvaluator	fitnessEvaluator;
@@ -119,7 +119,7 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 		markovModel.setOrder(ORDER);
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
-		importer = new MarkovImporterImpl();
+		importer = new LetterNGramMarkovImporter();
 		importer.setModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);

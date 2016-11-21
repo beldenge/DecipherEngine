@@ -36,7 +36,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.NGramIndexNode;
+import com.ciphertool.sherlock.markov.LetterNGramIndexNode;
 
 public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	private static final List<Character>	LOWERCASE_LETTERS		= Arrays.asList(new Character[] { 'a', 'b', 'c',
@@ -113,7 +113,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		NGramIndexNode match = null;
+		LetterNGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));

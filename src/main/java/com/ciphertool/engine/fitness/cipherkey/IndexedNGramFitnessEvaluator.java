@@ -36,7 +36,7 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -48,7 +48,7 @@ public class IndexedNGramFitnessEvaluator implements FitnessEvaluator {
 	protected TopWordsFacade	topWordsFacade;
 
 	private int					lastRowBegin;
-	private IndexNode			rootNode;
+	private WordNGramIndexNode			rootNode;
 
 	@PostConstruct
 	public void init() {

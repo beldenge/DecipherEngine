@@ -41,8 +41,8 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.NGramIndexNode;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
+import com.ciphertool.sherlock.markov.LetterNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -60,7 +60,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	protected TopWordsFacade				topWordsFacade;
 
 	private int								lastRowBegin;
-	private IndexNode						rootNode;
+	private WordNGramIndexNode						rootNode;
 	private double							frequencyWeight;
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
@@ -331,7 +331,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		NGramIndexNode match = null;
+		LetterNGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));

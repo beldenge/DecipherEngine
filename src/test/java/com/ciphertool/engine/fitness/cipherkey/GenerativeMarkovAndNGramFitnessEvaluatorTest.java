@@ -38,14 +38,14 @@ import com.ciphertool.sherlock.dao.NGramDao;
 import com.ciphertool.sherlock.dao.UniqueNGramListDao;
 import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.dao.WordDao;
-import com.ciphertool.sherlock.etl.importers.MarkovImporterImpl;
+import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.mongodb.MongoClient;
 
 public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger									log			= LoggerFactory.getLogger(GenerativeMarkovAndNGramFitnessEvaluatorTest.class);
 
-	private static MarkovImporterImpl						importer;
+	private static LetterNGramMarkovImporter						importer;
 	private static MarkovModel								markovModel;
 
 	private static GenerativeMarkovAndNGramFitnessEvaluator	fitnessEvaluator;
@@ -125,7 +125,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		markovModel.setOrder(5);
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
-		importer = new MarkovImporterImpl();
+		importer = new LetterNGramMarkovImporter();
 		importer.setModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);

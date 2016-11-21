@@ -32,7 +32,7 @@ import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.sherlock.wordgraph.IndexNode;
+import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -51,7 +51,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 		String currentSolutionString = fullSolutionString.substring(0, lastRowBegin);
 
 		String longestMatch;
-		IndexNode rootNode = topWordsFacade.getIndexedWords();
+		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWords();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
