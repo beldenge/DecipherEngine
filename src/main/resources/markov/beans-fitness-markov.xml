@@ -15,21 +15,21 @@ You should have received a copy of the GNU General Public License along with Dec
 	profile="markov">
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.MarkovModelFitnessEvaluator" id="markovModelFitnessEvaluator">
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.HockeyStickMarkovModelFitnessEvaluator" id="hockeyStickMarkovModelFitnessEvaluator">
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.TieredMarkovModelFitnessEvaluator" id="tieredMarkovModelFitnessEvaluator">
 		<property name="minimumOrder" value="${markov.letter.min.order}" />
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.SamplingMarkovModelFitnessEvaluator" id="samplingMarkovModelFitnessEvaluator">
 		<property name="sampleStepSize" value="${markov.model.sample.step.size}" />
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.ConstrainedMarkovModelFitnessEvaluator" id="constrainedMarkovModelFitnessEvaluator">
@@ -63,9 +63,9 @@ You should have received a copy of the GNU General Public License along with Dec
 				<entry key="z" value="${language.english.frequency.z}" />
 			</map>
 		</property>
-		<property name="kGramWeight" value="${markov.kGram.weight}" />
+		<property name="nGramWeight" value="${markov.nGram.weight}" />
 		<property name="frequencyWeight" value="${markov.frequency.weight}" />
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.ConstrainedTieredSamplingMarkovFitnessEvaluator" id="constrainedTieredSamplingMarkovFitnessEvaluator">
@@ -99,17 +99,17 @@ You should have received a copy of the GNU General Public License along with Dec
 				<entry key="z" value="${language.english.frequency.z}" />
 			</map>
 		</property>
-		<property name="kGramWeight" value="${markov.kGram.weight}" />
+		<property name="nGramWeight" value="${markov.nGram.weight}" />
 		<property name="frequencyWeight" value="${markov.frequency.weight}" />
-		<property name="model" ref="letterMarkovModel" />
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 		<property name="minimumOrder" value="${markov.letter.min.order}" />
 		<property name="sampleStepSize" value="${markov.model.sample.step.size}" />
 	</bean>
 
 	<beans profile="dictionary">
 		<bean class="com.ciphertool.engine.fitness.cipherkey.MarkovAndNGramFitnessEvaluator" id="markovAndNGramFitnessEvaluator">
-			<property name="model" ref="letterMarkovModel" />
-			<property name="topWordsFacade" ref="topWordsFacade" />
+			<property name="letterMarkovModel" ref="letterMarkovModel" />
+			<property name="wordMarkovModel" ref="wordMarkovModel" />
 			<property name="expectedLetterFrequencies">
 				<map>
 					<entry key="a" value="${language.english.frequency.a}" />
@@ -146,8 +146,8 @@ You should have received a copy of the GNU General Public License along with Dec
 		</bean>
 
 		<bean class="com.ciphertool.engine.fitness.cipherkey.GenerativeMarkovAndNGramFitnessEvaluator" id="generativeMarkovAndNGramFitnessEvaluator">
-			<property name="model" ref="letterMarkovModel" />
-			<property name="topWordsFacade" ref="topWordsFacade" />
+			<property name="letterMarkovModel" ref="letterMarkovModel" />
+			<property name="wordMarkovModel" ref="wordMarkovModel" />
 			<property name="expectedLetterFrequencies">
 				<map>
 					<entry key="a" value="${language.english.frequency.a}" />

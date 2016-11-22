@@ -30,13 +30,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.markov.WordNGramIndexNode;
+import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -46,10 +45,9 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	protected Cipher			cipher;
 	private static List<Word>	topWords	= new ArrayList<Word>();
 
-	protected TopWordsFacade	topWordsFacade;
+	private MarkovModel			wordMarkovModel;
 
 	int							lastRowBegin;
-	WordNGramIndexNode					rootNode;
 
 	static {
 		topWords.add(new Word("i", null));
@@ -236,10 +234,8 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	@PostConstruct
 	public void init() {
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
+			wordMarkovModel.addTransition(word.getWord(), false);
 		}
-
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 	}
 
 	@Override
@@ -254,7 +250,7 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -398,12 +394,12 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	@Override

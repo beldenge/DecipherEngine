@@ -36,7 +36,7 @@ public class MarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 
 	private static final int					ORDER		= 7;
 
-	private static LetterNGramMarkovImporter			importer;
+	private static LetterNGramMarkovImporter	importer;
 	private static MarkovModel					markovModel;
 
 	private static MarkovModelFitnessEvaluator	fitnessEvaluator;
@@ -117,7 +117,7 @@ public class MarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		importer = new LetterNGramMarkovImporter();
-		importer.setModel(markovModel);
+		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);
 		importer.setTaskExecutor(taskExecutorSpy);
@@ -125,7 +125,7 @@ public class MarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 
 		fitnessEvaluator = new MarkovModelFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
-		fitnessEvaluator.setModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(markovModel);
 	}
 
 	// @Test

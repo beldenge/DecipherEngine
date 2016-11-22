@@ -39,7 +39,7 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 
 	private static final int								ORDER		= 5;
 
-	private static LetterNGramMarkovImporter						importer;
+	private static LetterNGramMarkovImporter				importer;
 	private static MarkovModel								markovModel;
 
 	private static ConstrainedMarkovModelFitnessEvaluator	fitnessEvaluator;
@@ -120,14 +120,14 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		importer = new LetterNGramMarkovImporter();
-		importer.setModel(markovModel);
+		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);
 		importer.setTaskExecutor(taskExecutorSpy);
 		importer.importCorpus();
 
 		fitnessEvaluator = new ConstrainedMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(markovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);
 		frequenciesToSet.put('a', 0.0812);
@@ -160,7 +160,7 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 		fitnessEvaluator.setExpectedLetterFrequencies(frequenciesToSet);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 		fitnessEvaluator.setFrequencyWeight(0.5);
-		fitnessEvaluator.setkGramWeight(0.5);
+		fitnessEvaluator.setnGramWeight(0.5);
 		fitnessEvaluator.init();
 	}
 

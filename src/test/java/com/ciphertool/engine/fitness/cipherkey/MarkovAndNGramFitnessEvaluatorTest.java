@@ -30,21 +30,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.dao.NGramDao;
-import com.ciphertool.sherlock.dao.UniqueNGramListDao;
 import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
+import com.ciphertool.sherlock.etl.importers.WordNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.mongodb.MongoClient;
 
 public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger							log			= LoggerFactory.getLogger(MarkovAndNGramFitnessEvaluatorTest.class);
 
-	private static LetterNGramMarkovImporter		importer;
-	private static MarkovModel						markovModel;
+	private static LetterNGramMarkovImporter		letterNGramMarkovImporter;
+	private static WordNGramMarkovImporter			wordNGramMarkovImporter;
+	private static MarkovModel						letterMarkovModel;
+	private static MarkovModel						wordMarkovModel;
 
 	private static MarkovAndNGramFitnessEvaluator	fitnessEvaluator;
 
@@ -119,40 +120,38 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
 		taskExecutorSpy.initialize();
 
-		markovModel = new MarkovModel();
-		markovModel.setOrder(5);
-		markovModel.setTaskExecutor(taskExecutorSpy);
+		letterMarkovModel = new MarkovModel();
+		letterMarkovModel.setOrder(5);
+		letterMarkovModel.setTaskExecutor(taskExecutorSpy);
 
-		importer = new LetterNGramMarkovImporter();
-		importer.setModel(markovModel);
-		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
-		importer.setMinCount(1);
-		importer.setTaskExecutor(taskExecutorSpy);
-		importer.importCorpus();
+		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
+		letterNGramMarkovImporter.setLetterMarkovModel(letterMarkovModel);
+		letterNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		letterNGramMarkovImporter.setMinCount(1);
+		letterNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
+		letterNGramMarkovImporter.importCorpus();
+
+		wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(3);
+		wordMarkovModel.setTaskExecutor(taskExecutorSpy);
+
+		wordNGramMarkovImporter = new WordNGramMarkovImporter();
+		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
+		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		wordNGramMarkovImporter.setMinCount(1);
+		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
+		wordNGramMarkovImporter.importCorpus();
 
 		fitnessEvaluator = new MarkovAndNGramFitnessEvaluator();
-		fitnessEvaluator.setModel(markovModel);
-
-		TopWordsFacade topWordsFacade = new TopWordsFacade();
-		topWordsFacade.setMinWordLength(3);
+		fitnessEvaluator.setLetterMarkovModel(letterMarkovModel);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
 		MongoTemplate mongoTemplate = new MongoTemplate(new MongoClient("localhost", 27017), "DecipherEngine");
 
 		NGramDao nGramDao = new NGramDao();
 		nGramDao.setMongoTemplate(mongoTemplate);
 
-		UniqueNGramListDao nGramListDao = new UniqueNGramListDao();
-		nGramListDao.setnGramDao(nGramDao);
-		nGramListDao.setTopFiveGrams(900000);
-		nGramListDao.setTopFourGrams(675000);
-		nGramListDao.setTopThreeGrams(650000);
-		nGramListDao.setTopTwoGrams(900000);
-		nGramListDao.init();
-		topWordsFacade.setnGramListDao(nGramListDao);
-
-		topWordsFacade.init();
-
-		fitnessEvaluator.setTopWordsFacade(topWordsFacade);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);
 		frequenciesToSet.put('a', 0.0812);

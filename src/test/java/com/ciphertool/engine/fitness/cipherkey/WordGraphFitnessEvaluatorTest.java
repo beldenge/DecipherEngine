@@ -27,11 +27,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger						log			= LoggerFactory.getLogger(WordGraphFitnessEvaluatorTest.class);
@@ -612,26 +612,28 @@ public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 
 	@Test
 	public void testEvaluate_top1000() {
-		TopWordsFacade topWordsFacade = new TopWordsFacade();
+		MarkovModel wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(3);
 
 		for (int i = 0; i < 1000; i++) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(wordList.get(i));
+			wordMarkovModel.addTransition(wordList.get(i).getWord().toLowerCase(), false);
 		}
 
-		fitnessEvaluator.setTopWordsFacade(topWordsFacade);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
 		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	@Test
 	public void testEvaluate_top5000() {
-		TopWordsFacade topWordsFacade = new TopWordsFacade();
+		MarkovModel wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(3);
 
 		for (int i = 0; i < 5000; i++) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(wordList.get(i));
+			wordMarkovModel.addTransition(wordList.get(i).getWord().toLowerCase(), false);
 		}
 
-		fitnessEvaluator.setTopWordsFacade(topWordsFacade);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
 		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}

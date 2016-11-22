@@ -44,12 +44,12 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			'y', 'z' });
 	private static final int				GRACE_WINDOW_SIZE		= 1;
 
-	private double							kGramWeight;
+	private double							nGramWeight;
 	private double							frequencyWeight;
 
 	protected Cipher						cipher;
 
-	private MarkovModel						model;
+	private MarkovModel						letterMarkovModel;
 
 	private int								lastRowBegin;
 
@@ -59,10 +59,10 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 
 	@PostConstruct
 	public void init() {
-		if (kGramWeight + frequencyWeight != 1.0) {
+		if (nGramWeight + frequencyWeight != 1.0) {
 			throw new IllegalArgumentException(
-					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + kGramWeight
-							+ " and frequencyWeight=" + frequencyWeight + " sums to " + (kGramWeight
+					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + nGramWeight
+							+ " and frequencyWeight=" + frequencyWeight + " sums to " + (nGramWeight
 									+ frequencyWeight));
 		}
 	}
@@ -110,7 +110,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = model.getOrder();
+		int order = letterMarkovModel.getOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -118,7 +118,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = model.find(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.find(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -128,13 +128,13 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			matches += 1.0;
 		}
 
-		double kGramProbability = (matches / (lastRowBegin - order));
+		double nGramProbability = (matches / (lastRowBegin - order));
 
-		if (kGramProbability < 0.0) {
-			kGramProbability = 0.0;
+		if (nGramProbability < 0.0) {
+			nGramProbability = 0.0;
 		}
 
-		return (kGramProbability * kGramWeight) + (frequencyProbability * frequencyWeight);
+		return (nGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight);
 	}
 
 	@Override
@@ -151,12 +151,12 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	}
 
 	/**
-	 * @param model
-	 *            the model to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setModel(MarkovModel model) {
-		this.model = model;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**
@@ -169,12 +169,12 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	}
 
 	/**
-	 * @param kGramWeight
-	 *            the kGramWeight to set
+	 * @param nGramWeight
+	 *            the nGramWeight to set
 	 */
 	@Required
-	public void setkGramWeight(double kGramWeight) {
-		this.kGramWeight = kGramWeight;
+	public void setnGramWeight(double nGramWeight) {
+		this.nGramWeight = nGramWeight;
 	}
 
 	/**

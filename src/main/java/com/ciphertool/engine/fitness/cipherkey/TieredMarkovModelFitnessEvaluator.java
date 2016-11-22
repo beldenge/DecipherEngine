@@ -38,19 +38,19 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 	protected Cipher		cipher;
 
-	private MarkovModel		model;
+	private MarkovModel		letterMarkovModel;
 
 	private int				lastRowBegin;
 	private int				minimumOrder;
 
 	@PostConstruct
 	public void init() {
-		if (this.minimumOrder > this.model.getOrder()) {
+		if (this.minimumOrder > this.letterMarkovModel.getOrder()) {
 			log.warn("Minimum order is set to " + this.minimumOrder
-					+ ", which is greater than the Markov model order of " + this.model.getOrder()
-					+ ".  Reducing minimumOrder to " + this.model.getOrder());
+					+ ", which is greater than the Markov model order of " + this.letterMarkovModel.getOrder()
+					+ ".  Reducing minimumOrder to " + this.letterMarkovModel.getOrder());
 
-			this.minimumOrder = this.model.getOrder();
+			this.minimumOrder = this.letterMarkovModel.getOrder();
 		}
 	}
 
@@ -58,7 +58,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-		int order = model.getOrder();
+		int order = letterMarkovModel.getOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -68,7 +68,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -95,12 +95,12 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param model
-	 *            the model to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setModel(MarkovModel model) {
-		this.model = model;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**

@@ -36,7 +36,7 @@ public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTes
 
 	private static final int							ORDER		= 6;
 
-	private static LetterNGramMarkovImporter					importer;
+	private static LetterNGramMarkovImporter			importer;
 	private static MarkovModel							markovModel;
 
 	private static SamplingMarkovModelFitnessEvaluator	fitnessEvaluator;
@@ -117,7 +117,7 @@ public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTes
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		importer = new LetterNGramMarkovImporter();
-		importer.setModel(markovModel);
+		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(2);
 		importer.setTaskExecutor(taskExecutorSpy);
@@ -126,7 +126,7 @@ public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTes
 		fitnessEvaluator = new SamplingMarkovModelFitnessEvaluator();
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 		fitnessEvaluator.setSampleStepSize(4);
-		fitnessEvaluator.setModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(markovModel);
 	}
 
 	// @Test

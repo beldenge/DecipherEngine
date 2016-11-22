@@ -41,7 +41,7 @@ import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessEvaluator {
 	private static final int				GRACE_WINDOW_SIZE		= 1;
-	private double							kGramWeight;
+	private double							nGramWeight;
 	private double							frequencyWeight;
 	private static final List<Character>	LOWERCASE_LETTERS		= Arrays.asList(new Character[] { 'a', 'b', 'c',
 			'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
@@ -49,7 +49,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 	protected Cipher						cipher;
 
-	private MarkovModel						model;
+	private MarkovModel						letterMarkovModel;
 
 	private int								lastRowBegin;
 	private int								minimumOrder;
@@ -61,11 +61,11 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 	@PostConstruct
 	public void init() {
-		double weightTotal = (kGramWeight + frequencyWeight);
+		double weightTotal = (nGramWeight + frequencyWeight);
 
 		if (Math.abs(1.0 - weightTotal) > 0.0001) {
 			throw new IllegalArgumentException(
-					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + kGramWeight
+					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + nGramWeight
 							+ " and frequencyWeight=" + frequencyWeight + " sums to " + weightTotal);
 		}
 	}
@@ -113,7 +113,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = model.getOrder();
+		int order = letterMarkovModel.getOrder();
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		double matches = 0.0;
@@ -124,7 +124,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			}
 
 			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -146,7 +146,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			kGramProbability = 0.0;
 		}
 
-		return (kGramProbability * kGramWeight) + (frequencyProbability * frequencyWeight);
+		return (kGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight);
 	}
 
 	@Override
@@ -163,12 +163,12 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 	}
 
 	/**
-	 * @param model
-	 *            the model to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setModel(MarkovModel model) {
-		this.model = model;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**
@@ -181,11 +181,11 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 	}
 
 	/**
-	 * @param kGramWeight
+	 * @param nGramWeight
 	 *            the kGramWeight to set
 	 */
-	public void setkGramWeight(double kGramWeight) {
-		this.kGramWeight = kGramWeight;
+	public void setnGramWeight(double nGramWeight) {
+		this.nGramWeight = nGramWeight;
 	}
 
 	/**

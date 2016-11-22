@@ -24,36 +24,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.WordNGramIndexNode;
+import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class IndexedNGramFitnessEvaluator implements FitnessEvaluator {
-	private Logger				log	= LoggerFactory.getLogger(getClass());
+	private Logger		log	= LoggerFactory.getLogger(getClass());
 
-	protected Cipher			cipher;
+	protected Cipher	cipher;
 
-	protected TopWordsFacade	topWordsFacade;
+	private MarkovModel	wordMarkovModel;
 
-	private int					lastRowBegin;
-	private WordNGramIndexNode			rootNode;
-
-	@PostConstruct
-	public void init() {
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
-	}
+	private int			lastRowBegin;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
@@ -67,7 +58,7 @@ public class IndexedNGramFitnessEvaluator implements FitnessEvaluator {
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -132,12 +123,12 @@ public class IndexedNGramFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	@Override

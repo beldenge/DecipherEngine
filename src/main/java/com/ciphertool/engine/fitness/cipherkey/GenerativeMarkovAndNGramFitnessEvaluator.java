@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
@@ -41,7 +40,6 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
@@ -57,11 +55,10 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 	protected Cipher						cipher;
 
-	private MarkovModel						model;
-	protected TopWordsFacade				topWordsFacade;
+	private MarkovModel						letterMarkovModel;
+	private MarkovModel						wordMarkovModel;
 
 	private int								lastRowBegin;
-	private WordNGramIndexNode						rootNode;
 	private double							frequencyWeight;
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
@@ -257,12 +254,6 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 	@PostConstruct
 	public void init() {
-		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
-		}
-
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
-
 		double weightTotal = (letterNGramWeight + frequencyWeight + wordNGramWeight);
 
 		if (Math.abs(1.0 - weightTotal) > 0.0001) {
@@ -272,12 +263,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 							+ wordNGramWeight + " sums to " + weightTotal);
 		}
 
-		if (this.minimumOrder > this.model.getOrder()) {
+		if (this.minimumOrder > this.letterMarkovModel.getOrder()) {
 			log.warn("Minimum order is set to " + this.minimumOrder
-					+ ", which is greater than the Markov model order of " + this.model.getOrder()
-					+ ".  Reducing minimumOrder to " + this.model.getOrder());
+					+ ", which is greater than the Markov model order of " + this.letterMarkovModel.getOrder()
+					+ ".  Reducing minimumOrder to " + this.letterMarkovModel.getOrder());
 
-			this.minimumOrder = this.model.getOrder();
+			this.minimumOrder = this.letterMarkovModel.getOrder();
 		}
 	}
 
@@ -285,8 +276,8 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	public Double evaluate(Chromosome chromosome) {
 		double total = 0.0;
 		total += (frequencyWeight == 0.0) ? 0.0 : (frequencyWeight * evaluateFrequency(chromosome));
-		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateMarkovModel(chromosome));
-		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateNGram(chromosome));
+		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateLetterNGram(chromosome));
+		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateWordNGram(chromosome));
 
 		return total;
 	}
@@ -334,12 +325,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 		return frequencyProbability;
 	}
 
-	public Double evaluateMarkovModel(Chromosome chromosome) {
+	public Double evaluateLetterNGram(Chromosome chromosome) {
 		CipherKeyChromosome cipherKeyChromosome = (CipherKeyChromosome) chromosome;
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = model.getOrder();
+		int order = letterMarkovModel.getOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -349,7 +340,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 			}
 
 			if (match == null) {
-				match = model.findLongest(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match != null && match.getLevel() >= minimumOrder) {
@@ -374,7 +365,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 		return letterNGramProbability;
 	}
 
-	public Double evaluateNGram(Chromosome chromosome) {
+	public Double evaluateWordNGram(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
@@ -385,7 +376,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -465,21 +456,21 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	}
 
 	/**
-	 * @param model
-	 *            the model to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setModel(MarkovModel model) {
-		this.model = model;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**

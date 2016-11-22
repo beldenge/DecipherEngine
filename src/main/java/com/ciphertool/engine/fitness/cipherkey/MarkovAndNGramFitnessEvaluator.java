@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
@@ -41,7 +40,6 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.WordNGramIndexNode;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
@@ -56,11 +54,10 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 	protected Cipher						cipher;
 
-	private MarkovModel						model;
-	protected TopWordsFacade				topWordsFacade;
+	private MarkovModel						letterMarkovModel;
+	private MarkovModel						wordMarkovModel;
 
 	private int								lastRowBegin;
-	private WordNGramIndexNode						rootNode;
 	private double							frequencyWeight;
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
@@ -255,10 +252,8 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	@PostConstruct
 	public void init() {
 		for (Word word : topWords) {
-			topWordsFacade.addEntryToWordsAndNGramsIndex(word);
+			wordMarkovModel.addTransition(word.getWord(), false);
 		}
-
-		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 
 		double weightTotal = (letterNGramWeight + frequencyWeight + wordNGramWeight);
 
@@ -328,7 +323,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = model.getOrder();
+		int order = letterMarkovModel.getOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -336,7 +331,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = model.find(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.find(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -366,7 +361,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -439,21 +434,21 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param model
-	 *            the model to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setModel(MarkovModel model) {
-		this.model = model;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	/**

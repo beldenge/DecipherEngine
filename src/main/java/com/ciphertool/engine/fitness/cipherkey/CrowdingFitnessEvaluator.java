@@ -27,37 +27,34 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.markov.WordNGramIndexNode;
+import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CrowdingFitnessEvaluator implements FitnessEvaluator {
-	protected Cipher			cipher;
+	protected Cipher	cipher;
 
-	protected TopWordsFacade	topWordsFacade;
+	private MarkovModel	wordMarkovModel;
 
-	private int					minCrowdSize;
-	private double				penaltyFactor;
-	private double				sigma;
+	private int			minCrowdSize;
+	private double		penaltyFactor;
+	private double		sigma;
+	private int			lastRowBegin;
 
 	@Override
 	public Double evaluate(Chromosome chromosome) {
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
-
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
-		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -121,15 +118,17 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
-	 * @param topWordsFacade
-	 *            the topWordsFacade to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setTopWordsFacade(TopWordsFacade topWordsFacade) {
-		this.topWordsFacade = topWordsFacade;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	/**
