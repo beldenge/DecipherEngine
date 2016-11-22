@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.sherlock.dao.NGramListDao;
-import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.NGram;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.WordNGramIndexNode;
@@ -40,24 +39,19 @@ public class TopWordsFacade {
 	private Logger				log							= LoggerFactory.getLogger(getClass());
 
 	private int					minWordLength;
-	private int					top;
 
-	private UniqueWordListDao	wordListDao;
 	private NGramListDao		nGramListDao;
 
 	private List<Word>			topWords					= new ArrayList<Word>();
 	private List<Word>			topWordsAndNGrams			= new ArrayList<Word>();
 
-	private WordNGramIndexNode			rootNodeWithWordsAndNGrams	= new WordNGramIndexNode();
-	private WordNGramIndexNode			rootNodeWordsOnly			= new WordNGramIndexNode();
+	private WordNGramIndexNode	rootNodeWithWordsAndNGrams	= new WordNGramIndexNode();
 
 	@PostConstruct
 	public void init() {
 		long start = System.currentTimeMillis();
 
 		log.info("Beginning indexing of words and n-grams.");
-
-		populateWordsIndex();
 
 		populateWordsAndNGramsIndex();
 
@@ -95,45 +89,6 @@ public class TopWordsFacade {
 		WordGraphUtils.populateMap(rootNodeWithWordsAndNGrams, lowerCaseWord);
 	}
 
-	protected void populateWordsIndex() {
-		topWords = wordListDao.getTopWords(top);
-
-		if (topWords == null || topWords.size() < top) {
-			String message = "Attempted to get top " + top + " words from populated DAO, but only "
-					+ (topWords == null ? 0 : topWords.size()) + " words were available.";
-			log.error(message);
-			throw new IllegalStateException(message);
-		}
-
-		String lowerCaseWord;
-		for (Word word : topWords) {
-			if (word.getWord().length() < minWordLength) {
-				continue;
-			}
-
-			lowerCaseWord = word.getWord().toLowerCase();
-			WordGraphUtils.populateMap(rootNodeWordsOnly, lowerCaseWord);
-		}
-	}
-
-	/**
-	 * @param top
-	 *            the top to set
-	 */
-	@Required
-	public void setTop(int top) {
-		this.top = top;
-	}
-
-	/**
-	 * @param wordListDao
-	 *            the wordListDao to set
-	 */
-	@Required
-	public void setWordListDao(UniqueWordListDao wordListDao) {
-		this.wordListDao = wordListDao;
-	}
-
 	/**
 	 * @param nGramListDao
 	 *            the nGramListDao to set
@@ -157,12 +112,5 @@ public class TopWordsFacade {
 	 */
 	public WordNGramIndexNode getIndexedWordsAndNGrams() {
 		return rootNodeWithWordsAndNGrams;
-	}
-
-	/**
-	 * @return the root node of the word index
-	 */
-	public WordNGramIndexNode getIndexedWords() {
-		return rootNodeWordsOnly;
 	}
 }

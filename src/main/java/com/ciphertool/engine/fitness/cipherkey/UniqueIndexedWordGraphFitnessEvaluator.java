@@ -51,7 +51,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		String longestMatch;
-		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWords();
+		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);

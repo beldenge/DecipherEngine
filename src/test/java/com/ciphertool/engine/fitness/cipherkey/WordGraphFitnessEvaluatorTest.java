@@ -19,36 +19,28 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ciphertool.engine.dao.TopWordsFacade;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
-import com.ciphertool.engine.fitness.cipherkey.WordGraphFitnessEvaluator;
-import com.ciphertool.sherlock.dao.UniqueWordListDao;
 import com.ciphertool.sherlock.entities.Word;
 
 public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger								log			= LoggerFactory.getLogger(WordGraphFitnessEvaluatorTest.class);
+	private static Logger						log			= LoggerFactory.getLogger(WordGraphFitnessEvaluatorTest.class);
 
 	private static WordGraphFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome			solution	= new CipherKeyChromosome();
 
-	private static UniqueWordListDao					mockUniqueWordListDao;
-
-	private static List<Word>							wordList	= new ArrayList<Word>();
+	private static List<Word>					wordList	= new ArrayList<Word>();
 
 	static {
 		String[] wordArray = new String[] { "you", "I", "the", "to", "a", "it", "that", "and", "of", "What", "in", "me",
@@ -616,30 +608,30 @@ public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 		fitnessEvaluator = new WordGraphFitnessEvaluator();
 
 		fitnessEvaluator.setGeneticStructure(zodiac408);
-
-		mockUniqueWordListDao = mock(UniqueWordListDao.class);
-		fitnessEvaluator.setWordListDao(mockUniqueWordListDao);
-	}
-
-	@Before
-	public void resetMocks() {
-		reset(mockUniqueWordListDao);
 	}
 
 	@Test
 	public void testEvaluate_top1000() {
-		fitnessEvaluator.setTop(1000);
-		when(mockUniqueWordListDao.getTopWords(1000)).thenReturn(wordList.subList(0, 1000));
-		fitnessEvaluator.init();
+		TopWordsFacade topWordsFacade = new TopWordsFacade();
 
-		log.info("top1000 fitness: " + fitnessEvaluator.evaluate(solution));
+		for (int i = 0; i < 1000; i++) {
+			topWordsFacade.addEntryToWordsAndNGramsIndex(wordList.get(i));
+		}
+
+		fitnessEvaluator.setTopWordsFacade(topWordsFacade);
+
+		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	@Test
 	public void testEvaluate_top5000() {
-		fitnessEvaluator.setTop(5000);
-		when(mockUniqueWordListDao.getTopWords(5000)).thenReturn(wordList);
-		fitnessEvaluator.init();
+		TopWordsFacade topWordsFacade = new TopWordsFacade();
+
+		for (int i = 0; i < 5000; i++) {
+			topWordsFacade.addEntryToWordsAndNGramsIndex(wordList.get(i));
+		}
+
+		fitnessEvaluator.setTopWordsFacade(topWordsFacade);
 
 		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}

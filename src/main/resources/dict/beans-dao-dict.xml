@@ -30,14 +30,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
-	<bean class="com.ciphertool.sherlock.dao.UniqueWordListDao" id="uniqueWordListDao">
-		<property name="wordDao" ref="wordDao" />
-		<property name="topWords" value="${fitness.graph.words.count}" />
-	</bean>
-
 	<bean class="com.ciphertool.engine.dao.TopWordsFacade" id="topWordsFacade">
-		<property name="top" value="${fitness.graph.words.count}" />
-		<property name="wordListDao" ref="uniqueWordListDao" />
 		<property name="nGramListDao" ref="nGramListDao" />
 		<property name="minWordLength" value="${fitness.min.word.length}" />
 	</bean>

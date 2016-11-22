@@ -36,8 +36,6 @@ import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.dao.NGramDao;
 import com.ciphertool.sherlock.dao.UniqueNGramListDao;
-import com.ciphertool.sherlock.dao.UniqueWordListDao;
-import com.ciphertool.sherlock.dao.WordDao;
 import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.mongodb.MongoClient;
@@ -45,7 +43,7 @@ import com.mongodb.MongoClient;
 public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger									log			= LoggerFactory.getLogger(GenerativeMarkovAndNGramFitnessEvaluatorTest.class);
 
-	private static LetterNGramMarkovImporter						importer;
+	private static LetterNGramMarkovImporter				importer;
 	private static MarkovModel								markovModel;
 
 	private static GenerativeMarkovAndNGramFitnessEvaluator	fitnessEvaluator;
@@ -136,7 +134,6 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		fitnessEvaluator.setModel(markovModel);
 
 		TopWordsFacade topWordsFacade = new TopWordsFacade();
-		topWordsFacade.setTop(1);
 		topWordsFacade.setMinWordLength(3);
 
 		MongoTemplate mongoTemplate = new MongoTemplate(new MongoClient("localhost", 27017), "DecipherEngine");
@@ -152,15 +149,6 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		nGramListDao.setTopTwoGrams(1);
 		nGramListDao.init();
 		topWordsFacade.setnGramListDao(nGramListDao);
-
-		WordDao wordDao = new WordDao();
-		wordDao.setMongoTemplate(mongoTemplate);
-
-		UniqueWordListDao wordListDao = new UniqueWordListDao();
-		wordListDao.setTopWords(16000);
-		wordListDao.setWordDao(wordDao);
-		wordListDao.init();
-		topWordsFacade.setWordListDao(wordListDao);
 
 		topWordsFacade.init();
 
