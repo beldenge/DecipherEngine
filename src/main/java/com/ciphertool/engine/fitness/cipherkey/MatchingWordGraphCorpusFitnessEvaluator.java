@@ -234,7 +234,9 @@ public class MatchingWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	@PostConstruct
 	public void init() {
 		for (Word word : topWords) {
-			wordMarkovModel.addTransition(word.getWord(), false);
+			if (wordMarkovModel.find(word.getWord()) == null) {
+				wordMarkovModel.addTransition(word.getWord(), false);
+			}
 		}
 	}
 

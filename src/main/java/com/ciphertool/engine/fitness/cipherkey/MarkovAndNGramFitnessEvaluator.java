@@ -251,10 +251,6 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 
 	@PostConstruct
 	public void init() {
-		for (Word word : topWords) {
-			wordMarkovModel.addTransition(word.getWord(), false);
-		}
-
 		double weightTotal = (letterNGramWeight + frequencyWeight + wordNGramWeight);
 
 		if (Math.abs(1.0 - weightTotal) > 0.0001) {
@@ -262,6 +258,12 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 					"The sum of letterNGramWeight, wordNGramWeight, and frequencyWeight must equal exactly 1.0, but letterNGramWeight="
 							+ letterNGramWeight + " and frequencyWeight=" + frequencyWeight + " and wordNGramWeight="
 							+ wordNGramWeight + " sums to " + weightTotal);
+		}
+
+		for (Word word : topWords) {
+			if (wordMarkovModel.find(word.getWord()) == null) {
+				wordMarkovModel.addTransition(word.getWord(), false);
+			}
 		}
 	}
 

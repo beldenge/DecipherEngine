@@ -270,6 +270,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 			this.minimumOrder = this.letterMarkovModel.getOrder();
 		}
+
+		for (Word word : topWords) {
+			if (wordMarkovModel.find(word.getWord()) == null) {
+				wordMarkovModel.addTransition(word.getWord(), false);
+			}
+		}
 	}
 
 	@Override
