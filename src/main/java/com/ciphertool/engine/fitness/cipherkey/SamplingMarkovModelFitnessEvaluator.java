@@ -50,7 +50,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
-			match = letterMarkovModel.find(currentSolutionString.substring(i, i + order));
+			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 
 			if (match == null) {
 				continue;

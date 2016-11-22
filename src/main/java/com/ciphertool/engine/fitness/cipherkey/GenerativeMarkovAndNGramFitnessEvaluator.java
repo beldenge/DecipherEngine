@@ -272,7 +272,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 		}
 
 		for (Word word : topWords) {
-			if (wordMarkovModel.find(word.getWord()) == null) {
+			if (wordMarkovModel.findLongest(word.getWord()) == null) {
 				wordMarkovModel.addTransition(word.getWord(), false);
 			}
 		}

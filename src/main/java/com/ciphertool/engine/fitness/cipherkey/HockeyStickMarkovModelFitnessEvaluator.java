@@ -48,7 +48,7 @@ public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = letterMarkovModel.find(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {

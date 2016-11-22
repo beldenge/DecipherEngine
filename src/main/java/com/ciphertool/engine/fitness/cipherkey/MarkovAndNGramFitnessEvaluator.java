@@ -261,7 +261,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 		}
 
 		for (Word word : topWords) {
-			if (wordMarkovModel.find(word.getWord()) == null) {
+			if (wordMarkovModel.findLongest(word.getWord()) == null) {
 				wordMarkovModel.addTransition(word.getWord(), false);
 			}
 		}
@@ -333,7 +333,7 @@ public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = letterMarkovModel.find(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
