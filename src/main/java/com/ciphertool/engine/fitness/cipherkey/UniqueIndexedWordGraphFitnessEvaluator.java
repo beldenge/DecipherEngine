@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -42,17 +44,25 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 
 	protected TopWordsFacade	topWordsFacade;
 
+	private int					lastRowBegin;
+	private WordNGramIndexNode	rootNode;
+
+	@PostConstruct
+	public void init() {
+		rootNode = topWordsFacade.getIndexedWordsAndNGrams();
+	}
+
 	@Override
 	public Double evaluate(Chromosome chromosome) {
-		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
-
-		int lastRowBegin = (cipher.getColumns() * (cipher.getRows() - 1));
-
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
+		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 		String longestMatch;
-		WordNGramIndexNode rootNode = topWordsFacade.getIndexedWordsAndNGrams();
 
+		/*
+		 * Find the longest match at each indice. This helps to prevent short matches from precluding longer subsequent
+		 * matches from being found.
+		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			longestMatch = WordGraphUtils.findLongestWordMatch(rootNode, 0, currentSolutionString.substring(i), null);
 
@@ -62,10 +72,16 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 		}
 
 		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
-		int beginPos;
-		for (beginPos = 0; beginPos < lastRowBegin; beginPos++) {
+
+		/*
+		 * Find all the starting matches (first match from the beginning of the solution string) which overlap with one
+		 * another. These are the candidate root matches. This must be done in order, hence why we cannot iterate over
+		 * the Map's entry set.
+		 */
+		for (int beginPos = 0; beginPos < lastRowBegin; beginPos++) {
 			if (matchMap.containsKey(beginPos)) {
 				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
+					// Fail fast -- there are no candidates beyond this point
 					break;
 				}
 
@@ -80,8 +96,8 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 			branches.addAll(node.printBranches());
 		}
 
-		long score;
-		long highestScore = 0;
+		double score;
+		double highestScore = 0.0;
 
 		String bestBranch = "";
 
@@ -100,7 +116,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 
 		double uniquenessPenalty = highestScore * determineUniquenessPenalty(bestBranch.split(", "));
 
-		return ((double) (highestScore)) - uniquenessPenalty;
+		return highestScore - uniquenessPenalty;
 	}
 
 	private double determineUniquenessPenalty(String[] words) {
@@ -141,6 +157,8 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 	@Override
 	public void setGeneticStructure(Object cipher) {
 		this.cipher = (Cipher) cipher;
+
+		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
 
 	/**
