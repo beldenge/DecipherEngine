@@ -37,7 +37,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.LetterNGramIndexNode;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessEvaluator {
 	private static final int				GRACE_WINDOW_SIZE		= 1;
@@ -117,7 +117,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		double matches = 0.0;
-		LetterNGramIndexNode match = null;
+		NGramIndexNode match = null;
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));

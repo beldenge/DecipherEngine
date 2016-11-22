@@ -29,7 +29,7 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.LetterNGramIndexNode;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher	cipher;
@@ -46,7 +46,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int order = model.getOrder();
 
 		double matches = 0.0;
-		LetterNGramIndexNode match = null;
+		NGramIndexNode match = null;
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
