@@ -61,7 +61,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	public void init() {
 		if (nGramWeight + frequencyWeight != 1.0) {
 			throw new IllegalArgumentException(
-					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + nGramWeight
+					"The sum of nGramWeight and frequencyWeight must equal exactly 1.0, but nGramWeight=" + nGramWeight
 							+ " and frequencyWeight=" + frequencyWeight + " sums to " + (nGramWeight
 									+ frequencyWeight));
 		}

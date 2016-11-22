@@ -65,7 +65,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 		if (Math.abs(1.0 - weightTotal) > 0.0001) {
 			throw new IllegalArgumentException(
-					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but kGramWeight=" + nGramWeight
+					"The sum of nGramWeight and frequencyWeight must equal exactly 1.0, but nGramWeight=" + nGramWeight
 							+ " and frequencyWeight=" + frequencyWeight + " sums to " + weightTotal);
 		}
 	}
@@ -140,13 +140,13 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			}
 		}
 
-		double kGramProbability = (matches / ((lastRowBegin - order) / sampleStepSize));
+		double nGramProbability = (matches / ((lastRowBegin - order) / sampleStepSize));
 
-		if (kGramProbability < 0.0) {
-			kGramProbability = 0.0;
+		if (nGramProbability < 0.0) {
+			nGramProbability = 0.0;
 		}
 
-		return (kGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight);
+		return (nGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight);
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 	/**
 	 * @param nGramWeight
-	 *            the kGramWeight to set
+	 *            the nGramWeight to set
 	 */
 	public void setnGramWeight(double nGramWeight) {
 		this.nGramWeight = nGramWeight;

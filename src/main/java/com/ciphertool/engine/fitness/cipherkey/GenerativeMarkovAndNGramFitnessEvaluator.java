@@ -258,7 +258,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 		if (Math.abs(1.0 - weightTotal) > 0.0001) {
 			throw new IllegalArgumentException(
-					"The sum of kGramWeight and frequencyWeight must equal exactly 1.0, but letterNGramWeight="
+					"The sum of letterNGramWeight, wordNGramWeight, and frequencyWeight must equal exactly 1.0, but letterNGramWeight="
 							+ letterNGramWeight + " and frequencyWeight=" + frequencyWeight + " and wordNGramWeight="
 							+ wordNGramWeight + " sums to " + weightTotal);
 		}
