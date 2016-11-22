@@ -11,8 +11,7 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-	profile="dictionary">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.WordGraphFitnessEvaluator" id="wordGraphFitnessEvaluator">
 		<property name="wordMarkovModel" ref="wordMarkovModel" />
@@ -42,9 +41,9 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
-	<!-- <bean class="com.ciphertool.engine.fitness.cipherkey.MatchingWordGraphCorpusFitnessEvaluator" id="matchingWordGraphCorpusFitnessEvaluator">
+	<bean class="com.ciphertool.engine.fitness.cipherkey.MatchingWordGraphCorpusFitnessEvaluator" id="matchingWordGraphCorpusFitnessEvaluator">
 		<property name="wordMarkovModel" ref="wordMarkovModel" />
-	</bean> -->
+	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.FrequencyCorpusFitnessEvaluator" id="frequencyCorpusFitnessEvaluator">
 		<property name="minWordLength" value="${fitness.min.word.length}" />

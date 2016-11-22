@@ -56,7 +56,12 @@ public class DecipherEngineBootstrapper {
 
 		Properties props = new Properties();
 		props.load(new FileInputStream("src/main/resources/DecipherEngine.properties"));
-		System.setProperty(SPRING_PROFILES_ACTIVE_KEY, props.getProperty(SPRING_PROFILES_ACTIVE_KEY));
+
+		String activeProfiles = props.getProperty(SPRING_PROFILES_ACTIVE_KEY);
+
+		if (activeProfiles != null) {
+			System.setProperty(SPRING_PROFILES_ACTIVE_KEY, props.getProperty(SPRING_PROFILES_ACTIVE_KEY));
+		}
 
 		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
 

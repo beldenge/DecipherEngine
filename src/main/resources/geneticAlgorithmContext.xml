@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License along with Dec
 	<import resource="classpath:beans-selection.xml" />
 	<import resource="classpath:beans-mutation.xml" />
 	<import resource="classpath:beans-crossover.xml" />
-	<import resource="classpath:dict/beans-context-dict.xml" />
 
 	<bean class="com.ciphertool.engine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
@@ -73,5 +72,13 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.engine.printer.CipherKeyCorpusChromosomePrinter" id="cipherKeyCorpusChromosomePrinter">
 		<property name="minWordLength" value="${fitness.min.word.length}" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.printer.CipherKeyChromosomePrinter" id="cipherKeyChromosomePrinter">
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 </beans>
