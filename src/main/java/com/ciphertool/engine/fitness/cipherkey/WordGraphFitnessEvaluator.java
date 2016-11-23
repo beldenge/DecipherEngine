@@ -38,7 +38,7 @@ import com.ciphertool.sherlock.wordgraph.MatchNode;
 public class WordGraphFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher	cipher;
 
-	private MarkovModel	wordMarkovModel;
+	private MarkovModel	markovModel;
 
 	private int			lastRowBegin;
 
@@ -54,7 +54,7 @@ public class WordGraphFitnessEvaluator implements FitnessEvaluator {
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
+			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -112,12 +112,12 @@ public class WordGraphFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param wordMarkovModel
-	 *            the wordMarkovModel to set
+	 * @param markovModel
+	 *            the markovModel to set
 	 */
 	@Required
-	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
-		this.wordMarkovModel = wordMarkovModel;
+	public void setMarkovModel(MarkovModel markovModel) {
+		this.markovModel = markovModel;
 	}
 
 	@Override

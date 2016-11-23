@@ -612,28 +612,28 @@ public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 
 	@Test
 	public void testEvaluate_top1000() {
-		MarkovModel wordMarkovModel = new MarkovModel();
-		wordMarkovModel.setOrder(3);
+		MarkovModel markovModel = new MarkovModel();
+		markovModel.setWordOrder(3);
 
 		for (int i = 0; i < 1000; i++) {
-			wordMarkovModel.addTransition(wordList.get(i).getWord().toLowerCase(), false);
+			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), false, 1);
 		}
 
-		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
+		fitnessEvaluator.setMarkovModel(markovModel);
 
 		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}
 
 	@Test
 	public void testEvaluate_top5000() {
-		MarkovModel wordMarkovModel = new MarkovModel();
-		wordMarkovModel.setOrder(3);
+		MarkovModel markovModel = new MarkovModel();
+		markovModel.setWordOrder(3);
 
 		for (int i = 0; i < 5000; i++) {
-			wordMarkovModel.addTransition(wordList.get(i).getWord().toLowerCase(), false);
+			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), false, 1);
 		}
 
-		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
+		fitnessEvaluator.setMarkovModel(markovModel);
 
 		log.info("top5000 fitness: " + fitnessEvaluator.evaluate(solution));
 	}

@@ -36,7 +36,7 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter {
-	private MarkovModel wordMarkovModel;
+	private MarkovModel markovModel;
 
 	@Override
 	public String print(Chromosome chromosome) {
@@ -52,7 +52,7 @@ public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter
 		String longestMatch;
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
+			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -176,11 +176,11 @@ public class CipherKeyIndexedNGramChromosomePrinter implements ChromosomePrinter
 	}
 
 	/**
-	 * @param wordMarkovModel
-	 *            the wordMarkovModel to set
+	 * @param markovModel
+	 *            the markovModel to set
 	 */
 	@Required
-	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
-		this.wordMarkovModel = wordMarkovModel;
+	public void setMarkovModel(MarkovModel markovModel) {
+		this.markovModel = markovModel;
 	}
 }

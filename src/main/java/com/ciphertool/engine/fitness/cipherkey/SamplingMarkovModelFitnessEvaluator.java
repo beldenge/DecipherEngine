@@ -34,7 +34,7 @@ import com.ciphertool.sherlock.markov.NGramIndexNode;
 public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher	cipher;
 
-	private MarkovModel	letterMarkovModel;
+	private MarkovModel	markovModel;
 
 	private int			lastRowBegin;
 	private int			sampleStepSize;
@@ -43,14 +43,14 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-		int order = letterMarkovModel.getOrder();
+		int order = markovModel.getLetterOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
-			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
+			match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 
 			if (match == null) {
 				continue;
@@ -70,12 +70,12 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param letterMarkovModel
-	 *            the letterMarkovModel to set
+	 * @param markovModel
+	 *            the markovModel to set
 	 */
 	@Required
-	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
-		this.letterMarkovModel = letterMarkovModel;
+	public void setMarkovModel(MarkovModel markovModel) {
+		this.markovModel = markovModel;
 	}
 
 	/**

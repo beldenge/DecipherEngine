@@ -137,18 +137,18 @@ public class IndexedCorrelatedCorpusFitnessEvaluatorTest extends FitnessEvaluato
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 
-		MarkovModel wordMarkovModel = new MarkovModel();
-		wordMarkovModel.setOrder(3);
-		wordMarkovModel.setTaskExecutor(taskExecutorSpy);
+		MarkovModel markovModel = new MarkovModel();
+		markovModel.setWordOrder(3);
+		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		WordNGramMarkovImporter wordNGramMarkovImporter = new WordNGramMarkovImporter();
-		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
+		wordNGramMarkovImporter.setMarkovModel(markovModel);
 		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 
-		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
+		fitnessEvaluator.setMarkovModel(markovModel);
 		fitnessEvaluator.init();
 	}
 

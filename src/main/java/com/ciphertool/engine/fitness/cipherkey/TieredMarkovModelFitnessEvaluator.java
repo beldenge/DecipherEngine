@@ -39,19 +39,21 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 	protected Cipher		cipher;
 
-	private MarkovModel		letterMarkovModel;
+	private MarkovModel		markovModel;
 
 	private int				lastRowBegin;
 	private int				minimumOrder;
 
 	@PostConstruct
 	public void init() {
-		if (this.minimumOrder > this.letterMarkovModel.getOrder()) {
-			log.warn("Minimum order is set to " + this.minimumOrder
-					+ ", which is greater than the Markov model order of " + this.letterMarkovModel.getOrder()
-					+ ".  Reducing minimumOrder to " + this.letterMarkovModel.getOrder());
+		int order = this.markovModel.getLetterOrder();
 
-			this.minimumOrder = this.letterMarkovModel.getOrder();
+		if (this.minimumOrder > order) {
+			log.warn("Minimum order is set to " + this.minimumOrder
+					+ ", which is greater than the Markov model order of " + order + ".  Reducing minimumOrder to "
+					+ order);
+
+			this.minimumOrder = order;
 		}
 	}
 
@@ -59,7 +61,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
-		int order = letterMarkovModel.getOrder();
+		int order = markovModel.getLetterOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -70,7 +72,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			if (match == null) {
-				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -101,12 +103,12 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param letterMarkovModel
-	 *            the letterMarkovModel to set
+	 * @param markovModel
+	 *            the markovModel to set
 	 */
 	@Required
-	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
-		this.letterMarkovModel = letterMarkovModel;
+	public void setMarkovModel(MarkovModel markovModel) {
+		this.markovModel = markovModel;
 	}
 
 	/**

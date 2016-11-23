@@ -31,25 +31,21 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.engine.dao.CipherKeyGeneDao" id="cipherKeyGeneDao" />
 
-	<bean class="com.ciphertool.sherlock.markov.MarkovModel" id="letterMarkovModel">
-		<property name="order" value="${markov.letter.order}" />
+	<bean class="com.ciphertool.sherlock.markov.MarkovModel" id="markovModel">
+		<property name="letterOrder" value="${markov.letter.order}" />
+		<property name="wordOrder" value="${markov.word.order}" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
 	<bean class="com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter" id="letterNGramMarkovImporter">
-		<property name="letterMarkovModel" ref="letterMarkovModel" />
+		<property name="markovModel" ref="markovModel" />
 		<property name="corpusDirectory" value="${markov.corpus.directory}" />
 		<property name="minCount" value="${markov.letter.min.count}" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
-	<bean class="com.ciphertool.sherlock.markov.MarkovModel" id="wordMarkovModel">
-		<property name="order" value="${markov.word.order}" />
-		<property name="taskExecutor" ref="taskExecutor" />
-	</bean>
-
 	<bean class="com.ciphertool.sherlock.etl.importers.WordNGramMarkovImporter" id="wordNGramMarkovImporter">
-		<property name="wordMarkovModel" ref="wordMarkovModel" />
+		<property name="markovModel" ref="markovModel" />
 		<property name="corpusDirectory" value="${markov.corpus.directory}" />
 		<property name="minCount" value="${markov.word.min.count}" />
 		<property name="taskExecutor" ref="taskExecutor" />

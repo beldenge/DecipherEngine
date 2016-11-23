@@ -49,7 +49,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 
 	protected Cipher						cipher;
 
-	private MarkovModel						letterMarkovModel;
+	private MarkovModel						markovModel;
 
 	private int								lastRowBegin;
 
@@ -110,7 +110,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = letterMarkovModel.getOrder();
+		int order = markovModel.getLetterOrder();
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
@@ -118,7 +118,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -151,12 +151,12 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	}
 
 	/**
-	 * @param letterMarkovModel
-	 *            the letterMarkovModel to set
+	 * @param markovModel
+	 *            the markovModel to set
 	 */
 	@Required
-	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
-		this.letterMarkovModel = letterMarkovModel;
+	public void setMarkovModel(MarkovModel markovModel) {
+		this.markovModel = markovModel;
 	}
 
 	/**
