@@ -32,7 +32,7 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
-import com.ciphertool.sherlock.markov.TerminalNGramIndexNode;
+import com.ciphertool.sherlock.markov.TerminalInfo;
 
 public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	protected static Logger	log	= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluator.class);
@@ -63,7 +63,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
-		TerminalNGramIndexNode terminalMatch;
+		TerminalInfo terminalInfo;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
@@ -77,14 +77,14 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 				continue;
 			}
 
-			if (match instanceof TerminalNGramIndexNode) {
-				terminalMatch = (TerminalNGramIndexNode) match;
+			terminalInfo = match.getTerminalInfo();
 
-				if (terminalMatch.getLevel() >= minimumOrder) {
-					matches += (double) terminalMatch.getLevel() / (double) order;
+			if (terminalInfo != null) {
+				if (terminalInfo.getLevel() >= minimumOrder) {
+					matches += (double) terminalInfo.getLevel() / (double) order;
 				}
 
-				if (terminalMatch.getLevel() != order) {
+				if (terminalInfo.getLevel() != order) {
 					match = null;
 				}
 			}

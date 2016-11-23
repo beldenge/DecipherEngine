@@ -38,7 +38,7 @@ import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
-import com.ciphertool.sherlock.markov.TerminalNGramIndexNode;
+import com.ciphertool.sherlock.markov.TerminalInfo;
 
 public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessEvaluator {
 	private static final int				GRACE_WINDOW_SIZE		= 1;
@@ -119,7 +119,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
-		TerminalNGramIndexNode terminalMatch;
+		TerminalInfo terminalInfo;
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
@@ -133,14 +133,14 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 				continue;
 			}
 
-			if (match instanceof TerminalNGramIndexNode) {
-				terminalMatch = (TerminalNGramIndexNode) match;
+			terminalInfo = match.getTerminalInfo();
 
-				if (terminalMatch.getLevel() >= minimumOrder) {
-					matches += ((double) terminalMatch.getLevel() / (double) order);
+			if (terminalInfo != null) {
+				if (terminalInfo.getLevel() >= minimumOrder) {
+					matches += ((double) terminalInfo.getLevel() / (double) order);
 				}
 
-				if (terminalMatch.getLevel() != order) {
+				if (terminalInfo.getLevel() != order) {
 					match = null;
 				}
 			}
