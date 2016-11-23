@@ -41,6 +41,7 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
+import com.ciphertool.sherlock.markov.TerminalNGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
@@ -340,6 +341,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
+		TerminalNGramIndexNode terminalMatch;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
@@ -349,16 +351,20 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
-			if (match != null && match.getLevel() >= minimumOrder) {
-				matches += (double) match.getLevel() / (double) order;
+			if (match instanceof TerminalNGramIndexNode) {
+				terminalMatch = (TerminalNGramIndexNode) match;
+
+				if (terminalMatch.getLevel() >= minimumOrder) {
+					matches += (double) terminalMatch.getLevel() / (double) order;
+				}
+
+				if (terminalMatch.getLevel() != order) {
+					match = null;
+				}
 			}
 
 			if ((matches / (double) i) < minimumProbability) {
 				break;
-			}
-
-			if (match.getLevel() != order) {
-				match = null;
 			}
 		}
 

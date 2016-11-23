@@ -37,7 +37,7 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static Logger									log			= LoggerFactory.getLogger(ConstrainedMarkovModelFitnessEvaluatorTest.class);
 
-	private static final int								ORDER		= 5;
+	private static final int								ORDER		= 3;
 
 	private static LetterNGramMarkovImporter				importer;
 	private static MarkovModel								markovModel;
@@ -110,7 +110,7 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
 		taskExecutorSpy.setMaxPoolSize(4);
-		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setQueueCapacity(1000000);
 		taskExecutorSpy.setKeepAliveSeconds(1);
 		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
 		taskExecutorSpy.initialize();
@@ -159,8 +159,8 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 
 		fitnessEvaluator.setExpectedLetterFrequencies(frequenciesToSet);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
-		fitnessEvaluator.setFrequencyWeight(0.5);
-		fitnessEvaluator.setnGramWeight(0.5);
+		fitnessEvaluator.setFrequencyWeight(0.05);
+		fitnessEvaluator.setnGramWeight(0.95);
 		fitnessEvaluator.init();
 	}
 
