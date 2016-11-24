@@ -138,18 +138,18 @@ public class MatchingWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluato
 		ReflectionUtils.makeAccessible(logField);
 		ReflectionUtils.setField(logField, fitnessEvaluator, logMock);
 
-		MarkovModel markovModel = new MarkovModel();
-		markovModel.setWordOrder(3);
-		markovModel.setTaskExecutor(taskExecutorSpy);
+		MarkovModel wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(3);
+		wordMarkovModel.setTaskExecutor(taskExecutorSpy);
 
 		WordNGramMarkovImporter wordNGramMarkovImporter = new WordNGramMarkovImporter();
-		wordNGramMarkovImporter.setMarkovModel(markovModel);
+		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
 		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 
-		fitnessEvaluator.setMarkovModel(markovModel);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 		fitnessEvaluator.init();
 	}
 

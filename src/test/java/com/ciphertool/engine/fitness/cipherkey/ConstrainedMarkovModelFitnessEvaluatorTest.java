@@ -116,18 +116,18 @@ public class ConstrainedMarkovModelFitnessEvaluatorTest extends FitnessEvaluator
 		taskExecutorSpy.initialize();
 
 		markovModel = new MarkovModel();
-		markovModel.setLetterOrder(ORDER);
+		markovModel.setOrder(ORDER);
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		importer = new LetterNGramMarkovImporter();
-		importer.setMarkovModel(markovModel);
+		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);
 		importer.setTaskExecutor(taskExecutorSpy);
 		importer.importCorpus();
 
 		fitnessEvaluator = new ConstrainedMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setMarkovModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(markovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);
 		frequenciesToSet.put('a', 0.0812);

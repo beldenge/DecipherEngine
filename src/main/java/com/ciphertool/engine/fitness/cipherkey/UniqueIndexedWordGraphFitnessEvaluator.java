@@ -39,7 +39,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 	private int			matchThreshold	= 2;
 	protected Cipher	cipher;
 
-	private MarkovModel	markovModel;
+	private MarkovModel	wordMarkovModel;
 
 	private int			lastRowBegin;
 
@@ -55,7 +55,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -153,12 +153,12 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 	}
 
 	/**
-	 * @param markovModel
-	 *            the markovModel to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setMarkovModel(MarkovModel markovModel) {
-		this.markovModel = markovModel;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	@Override

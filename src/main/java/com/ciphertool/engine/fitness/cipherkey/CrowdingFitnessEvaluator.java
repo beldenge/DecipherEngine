@@ -38,7 +38,7 @@ import com.ciphertool.sherlock.wordgraph.MatchNode;
 public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	protected Cipher	cipher;
 
-	private MarkovModel	markovModel;
+	private MarkovModel	wordMarkovModel;
 
 	private int			minCrowdSize;
 	private double		penaltyFactor;
@@ -54,7 +54,7 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 		String longestMatch;
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
+			longestMatch = wordMarkovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
@@ -123,12 +123,12 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param markovModel
-	 *            the markovModel to set
+	 * @param wordMarkovModel
+	 *            the wordMarkovModel to set
 	 */
 	@Required
-	public void setMarkovModel(MarkovModel markovModel) {
-		this.markovModel = markovModel;
+	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
+		this.wordMarkovModel = wordMarkovModel;
 	}
 
 	/**

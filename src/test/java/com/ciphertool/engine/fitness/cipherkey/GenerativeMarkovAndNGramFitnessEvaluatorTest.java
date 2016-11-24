@@ -41,7 +41,8 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 
 	private static LetterNGramMarkovImporter				letterNGramMarkovImporter;
 	private static WordNGramMarkovImporter					wordNGramMarkovImporter;
-	private static MarkovModel								markovModel;
+	private static MarkovModel								letterMarkovModel;
+	private static MarkovModel								wordMarkovModel;
 
 	private static GenerativeMarkovAndNGramFitnessEvaluator	fitnessEvaluator;
 
@@ -116,27 +117,31 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
 		taskExecutorSpy.initialize();
 
-		markovModel = new MarkovModel();
-		markovModel.setLetterOrder(3);
-		markovModel.setWordOrder(3);
-		markovModel.setTaskExecutor(taskExecutorSpy);
+		letterMarkovModel = new MarkovModel();
+		letterMarkovModel.setOrder(3);
+		letterMarkovModel.setTaskExecutor(taskExecutorSpy);
 
 		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
-		letterNGramMarkovImporter.setMarkovModel(markovModel);
+		letterNGramMarkovImporter.setLetterMarkovModel(letterMarkovModel);
 		letterNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		letterNGramMarkovImporter.setMinCount(1);
 		letterNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		letterNGramMarkovImporter.importCorpus();
 
+		wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(3);
+		wordMarkovModel.setTaskExecutor(taskExecutorSpy);
+
 		wordNGramMarkovImporter = new WordNGramMarkovImporter();
-		wordNGramMarkovImporter.setMarkovModel(markovModel);
+		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
 		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 
 		fitnessEvaluator = new GenerativeMarkovAndNGramFitnessEvaluator();
-		fitnessEvaluator.setMarkovModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(letterMarkovModel);
+		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);
 		frequenciesToSet.put('a', 0.0812);

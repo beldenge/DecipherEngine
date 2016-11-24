@@ -113,18 +113,18 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		taskExecutorSpy.initialize();
 
 		markovModel = new MarkovModel();
-		markovModel.setLetterOrder(ORDER);
+		markovModel.setOrder(ORDER);
 		markovModel.setTaskExecutor(taskExecutorSpy);
 
 		importer = new LetterNGramMarkovImporter();
-		importer.setMarkovModel(markovModel);
+		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
 		importer.setMinCount(1);
 		importer.setTaskExecutor(taskExecutorSpy);
 		importer.importCorpus();
 
 		fitnessEvaluator = new TieredMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setMarkovModel(markovModel);
+		fitnessEvaluator.setLetterMarkovModel(markovModel);
 		fitnessEvaluator.setGeneticStructure(zodiac408);
 		fitnessEvaluator.setMinimumOrder(3);
 		fitnessEvaluator.init();

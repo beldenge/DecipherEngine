@@ -50,7 +50,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 	protected Cipher						cipher;
 
-	private MarkovModel						markovModel;
+	private MarkovModel						letterMarkovModel;
 
 	private int								lastRowBegin;
 	private int								minimumOrder;
@@ -114,7 +114,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
-		int order = markovModel.getLetterOrder();
+		int order = letterMarkovModel.getOrder();
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		double matches = 0.0;
@@ -126,7 +126,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			}
 
 			if (match == null) {
-				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
+				match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -169,12 +169,12 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 	}
 
 	/**
-	 * @param markovModel
-	 *            the markovModel to set
+	 * @param letterMarkovModel
+	 *            the letterMarkovModel to set
 	 */
 	@Required
-	public void setMarkovModel(MarkovModel markovModel) {
-		this.markovModel = markovModel;
+	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
+		this.letterMarkovModel = letterMarkovModel;
 	}
 
 	/**

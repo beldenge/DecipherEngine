@@ -14,35 +14,35 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.WordGraphFitnessEvaluator" id="wordGraphFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 	
 	<bean class="com.ciphertool.engine.fitness.cipherkey.CrowdingFitnessEvaluator" id="crowdingFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />
 	</bean>
 	
 	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedCrowdingWordGraphFitnessEvaluator" id="indexedCrowdingWordGraphFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
 		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
 		<property name="sigma" value="${fitness.sharing.sigma}" />
 	</bean>
 	
 	<bean class="com.ciphertool.engine.fitness.cipherkey.UniqueIndexedWordGraphFitnessEvaluator" id="uniqueIndexedWordGraphFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 		<property name="matchThreshold" value="${fitness.match.threshold}" />
 	</bean>
 	
 	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedWordGraphCorpusFitnessEvaluator" id="indexedWordGraphCorpusFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 
 	<!-- Temporarily disabled since it mutually adds entries to topWordsFacade -->
 	<bean class="com.ciphertool.engine.fitness.cipherkey.MatchingWordGraphCorpusFitnessEvaluator" id="matchingWordGraphCorpusFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.FrequencyCorpusFitnessEvaluator" id="frequencyCorpusFitnessEvaluator">
@@ -80,7 +80,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedNGramFitnessEvaluator" id="indexedNGramFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.AdjacentWordGraphCorpusFitnessEvaluator" id="adjacentWordGraphCorpusFitnessEvaluator">
@@ -88,6 +88,6 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 	
 	<bean class="com.ciphertool.engine.fitness.cipherkey.IndexedCorrelatedCorpusFitnessEvaluator" id="indexedCorrelatedCorpusFitnessEvaluator">
-		<property name="markovModel" ref="markovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
 	</bean>
 </beans>
