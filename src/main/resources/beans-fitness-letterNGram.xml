@@ -106,7 +106,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<beans profile="dictionary">
-		<bean class="com.ciphertool.engine.fitness.cipherkey.MarkovAndNGramFitnessEvaluator" id="markovAndNGramFitnessEvaluator">
+		<bean class="com.ciphertool.engine.fitness.cipherkey.LetterAndWordMarkovFitnessEvaluator" id="markovAndNGramFitnessEvaluator">
 			<property name="markovModel" ref="markovModel" />
 			<property name="expectedLetterFrequencies">
 				<map>
@@ -143,7 +143,7 @@ You should have received a copy of the GNU General Public License along with Dec
 			<property name="wordNGramWeight" value="${fitness.wordNGram.weight}" />
 		</bean>
 
-		<bean class="com.ciphertool.engine.fitness.cipherkey.GenerativeMarkovAndNGramFitnessEvaluator" id="generativeMarkovAndNGramFitnessEvaluator">
+		<bean class="com.ciphertool.engine.fitness.cipherkey.GenerativeLetterAndWordMarkovFitnessEvaluator" id="generativeMarkovAndNGramFitnessEvaluator">
 			<property name="markovModel" ref="markovModel" />
 			<property name="expectedLetterFrequencies">
 				<map>
