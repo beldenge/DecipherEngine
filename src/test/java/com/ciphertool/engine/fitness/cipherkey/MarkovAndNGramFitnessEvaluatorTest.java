@@ -47,7 +47,7 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 	private static MarkovModel						letterMarkovModel;
 	private static MarkovModel						wordMarkovModel;
 
-	private static MarkovAndNGramFitnessEvaluator	fitnessEvaluator;
+	private static LetterAndWordMarkovFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome				solution	= new CipherKeyChromosome();
 
@@ -142,7 +142,7 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 
-		fitnessEvaluator = new MarkovAndNGramFitnessEvaluator();
+		fitnessEvaluator = new LetterAndWordMarkovFitnessEvaluator();
 		fitnessEvaluator.setLetterMarkovModel(letterMarkovModel);
 		fitnessEvaluator.setWordMarkovModel(wordMarkovModel);
 
