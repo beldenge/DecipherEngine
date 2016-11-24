@@ -22,7 +22,7 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 
 	<bean class="com.ciphertool.engine.fitness.cipherkey.TieredMarkovModelFitnessEvaluator" id="tieredMarkovModelFitnessEvaluator">
-		<property name="minimumLetterOrder" value="${markov.letter.min.order}" />
+		<property name="minimumOrder" value="${markov.letter.min.order}" />
 		<property name="markovModel" ref="markovModel" />
 	</bean>
 
@@ -101,7 +101,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="nGramWeight" value="${markov.nGram.weight}" />
 		<property name="frequencyWeight" value="${markov.frequency.weight}" />
 		<property name="markovModel" ref="markovModel" />
-		<property name="minimumLetterOrder" value="${markov.letter.min.order}" />
+		<property name="minimumOrder" value="${markov.letter.min.order}" />
 		<property name="sampleStepSize" value="${markov.model.sample.step.size}" />
 	</bean>
 
@@ -179,7 +179,7 @@ You should have received a copy of the GNU General Public License along with Dec
 			<property name="frequencyWeight" value="${fitness.frequency.weight}" />
 			<property name="wordNGramWeight" value="${fitness.wordNGram.weight}" />
 			<property name="minimumProbability" value="${fitness.generative.minimum.probability}" />
-			<property name="minimumLetterOrder" value="${markov.letter.min.order}" />
+			<property name="minimumOrder" value="${markov.letter.min.order}" />
 		</bean>
 	</beans>
 </beans>

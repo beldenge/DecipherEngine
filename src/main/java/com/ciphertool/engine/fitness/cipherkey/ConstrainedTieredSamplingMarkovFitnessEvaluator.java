@@ -27,8 +27,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -43,8 +41,6 @@ import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.markov.TerminalInfo;
 
 public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessEvaluator {
-	protected static Logger					log						= LoggerFactory.getLogger(ConstrainedTieredSamplingMarkovFitnessEvaluator.class);
-
 	private static final int				GRACE_WINDOW_SIZE		= 1;
 	private double							nGramWeight;
 	private double							frequencyWeight;
@@ -57,7 +53,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 	private MarkovModel						markovModel;
 
 	private int								lastRowBegin;
-	private int								minimumLetterOrder;
+	private int								minimumOrder;
 	private int								sampleStepSize;
 
 	private Map<Character, Double>			expectedLetterFrequencies;
@@ -72,16 +68,6 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			throw new IllegalArgumentException(
 					"The sum of nGramWeight and frequencyWeight must equal exactly 1.0, but nGramWeight=" + nGramWeight
 							+ " and frequencyWeight=" + frequencyWeight + " sums to " + weightTotal);
-		}
-
-		int letterOrder = this.markovModel.getLetterOrder();
-
-		if (this.minimumLetterOrder > letterOrder) {
-			log.warn("Minimum letter order is set to " + this.minimumLetterOrder
-					+ ", which is greater than the Markov model letter order of " + letterOrder
-					+ ".  Reducing minimumLetterOrder to " + letterOrder);
-
-			this.minimumLetterOrder = letterOrder;
 		}
 	}
 
@@ -150,7 +136,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			terminalInfo = match.getTerminalInfo();
 
 			if (terminalInfo != null) {
-				if (terminalInfo.getLevel() >= minimumLetterOrder) {
+				if (terminalInfo.getLevel() >= minimumOrder) {
 					matches += ((double) terminalInfo.getLevel() / (double) order);
 				}
 
@@ -217,12 +203,12 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 	}
 
 	/**
-	 * @param minimumLetterOrder
-	 *            the minimumLetterOrder to set
+	 * @param minimumOrder
+	 *            the minimumOrder to set
 	 */
 	@Required
-	public void setMinimumLetterOrder(int minimumLetterOrder) {
-		this.minimumLetterOrder = minimumLetterOrder;
+	public void setMinimumOrder(int minimumOrder) {
+		this.minimumOrder = minimumOrder;
 	}
 
 	/**

@@ -63,7 +63,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
 	private double							minimumProbability;
-	private int								minimumLetterOrder;
+	private int								minimumOrder;
 
 	private Map<Character, Double>			expectedLetterFrequencies;
 	private Map<Character, Integer>			expectedLetterCounts	= new HashMap<Character, Integer>(
@@ -269,12 +269,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 		int letterOrder = this.markovModel.getLetterOrder();
 
-		if (this.minimumLetterOrder > letterOrder) {
-			log.warn("Minimum letter order is set to " + this.minimumLetterOrder
-					+ ", which is greater than the Markov model letter order of " + letterOrder
-					+ ".  Reducing minimumLetterOrder to " + letterOrder);
+		if (this.minimumOrder > letterOrder) {
+			log.warn("Minimum order is set to " + this.minimumOrder
+					+ ", which is greater than the Markov model order of " + letterOrder
+					+ ".  Reducing minimumOrder to " + letterOrder);
 
-			this.minimumLetterOrder = letterOrder;
+			this.minimumOrder = letterOrder;
 		}
 
 		for (Word word : topOneGrams) {
@@ -383,7 +383,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 			terminalInfo = match.getTerminalInfo();
 
 			if (terminalInfo != null) {
-				if (terminalInfo.getLevel() >= minimumLetterOrder) {
+				if (terminalInfo.getLevel() >= minimumOrder) {
 					matches += (double) terminalInfo.getLevel() / (double) order;
 				}
 
@@ -551,12 +551,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	}
 
 	/**
-	 * @param minimumLetterOrder
-	 *            the minimumLetterOrder to set
+	 * @param minimumOrder
+	 *            the minimumOrder to set
 	 */
 	@Required
-	public void setMinimumLetterOrder(int minimumLetterOrder) {
-		this.minimumLetterOrder = minimumLetterOrder;
+	public void setMinimumOrder(int minimumOrder) {
+		this.minimumOrder = minimumOrder;
 	}
 
 	@Override
