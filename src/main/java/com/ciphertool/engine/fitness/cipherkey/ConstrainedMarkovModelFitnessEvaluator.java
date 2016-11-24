@@ -35,7 +35,6 @@ import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
@@ -119,7 +118,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = markovModel.findLongest(currentSolutionString.substring(i, i + order), TerminalType.LETTER);
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {

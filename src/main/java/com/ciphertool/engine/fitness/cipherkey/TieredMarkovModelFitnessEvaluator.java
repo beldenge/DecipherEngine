@@ -30,7 +30,6 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
-import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.markov.TerminalInfo;
@@ -73,7 +72,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 
 			if (match == null) {
-				match = markovModel.findLongest(currentSolutionString.substring(i, i + order), TerminalType.WORD);
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {

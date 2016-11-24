@@ -39,7 +39,6 @@ import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
-import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.wordgraph.Match;
@@ -265,31 +264,31 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 		}
 
 		for (Word word : topOneGrams) {
-			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
+			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topTwoGrams) {
-			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
+			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topThreeGrams) {
-			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
+			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topFourGrams) {
-			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
+			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topFiveGrams) {
-			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
+			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
@@ -299,8 +298,8 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 	public Double evaluate(Chromosome chromosome) {
 		double total = 0.0;
 		total += (frequencyWeight == 0.0) ? 0.0 : (frequencyWeight * evaluateFrequency(chromosome));
-		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateLetterNGrams(chromosome));
-		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateWordNGrams(chromosome));
+		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateMarkovModel(chromosome));
+		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateNGram(chromosome));
 
 		return total;
 	}
@@ -348,7 +347,7 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 		return frequencyProbability;
 	}
 
-	public Double evaluateLetterNGrams(Chromosome chromosome) {
+	public Double evaluateMarkovModel(Chromosome chromosome) {
 		CipherKeyChromosome cipherKeyChromosome = (CipherKeyChromosome) chromosome;
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
@@ -361,7 +360,7 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
 			} else {
-				match = markovModel.findLongest(currentSolutionString.substring(i, i + order), TerminalType.LETTER);
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
 			if (match == null) {
@@ -380,7 +379,7 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 		return letterNGramProbability;
 	}
 
-	public Double evaluateWordNGrams(Chromosome chromosome) {
+	public Double evaluateNGram(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
@@ -391,7 +390,7 @@ public class LetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
 		 * matches from being found.
 		 */
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i), TerminalType.WORD);
+			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));

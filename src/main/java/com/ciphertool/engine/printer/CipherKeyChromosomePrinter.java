@@ -31,7 +31,6 @@ import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.ChromosomePrinter;
 import com.ciphertool.genetics.entities.Chromosome;
-import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
@@ -53,7 +52,7 @@ public class CipherKeyChromosomePrinter implements ChromosomePrinter {
 		String longestMatch;
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i), TerminalType.WORD);
+			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
 
 			if (longestMatch != null) {
 				matchMap.put(i, new Match(i, i + longestMatch.length() - 1, longestMatch));
