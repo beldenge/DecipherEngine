@@ -43,7 +43,7 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 	private static WordNGramMarkovImporter			wordNGramMarkovImporter;
 	private static MarkovModel						markovModel;
 
-	private static LetterAndWordMarkovFitnessEvaluator	fitnessEvaluator;
+	private static MarkovAndNGramFitnessEvaluator	fitnessEvaluator;
 
 	private static CipherKeyChromosome				solution	= new CipherKeyChromosome();
 
@@ -135,7 +135,7 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 
-		fitnessEvaluator = new LetterAndWordMarkovFitnessEvaluator();
+		fitnessEvaluator = new MarkovAndNGramFitnessEvaluator();
 		fitnessEvaluator.setMarkovModel(markovModel);
 
 		Map<Character, Double> frequenciesToSet = new HashMap<Character, Double>(26);

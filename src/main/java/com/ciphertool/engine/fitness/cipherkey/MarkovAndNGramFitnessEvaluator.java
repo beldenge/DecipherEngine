@@ -41,18 +41,16 @@ import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
-import com.ciphertool.sherlock.markov.TerminalInfo;
 import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
-public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEvaluator {
+public class MarkovAndNGramFitnessEvaluator implements FitnessEvaluator {
 	private Logger							log						= LoggerFactory.getLogger(getClass());
 
 	private static final List<Character>	LOWERCASE_LETTERS		= Arrays.asList(new Character[] { 'a', 'b', 'c',
 			'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
 			'y', 'z' });
 	private static final int				GRACE_WINDOW_SIZE		= 1;
-	private static final int				MIN_POS					= 4;
 
 	protected Cipher						cipher;
 
@@ -62,8 +60,6 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 	private double							frequencyWeight;
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
-	private double							minimumProbability;
-	private int								minimumLetterOrder;
 
 	private Map<Character, Double>			expectedLetterFrequencies;
 	private Map<Character, Integer>			expectedLetterCounts	= new HashMap<Character, Integer>(
@@ -267,16 +263,6 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 							+ wordNGramWeight + " sums to " + weightTotal);
 		}
 
-		int letterOrder = this.markovModel.getLetterOrder();
-
-		if (this.minimumLetterOrder > letterOrder) {
-			log.warn("Minimum letter order is set to " + this.minimumLetterOrder
-					+ ", which is greater than the Markov model letter order of " + letterOrder
-					+ ".  Reducing minimumLetterOrder to " + letterOrder);
-
-			this.minimumLetterOrder = letterOrder;
-		}
-
 		for (Word word : topOneGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
 				markovModel.addWordTransition(word.getWord(), false, 1);
@@ -312,8 +298,8 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 	public Double evaluate(Chromosome chromosome) {
 		double total = 0.0;
 		total += (frequencyWeight == 0.0) ? 0.0 : (frequencyWeight * evaluateFrequency(chromosome));
-		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateLetterNGram(chromosome));
-		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateWordNGram(chromosome));
+		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateMarkovModel(chromosome));
+		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateNGram(chromosome));
 
 		return total;
 	}
@@ -361,7 +347,7 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 		return frequencyProbability;
 	}
 
-	public Double evaluateLetterNGram(Chromosome chromosome) {
+	public Double evaluateMarkovModel(Chromosome chromosome) {
 		CipherKeyChromosome cipherKeyChromosome = (CipherKeyChromosome) chromosome;
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
@@ -370,34 +356,21 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 
 		double matches = 0.0;
 		NGramIndexNode match = null;
-		TerminalInfo terminalInfo;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			if (match != null) {
 				match = match.getChild(currentSolutionString.charAt(i + order - 1));
-			}
-
-			if (match == null) {
+			} else {
 				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
 			}
 
-			terminalInfo = match.getTerminalInfo();
-
-			if (terminalInfo != null) {
-				if (terminalInfo.getLevel() >= minimumLetterOrder) {
-					matches += (double) terminalInfo.getLevel() / (double) order;
-				}
-
-				if (terminalInfo.getLevel() != order) {
-					match = null;
-				}
+			if (match == null) {
+				continue;
 			}
 
-			if ((matches / (double) i) < minimumProbability) {
-				break;
-			}
+			matches += 1.0;
 		}
 
-		double letterNGramProbability = (matches / (double) (lastRowBegin - order));
+		double letterNGramProbability = (matches / (lastRowBegin - order));
 
 		if (letterNGramProbability < 0.0) {
 			letterNGramProbability = 0.0;
@@ -406,7 +379,7 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 		return letterNGramProbability;
 	}
 
-	public Double evaluateWordNGram(Chromosome chromosome) {
+	public Double evaluateNGram(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
@@ -424,10 +397,7 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 			}
 		}
 
-		List<MatchNode> nodes = new ArrayList<MatchNode>();
-		MatchNode best = null;
-		MatchNode root = null;
-		MatchNode parent = null;
+		List<MatchNode> rootNodes = new ArrayList<MatchNode>();
 
 		/*
 		 * Find all the starting matches (first match from the beginning of the solution string) which overlap with one
@@ -435,52 +405,48 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 		 * the Map's entry set.
 		 */
 		for (int beginPos = 0; beginPos < lastRowBegin; beginPos++) {
-			if (matchMap.containsKey(beginPos) || beginPos == lastRowBegin - 1) {
-				if (WordGraphUtils.nonOverlapping(beginPos, nodes)) {
-					if (root == null) {
-						root = best;
-						parent = root;
-					} else if (parent != best) {
-						parent.addChild(best);
-						parent = best;
-					}
-
-					beginPos = best.getSelf().getEndPos();
-					nodes.clear();
-					best = null;
-					continue;
+			if (matchMap.containsKey(beginPos)) {
+				if (WordGraphUtils.nonOverlapping(beginPos, rootNodes)) {
+					// Fail fast -- there are no candidates beyond this point
+					break;
 				}
 
-				MatchNode node = new MatchNode(matchMap.get(beginPos));
-
-				if (best == null || node.getSelf().getWord().length() > best.getSelf().getWord().length()) {
-					best = node;
-				}
-
-				nodes.add(node);
-			}
-
-			if (root != null && best == null && ((double) root.printBranches().get(0).replaceAll(", ", "").length()
-					/ (double) beginPos) < minimumProbability) {
-				break;
-			} else if (beginPos > MIN_POS && root == null && best == null) {
-				break;
+				rootNodes.add(new MatchNode(matchMap.get(beginPos)));
 			}
 		}
 
-		int length = 0;
+		List<String> branches = new ArrayList<String>();
 
-		if (root != null) {
-			length = root.printBranches().get(0).replaceAll(", ", "").length();
+		/*
+		 * Beginning with each candidate root node, find all possible branches of overlapping matches from the initial
+		 * map of matches.
+		 */
+		for (MatchNode node : rootNodes) {
+			WordGraphUtils.findOverlappingChildren(node.getSelf().getEndPos() + 1, lastRowBegin, matchMap, node);
+
+			branches.addAll(node.printBranches());
 		}
 
-		double wordNGramProbability = (double) length / (double) currentSolutionString.length();
+		double score;
+		double highestScore = 0.0;
 
-		if (wordNGramProbability < 0.0) {
-			wordNGramProbability = 0.0;
+		String bestBranch = "";
+
+		// Find the longest branch by number of characters. Ties are skipped.
+		for (String branch : branches) {
+			score = branch.replaceAll(", ", "").length();
+
+			if (score > highestScore) {
+				highestScore = score;
+				bestBranch = branch;
+			}
 		}
 
-		return wordNGramProbability;
+		if (log.isDebugEnabled()) {
+			log.debug("Best branch: " + bestBranch);
+		}
+
+		return (double) highestScore / (double) currentSolutionString.length();
 	}
 
 	@Override
@@ -541,26 +507,8 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 		this.frequencyWeight = frequencyWeight;
 	}
 
-	/**
-	 * @param minimumProbability
-	 *            the minimumProbability to set
-	 */
-	@Required
-	public void setMinimumProbability(double minimumProbability) {
-		this.minimumProbability = minimumProbability;
-	}
-
-	/**
-	 * @param minimumLetterOrder
-	 *            the minimumLetterOrder to set
-	 */
-	@Required
-	public void setMinimumLetterOrder(int minimumLetterOrder) {
-		this.minimumLetterOrder = minimumLetterOrder;
-	}
-
 	@Override
 	public String getDisplayName() {
-		return "Generative Markov And N-Gram";
+		return "Markov And N-Gram";
 	}
 }
