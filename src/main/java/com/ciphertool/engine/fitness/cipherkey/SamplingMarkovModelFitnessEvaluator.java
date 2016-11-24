@@ -28,6 +28,7 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
@@ -50,7 +51,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 		int offset = ThreadLocalRandom.current().nextInt(sampleStepSize);
 
 		for (int i = offset; i < currentSolutionString.length() - order; i += sampleStepSize) {
-			match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
+			match = markovModel.findLongest(currentSolutionString.substring(i, i + order), TerminalType.LETTER);
 
 			if (match == null) {
 				continue;

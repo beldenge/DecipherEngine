@@ -33,6 +33,7 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
 import com.ciphertool.sherlock.entities.Word;
+import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.wordgraph.Match;
 
@@ -236,31 +237,31 @@ public class IndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator
 	@PostConstruct
 	public void init() {
 		for (Word word : topOneGrams) {
-			if (markovModel.findLongest(word.getWord()) == null) {
+			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topTwoGrams) {
-			if (markovModel.findLongest(word.getWord()) == null) {
+			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topThreeGrams) {
-			if (markovModel.findLongest(word.getWord()) == null) {
+			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topFourGrams) {
-			if (markovModel.findLongest(word.getWord()) == null) {
+			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topFiveGrams) {
-			if (markovModel.findLongest(word.getWord()) == null) {
+			if (markovModel.findLongest(word.getWord(), TerminalType.WORD) == null) {
 				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
@@ -284,7 +285,7 @@ public class IndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator
 
 		String longestMatch;
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i));
+			longestMatch = markovModel.findLongestAsString(currentSolutionString.substring(i), TerminalType.WORD);
 
 			if (longestMatch != null) {
 				if (!matchMap.containsKey(i)) {

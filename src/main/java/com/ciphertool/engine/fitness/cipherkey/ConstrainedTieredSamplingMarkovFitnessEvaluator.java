@@ -38,6 +38,7 @@ import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.genetics.fitness.FitnessEvaluator;
+import com.ciphertool.sherlock.enumerations.TerminalType;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 import com.ciphertool.sherlock.markov.TerminalInfo;
@@ -140,7 +141,7 @@ public class ConstrainedTieredSamplingMarkovFitnessEvaluator implements FitnessE
 			}
 
 			if (match == null) {
-				match = markovModel.findLongest(currentSolutionString.substring(i, i + order));
+				match = markovModel.findLongest(currentSolutionString.substring(i, i + order), TerminalType.LETTER);
 			}
 
 			if (match == null) {
