@@ -237,30 +237,30 @@ public class IndexedWordGraphCorpusFitnessEvaluator implements FitnessEvaluator 
 	public void init() {
 		for (Word word : topOneGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
-				markovModel.addWordTransition(word.getWord(), false, 1);
+				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topTwoGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
-				markovModel.addWordTransition(word.getWord(), false, 1);
+				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topThreeGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
-				markovModel.addWordTransition(word.getWord(), false, 1);
+				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 
 		for (Word word : topFourGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
-				markovModel.addWordTransition(word.getWord(), false, 1);
+				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 		for (Word word : topFiveGrams) {
 			if (markovModel.findLongest(word.getWord()) == null) {
-				markovModel.addWordTransition(word.getWord(), false, 1);
+				markovModel.addWordTransition(word.getWord(), 1);
 			}
 		}
 	}

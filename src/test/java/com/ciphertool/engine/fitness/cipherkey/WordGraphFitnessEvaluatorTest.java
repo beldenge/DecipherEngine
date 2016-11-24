@@ -616,7 +616,7 @@ public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 		markovModel.setWordOrder(3);
 
 		for (int i = 0; i < 1000; i++) {
-			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), false, 1);
+			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), 1);
 		}
 
 		fitnessEvaluator.setMarkovModel(markovModel);
@@ -630,7 +630,7 @@ public class WordGraphFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
 		markovModel.setWordOrder(3);
 
 		for (int i = 0; i < 5000; i++) {
-			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), false, 1);
+			markovModel.addWordTransition(wordList.get(i).getWord().toLowerCase(), 1);
 		}
 
 		fitnessEvaluator.setMarkovModel(markovModel);
