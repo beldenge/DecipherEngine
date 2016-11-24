@@ -172,7 +172,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		fitnessEvaluator.setLetterNGramWeight(0.45);
 		fitnessEvaluator.setWordNGramWeight(0.45);
 		fitnessEvaluator.setMinimumProbability(0.75);
-		fitnessEvaluator.setMinimumOrder(5);
+		fitnessEvaluator.setMinimumLetterOrder(5);
 		fitnessEvaluator.init();
 	}
 

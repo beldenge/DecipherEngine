@@ -63,7 +63,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	private double							letterNGramWeight;
 	private double							wordNGramWeight;
 	private double							minimumProbability;
-	private int								minimumOrder;
+	private int								minimumLetterOrder;
 
 	private Map<Character, Double>			expectedLetterFrequencies;
 	private Map<Character, Integer>			expectedLetterCounts	= new HashMap<Character, Integer>(
@@ -269,12 +269,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 
 		int letterOrder = this.markovModel.getLetterOrder();
 
-		if (this.minimumOrder > letterOrder) {
-			log.warn("Minimum order is set to " + this.minimumOrder
-					+ ", which is greater than the Markov model order of " + letterOrder
-					+ ".  Reducing minimumOrder to " + letterOrder);
+		if (this.minimumLetterOrder > letterOrder) {
+			log.warn("Minimum letter order is set to " + this.minimumLetterOrder
+					+ ", which is greater than the Markov model letter order of " + letterOrder
+					+ ".  Reducing minimumLetterOrder to " + letterOrder);
 
-			this.minimumOrder = letterOrder;
+			this.minimumLetterOrder = letterOrder;
 		}
 
 		for (Word word : topOneGrams) {
@@ -383,7 +383,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 			terminalInfo = match.getTerminalInfo();
 
 			if (terminalInfo != null) {
-				if (terminalInfo.getLevel() >= minimumOrder) {
+				if (terminalInfo.getLevel() >= minimumLetterOrder) {
 					matches += (double) terminalInfo.getLevel() / (double) order;
 				}
 
@@ -551,12 +551,12 @@ public class GenerativeMarkovAndNGramFitnessEvaluator implements FitnessEvaluato
 	}
 
 	/**
-	 * @param minimumOrder
-	 *            the minimumOrder to set
+	 * @param minimumLetterOrder
+	 *            the minimumLetterOrder to set
 	 */
 	@Required
-	public void setMinimumOrder(int minimumOrder) {
-		this.minimumOrder = minimumOrder;
+	public void setMinimumLetterOrder(int minimumLetterOrder) {
+		this.minimumLetterOrder = minimumLetterOrder;
 	}
 
 	@Override

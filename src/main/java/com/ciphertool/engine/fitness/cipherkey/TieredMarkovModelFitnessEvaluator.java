@@ -42,18 +42,18 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	private MarkovModel		markovModel;
 
 	private int				lastRowBegin;
-	private int				minimumOrder;
+	private int				minimumLetterOrder;
 
 	@PostConstruct
 	public void init() {
-		int order = this.markovModel.getLetterOrder();
+		int letterOrder = this.markovModel.getLetterOrder();
 
-		if (this.minimumOrder > order) {
-			log.warn("Minimum order is set to " + this.minimumOrder
-					+ ", which is greater than the Markov model order of " + order + ".  Reducing minimumOrder to "
-					+ order);
+		if (this.minimumLetterOrder > letterOrder) {
+			log.warn("Minimum letter order is set to " + this.minimumLetterOrder
+					+ ", which is greater than the Markov model letter order of " + letterOrder
+					+ ".  Reducing minimumLetterOrder to " + letterOrder);
 
-			this.minimumOrder = order;
+			this.minimumLetterOrder = letterOrder;
 		}
 	}
 
@@ -82,7 +82,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			terminalInfo = match.getTerminalInfo();
 
 			if (terminalInfo != null) {
-				if (terminalInfo.getLevel() >= minimumOrder) {
+				if (terminalInfo.getLevel() >= minimumLetterOrder) {
 					matches += (double) terminalInfo.getLevel() / (double) order;
 				}
 
@@ -112,12 +112,12 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	/**
-	 * @param minimumOrder
-	 *            the minimumOrder to set
+	 * @param minimumLetterOrder
+	 *            the minimumLetterOrder to set
 	 */
 	@Required
-	public void setMinimumOrder(int minimumOrder) {
-		this.minimumOrder = minimumOrder;
+	public void setMinimumLetterOrder(int minimumLetterOrder) {
+		this.minimumLetterOrder = minimumLetterOrder;
 	}
 
 	@Override
