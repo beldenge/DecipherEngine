@@ -27,11 +27,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class DecipherEngineBootstrapper {
-	private static Logger				log							= LoggerFactory.getLogger(DecipherEngineBootstrapper.class);
+public class BayesianEngineBootstrapper {
+	private static Logger				log							= LoggerFactory.getLogger(BayesianEngineBootstrapper.class);
 
 	private static final String			SPRING_PROFILES_ACTIVE_KEY	= "spring.profiles.active";
-	private static final String			SPRING_PROFILE				= "genetic";
+	private static final String			SPRING_PROFILE				= "bayesian";
 
 	@SuppressWarnings("unused")
 	private static ApplicationContext	context;

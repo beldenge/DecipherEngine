@@ -21,16 +21,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="mongoTemplate" ref="mongoTemplate" />
 	</bean>
 
-	<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
-		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean>
-
-	<bean class="com.ciphertool.genetics.dao.GenerationStatisticsDao" id="generationStatisticsDao">
-		<property name="mongoTemplate" ref="mongoTemplate" />
-	</bean>
-
-	<bean class="com.ciphertool.engine.dao.CipherKeyGeneDao" id="cipherKeyGeneDao" />
-
 	<bean class="com.ciphertool.sherlock.markov.MarkovModel" id="letterMarkovModel">
 		<property name="order" value="${markov.letter.order}" />
 		<property name="taskExecutor" ref="taskExecutor" />
@@ -54,4 +44,16 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="minCount" value="${markov.word.min.count}" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
+	
+	<beans profile="genetic">
+		<bean class="com.ciphertool.genetics.dao.ExecutionStatisticsDao" id="executionStatisticsDao">
+			<property name="mongoTemplate" ref="mongoTemplate" />
+		</bean>
+	
+		<bean class="com.ciphertool.genetics.dao.GenerationStatisticsDao" id="generationStatisticsDao">
+			<property name="mongoTemplate" ref="mongoTemplate" />
+		</bean>
+	
+		<bean class="com.ciphertool.engine.dao.CipherKeyGeneDao" id="cipherKeyGeneDao" />
+	</beans>
 </beans>

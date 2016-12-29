@@ -38,46 +38,14 @@ You should have received a copy of the GNU General Public License along with Dec
 	</bean>
 	
 	<import resource="classpath:beans-dao.xml" />
-	<import resource="classpath:geneticAlgorithmContext.xml" />
+
+	<bean class="com.ciphertool.engine.fitness.cipherkey.KnownSolutionFitnessEvaluator" id="knownSolutionFitnessEvaluator" />
 
 	<mongo:mongo host="${mongodb.host}" port="${mongodb.port}" />
 	<mongo:db-factory dbname="${mongodb.database}" />
 
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-	</bean>
-
-	<bean class="com.ciphertool.engine.service.GeneticCipherSolutionService" id="cipherSolutionService">
-		<property name="geneticAlgorithm" ref="standardGeneticAlgorithm" />
-		<property name="solutionDao" ref="solutionDao" />
-		<property name="commandsBefore" value="${app.commands.before}" />
-		<property name="commandsAfter" value="${app.commands.after}" />
-		<property name="persistPopulation" value="${persist.population}" />
-	</bean>
-
-	<bean class="com.ciphertool.engine.common.GeneticStrategyBuilder" id="strategyBuilder">
-		<property name="cipherDao" ref="cipherDao" />
-		<property name="knownSolutionFitnessEvaluator" ref="knownSolutionFitnessEvaluator" />
-	</bean>
-
-	<bean class="com.ciphertool.engine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">
-		<property name="cipherSolutionService" ref="cipherSolutionService" />
-	</bean>
-
-	<bean class="com.ciphertool.engine.view.SwingUserInterface" id="userInterface" init-method="init">
-		<property name="windowTitle" value="${ui.window.title}" />
-		<property name="windowWidth" value="${ui.window.width}" />
-		<property name="windowHeight" value="${ui.window.height}" />
-		<property name="startButtonText" value="${ui.window.startButton.text}" />
-		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
-		<property name="cipherSolutionController" ref="cipherSolutionController" />
-		<property name="cipherDao" ref="cipherDao" />
-		<property name="populationInitial" value="${genetic.population.size}" />
-		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
-		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
-		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
-		<property name="defaultCipher" value="${cipher.name}" />
-		<property name="strategyBuilder" ref="strategyBuilder" />
 	</bean>
 
 	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
@@ -90,4 +58,12 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="keepAliveSeconds" value="30" />
 		<property name="allowCoreThreadTimeOut" value="true" />
 	</bean>
+
+	<beans profile="genetic">
+		<import resource="classpath:genetic/beans.xml" />
+	</beans>
+
+	<beans profile="bayesian">
+		<import resource="classpath:bayesian/beans.xml" />
+	</beans>
 </beans>

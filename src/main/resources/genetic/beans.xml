@@ -11,12 +11,13 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	profile="genetic">
 
-	<import resource="classpath:beans-fitness.xml" />
-	<import resource="classpath:beans-selection.xml" />
-	<import resource="classpath:beans-mutation.xml" />
-	<import resource="classpath:beans-crossover.xml" />
+	<import resource="classpath:genetic/beans-fitness.xml" />
+	<import resource="classpath:genetic/beans-selection.xml" />
+	<import resource="classpath:genetic/beans-mutation.xml" />
+	<import resource="classpath:genetic/beans-crossover.xml" />
 
 	<bean class="com.ciphertool.engine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />
@@ -80,5 +81,38 @@ You should have received a copy of the GNU General Public License along with Dec
 
 	<bean class="com.ciphertool.engine.printer.CipherKeyIndexedNGramChromosomePrinter" id="cipherKeyIndexedNGramChromosomePrinter">
 		<property name="wordMarkovModel" ref="wordMarkovModel" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.service.GeneticCipherSolutionService" id="cipherSolutionService">
+		<property name="geneticAlgorithm" ref="standardGeneticAlgorithm" />
+		<property name="solutionDao" ref="solutionDao" />
+		<property name="commandsBefore" value="${app.commands.before}" />
+		<property name="commandsAfter" value="${app.commands.after}" />
+		<property name="persistPopulation" value="${persist.population}" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.common.GeneticStrategyBuilder" id="strategyBuilder">
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="knownSolutionFitnessEvaluator" ref="knownSolutionFitnessEvaluator" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.controller.ZodiacCipherSolutionController" id="cipherSolutionController">
+		<property name="cipherSolutionService" ref="cipherSolutionService" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.view.SwingUserInterface" id="userInterface" init-method="init">
+		<property name="windowTitle" value="${ui.window.title}" />
+		<property name="windowWidth" value="${ui.window.width}" />
+		<property name="windowHeight" value="${ui.window.height}" />
+		<property name="startButtonText" value="${ui.window.startButton.text}" />
+		<property name="stopButtonText" value="${ui.window.stopButton.text}" />
+		<property name="cipherSolutionController" ref="cipherSolutionController" />
+		<property name="cipherDao" ref="cipherDao" />
+		<property name="populationInitial" value="${genetic.population.size}" />
+		<property name="mutationInitial" value="${genetic.algorithm.mutationRate}" />
+		<property name="maxMutationsPerIndividualInitial" value="${genetic.algorithm.maxMutationsPerChromosome}" />
+		<property name="generationsInitial" value="${genetic.algorithm.maxGenerations}" />
+		<property name="defaultCipher" value="${cipher.name}" />
+		<property name="strategyBuilder" ref="strategyBuilder" />
 	</bean>
 </beans>
