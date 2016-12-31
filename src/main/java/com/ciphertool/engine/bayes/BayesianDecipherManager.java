@@ -19,6 +19,10 @@
 
 package com.ciphertool.engine.bayes;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -27,7 +31,10 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sherlock.markov.MarkovModel;
+import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
 	private static Logger	log	= LoggerFactory.getLogger(BayesianDecipherManager.class);
@@ -39,10 +46,49 @@ public class BayesianDecipherManager {
 	private MarkovModel		wordMarkovModel;
 	private double			letterNGramWeight;
 	private double			wordNGramWeight;
+	private int				samplerIterations;
+	private double			sourceModelPrior;
+	private double			channelModelPrior;
+	private int				annealingTemperatureStart;
+	private int				annealingTemperatureStop;
+	private int				lastRowBegin;
+	private int				cipherKeySize;
 
 	@PostConstruct
 	public void setUp() {
 		this.cipher = cipherDao.findByCipherName(cipherName);
+
+		lastRowBegin = cipher.getColumns() * (cipher.getRows() - 1);
+		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
+
+		Map<Integer, Map<Character, BigDecimal>> sourcePriors = new HashMap<>();
+
+		// Initialize prior probabilities for the source model based on language model frequencies
+		for (int i = 0; i < lastRowBegin; i++) {
+			sourcePriors.put(i, new HashMap<>());
+
+			for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
+				sourcePriors.get(i).put(entry.getKey(), entry.getValue().getTerminalInfo().getProbability());
+			}
+		}
+
+		// Initialize the solution key
+		CipherKeyChromosome initialSolution = new CipherKeyChromosome(cipher, cipherKeySize);
+
+		cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().forEach(c -> {
+			// Pick a plaintext at random using the language model and max annealing temperature
+			Gene nextGene = null;
+
+			initialSolution.putGene(c, nextGene);
+		});
+
+		for (int i = 0; i < samplerIterations; i++) {
+			runSampler(initialSolution);
+		}
+	}
+
+	private void runSampler(CipherKeyChromosome solution) {
+		// For each cipher symbol type, run the gibbs sampling
 	}
 
 	/**
@@ -97,5 +143,50 @@ public class BayesianDecipherManager {
 	@Required
 	public void setWordNGramWeight(double wordNGramWeight) {
 		this.wordNGramWeight = wordNGramWeight;
+	}
+
+	/**
+	 * @param samplerIterations
+	 *            the samplerIterations to set
+	 */
+	@Required
+	public void setSamplerIterations(int samplerIterations) {
+		this.samplerIterations = samplerIterations;
+	}
+
+	/**
+	 * @param sourceModelPrior
+	 *            the sourceModelPrior to set
+	 */
+	@Required
+	public void setSourceModelPrior(double sourceModelPrior) {
+		this.sourceModelPrior = sourceModelPrior;
+	}
+
+	/**
+	 * @param channelModelPrior
+	 *            the channelModelPrior to set
+	 */
+	@Required
+	public void setChannelModelPrior(double channelModelPrior) {
+		this.channelModelPrior = channelModelPrior;
+	}
+
+	/**
+	 * @param annealingTemperatureStart
+	 *            the annealingTemperatureStart to set
+	 */
+	@Required
+	public void setAnnealingTemperatureStart(int annealingTemperatureStart) {
+		this.annealingTemperatureStart = annealingTemperatureStart;
+	}
+
+	/**
+	 * @param annealingTemperatureStop
+	 *            the annealingTemperatureStop to set
+	 */
+	@Required
+	public void setAnnealingTemperatureStop(int annealingTemperatureStop) {
+		this.annealingTemperatureStop = annealingTemperatureStop;
 	}
 }
