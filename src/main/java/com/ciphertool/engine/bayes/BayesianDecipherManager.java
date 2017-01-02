@@ -19,8 +19,8 @@
 
 package com.ciphertool.engine.bayes;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -37,22 +37,22 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
-	private static Logger	log	= LoggerFactory.getLogger(BayesianDecipherManager.class);
+	private static Logger log = LoggerFactory.getLogger(BayesianDecipherManager.class);
 
-	private String			cipherName;
-	private CipherDao		cipherDao;
-	private Cipher			cipher;
-	private MarkovModel		letterMarkovModel;
-	private MarkovModel		wordMarkovModel;
-	private double			letterNGramWeight;
-	private double			wordNGramWeight;
-	private int				samplerIterations;
-	private double			sourceModelPrior;
-	private double			channelModelPrior;
-	private int				annealingTemperatureStart;
-	private int				annealingTemperatureStop;
-	private int				lastRowBegin;
-	private int				cipherKeySize;
+	private String cipherName;
+	private CipherDao cipherDao;
+	private Cipher cipher;
+	private MarkovModel letterMarkovModel;
+	private MarkovModel wordMarkovModel;
+	private double letterNGramWeight;
+	private double wordNGramWeight;
+	private int samplerIterations;
+	private double sourceModelPrior;
+	private double channelModelPrior;
+	private int annealingTemperatureStart;
+	private int annealingTemperatureStop;
+	private int lastRowBegin;
+	private int cipherKeySize;
 
 	@PostConstruct
 	public void setUp() {
@@ -61,15 +61,11 @@ public class BayesianDecipherManager {
 		lastRowBegin = cipher.getColumns() * (cipher.getRows() - 1);
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
 
-		Map<Integer, Map<Character, BigDecimal>> sourcePriors = new HashMap<>();
+		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
 
-		// Initialize prior probabilities for the source model based on language model frequencies
-		for (int i = 0; i < lastRowBegin; i++) {
-			sourcePriors.put(i, new HashMap<>());
-
-			for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
-				sourcePriors.get(i).put(entry.getKey(), entry.getValue().getTerminalInfo().getProbability());
-			}
+		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
+			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(), entry.getValue().getTerminalInfo()
+					.getProbability()));
 		}
 
 		// Initialize the solution key
