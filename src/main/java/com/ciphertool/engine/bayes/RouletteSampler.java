@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 import com.ciphertool.genetics.algorithms.selection.BinaryRouletteNode;
 import com.ciphertool.genetics.algorithms.selection.BinaryRouletteTree;
 
-public class RouletteSampler<T> {
+public class RouletteSampler<T extends Probability<?>> {
 	private Logger log = LoggerFactory.getLogger(getClass());
 
 	private BinaryRouletteTree rouletteWheel;
 
-	public synchronized void reIndex(List<Probability<T>> probabilities) {
+	public synchronized void reIndex(List<T> probabilities) {
 		this.rouletteWheel = new BinaryRouletteTree();
 
 		List<BinaryRouletteNode> nodes = new ArrayList<BinaryRouletteNode>();
@@ -83,7 +83,7 @@ public class RouletteSampler<T> {
 		addToTreeBalanced(nodes.subList(half + 1, nodes.size()));
 	}
 
-	public int getNextIndex(List<Probability<T>> probabilities) {
+	public int getNextIndex(List<T> probabilities) {
 		if (probabilities == null || probabilities.isEmpty()) {
 			log.warn("Attempted to select an individual from a null or empty population.  Unable to continue.");
 
