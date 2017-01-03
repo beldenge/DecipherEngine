@@ -4,8 +4,6 @@ import static org.mockito.Mockito.spy;
 
 import java.util.concurrent.ExecutionException;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -88,7 +86,7 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		solution.setCipher(zodiac408);
 	}
 
-	@BeforeClass
+	// @BeforeClass
 	public static void setUp() throws InterruptedException, ExecutionException {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
@@ -129,7 +127,7 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator.init();
 	}
 
-	@Test
+	// @Test
 	public void testEvaluate() {
 		log.info("fitness: " + plaintextEvaluator.evaluate(solution));
 	}
