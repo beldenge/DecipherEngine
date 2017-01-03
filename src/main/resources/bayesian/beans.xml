@@ -15,16 +15,21 @@ You should have received a copy of the GNU General Public License along with Dec
 	profile="bayesian">
 
 	<bean class="com.ciphertool.engine.bayes.BayesianDecipherManager" id="bayesianDecipherManager">
+		<property name="plaintextEvaluator" ref="plaintextEvaluator" />
 		<property name="cipherName" value="${cipher.name}" />
 		<property name="cipherDao" ref="cipherDao" />
 		<property name="letterMarkovModel" ref="letterMarkovModel" />
-		<property name="wordMarkovModel" ref="wordMarkovModel" />
-		<property name="letterNGramWeight" value="${bayes.letterNGram.weight}" />
-		<property name="wordNGramWeight" value="${bayes.wordNGram.weight}" />
 		<property name="sourceModelPrior" value="${bayes.source.model.prior}" />
 		<property name="channelModelPrior" value="${bayes.channel.model.prior}" />
 		<property name="samplerIterations" value="${bayes.sampler.iterations}" />
 		<property name="annealingTemperatureStart" value="${bayes.annealing.temperature.start}" />
 		<property name="annealingTemperatureStop" value="${bayes.annealing.temperature.stop}" />
+	</bean>
+
+	<bean class="com.ciphertool.engine.bayes.PlaintextEvaluator" id="plaintextEvaluator">
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
+		<property name="wordMarkovModel" ref="wordMarkovModel" />
+		<property name="letterNGramWeight" value="${bayes.letterNGram.weight}" />
+		<property name="wordNGramWeight" value="${bayes.wordNGram.weight}" />
 	</bean>
 </beans>

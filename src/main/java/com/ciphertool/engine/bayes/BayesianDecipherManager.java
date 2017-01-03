@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.bayes;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ import org.springframework.beans.factory.annotation.Required;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
+import com.ciphertool.engine.entities.CipherKeyGene;
+import com.ciphertool.engine.entities.Ciphertext;
+import com.ciphertool.engine.fitness.cipherkey.PlaintextEvaluator;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
@@ -40,25 +44,21 @@ public class BayesianDecipherManager {
 	private static Logger log = LoggerFactory.getLogger(BayesianDecipherManager.class);
 
 	private String cipherName;
+	private PlaintextEvaluator plaintextEvaluator;
 	private CipherDao cipherDao;
 	private Cipher cipher;
 	private MarkovModel letterMarkovModel;
-	private MarkovModel wordMarkovModel;
-	private double letterNGramWeight;
-	private double wordNGramWeight;
 	private int samplerIterations;
 	private double sourceModelPrior;
 	private double channelModelPrior;
 	private int annealingTemperatureStart;
 	private int annealingTemperatureStop;
-	private int lastRowBegin;
 	private int cipherKeySize;
 
 	@PostConstruct
 	public void setUp() {
 		this.cipher = cipherDao.findByCipherName(cipherName);
 
-		lastRowBegin = cipher.getColumns() * (cipher.getRows() - 1);
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
 
 		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
@@ -71,20 +71,44 @@ public class BayesianDecipherManager {
 		// Initialize the solution key
 		CipherKeyChromosome initialSolution = new CipherKeyChromosome(cipher, cipherKeySize);
 
-		cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().forEach(c -> {
-			// Pick a plaintext at random using the language model and max annealing temperature
-			Gene nextGene = null;
+		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
+		rouletteSampler.reIndex(letterUnigramProbabilities);
 
-			initialSolution.putGene(c, nextGene);
-		});
+		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(
+				ciphertext -> {
+					// Pick a plaintext at random using the language model and max annealing temperature
+					Gene nextGene = new CipherKeyGene(initialSolution, letterUnigramProbabilities.get(rouletteSampler
+							.getNextIndex(letterUnigramProbabilities)).getValue().toString());
+
+					initialSolution.putGene(ciphertext, nextGene);
+				});
 
 		for (int i = 0; i < samplerIterations; i++) {
 			runSampler(initialSolution);
 		}
 	}
 
+	private BigDecimal calculatePlaintextProbability(CipherKeyChromosome solution) {
+		BigDecimal probability = null;
+
+		for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
+
+		}
+
+		return probability;
+	}
+
 	private void runSampler(CipherKeyChromosome solution) {
 		// For each cipher symbol type, run the gibbs sampling
+	}
+
+	/**
+	 * @param plaintextEvaluator
+	 *            the plaintextEvaluator to set
+	 */
+	@Required
+	public void setPlaintextEvaluator(PlaintextEvaluator plaintextEvaluator) {
+		this.plaintextEvaluator = plaintextEvaluator;
 	}
 
 	/**
@@ -112,33 +136,6 @@ public class BayesianDecipherManager {
 	@Required
 	public void setLetterMarkovModel(MarkovModel letterMarkovModel) {
 		this.letterMarkovModel = letterMarkovModel;
-	}
-
-	/**
-	 * @param wordMarkovModel
-	 *            the wordMarkovModel to set
-	 */
-	@Required
-	public void setWordMarkovModel(MarkovModel wordMarkovModel) {
-		this.wordMarkovModel = wordMarkovModel;
-	}
-
-	/**
-	 * @param letterNGramWeight
-	 *            the letterNGramWeight to set
-	 */
-	@Required
-	public void setLetterNGramWeight(double letterNGramWeight) {
-		this.letterNGramWeight = letterNGramWeight;
-	}
-
-	/**
-	 * @param wordNGramWeight
-	 *            the wordNGramWeight to set
-	 */
-	@Required
-	public void setWordNGramWeight(double wordNGramWeight) {
-		this.wordNGramWeight = wordNGramWeight;
 	}
 
 	/**
