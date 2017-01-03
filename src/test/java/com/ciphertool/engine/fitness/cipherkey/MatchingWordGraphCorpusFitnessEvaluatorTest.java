@@ -144,7 +144,7 @@ public class MatchingWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluato
 
 		WordNGramMarkovImporter wordNGramMarkovImporter = new WordNGramMarkovImporter();
 		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
-		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		wordNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
 		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();

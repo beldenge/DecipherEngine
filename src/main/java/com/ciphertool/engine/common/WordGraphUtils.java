@@ -38,11 +38,11 @@ public class WordGraphUtils {
 			if (currentNode.containsChild(firstLetter)) {
 				currentNode.getChild(firstLetter).setTerminalInfo(new TerminalInfo());
 			} else {
-				currentNode.putChild(firstLetter, new NGramIndexNode(new TerminalInfo()));
+				currentNode.putChild(firstLetter, new NGramIndexNode(currentNode, new TerminalInfo()));
 			}
 		} else {
 			if (!currentNode.containsChild(firstLetter)) {
-				currentNode.putChild(firstLetter, new NGramIndexNode());
+				currentNode.putChild(firstLetter, new NGramIndexNode(currentNode));
 			}
 
 			populateMap(currentNode.getChild(firstLetter), wordPart.substring(1));

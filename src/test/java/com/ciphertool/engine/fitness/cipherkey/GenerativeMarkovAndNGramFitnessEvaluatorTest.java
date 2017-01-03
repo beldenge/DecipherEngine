@@ -123,7 +123,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 
 		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
 		letterNGramMarkovImporter.setLetterMarkovModel(letterMarkovModel);
-		letterNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		letterNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
 		letterNGramMarkovImporter.setMinCount(1);
 		letterNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		letterNGramMarkovImporter.importCorpus();
@@ -134,7 +134,7 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 
 		wordNGramMarkovImporter = new WordNGramMarkovImporter();
 		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
-		wordNGramMarkovImporter.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		wordNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
 		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();

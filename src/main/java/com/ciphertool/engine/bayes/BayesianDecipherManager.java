@@ -35,7 +35,6 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.entities.Ciphertext;
-import com.ciphertool.engine.fitness.cipherkey.PlaintextEvaluator;
 import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
@@ -65,7 +64,7 @@ public class BayesianDecipherManager {
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
 			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
-					entry.getValue().getTerminalInfo().getProbability()));
+					entry.getValue().getTerminalInfo().getConditionalProbability()));
 		}
 
 		// Initialize the solution key

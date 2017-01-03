@@ -118,7 +118,7 @@ public class SamplingMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTes
 
 		importer = new LetterNGramMarkovImporter();
 		importer.setLetterMarkovModel(markovModel);
-		importer.setCorpusDirectory("../Sherlock/src/main/data/corpus");
+		importer.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
 		importer.setMinCount(2);
 		importer.setTaskExecutor(taskExecutorSpy);
 		importer.importCorpus();

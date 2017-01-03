@@ -1,26 +1,11 @@
-/**
- * Copyright 2015 George Belden
- * 
- * This file is part of DecipherEngine.
- * 
- * DecipherEngine is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * DecipherEngine is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
- */
-
-package com.ciphertool.engine.fitness.cipherkey;
+package com.ciphertool.engine.bayes;
 
 import static org.mockito.Mockito.spy;
 
+import java.util.concurrent.ExecutionException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -29,19 +14,20 @@ import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
+import com.ciphertool.sherlock.etl.importers.WordNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
-public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger								log			= LoggerFactory.getLogger(TieredMarkovModelFitnessEvaluatorTest.class);
+public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
+	private static Logger						log			= LoggerFactory.getLogger(PlaintextEvaluatorTest.class);
 
-	private static final int							ORDER		= 7;
+	private static LetterNGramMarkovImporter	letterNGramMarkovImporter;
+	private static WordNGramMarkovImporter		wordNGramMarkovImporter;
+	private static MarkovModel					letterMarkovModel;
+	private static MarkovModel					wordMarkovModel;
 
-	private static LetterNGramMarkovImporter			importer;
-	private static MarkovModel							markovModel;
+	private static PlaintextEvaluator			plaintextEvaluator;
 
-	private static TieredMarkovModelFitnessEvaluator	fitnessEvaluator;
-
-	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome			solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));
@@ -102,37 +88,50 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		solution.setCipher(zodiac408);
 	}
 
-	// @BeforeClass
-	public static void setUp() {
+	@BeforeClass
+	public static void setUp() throws InterruptedException, ExecutionException {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
 		taskExecutorSpy.setMaxPoolSize(4);
-		taskExecutorSpy.setQueueCapacity(100);
+		taskExecutorSpy.setQueueCapacity(10000);
 		taskExecutorSpy.setKeepAliveSeconds(1);
 		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
 		taskExecutorSpy.initialize();
 
-		markovModel = new MarkovModel();
-		markovModel.setOrder(ORDER);
-		markovModel.setTaskExecutor(taskExecutorSpy);
+		letterMarkovModel = new MarkovModel();
+		letterMarkovModel.setOrder(3);
+		letterMarkovModel.setTaskExecutor(taskExecutorSpy);
 
-		importer = new LetterNGramMarkovImporter();
-		importer.setLetterMarkovModel(markovModel);
-		importer.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
-		importer.setMinCount(1);
-		importer.setTaskExecutor(taskExecutorSpy);
-		importer.importCorpus();
+		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
+		letterNGramMarkovImporter.setLetterMarkovModel(letterMarkovModel);
+		letterNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
+		letterNGramMarkovImporter.setMinCount(2);
+		letterNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
+		letterNGramMarkovImporter.importCorpus();
 
-		fitnessEvaluator = new TieredMarkovModelFitnessEvaluator();
-		fitnessEvaluator.setLetterMarkovModel(markovModel);
-		fitnessEvaluator.setGeneticStructure(zodiac408);
-		fitnessEvaluator.setMinimumLetterOrder(3);
-		fitnessEvaluator.init();
+		wordMarkovModel = new MarkovModel();
+		wordMarkovModel.setOrder(1);
+		wordMarkovModel.setTaskExecutor(taskExecutorSpy);
+
+		wordNGramMarkovImporter = new WordNGramMarkovImporter();
+		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
+		wordNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
+		wordNGramMarkovImporter.setMinCount(2);
+		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
+		wordNGramMarkovImporter.importCorpus();
+
+		plaintextEvaluator = new PlaintextEvaluator();
+		plaintextEvaluator.setLetterMarkovModel(letterMarkovModel);
+		plaintextEvaluator.setWordMarkovModel(wordMarkovModel);
+		plaintextEvaluator.setStructure(zodiac408);
+		plaintextEvaluator.setLetterNGramWeight(0.1);
+		plaintextEvaluator.setWordNGramWeight(0.9);
+		plaintextEvaluator.init();
 	}
 
-	// @Test
+	@Test
 	public void testEvaluate() {
-		log.info("fitness: " + fitnessEvaluator.evaluate(solution));
+		log.info("fitness: " + plaintextEvaluator.evaluate(solution));
 	}
 
 	// @Test
@@ -141,7 +140,7 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		long evaluations = 10000;
 
 		for (int i = 0; i < evaluations; i++) {
-			fitnessEvaluator.evaluate(solution);
+			plaintextEvaluator.evaluate(solution);
 		}
 
 		log.info(evaluations + " evaluations took: " + (System.currentTimeMillis() - start) + "ms.");

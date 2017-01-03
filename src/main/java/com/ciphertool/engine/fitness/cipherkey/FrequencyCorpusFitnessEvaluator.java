@@ -233,7 +233,7 @@ public class FrequencyCorpusFitnessEvaluator implements FitnessEvaluator {
 		topWords.add(new Word("iwillnotgiveyou", null));
 	}
 
-	private NGramIndexNode rootNode = new NGramIndexNode();
+	private NGramIndexNode rootNode = new NGramIndexNode(null);
 
 	@PostConstruct
 	public void init() {
