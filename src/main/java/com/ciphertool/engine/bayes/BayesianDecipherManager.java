@@ -41,19 +41,19 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
-	private static Logger log = LoggerFactory.getLogger(BayesianDecipherManager.class);
+	private static Logger		log	= LoggerFactory.getLogger(BayesianDecipherManager.class);
 
-	private String cipherName;
-	private PlaintextEvaluator plaintextEvaluator;
-	private CipherDao cipherDao;
-	private Cipher cipher;
-	private MarkovModel letterMarkovModel;
-	private int samplerIterations;
-	private double sourceModelPrior;
-	private double channelModelPrior;
-	private int annealingTemperatureStart;
-	private int annealingTemperatureStop;
-	private int cipherKeySize;
+	private String				cipherName;
+	private PlaintextEvaluator	plaintextEvaluator;
+	private CipherDao			cipherDao;
+	private Cipher				cipher;
+	private MarkovModel			letterMarkovModel;
+	private int					samplerIterations;
+	private double				sourceModelPrior;
+	private double				channelModelPrior;
+	private int					annealingTemperatureStart;
+	private int					annealingTemperatureStop;
+	private int					cipherKeySize;
 
 	@PostConstruct
 	public void setUp() {
@@ -64,8 +64,8 @@ public class BayesianDecipherManager {
 		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
-			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(), entry.getValue().getTerminalInfo()
-					.getProbability()));
+			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
+					entry.getValue().getTerminalInfo().getProbability()));
 		}
 
 		// Initialize the solution key
@@ -74,14 +74,13 @@ public class BayesianDecipherManager {
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 		rouletteSampler.reIndex(letterUnigramProbabilities);
 
-		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(
-				ciphertext -> {
-					// Pick a plaintext at random using the language model and max annealing temperature
-					Gene nextGene = new CipherKeyGene(initialSolution, letterUnigramProbabilities.get(rouletteSampler
-							.getNextIndex(letterUnigramProbabilities)).getValue().toString());
+		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(ciphertext -> {
+			// Pick a plaintext at random using the language model and max annealing temperature
+			Gene nextGene = new CipherKeyGene(initialSolution,
+					letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString());
 
-					initialSolution.putGene(ciphertext, nextGene);
-				});
+			initialSolution.putGene(ciphertext, nextGene);
+		});
 
 		for (int i = 0; i < samplerIterations; i++) {
 			runSampler(initialSolution);

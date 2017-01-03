@@ -40,16 +40,16 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.mongodb.MongoClient;
 
 public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger							log			= LoggerFactory.getLogger(MarkovAndNGramFitnessEvaluatorTest.class);
+	private static Logger								log			= LoggerFactory.getLogger(MarkovAndNGramFitnessEvaluatorTest.class);
 
-	private static LetterNGramMarkovImporter		letterNGramMarkovImporter;
-	private static WordNGramMarkovImporter			wordNGramMarkovImporter;
-	private static MarkovModel						letterMarkovModel;
-	private static MarkovModel						wordMarkovModel;
+	private static LetterNGramMarkovImporter			letterNGramMarkovImporter;
+	private static WordNGramMarkovImporter				wordNGramMarkovImporter;
+	private static MarkovModel							letterMarkovModel;
+	private static MarkovModel							wordMarkovModel;
 
 	private static LetterAndWordMarkovFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome				solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome					solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

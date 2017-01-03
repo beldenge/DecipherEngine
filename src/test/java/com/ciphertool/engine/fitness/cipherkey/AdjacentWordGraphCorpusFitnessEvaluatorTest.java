@@ -40,11 +40,11 @@ import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.engine.fitness.cipherkey.AdjacentWordGraphCorpusFitnessEvaluator;
 
 public class AdjacentWordGraphCorpusFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger											log			= LoggerFactory.getLogger(AdjacentWordGraphCorpusFitnessEvaluatorTest.class);
+	private static Logger									log			= LoggerFactory.getLogger(AdjacentWordGraphCorpusFitnessEvaluatorTest.class);
 
 	private static AdjacentWordGraphCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

@@ -31,9 +31,9 @@ import com.ciphertool.genetics.algorithms.selection.BinaryRouletteNode;
 import com.ciphertool.genetics.algorithms.selection.BinaryRouletteTree;
 
 public class RouletteSampler<T extends Probability<?>> {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger				log	= LoggerFactory.getLogger(getClass());
 
-	private BinaryRouletteTree rouletteWheel;
+	private BinaryRouletteTree	rouletteWheel;
 
 	public synchronized void reIndex(List<T> probabilities) {
 		this.rouletteWheel = new BinaryRouletteTree();
@@ -48,9 +48,8 @@ public class RouletteSampler<T extends Probability<?>> {
 			}
 
 			if (probabilities.get(i).getProbability() == null) {
-				log.warn(
-						"Attempted to spin roulette wheel but an individual was found with a null fitness value.  Please make a call to evaluateFitness() before attempting to spin the roulette wheel. "
-								+ probabilities.get(i));
+				log.warn("Attempted to spin roulette wheel but an individual was found with a null fitness value.  Please make a call to evaluateFitness() before attempting to spin the roulette wheel. "
+						+ probabilities.get(i));
 
 				continue;
 			}

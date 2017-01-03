@@ -22,8 +22,8 @@ package com.ciphertool.engine.bayes;
 import java.math.BigDecimal;
 
 public class LetterProbability implements Probability<Character> {
-	private Character letter;
-	private BigDecimal probability;
+	private Character	letter;
+	private BigDecimal	probability;
 
 	/**
 	 * @param letter

@@ -40,11 +40,11 @@ import com.ciphertool.engine.fitness.FrequencyFitnessEvaluatorTestBase;
 import com.ciphertool.engine.fitness.cipherkey.FrequencyCorpusFitnessEvaluator;
 
 public class FrequencyCorpusFitnessEvaluatorTest extends FrequencyFitnessEvaluatorTestBase {
-	private static Logger									log			= LoggerFactory.getLogger(FrequencyCorpusFitnessEvaluatorTest.class);
+	private static Logger							log			= LoggerFactory.getLogger(FrequencyCorpusFitnessEvaluatorTest.class);
 
 	private static FrequencyCorpusFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome				solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

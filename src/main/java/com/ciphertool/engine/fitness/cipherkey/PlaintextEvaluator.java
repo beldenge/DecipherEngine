@@ -40,16 +40,16 @@ import com.ciphertool.sherlock.wordgraph.Match;
 import com.ciphertool.sherlock.wordgraph.MatchNode;
 
 public class PlaintextEvaluator {
-	private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger		log	= LoggerFactory.getLogger(getClass());
 
-	protected Cipher cipher;
+	protected Cipher	cipher;
 
-	private MarkovModel letterMarkovModel;
-	private MarkovModel wordMarkovModel;
+	private MarkovModel	letterMarkovModel;
+	private MarkovModel	wordMarkovModel;
 
-	private int lastRowBegin;
-	private double letterNGramWeight;
-	private double wordNGramWeight;
+	private int			lastRowBegin;
+	private double		letterNGramWeight;
+	private double		wordNGramWeight;
 
 	@PostConstruct
 	public void init() {
@@ -74,8 +74,7 @@ public class PlaintextEvaluator {
 	public Double evaluateLetterNGrams(Chromosome chromosome) {
 		CipherKeyChromosome cipherKeyChromosome = (CipherKeyChromosome) chromosome;
 
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0,
-				lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(cipherKeyChromosome).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
 
@@ -105,8 +104,7 @@ public class PlaintextEvaluator {
 	}
 
 	public Double evaluateWords(Chromosome chromosome) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0,
-				lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
 		String longestMatch;

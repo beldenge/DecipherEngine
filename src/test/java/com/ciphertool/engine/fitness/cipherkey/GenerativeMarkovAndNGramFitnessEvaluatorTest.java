@@ -37,16 +37,16 @@ import com.ciphertool.sherlock.etl.importers.WordNGramMarkovImporter;
 import com.ciphertool.sherlock.markov.MarkovModel;
 
 public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase {
-	private static Logger									log			= LoggerFactory.getLogger(GenerativeMarkovAndNGramFitnessEvaluatorTest.class);
+	private static Logger											log			= LoggerFactory.getLogger(GenerativeMarkovAndNGramFitnessEvaluatorTest.class);
 
-	private static LetterNGramMarkovImporter				letterNGramMarkovImporter;
-	private static WordNGramMarkovImporter					wordNGramMarkovImporter;
-	private static MarkovModel								letterMarkovModel;
-	private static MarkovModel								wordMarkovModel;
+	private static LetterNGramMarkovImporter						letterNGramMarkovImporter;
+	private static WordNGramMarkovImporter							wordNGramMarkovImporter;
+	private static MarkovModel										letterMarkovModel;
+	private static MarkovModel										wordMarkovModel;
 
 	private static GenerativeLetterAndWordMarkovFitnessEvaluator	fitnessEvaluator;
 
-	private static CipherKeyChromosome						solution	= new CipherKeyChromosome();
+	private static CipherKeyChromosome								solution	= new CipherKeyChromosome();
 
 	static {
 		solution.putGene("tri", new CipherKeyGene(solution, "i"));

@@ -60,8 +60,8 @@ public class RouletteSamplerTest {
 		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
-			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(), entry.getValue().getTerminalInfo()
-					.getProbability()));
+			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
+					entry.getValue().getTerminalInfo().getProbability()));
 		}
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
@@ -80,14 +80,14 @@ public class RouletteSamplerTest {
 				characterCounts.put(letterUnigramProbabilities.get(nextIndex).getValue(), 1);
 			}
 
-			characterCounts.put(letterUnigramProbabilities.get(nextIndex).getValue(), characterCounts.get(
-					letterUnigramProbabilities.get(nextIndex).getValue()) + 1);
+			characterCounts.put(letterUnigramProbabilities.get(nextIndex).getValue(), characterCounts.get(letterUnigramProbabilities.get(nextIndex).getValue())
+					+ 1);
 		}
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
 			BigDecimal actual = entry.getValue().getTerminalInfo().getProbability().setScale(5, RoundingMode.HALF_UP);
-			BigDecimal estimated = BigDecimal.valueOf(((double) characterCounts.get(entry.getKey()) / (double) i))
-					.setScale(5, RoundingMode.HALF_UP);
+			BigDecimal estimated = BigDecimal.valueOf(((double) characterCounts.get(entry.getKey())
+					/ (double) i)).setScale(5, RoundingMode.HALF_UP);
 
 			System.out.printf(entry.getKey() + ": actual=" + actual.toString() + ", estimated=" + estimated.toString()
 					+ ", difference=" + actual.subtract(estimated).abs().setScale(5, RoundingMode.HALF_UP).toString()
