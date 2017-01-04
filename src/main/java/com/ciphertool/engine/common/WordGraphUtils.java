@@ -22,6 +22,7 @@ package com.ciphertool.engine.common;
 import java.util.List;
 import java.util.Map;
 
+import com.ciphertool.engine.bayes.CipherSolution;
 import com.ciphertool.engine.entities.CipherKeyChromosome;
 import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.entities.Ciphertext;
@@ -103,6 +104,25 @@ public class WordGraphUtils {
 			nextPlaintext = (CipherKeyGene) chromosome.getGenes().get(ciphertext.getValue());
 
 			sb.append(nextPlaintext.getValue());
+		}
+
+		return sb.toString();
+	}
+
+	public static String getSolutionAsString(CipherSolution cipherSolution) {
+		StringBuilder sb = new StringBuilder();
+
+		if (null == cipherSolution.getCipher()) {
+			throw new IllegalStateException(
+					"Called getSolutionAsString(), but found a null Cipher.  Cannot create valid solution string unless the Cipher is properly set.");
+		}
+
+		String nextPlaintext = null;
+
+		for (Ciphertext ciphertext : cipherSolution.getCipher().getCiphertextCharacters()) {
+			nextPlaintext = cipherSolution.getMappings().get(ciphertext.getValue());
+
+			sb.append(nextPlaintext);
 		}
 
 		return sb.toString();

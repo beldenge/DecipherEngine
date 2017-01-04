@@ -30,8 +30,6 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
-import com.ciphertool.genetics.entities.Chromosome;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
@@ -71,7 +69,7 @@ public class PlaintextEvaluator {
 		log.debug("unknownWordProbability: {}", unknownWordProbability);
 	}
 
-	public BigDecimal evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(CipherSolution chromosome) {
 		BigDecimal total = BigDecimal.ZERO;
 		total = total.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(evaluateLetterNGrams(chromosome), MathContext.DECIMAL128)));
 		total = total.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(evaluateWords(chromosome), MathContext.DECIMAL128)));
@@ -79,8 +77,8 @@ public class PlaintextEvaluator {
 		return total;
 	}
 
-	public BigDecimal evaluateLetterNGrams(Chromosome chromosome) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
+	public BigDecimal evaluateLetterNGrams(CipherSolution solution) {
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
 
@@ -100,8 +98,8 @@ public class PlaintextEvaluator {
 		return jointProbability;
 	}
 
-	public BigDecimal evaluateWords(Chromosome chromosome) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
+	public BigDecimal evaluateWords(CipherSolution solution) {
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
 
 		BigDecimal jointProbability = BigDecimal.ONE;
 

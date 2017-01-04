@@ -4,12 +4,12 @@ import static org.mockito.Mockito.spy;
 
 import java.util.concurrent.ExecutionException;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.ciphertool.engine.entities.CipherKeyChromosome;
-import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.fitness.FitnessEvaluatorTestBase;
 import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
 import com.ciphertool.sherlock.etl.importers.WordNGramMarkovImporter;
@@ -25,68 +25,68 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 
 	private static PlaintextEvaluator			plaintextEvaluator;
 
-	private static CipherKeyChromosome			solution	= new CipherKeyChromosome();
+	private static CipherSolution				solution	= new CipherSolution();
 
 	static {
-		solution.putGene("tri", new CipherKeyGene(solution, "i"));
-		solution.putGene("lrbox", new CipherKeyGene(solution, "l"));
-		solution.putGene("p", new CipherKeyGene(solution, "i"));
-		solution.putGene("forslash", new CipherKeyGene(solution, "k"));
-		solution.putGene("z", new CipherKeyGene(solution, "e"));
-		solution.putGene("u", new CipherKeyGene(solution, "i"));
-		solution.putGene("b", new CipherKeyGene(solution, "l"));
-		solution.putGene("backk", new CipherKeyGene(solution, "i"));
-		solution.putGene("o", new CipherKeyGene(solution, "n"));
-		solution.putGene("r", new CipherKeyGene(solution, "g"));
-		solution.putGene("pi", new CipherKeyGene(solution, "p"));
-		solution.putGene("backp", new CipherKeyGene(solution, "e"));
-		solution.putGene("x", new CipherKeyGene(solution, "o"));
-		solution.putGene("w", new CipherKeyGene(solution, "e"));
-		solution.putGene("v", new CipherKeyGene(solution, "b"));
-		solution.putGene("plus", new CipherKeyGene(solution, "e"));
-		solution.putGene("backe", new CipherKeyGene(solution, "c"));
-		solution.putGene("g", new CipherKeyGene(solution, "a"));
-		solution.putGene("y", new CipherKeyGene(solution, "u"));
-		solution.putGene("f", new CipherKeyGene(solution, "s"));
-		solution.putGene("circledot", new CipherKeyGene(solution, "e"));
-		solution.putGene("h", new CipherKeyGene(solution, "t"));
-		solution.putGene("boxdot", new CipherKeyGene(solution, "s"));
-		solution.putGene("k", new CipherKeyGene(solution, "s"));
-		solution.putGene("anchor", new CipherKeyGene(solution, "o"));
-		solution.putGene("backq", new CipherKeyGene(solution, "m"));
-		solution.putGene("m", new CipherKeyGene(solution, "h"));
-		solution.putGene("j", new CipherKeyGene(solution, "f"));
-		solution.putGene("carrot", new CipherKeyGene(solution, "n"));
-		solution.putGene("i", new CipherKeyGene(solution, "t"));
-		solution.putGene("tridot", new CipherKeyGene(solution, "s"));
-		solution.putGene("t", new CipherKeyGene(solution, "o"));
-		solution.putGene("flipt", new CipherKeyGene(solution, "r"));
-		solution.putGene("n", new CipherKeyGene(solution, "e"));
-		solution.putGene("q", new CipherKeyGene(solution, "f"));
-		solution.putGene("d", new CipherKeyGene(solution, "n"));
-		solution.putGene("fullcircle", new CipherKeyGene(solution, "t"));
-		solution.putGene("horstrike", new CipherKeyGene(solution, "h"));
-		solution.putGene("s", new CipherKeyGene(solution, "a"));
-		solution.putGene("vertstrike", new CipherKeyGene(solution, "n"));
-		solution.putGene("fullbox", new CipherKeyGene(solution, "l"));
-		solution.putGene("a", new CipherKeyGene(solution, "w"));
-		solution.putGene("backf", new CipherKeyGene(solution, "d"));
-		solution.putGene("backl", new CipherKeyGene(solution, "a"));
-		solution.putGene("e", new CipherKeyGene(solution, "e"));
-		solution.putGene("l", new CipherKeyGene(solution, "t"));
-		solution.putGene("backd", new CipherKeyGene(solution, "o"));
-		solution.putGene("backr", new CipherKeyGene(solution, "r"));
-		solution.putGene("backslash", new CipherKeyGene(solution, "r"));
-		solution.putGene("fulltri", new CipherKeyGene(solution, "a"));
-		solution.putGene("zodiac", new CipherKeyGene(solution, "d"));
-		solution.putGene("backc", new CipherKeyGene(solution, "v"));
-		solution.putGene("backj", new CipherKeyGene(solution, "x"));
-		solution.putGene("box", new CipherKeyGene(solution, "y"));
+		solution.putMapping("tri", "i");
+		solution.putMapping("lrbox", "l");
+		solution.putMapping("p", "i");
+		solution.putMapping("forslash", "k");
+		solution.putMapping("z", "e");
+		solution.putMapping("u", "i");
+		solution.putMapping("b", "l");
+		solution.putMapping("backk", "i");
+		solution.putMapping("o", "n");
+		solution.putMapping("r", "g");
+		solution.putMapping("pi", "p");
+		solution.putMapping("backp", "e");
+		solution.putMapping("x", "o");
+		solution.putMapping("w", "e");
+		solution.putMapping("v", "b");
+		solution.putMapping("plus", "e");
+		solution.putMapping("backe", "c");
+		solution.putMapping("g", "a");
+		solution.putMapping("y", "u");
+		solution.putMapping("f", "s");
+		solution.putMapping("circledot", "e");
+		solution.putMapping("h", "t");
+		solution.putMapping("boxdot", "s");
+		solution.putMapping("k", "s");
+		solution.putMapping("anchor", "o");
+		solution.putMapping("backq", "m");
+		solution.putMapping("m", "h");
+		solution.putMapping("j", "f");
+		solution.putMapping("carrot", "n");
+		solution.putMapping("i", "t");
+		solution.putMapping("tridot", "s");
+		solution.putMapping("t", "o");
+		solution.putMapping("flipt", "r");
+		solution.putMapping("n", "e");
+		solution.putMapping("q", "f");
+		solution.putMapping("d", "n");
+		solution.putMapping("fullcircle", "t");
+		solution.putMapping("horstrike", "h");
+		solution.putMapping("s", "a");
+		solution.putMapping("vertstrike", "n");
+		solution.putMapping("fullbox", "l");
+		solution.putMapping("a", "w");
+		solution.putMapping("backf", "d");
+		solution.putMapping("backl", "a");
+		solution.putMapping("e", "e");
+		solution.putMapping("l", "t");
+		solution.putMapping("backd", "o");
+		solution.putMapping("backr", "r");
+		solution.putMapping("backslash", "r");
+		solution.putMapping("fulltri", "a");
+		solution.putMapping("zodiac", "d");
+		solution.putMapping("backc", "v");
+		solution.putMapping("backj", "x");
+		solution.putMapping("box", "y");
 
 		solution.setCipher(zodiac408);
 	}
 
-	// @BeforeClass
+	@BeforeClass
 	public static void setUp() throws InterruptedException, ExecutionException {
 		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
 		taskExecutorSpy.setCorePoolSize(4);
@@ -127,12 +127,12 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator.init();
 	}
 
-	// @Test
+	@Test
 	public void testEvaluate() {
 		log.info("fitness: " + plaintextEvaluator.evaluate(solution));
 	}
 
-	// @Test
+	@Test
 	public void testPerf() {
 		long start = System.currentTimeMillis();
 		long evaluations = 10000;

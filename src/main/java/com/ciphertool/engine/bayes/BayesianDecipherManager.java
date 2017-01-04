@@ -32,10 +32,7 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.CipherKeyChromosome;
-import com.ciphertool.engine.entities.CipherKeyGene;
 import com.ciphertool.engine.entities.Ciphertext;
-import com.ciphertool.genetics.entities.Gene;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
@@ -68,25 +65,26 @@ public class BayesianDecipherManager {
 		}
 
 		// Initialize the solution key
-		CipherKeyChromosome initialSolution = new CipherKeyChromosome(cipher, cipherKeySize);
+		CipherSolution initialSolution = new CipherSolution(cipher, cipherKeySize);
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 		rouletteSampler.reIndex(letterUnigramProbabilities);
 
 		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(ciphertext -> {
-			// Pick a plaintext at random using the language model and max annealing temperature
-			Gene nextGene = new CipherKeyGene(initialSolution,
-					letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString());
+			// Pick a plaintext at random using the language model
+			String nextPlaintext = letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString();
 
-			initialSolution.putGene(ciphertext, nextGene);
+			initialSolution.putMapping(ciphertext, nextPlaintext);
 		});
+
+		initialSolution.setScore(plaintextEvaluator.evaluate(initialSolution));
 
 		for (int i = 0; i < samplerIterations; i++) {
 			runSampler(initialSolution);
 		}
 	}
 
-	private BigDecimal calculatePlaintextProbability(CipherKeyChromosome solution) {
+	private BigDecimal calculatePlaintextProbability(CipherSolution solution) {
 		BigDecimal probability = null;
 
 		for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
@@ -96,7 +94,7 @@ public class BayesianDecipherManager {
 		return probability;
 	}
 
-	private void runSampler(CipherKeyChromosome solution) {
+	private void runSampler(CipherSolution solution) {
 		// For each cipher symbol type, run the gibbs sampling
 	}
 
