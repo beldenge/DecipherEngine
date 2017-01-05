@@ -19,35 +19,33 @@
 
 package com.ciphertool.engine.bayes;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
-	private static Logger		log	= LoggerFactory.getLogger(BayesianDecipherManager.class);
-
 	private String				cipherName;
 	private PlaintextEvaluator	plaintextEvaluator;
 	private CipherDao			cipherDao;
 	private Cipher				cipher;
 	private MarkovModel			letterMarkovModel;
 	private int					samplerIterations;
+	@SuppressWarnings("unused")
 	private double				sourceModelPrior;
+	@SuppressWarnings("unused")
 	private double				channelModelPrior;
+	@SuppressWarnings("unused")
 	private int					annealingTemperatureStart;
+	@SuppressWarnings("unused")
 	private int					annealingTemperatureStop;
 	private int					cipherKeySize;
 
@@ -82,16 +80,6 @@ public class BayesianDecipherManager {
 		for (int i = 0; i < samplerIterations; i++) {
 			runSampler(initialSolution);
 		}
-	}
-
-	private BigDecimal calculatePlaintextProbability(CipherSolution solution) {
-		BigDecimal probability = null;
-
-		for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
-
-		}
-
-		return probability;
 	}
 
 	private void runSampler(CipherSolution solution) {
