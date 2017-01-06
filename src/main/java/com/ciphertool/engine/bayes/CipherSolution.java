@@ -28,38 +28,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.Ciphertext;
 
 public class CipherSolution {
-	private static Logger		log			= LoggerFactory.getLogger(CipherSolution.class);
+	private static Logger				log			= LoggerFactory.getLogger(CipherSolution.class);
 
-	private static final int	KEY_SIZE	= 54;
+	private static final int			KEY_SIZE	= 54;
 
-	protected Cipher			cipher;
+	protected Cipher					cipher;
 
-	private BigDecimal			score		= BigDecimal.ZERO;
+	private BigDecimal					score		= BigDecimal.ZERO;
 
-	private Map<String, String>	ciphertextToPlaintextMappings;
+	private Map<Ciphertext, Plaintext>	ciphertextToPlaintextMappings;
 
 	public CipherSolution() {
 		ciphertextToPlaintextMappings = new HashMap<>();
 	}
 
-	/**
-	 * @param cipherId
-	 *            the cipherId to set
-	 * @param rows
-	 *            the rows to set
-	 * @param columns
-	 *            the columns to set
-	 */
-	public CipherSolution(Cipher cipher, int numGenes) {
+	public CipherSolution(Cipher cipher, int numCiphertext) {
 		if (cipher == null) {
 			throw new IllegalArgumentException("Cannot construct CipherSolution with null cipher.");
 		}
 
 		this.cipher = cipher;
 
-		ciphertextToPlaintextMappings = new HashMap<>(numGenes);
+		ciphertextToPlaintextMappings = new HashMap<>(numCiphertext);
 	}
 
 	/**
@@ -85,20 +78,20 @@ public class CipherSolution {
 		this.score = score;
 	}
 
-	public Map<String, String> getMappings() {
+	public Map<Ciphertext, Plaintext> getMappings() {
 		return Collections.unmodifiableMap(ciphertextToPlaintextMappings);
 	}
 
-	public void putMapping(String key, String plaintext) {
+	public void putMapping(Ciphertext key, Plaintext plaintext) {
 		if (null == plaintext) {
-			log.warn("Attempted to insert a null Gene to CipherSolution.  Returning. " + this);
+			log.warn("Attempted to insert a null mapping to CipherSolution.  Returning. " + this);
 
 			return;
 		}
 
 		if (this.ciphertextToPlaintextMappings.get(key) != null) {
-			log.warn("Attempted to insert a Gene to CipherSolution with key " + key
-					+ ", but the key already exists.  If this was intentional, please use replaceGene() instead.  Returning. "
+			log.warn("Attempted to insert a mapping to CipherSolution with key " + key
+					+ ", but the key already exists.  If this was intentional, please use replaceMapping() instead.  Returning. "
 					+ this);
 
 			return;
@@ -107,9 +100,9 @@ public class CipherSolution {
 		this.ciphertextToPlaintextMappings.put(key, plaintext);
 	}
 
-	public String removeMapping(String key) {
+	public Plaintext removeMapping(Ciphertext key) {
 		if (null == this.ciphertextToPlaintextMappings || null == this.ciphertextToPlaintextMappings.get(key)) {
-			log.warn("Attempted to remove a Gene from CipherSolution with key " + key
+			log.warn("Attempted to remove a mapping from CipherSolution with key " + key
 					+ ", but this key does not exist.  Returning null.");
 
 			return null;
@@ -121,16 +114,16 @@ public class CipherSolution {
 	/*
 	 * This does the same thing as putMapping(), and exists solely for semantic consistency.
 	 */
-	public void replaceMapping(String key, String newPlaintext) {
+	public void replaceMapping(Ciphertext key, Plaintext newPlaintext) {
 		if (null == newPlaintext) {
-			log.warn("Attempted to replace a Gene from CipherSolution, but the supplied Gene was null.  Cannot continue. "
+			log.warn("Attempted to replace a mapping from CipherSolution, but the supplied mapping was null.  Cannot continue. "
 					+ this);
 
 			return;
 		}
 
 		if (null == this.ciphertextToPlaintextMappings || null == this.ciphertextToPlaintextMappings.get(key)) {
-			log.warn("Attempted to replace a Gene from CipherSolution with key " + key
+			log.warn("Attempted to replace a mapping from CipherSolution with key " + key
 					+ ", but this key does not exist.  Cannot continue.");
 
 			return;
@@ -150,11 +143,11 @@ public class CipherSolution {
 	public CipherSolution clone() {
 		CipherSolution copySolution = new CipherSolution(this.cipher, this.ciphertextToPlaintextMappings.size());
 
-		String nextGene = null;
-		for (String key : this.ciphertextToPlaintextMappings.keySet()) {
-			nextGene = this.ciphertextToPlaintextMappings.get(key);
+		Plaintext nextPlaintext = null;
+		for (Ciphertext key : this.ciphertextToPlaintextMappings.keySet()) {
+			nextPlaintext = this.ciphertextToPlaintextMappings.get(key);
 
-			copySolution.putMapping(key, nextGene);
+			copySolution.putMapping(key, nextPlaintext);
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone
@@ -180,7 +173,7 @@ public class CipherSolution {
 			int actualSize = this.cipher.getCiphertextCharacters().size();
 			for (int i = 0; i < actualSize; i++) {
 
-				nextPlaintext = this.ciphertextToPlaintextMappings.get(this.cipher.getCiphertextCharacters().get(i).getValue());
+				nextPlaintext = this.ciphertextToPlaintextMappings.get(this.cipher.getCiphertextCharacters().get(i).getValue()).getValue();
 
 				sb.append(" ");
 				sb.append(nextPlaintext);

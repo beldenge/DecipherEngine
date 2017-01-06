@@ -19,7 +19,11 @@
 
 package com.ciphertool.engine.bayes;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,28 +33,34 @@ import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
+import com.ciphertool.engine.entities.Ciphertext;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
-	private String				cipherName;
-	private PlaintextEvaluator	plaintextEvaluator;
-	private CipherDao			cipherDao;
-	private Cipher				cipher;
-	private MarkovModel			letterMarkovModel;
-	private int					samplerIterations;
-	@SuppressWarnings("unused")
-	private double				sourceModelPrior;
-	@SuppressWarnings("unused")
-	private double				channelModelPrior;
-	@SuppressWarnings("unused")
-	private int					annealingTemperatureStart;
-	@SuppressWarnings("unused")
-	private int					annealingTemperatureStop;
-	private int					cipherKeySize;
+	private static final List<Character>	LOWERCASE_LETTERS	= Arrays.asList(new Character[] { 'a', 'b', 'c', 'd',
+			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
+			'z' });
+
+	private String							cipherName;
+	private PlaintextEvaluator				plaintextEvaluator;
+	private CipherDao						cipherDao;
+	private Cipher							cipher;
+	private MarkovModel						letterMarkovModel;
+	private int								samplerIterations;
+	private double							sourceModelPrior;
+	private BigDecimal						alphaHyperparameter;
+	private double							channelModelPrior;
+	private BigDecimal						betaHyperparameter;
+	private int								annealingTemperatureMax;
+	private int								annealingTemperatureMin;
+	private int								cipherKeySize;
 
 	@PostConstruct
 	public void setUp() {
+		alphaHyperparameter = BigDecimal.valueOf(sourceModelPrior);
+		betaHyperparameter = BigDecimal.valueOf(channelModelPrior);
+
 		this.cipher = cipherDao.findByCipherName(cipherName);
 
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
@@ -69,21 +79,100 @@ public class BayesianDecipherManager {
 		rouletteSampler.reIndex(letterUnigramProbabilities);
 
 		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(ciphertext -> {
-			// Pick a plaintext at random using the language model
+			// Pick a plaintext at random according to the language model
 			String nextPlaintext = letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString();
 
-			initialSolution.putMapping(ciphertext, nextPlaintext);
+			initialSolution.putMapping(new Ciphertext(ciphertext), new Plaintext(nextPlaintext));
 		});
 
 		initialSolution.setScore(plaintextEvaluator.evaluate(initialSolution));
 
+		BigDecimal maxTemp = BigDecimal.valueOf(annealingTemperatureMax);
+		BigDecimal minTemp = BigDecimal.valueOf(annealingTemperatureMin);
+		BigDecimal iterations = BigDecimal.valueOf(samplerIterations);
+		BigDecimal temperature;
+
 		for (int i = 0; i < samplerIterations; i++) {
-			runSampler(initialSolution);
+			/*
+			 * Set temperature as a ratio of the max temperature to the number of iterations left, offset by the min
+			 * temperature so as not to go below it
+			 */
+			temperature = maxTemp.subtract(minTemp).multiply(iterations.subtract(BigDecimal.valueOf(i)).divide(iterations, MathContext.DECIMAL128)).add(minTemp);
+
+			runGibbsSampler(temperature, initialSolution);
 		}
 	}
 
-	private void runSampler(CipherSolution solution) {
+	private void runGibbsSampler(BigDecimal temperature, CipherSolution solution) {
+		BigDecimal acceptanceProbability;
+
 		// For each cipher symbol type, run the gibbs sampling
+		for (Map.Entry<Ciphertext, Plaintext> entry : solution.getMappings().entrySet()) {
+			String lastCharacter = null;
+			BigDecimal sumOfProbabilities = BigDecimal.ZERO;
+
+			// Calculate the full conditional probability for each possible plaintext substitution
+			for (Character letter : LOWERCASE_LETTERS) {
+				BigDecimal fullConditionalProbability = BigDecimal.ONE;
+				BigDecimal numerator;
+				BigDecimal denominator;
+				String currentCharacter = "";
+				Map<String, BigDecimal> unigramCounts = new HashMap<>();
+				Map<String, BigDecimal> bigramCounts = new HashMap<>();
+
+				for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
+					if (ciphertext.equals(entry.getKey())) {
+						lastCharacter = "";
+						currentCharacter = "";
+					} else {
+						lastCharacter = currentCharacter;
+						currentCharacter = solution.getMappings().get(ciphertext).getValue();
+
+						if (unigramCounts.get(currentCharacter) == null) {
+							unigramCounts.put(currentCharacter, BigDecimal.ZERO);
+						}
+
+						unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+					}
+
+					if (!lastCharacter.isEmpty() && !currentCharacter.isEmpty()) {
+						if (bigramCounts.get(lastCharacter + currentCharacter) == null) {
+							bigramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
+						}
+
+						bigramCounts.put(currentCharacter, unigramCounts.get(lastCharacter
+								+ currentCharacter).add(BigDecimal.ONE));
+					}
+
+					BigDecimal bigramPriorProbability = letterMarkovModel.findLongest(lastCharacter
+							+ currentCharacter).getTerminalInfo().getConditionalProbability();
+					// TODO: verify that our corpus contains every possible bigram (this should be the case)
+					BigDecimal unigramCount = unigramCounts.get(currentCharacter);
+					BigDecimal bigramCount = bigramCounts.get(lastCharacter + currentCharacter);
+					numerator = alphaHyperparameter.multiply(bigramPriorProbability).add(bigramCount == null ? BigDecimal.ZERO : bigramCount);
+					denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+
+					fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+				}
+			}
+
+			CipherSolution proposedSolution = solution.clone();
+
+			proposedSolution.setScore(plaintextEvaluator.evaluate(proposedSolution));
+
+			// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
+			// TODO: use a better implementation of exponent that does not lose precision
+			acceptanceProbability = BigDecimal.valueOf(Math.exp(convertToLogProbability(solution.getScore()).subtract(convertToLogProbability(proposedSolution.getScore())).divide(temperature, MathContext.DECIMAL128).negate().doubleValue()));
+		}
+	}
+
+	public BigDecimal convertToLogProbability(BigDecimal probability) {
+		if (probability == null) {
+			return BigDecimal.ZERO;
+		}
+
+		// TODO: use a better implementation of logarithm that does not lose precision
+		return BigDecimal.valueOf(Math.log10(probability.doubleValue()));
 	}
 
 	/**
@@ -150,20 +239,20 @@ public class BayesianDecipherManager {
 	}
 
 	/**
-	 * @param annealingTemperatureStart
-	 *            the annealingTemperatureStart to set
+	 * @param annealingTemperatureMax
+	 *            the annealingTemperatureMax to set
 	 */
 	@Required
-	public void setAnnealingTemperatureStart(int annealingTemperatureStart) {
-		this.annealingTemperatureStart = annealingTemperatureStart;
+	public void setAnnealingTemperatureMax(int annealingTemperatureMax) {
+		this.annealingTemperatureMax = annealingTemperatureMax;
 	}
 
 	/**
-	 * @param annealingTemperatureStop
-	 *            the annealingTemperatureStop to set
+	 * @param annealingTemperatureMin
+	 *            the annealingTemperatureMin to set
 	 */
 	@Required
-	public void setAnnealingTemperatureStop(int annealingTemperatureStop) {
-		this.annealingTemperatureStop = annealingTemperatureStop;
+	public void setAnnealingTemperatureMin(int annealingTemperatureMin) {
+		this.annealingTemperatureMin = annealingTemperatureMin;
 	}
 }

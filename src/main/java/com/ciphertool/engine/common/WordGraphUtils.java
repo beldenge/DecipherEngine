@@ -120,7 +120,7 @@ public class WordGraphUtils {
 		String nextPlaintext = null;
 
 		for (Ciphertext ciphertext : cipherSolution.getCipher().getCiphertextCharacters()) {
-			nextPlaintext = cipherSolution.getMappings().get(ciphertext.getValue());
+			nextPlaintext = cipherSolution.getMappings().get(ciphertext.getValue()).getValue();
 
 			sb.append(nextPlaintext);
 		}
