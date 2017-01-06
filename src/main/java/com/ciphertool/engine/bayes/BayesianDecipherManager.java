@@ -82,7 +82,7 @@ public class BayesianDecipherManager {
 			// Pick a plaintext at random according to the language model
 			String nextPlaintext = letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString();
 
-			initialSolution.putMapping(new Ciphertext(ciphertext), new Plaintext(nextPlaintext));
+			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
 
 		initialSolution.setScore(plaintextEvaluator.evaluate(initialSolution));
@@ -107,7 +107,7 @@ public class BayesianDecipherManager {
 		BigDecimal acceptanceProbability;
 
 		// For each cipher symbol type, run the gibbs sampling
-		for (Map.Entry<Ciphertext, Plaintext> entry : solution.getMappings().entrySet()) {
+		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
 			String lastCharacter = null;
 			BigDecimal sumOfProbabilities = BigDecimal.ZERO;
 
@@ -121,12 +121,12 @@ public class BayesianDecipherManager {
 				Map<String, BigDecimal> bigramCounts = new HashMap<>();
 
 				for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
-					if (ciphertext.equals(entry.getKey())) {
+					if (ciphertext.getValue().equals(entry.getKey())) {
 						lastCharacter = "";
 						currentCharacter = "";
 					} else {
 						lastCharacter = currentCharacter;
-						currentCharacter = solution.getMappings().get(ciphertext).getValue();
+						currentCharacter = solution.getMappings().get(ciphertext.getValue()).getValue();
 
 						if (unigramCounts.get(currentCharacter) == null) {
 							unigramCounts.put(currentCharacter, BigDecimal.ZERO);

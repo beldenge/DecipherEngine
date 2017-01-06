@@ -31,18 +31,18 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
 
 public class CipherSolution {
-	private static Logger				log			= LoggerFactory.getLogger(CipherSolution.class);
+	private static Logger			log			= LoggerFactory.getLogger(CipherSolution.class);
 
-	private static final int			KEY_SIZE	= 54;
+	private static final int		KEY_SIZE	= 54;
 
-	protected Cipher					cipher;
+	protected Cipher				cipher;
 
-	private BigDecimal					score		= BigDecimal.ZERO;
+	private BigDecimal				score		= BigDecimal.ZERO;
 
-	private Map<Ciphertext, Plaintext>	ciphertextToPlaintextMappings;
+	private Map<String, Plaintext>	mappings;
 
 	public CipherSolution() {
-		ciphertextToPlaintextMappings = new HashMap<>();
+		mappings = new HashMap<>();
 	}
 
 	public CipherSolution(Cipher cipher, int numCiphertext) {
@@ -52,7 +52,7 @@ public class CipherSolution {
 
 		this.cipher = cipher;
 
-		ciphertextToPlaintextMappings = new HashMap<>(numCiphertext);
+		mappings = new HashMap<>(numCiphertext);
 	}
 
 	/**
@@ -78,18 +78,18 @@ public class CipherSolution {
 		this.score = score;
 	}
 
-	public Map<Ciphertext, Plaintext> getMappings() {
-		return Collections.unmodifiableMap(ciphertextToPlaintextMappings);
+	public Map<String, Plaintext> getMappings() {
+		return Collections.unmodifiableMap(mappings);
 	}
 
-	public void putMapping(Ciphertext key, Plaintext plaintext) {
+	public void putMapping(String key, Plaintext plaintext) {
 		if (null == plaintext) {
 			log.warn("Attempted to insert a null mapping to CipherSolution.  Returning. " + this);
 
 			return;
 		}
 
-		if (this.ciphertextToPlaintextMappings.get(key) != null) {
+		if (this.mappings.get(key) != null) {
 			log.warn("Attempted to insert a mapping to CipherSolution with key " + key
 					+ ", but the key already exists.  If this was intentional, please use replaceMapping() instead.  Returning. "
 					+ this);
@@ -97,24 +97,24 @@ public class CipherSolution {
 			return;
 		}
 
-		this.ciphertextToPlaintextMappings.put(key, plaintext);
+		this.mappings.put(key, plaintext);
 	}
 
 	public Plaintext removeMapping(Ciphertext key) {
-		if (null == this.ciphertextToPlaintextMappings || null == this.ciphertextToPlaintextMappings.get(key)) {
+		if (null == this.mappings || null == this.mappings.get(key)) {
 			log.warn("Attempted to remove a mapping from CipherSolution with key " + key
 					+ ", but this key does not exist.  Returning null.");
 
 			return null;
 		}
 
-		return this.ciphertextToPlaintextMappings.remove(key);
+		return this.mappings.remove(key);
 	}
 
 	/*
 	 * This does the same thing as putMapping(), and exists solely for semantic consistency.
 	 */
-	public void replaceMapping(Ciphertext key, Plaintext newPlaintext) {
+	public void replaceMapping(String key, Plaintext newPlaintext) {
 		if (null == newPlaintext) {
 			log.warn("Attempted to replace a mapping from CipherSolution, but the supplied mapping was null.  Cannot continue. "
 					+ this);
@@ -122,18 +122,18 @@ public class CipherSolution {
 			return;
 		}
 
-		if (null == this.ciphertextToPlaintextMappings || null == this.ciphertextToPlaintextMappings.get(key)) {
+		if (null == this.mappings || null == this.mappings.get(key)) {
 			log.warn("Attempted to replace a mapping from CipherSolution with key " + key
 					+ ", but this key does not exist.  Cannot continue.");
 
 			return;
 		}
 
-		this.ciphertextToPlaintextMappings.put(key, newPlaintext);
+		this.mappings.put(key, newPlaintext);
 	}
 
 	public Integer actualSize() {
-		return this.ciphertextToPlaintextMappings.size();
+		return this.mappings.size();
 	}
 
 	public Integer targetSize() {
@@ -141,11 +141,11 @@ public class CipherSolution {
 	}
 
 	public CipherSolution clone() {
-		CipherSolution copySolution = new CipherSolution(this.cipher, this.ciphertextToPlaintextMappings.size());
+		CipherSolution copySolution = new CipherSolution(this.cipher, this.mappings.size());
 
 		Plaintext nextPlaintext = null;
-		for (Ciphertext key : this.ciphertextToPlaintextMappings.keySet()) {
-			nextPlaintext = this.ciphertextToPlaintextMappings.get(key);
+		for (String key : this.mappings.keySet()) {
+			nextPlaintext = this.mappings.get(key);
 
 			copySolution.putMapping(key, nextPlaintext);
 		}
@@ -173,7 +173,7 @@ public class CipherSolution {
 			int actualSize = this.cipher.getCiphertextCharacters().size();
 			for (int i = 0; i < actualSize; i++) {
 
-				nextPlaintext = this.ciphertextToPlaintextMappings.get(this.cipher.getCiphertextCharacters().get(i).getValue()).getValue();
+				nextPlaintext = this.mappings.get(this.cipher.getCiphertextCharacters().get(i).getValue()).getValue();
 
 				sb.append(" ");
 				sb.append(nextPlaintext);

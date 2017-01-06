@@ -28,10 +28,6 @@ public class Ciphertext {
 	public Ciphertext() {
 	}
 
-	public Ciphertext(String value) {
-		this.value = value;
-	}
-
 	public Ciphertext(Integer ciphertextId, String value) {
 		this.ciphertextId = ciphertextId;
 		this.value = value;
