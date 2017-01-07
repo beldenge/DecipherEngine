@@ -19,38 +19,41 @@
 
 package com.ciphertool.engine.bayes;
 
-import java.math.BigDecimal;
-
-public class LetterProbability implements Probability<Character> {
-	private Character	letter;
-	private BigDecimal	probability;
+public class CiphertextMapping {
+	private String		ciphertext;
+	private Plaintext	plaintext;
 
 	/**
-	 * @param letter
-	 *            the letter
-	 * @param probability
-	 *            the probability
+	 * @param ciphertext
+	 *            the ciphertext String
+	 * @param plaintext
+	 *            the Plaintext
 	 */
-	public LetterProbability(Character letter, BigDecimal probability) {
-		this.letter = letter;
-		this.probability = probability;
+	public CiphertextMapping(String ciphertext, Plaintext plaintext) {
+		this.ciphertext = ciphertext;
+		this.plaintext = plaintext;
 	}
 
-	@Override
-	public Character getValue() {
-		return letter;
+	/**
+	 * @return the ciphertext
+	 */
+	public String getCiphertext() {
+		return ciphertext;
 	}
 
-	@Override
-	public BigDecimal getProbability() {
-		return probability;
+	/**
+	 * @return the plaintext
+	 */
+	public Plaintext getPlaintext() {
+		return plaintext;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((letter == null) ? 0 : letter.hashCode());
+		result = prime * result + ((ciphertext == null) ? 0 : ciphertext.hashCode());
+		result = prime * result + ((plaintext == null) ? 0 : plaintext.hashCode());
 		return result;
 	}
 
@@ -62,15 +65,22 @@ public class LetterProbability implements Probability<Character> {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof LetterProbability)) {
+		if (!(obj instanceof CiphertextMapping)) {
 			return false;
 		}
-		LetterProbability other = (LetterProbability) obj;
-		if (letter == null) {
-			if (other.letter != null) {
+		CiphertextMapping other = (CiphertextMapping) obj;
+		if (ciphertext == null) {
+			if (other.ciphertext != null) {
 				return false;
 			}
-		} else if (!letter.equals(other.letter)) {
+		} else if (!ciphertext.equals(other.ciphertext)) {
+			return false;
+		}
+		if (plaintext == null) {
+			if (other.plaintext != null) {
+				return false;
+			}
+		} else if (!plaintext.equals(other.plaintext)) {
 			return false;
 		}
 		return true;

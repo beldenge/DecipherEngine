@@ -38,9 +38,9 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
-	private static final List<Character>	LOWERCASE_LETTERS	= Arrays.asList(new Character[] { 'a', 'b', 'c', 'd',
-			'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y',
-			'z' });
+	private static final List<Character>	LOWERCASE_LETTERS			= Arrays.asList(new Character[] { 'a', 'b', 'c',
+			'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+			'y', 'z' });
 
 	private String							cipherName;
 	private PlaintextEvaluator				plaintextEvaluator;
@@ -55,6 +55,9 @@ public class BayesianDecipherManager {
 	private int								annealingTemperatureMax;
 	private int								annealingTemperatureMin;
 	private int								cipherKeySize;
+	private static List<LetterProbability>	letterUnigramProbabilities	= new ArrayList<>();
+	// Use a uniform distribution for ciphertext probabilities
+	BigDecimal								ciphertextProbability		= BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathContext.DECIMAL128);
 
 	@PostConstruct
 	public void setUp() {
@@ -64,8 +67,6 @@ public class BayesianDecipherManager {
 		this.cipher = cipherDao.findByCipherName(cipherName);
 
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
-
-		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
 			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
@@ -117,43 +118,68 @@ public class BayesianDecipherManager {
 				BigDecimal numerator;
 				BigDecimal denominator;
 				String currentCharacter = "";
+				CiphertextMapping ciphertextMapping;
 				Map<String, BigDecimal> unigramCounts = new HashMap<>();
 				Map<String, BigDecimal> bigramCounts = new HashMap<>();
+				Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts = new HashMap<>();
 
 				for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
+					lastCharacter = currentCharacter;
+
 					if (ciphertext.getValue().equals(entry.getKey())) {
-						lastCharacter = "";
-						currentCharacter = "";
+						currentCharacter = letter.toString();
 					} else {
-						lastCharacter = currentCharacter;
 						currentCharacter = solution.getMappings().get(ciphertext.getValue()).getValue();
-
-						if (unigramCounts.get(currentCharacter) == null) {
-							unigramCounts.put(currentCharacter, BigDecimal.ZERO);
-						}
-
-						unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
 					}
 
-					if (!lastCharacter.isEmpty() && !currentCharacter.isEmpty()) {
-						if (bigramCounts.get(lastCharacter + currentCharacter) == null) {
-							bigramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
-						}
+					ciphertextMapping = new CiphertextMapping(ciphertext.getValue(), new Plaintext(currentCharacter));
 
-						bigramCounts.put(currentCharacter, unigramCounts.get(lastCharacter
-								+ currentCharacter).add(BigDecimal.ONE));
+					if (lastCharacter.isEmpty()) {
+						fullConditionalProbability = fullConditionalProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(lastCharacter.charAt(0))).getProbability()).multiply(ciphertextProbability);
+
+						continue;
 					}
 
 					BigDecimal bigramPriorProbability = letterMarkovModel.findLongest(lastCharacter
 							+ currentCharacter).getTerminalInfo().getConditionalProbability();
-					// TODO: verify that our corpus contains every possible bigram (this should be the case)
-					BigDecimal unigramCount = unigramCounts.get(currentCharacter);
+					// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
+					BigDecimal unigramCount = unigramCounts.get(lastCharacter);
 					BigDecimal bigramCount = bigramCounts.get(lastCharacter + currentCharacter);
 					numerator = alphaHyperparameter.multiply(bigramPriorProbability).add(bigramCount == null ? BigDecimal.ZERO : bigramCount);
 					denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
 
-					fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+					// Multiply by the source model probability
+					fullConditionalProbability = fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+
+					BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
+					unigramCount = unigramCounts.get(currentCharacter);
+					numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
+					denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+
+					// Multiply by the channel model probability
+					fullConditionalProbability = fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+
+					if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
+						ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
+					}
+
+					ciphertextMappingCounts.put(ciphertextMapping, ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
+
+					if (unigramCounts.get(currentCharacter) == null) {
+						unigramCounts.put(currentCharacter, BigDecimal.ZERO);
+					}
+
+					unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+
+					if (bigramCounts.get(lastCharacter + currentCharacter) == null) {
+						bigramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
+					}
+
+					bigramCounts.put(currentCharacter, unigramCounts.get(lastCharacter
+							+ currentCharacter).add(BigDecimal.ONE));
 				}
+
+				sumOfProbabilities = sumOfProbabilities.add(fullConditionalProbability);
 			}
 
 			CipherSolution proposedSolution = solution.clone();
