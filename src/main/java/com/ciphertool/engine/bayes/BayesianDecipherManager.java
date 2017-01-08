@@ -30,6 +30,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.dao.CipherDao;
@@ -39,6 +41,8 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class BayesianDecipherManager {
+	private Logger							log							= LoggerFactory.getLogger(getClass());
+
 	private static final List<Character>	LOWERCASE_LETTERS			= Arrays.asList(new Character[] { 'a', 'b', 'c',
 			'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
 			'y', 'z' });
@@ -94,6 +98,8 @@ public class BayesianDecipherManager {
 		BigDecimal iterations = BigDecimal.valueOf(samplerIterations);
 		BigDecimal temperature;
 
+		CipherSolution next = initialSolution;
+
 		for (int i = 0; i < samplerIterations; i++) {
 			/*
 			 * Set temperature as a ratio of the max temperature to the number of iterations left, offset by the min
@@ -101,11 +107,13 @@ public class BayesianDecipherManager {
 			 */
 			temperature = maxTemp.subtract(minTemp).multiply(iterations.subtract(BigDecimal.valueOf(i)).divide(iterations, MathContext.DECIMAL128)).add(minTemp);
 
-			runGibbsSampler(temperature, initialSolution);
+			next = runGibbsSampler(temperature, next);
 		}
+
+		log.info("Solution: " + next);
 	}
 
-	protected void runGibbsSampler(BigDecimal temperature, CipherSolution solution) {
+	protected CipherSolution runGibbsSampler(BigDecimal temperature, CipherSolution solution) {
 		BigDecimal acceptanceProbability;
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 
@@ -121,6 +129,7 @@ public class BayesianDecipherManager {
 			proposedSolution.getMappings().put(entry.getKey(), new Plaintext(proposedLetter.toString()));
 			proposedSolution.setScore(plaintextEvaluator.evaluate(proposedSolution));
 
+			// For now, we're not doing anything if the same mapping is chosen
 			if (proposedSolution.getScore().compareTo(solution.getScore()) > 1) {
 				solution = proposedSolution;
 			} else {
@@ -133,6 +142,8 @@ public class BayesianDecipherManager {
 				}
 			}
 		}
+
+		return solution;
 	}
 
 	protected List<LetterProbability> computeDistribution(String ciphertextKey, CipherSolution solution) {
