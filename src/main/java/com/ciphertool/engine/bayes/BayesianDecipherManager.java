@@ -155,13 +155,13 @@ public class BayesianDecipherManager {
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
-			BigDecimal fullConditionalProbability = BigDecimal.ONE;
+			BigDecimal fullJointProbability = BigDecimal.ONE;
 			BigDecimal numerator;
 			BigDecimal denominator;
 			String currentCharacter = "";
 			CiphertextMapping ciphertextMapping;
 			Map<String, BigDecimal> unigramCounts = new HashMap<>();
-			Map<String, BigDecimal> bigramCounts = new HashMap<>();
+			Map<String, BigDecimal> nGramCounts = new HashMap<>();
 			Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts = new HashMap<>();
 
 			for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
@@ -176,23 +176,23 @@ public class BayesianDecipherManager {
 				ciphertextMapping = new CiphertextMapping(ciphertext.getValue(), new Plaintext(currentCharacter));
 
 				if (lastCharacter.isEmpty()) {
-					fullConditionalProbability = fullConditionalProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
+					fullJointProbability = fullJointProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
 							currentCharacter.charAt(0),
 							BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
 
 					continue;
 				}
 
-				BigDecimal bigramPriorProbability = letterMarkovModel.findLongest(lastCharacter
+				BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
 						+ currentCharacter).getTerminalInfo().getConditionalProbability();
 				// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
 				BigDecimal unigramCount = unigramCounts.get(lastCharacter);
-				BigDecimal bigramCount = bigramCounts.get(lastCharacter + currentCharacter);
-				numerator = alphaHyperparameter.multiply(bigramPriorProbability).add(bigramCount == null ? BigDecimal.ZERO : bigramCount);
+				BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
+				numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
 				denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
 
 				// Multiply by the source model probability
-				fullConditionalProbability = fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+				fullJointProbability = fullJointProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
 
 				BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
 				unigramCount = unigramCounts.get(currentCharacter);
@@ -200,7 +200,7 @@ public class BayesianDecipherManager {
 				denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
 
 				// Multiply by the channel model probability
-				fullConditionalProbability = fullConditionalProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+				fullJointProbability = fullJointProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
 
 				if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
 					ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
@@ -214,16 +214,16 @@ public class BayesianDecipherManager {
 
 				unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
 
-				if (bigramCounts.get(lastCharacter + currentCharacter) == null) {
-					bigramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
+				if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
+					nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 				}
 
-				bigramCounts.put(currentCharacter, bigramCounts.get(lastCharacter
+				nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
 						+ currentCharacter).add(BigDecimal.ONE));
 			}
 
-			plaintextDistribution.add(new LetterProbability(letter, fullConditionalProbability));
-			sumOfProbabilities = sumOfProbabilities.add(fullConditionalProbability);
+			plaintextDistribution.add(new LetterProbability(letter, fullJointProbability));
+			sumOfProbabilities = sumOfProbabilities.add(fullJointProbability);
 		}
 
 		for (LetterProbability letterProbability : plaintextDistribution) {
