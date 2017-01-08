@@ -102,7 +102,7 @@ public class BayesianDecipherManager {
 		CipherSolution next = initialSolution;
 
 		for (int i = 0; i < samplerIterations; i++) {
-			log.info("Samping iteration: " + (i + 1));
+			log.info("Sampling iteration: " + (i + 1));
 			/*
 			 * Set temperature as a ratio of the max temperature to the number of iterations left, offset by the min
 			 * temperature so as not to go below it
