@@ -46,6 +46,14 @@ public class LetterProbability implements Probability<Character> {
 		return probability;
 	}
 
+	/**
+	 * @param probability
+	 *            the probability to set
+	 */
+	public void setProbability(BigDecimal probability) {
+		this.probability = probability;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

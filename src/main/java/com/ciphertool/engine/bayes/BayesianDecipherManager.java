@@ -62,7 +62,7 @@ public class BayesianDecipherManager {
 	private int								cipherKeySize;
 	private static List<LetterProbability>	letterUnigramProbabilities	= new ArrayList<>();
 	// Use a uniform distribution for ciphertext probabilities
-	BigDecimal								ciphertextProbability		= BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathContext.DECIMAL128);
+	BigDecimal								ciphertextProbability;
 
 	@PostConstruct
 	public void setUp() {
@@ -72,6 +72,7 @@ public class BayesianDecipherManager {
 		this.cipher = cipherDao.findByCipherName(cipherName);
 
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
+		ciphertextProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathContext.DECIMAL128);
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
 			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
@@ -101,6 +102,7 @@ public class BayesianDecipherManager {
 		CipherSolution next = initialSolution;
 
 		for (int i = 0; i < samplerIterations; i++) {
+			log.info("Samping iteration: " + (i + 1));
 			/*
 			 * Set temperature as a ratio of the max temperature to the number of iterations left, offset by the min
 			 * temperature so as not to go below it
@@ -126,7 +128,7 @@ public class BayesianDecipherManager {
 			Character proposedLetter = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution)).getValue();
 
 			CipherSolution proposedSolution = solution.clone();
-			proposedSolution.getMappings().put(entry.getKey(), new Plaintext(proposedLetter.toString()));
+			proposedSolution.replaceMapping(entry.getKey(), new Plaintext(proposedLetter.toString()));
 			proposedSolution.setScore(plaintextEvaluator.evaluate(proposedSolution));
 
 			// For now, we're not doing anything if the same mapping is chosen
@@ -149,6 +151,7 @@ public class BayesianDecipherManager {
 	protected List<LetterProbability> computeDistribution(String ciphertextKey, CipherSolution solution) {
 		List<LetterProbability> plaintextDistribution = new ArrayList<>();
 		String lastCharacter = null;
+		BigDecimal sumOfProbabilities = BigDecimal.ZERO;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
@@ -173,7 +176,9 @@ public class BayesianDecipherManager {
 				ciphertextMapping = new CiphertextMapping(ciphertext.getValue(), new Plaintext(currentCharacter));
 
 				if (lastCharacter.isEmpty()) {
-					fullConditionalProbability = fullConditionalProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(lastCharacter.charAt(0))).getProbability()).multiply(ciphertextProbability);
+					fullConditionalProbability = fullConditionalProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
+							currentCharacter.charAt(0),
+							BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
 
 					continue;
 				}
@@ -213,11 +218,16 @@ public class BayesianDecipherManager {
 					bigramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 				}
 
-				bigramCounts.put(currentCharacter, unigramCounts.get(lastCharacter
+				bigramCounts.put(currentCharacter, bigramCounts.get(lastCharacter
 						+ currentCharacter).add(BigDecimal.ONE));
 			}
 
 			plaintextDistribution.add(new LetterProbability(letter, fullConditionalProbability));
+			sumOfProbabilities = sumOfProbabilities.add(fullConditionalProbability);
+		}
+
+		for (LetterProbability letterProbability : plaintextDistribution) {
+			letterProbability.setProbability(letterProbability.getProbability().divide(sumOfProbabilities, MathContext.DECIMAL128));
 		}
 
 		return plaintextDistribution;
