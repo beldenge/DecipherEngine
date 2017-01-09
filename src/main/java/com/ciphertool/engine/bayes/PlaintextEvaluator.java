@@ -21,6 +21,11 @@ package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import javax.annotation.PostConstruct;
 
@@ -28,6 +33,7 @@ import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.core.task.TaskExecutor;
 
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.entities.Cipher;
@@ -35,19 +41,21 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class PlaintextEvaluator {
-	private Logger		log	= LoggerFactory.getLogger(getClass());
+	private Logger			log	= LoggerFactory.getLogger(getClass());
 
-	protected Cipher	cipher;
+	protected Cipher		cipher;
 
-	private MarkovModel	letterMarkovModel;
-	private MarkovModel	wordMarkovModel;
+	private MarkovModel		letterMarkovModel;
+	private MarkovModel		wordMarkovModel;
 
-	private int			lastRowBegin;
-	private double		letterNGramWeight;
-	private double		wordNGramWeight;
+	private int				lastRowBegin;
+	private double			letterNGramWeight;
+	private double			wordNGramWeight;
 
-	private BigDecimal	unknownLetterNGramProbability;
-	private BigDecimal	unknownWordProbability;
+	private BigDecimal		unknownLetterNGramProbability;
+	private BigDecimal		unknownWordProbability;
+
+	private TaskExecutor	taskExecutor;
 
 	@PostConstruct
 	public void init() {
@@ -93,16 +101,35 @@ public class PlaintextEvaluator {
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(26);
+		FutureTask<BigDecimal> task;
+
+		// Calculate the full conditional probability for each possible plaintext substitution
+		BigDecimal probability;
 		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
 			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 
 			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
-				jointLogProbability = jointLogProbability.add(convertToLogProbability(match.getTerminalInfo().getProbability()));
+				probability = match.getTerminalInfo().getProbability();
 			} else {
 				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathContext.DECIMAL128);
-				jointLogProbability = jointLogProbability.add(convertToLogProbability(unknownLetterNGramProbability));
+				probability = unknownWordProbability;
+			}
+
+			task = new FutureTask<>(new CovertLogProbabilityTask(probability));
+			futures.add(task);
+			this.taskExecutor.execute(task);
+		}
+
+		for (FutureTask<BigDecimal> future : futures) {
+			try {
+				jointLogProbability = jointLogProbability.add(future.get());
+			} catch (InterruptedException ie) {
+				log.error("Caught InterruptedException while waiting for BigDecimal ", ie);
+			} catch (ExecutionException ee) {
+				log.error("Caught ExecutionException while waiting for BigDecimal ", ee);
 			}
 		}
 
@@ -115,22 +142,60 @@ public class PlaintextEvaluator {
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(26);
+		FutureTask<BigDecimal> task;
+
+		// Calculate the full conditional probability for each possible plaintext substitution
 		NGramIndexNode match = null;
+		BigDecimal probability;
 		for (int i = 0; i < currentSolutionString.length(); i += (match == null ? 1 : match.getCumulativeStringValue().length())) {
 			match = wordMarkovModel.findLongest(currentSolutionString.substring(i));
 
 			if (match == null) {
 				jointProbability = jointProbability.multiply(unknownWordProbability, MathContext.DECIMAL128);
-				jointLogProbability = jointLogProbability.add(convertToLogProbability(unknownWordProbability));
+				probability = unknownWordProbability;
 			} else {
 				log.debug("matchString: {}", match.getCumulativeStringValue());
 
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
-				jointLogProbability = jointLogProbability.add(convertToLogProbability(match.getTerminalInfo().getProbability()));
+				probability = match.getTerminalInfo().getProbability();
+			}
+
+			task = new FutureTask<>(new CovertLogProbabilityTask(probability));
+			futures.add(task);
+			this.taskExecutor.execute(task);
+		}
+
+		for (FutureTask<BigDecimal> future : futures) {
+			try {
+				jointLogProbability = jointLogProbability.add(future.get());
+			} catch (InterruptedException ie) {
+				log.error("Caught InterruptedException while waiting for BigDecimal ", ie);
+			} catch (ExecutionException ee) {
+				log.error("Caught ExecutionException while waiting for BigDecimal ", ee);
 			}
 		}
 
 		return new EvaluationResults(jointProbability, jointLogProbability);
+	}
+
+	/**
+	 * A concurrent task for computing log probability.
+	 */
+	protected class CovertLogProbabilityTask implements Callable<BigDecimal> {
+		private BigDecimal probability;
+
+		/**
+		 * @param probability
+		 */
+		public CovertLogProbabilityTask(BigDecimal probability) {
+			this.probability = probability;
+		}
+
+		@Override
+		public BigDecimal call() throws Exception {
+			return convertToLogProbability(this.probability);
+		}
 	}
 
 	protected static BigDecimal convertToLogProbability(BigDecimal probability) {
@@ -181,5 +246,14 @@ public class PlaintextEvaluator {
 	@Required
 	public void setWordNGramWeight(double wordNGramWeight) {
 		this.wordNGramWeight = wordNGramWeight;
+	}
+
+	/**
+	 * @param taskExecutor
+	 *            the taskExecutor to set
+	 */
+	@Required
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 }
