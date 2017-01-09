@@ -166,7 +166,7 @@ public class CipherSolution {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Solution [score=" + String.format("%1$,.2f", score) + "]\n");
+		sb.append("Solution [score=" + score.toString() + "]\n");
 
 		if (this.cipher != null) {
 			String nextPlaintext = null;

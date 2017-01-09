@@ -119,7 +119,7 @@ public class PlaintextEvaluator {
 		return jointProbability;
 	}
 
-	public void setStructure(Object cipher) {
+	public void setCipher(Object cipher) {
 		this.cipher = (Cipher) cipher;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
