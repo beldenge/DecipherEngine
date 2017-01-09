@@ -26,6 +26,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +37,7 @@ import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.core.task.TaskExecutor;
 
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
@@ -62,8 +66,8 @@ public class BayesianDecipherManager {
 	private int								annealingTemperatureMin;
 	private int								cipherKeySize;
 	private static List<LetterProbability>	letterUnigramProbabilities	= new ArrayList<>();
-	// Use a uniform distribution for ciphertext probabilities
-	BigDecimal								ciphertextProbability;
+	private BigDecimal						ciphertextProbability;
+	private TaskExecutor					taskExecutor;
 
 	@PostConstruct
 	public void setUp() {
@@ -74,6 +78,7 @@ public class BayesianDecipherManager {
 		plaintextEvaluator.setCipher(cipher);
 
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
+		// Use a uniform distribution for ciphertext probabilities
 		ciphertextProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathContext.DECIMAL128);
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
@@ -346,83 +351,27 @@ public class BayesianDecipherManager {
 			unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
 		}
 
+		List<FutureTask<LetterProbability>> futures = new ArrayList<>(26);
+		FutureTask<LetterProbability> task;
+
 		// Calculate the full conditional probability for each possible plaintext substitution
-		// TODO: parallelize this loop
 		for (Character letter : LOWERCASE_LETTERS) {
-			lastCharacter = null;
-			numerator = null;
-			denominator = null;
-			currentCharacter = "";
-			ciphertextMapping = null;
-			unigramCounts = new HashMap<>(); // need to deep copy
-			nGramCounts = new HashMap<>(); // need to deep copy
-			ciphertextMappingCounts = new HashMap<>(); // need to deep copy
-			BigDecimal jointProbabilityNumerator = jointProbabilityDenominator;
+			task = new FutureTask<>(new JointProbabilityTask(solution, letter, ciphertextKey,
+					jointProbabilityDenominator, unigramCounts, nGramCounts, ciphertextMappingCounts));
+			futures.add(task);
+			this.taskExecutor.execute(task);
+		}
 
-			for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
-				partialProbability = BigDecimal.ONE;
-				lastCharacter = currentCharacter;
-
-				currentCharacter = solution.getMappings().get(ciphertext.getValue()).getValue();
-
-				ciphertextMapping = new CiphertextMapping(ciphertext.getValue(), new Plaintext(currentCharacter));
-
-				// Only include in the joint probability if this is the cipher type we are sampling for
-				if (ciphertext.getValue().equals(ciphertextKey)) {
-					if (lastCharacter.isEmpty()) {
-						partialProbability = partialProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
-								currentCharacter.charAt(0),
-								BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
-					} else {
-						BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
-								+ currentCharacter).getTerminalInfo().getConditionalProbability();
-						// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
-						BigDecimal unigramCount = unigramCounts.get(lastCharacter);
-						BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
-						numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
-						denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
-
-						// Multiply by the source model probability
-						partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
-
-						BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
-						unigramCount = unigramCounts.get(currentCharacter);
-						numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
-						denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
-
-						// Multiply by the channel model probability
-						partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
-
-						// TODO: update counts in an incremental fashion
-						// if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
-						// nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
-						// }
-						//
-						// nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
-						// + currentCharacter).add(BigDecimal.ONE));
-					}
-
-					jointProbabilityNumerator = jointProbabilityNumerator.multiply(partialProbability);
-
-					// TODO: update counts in an incremental fashion
-					// if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
-					// ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
-					// }
-					//
-					// ciphertextMappingCounts.put(ciphertextMapping,
-					// ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
-					//
-					// if (unigramCounts.get(currentCharacter) == null) {
-					// unigramCounts.put(currentCharacter, BigDecimal.ZERO);
-					// }
-					//
-					// unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
-				}
+		for (FutureTask<LetterProbability> future : futures) {
+			try {
+				LetterProbability letterProbability = future.get();
+				plaintextDistribution.add(letterProbability);
+				sumOfProbabilities = sumOfProbabilities.add(letterProbability.getProbability());
+			} catch (InterruptedException ie) {
+				log.error("Caught InterruptedException while waiting for JointProbabilityTask ", ie);
+			} catch (ExecutionException ee) {
+				log.error("Caught ExecutionException while waiting for JointProbabilityTask ", ee);
 			}
-
-			plaintextDistribution.add(new LetterProbability(letter,
-					jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL128)));
-			sumOfProbabilities = sumOfProbabilities.add(jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL128));
 		}
 
 		for (LetterProbability letterProbability : plaintextDistribution) {
@@ -430,6 +379,113 @@ public class BayesianDecipherManager {
 		}
 
 		return plaintextDistribution;
+	}
+
+	protected LetterProbability computeJointDistributionAsync(CipherSolution solution, Character letter, String ciphertextKey, BigDecimal jointProbabilityDenominator, Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> nGramCounts, Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts) {
+		BigDecimal partialProbability;
+		String lastCharacter = null;
+		BigDecimal numerator = null;
+		BigDecimal denominator = null;
+		String currentCharacter = "";
+		CiphertextMapping ciphertextMapping = null;
+		// unigramCounts = new HashMap<>(); // TODO: need to deep copy
+		// nGramCounts = new HashMap<>(); // TODO: need to deep copy
+		// ciphertextMappingCounts = new HashMap<>(); // TODO: need to deep copy
+		BigDecimal jointProbabilityNumerator = jointProbabilityDenominator;
+
+		for (Ciphertext ciphertext : cipher.getCiphertextCharacters()) {
+			partialProbability = BigDecimal.ONE;
+			lastCharacter = currentCharacter;
+
+			currentCharacter = solution.getMappings().get(ciphertext.getValue()).getValue();
+
+			ciphertextMapping = new CiphertextMapping(ciphertext.getValue(), new Plaintext(currentCharacter));
+
+			// Only include in the joint probability if this is the cipher type we are sampling for
+			if (ciphertext.getValue().equals(ciphertextKey)) {
+				if (lastCharacter.isEmpty()) {
+					partialProbability = partialProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
+							currentCharacter.charAt(0),
+							BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
+				} else {
+					BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
+							+ currentCharacter).getTerminalInfo().getConditionalProbability();
+					// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
+					BigDecimal unigramCount = unigramCounts.get(lastCharacter);
+					BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
+					numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
+					denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+
+					// Multiply by the source model probability
+					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+
+					BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
+					unigramCount = unigramCounts.get(currentCharacter);
+					numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
+					denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+
+					// Multiply by the channel model probability
+					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL128));
+
+					// TODO: update counts in an incremental fashion
+					// if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
+					// nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
+					// }
+					//
+					// nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
+					// + currentCharacter).add(BigDecimal.ONE));
+				}
+
+				jointProbabilityNumerator = jointProbabilityNumerator.multiply(partialProbability);
+
+				// TODO: update counts in an incremental fashion
+				// if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
+				// ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
+				// }
+				//
+				// ciphertextMappingCounts.put(ciphertextMapping,
+				// ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
+				//
+				// if (unigramCounts.get(currentCharacter) == null) {
+				// unigramCounts.put(currentCharacter, BigDecimal.ZERO);
+				// }
+				//
+				// unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+			}
+		}
+
+		return new LetterProbability(letter,
+				jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL128));
+	}
+
+	/**
+	 * A concurrent task for calculating the joint probability.
+	 */
+	protected class JointProbabilityTask implements Callable<LetterProbability> {
+		private CipherSolution						solution;
+		private Character							letter;
+		private String								ciphertextKey;
+		private BigDecimal							jointProbabilityDenominator;
+		private Map<String, BigDecimal>				unigramCounts;
+		private Map<String, BigDecimal>				nGramCounts;
+		private Map<CiphertextMapping, BigDecimal>	ciphertextMappingCounts;
+
+		public JointProbabilityTask(CipherSolution solution, Character letter, String ciphertextKey,
+				BigDecimal jointProbabilityDenominator, Map<String, BigDecimal> unigramCounts,
+				Map<String, BigDecimal> nGramCounts, Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts) {
+			this.solution = solution;
+			this.letter = letter;
+			this.ciphertextKey = ciphertextKey;
+			this.jointProbabilityDenominator = jointProbabilityDenominator;
+			this.unigramCounts = unigramCounts;
+			this.nGramCounts = nGramCounts;
+			this.ciphertextMappingCounts = ciphertextMappingCounts;
+		}
+
+		@Override
+		public LetterProbability call() throws Exception {
+			return computeJointDistributionAsync(solution, letter, ciphertextKey, jointProbabilityDenominator, unigramCounts, nGramCounts, ciphertextMappingCounts);
+		}
 	}
 
 	/**
@@ -511,5 +567,14 @@ public class BayesianDecipherManager {
 	@Required
 	public void setAnnealingTemperatureMin(int annealingTemperatureMin) {
 		this.annealingTemperatureMin = annealingTemperatureMin;
+	}
+
+	/**
+	 * @param taskExecutor
+	 *            the taskExecutor to set
+	 */
+	@Required
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 }
