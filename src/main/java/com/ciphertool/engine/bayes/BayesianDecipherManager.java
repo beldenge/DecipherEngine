@@ -67,6 +67,7 @@ public class BayesianDecipherManager {
 	private int								cipherKeySize;
 	private static List<LetterProbability>	letterUnigramProbabilities	= new ArrayList<>();
 	private BigDecimal						ciphertextProbability;
+	private KnownPlaintextEvaluator			knownPlaintextEvaluator;
 	private TaskExecutor					taskExecutor;
 
 	@PostConstruct
@@ -109,10 +110,15 @@ public class BayesianDecipherManager {
 		BigDecimal temperature;
 
 		CipherSolution next = initialSolution;
+		CipherSolution maxBayes = null;
+		int maxBayesIteration = 0;
+		Double maxKnown = 0.0;
+		int maxKnownIteration = 0;
 
 		log.info("Running Gibbs sampler for " + samplerIterations + " iterations.");
 		long start = System.currentTimeMillis();
 
+		Double knownProximity = null;
 		int i;
 		for (i = 0; i < samplerIterations; i++) {
 			long iterationStart = System.currentTimeMillis();
@@ -125,11 +131,28 @@ public class BayesianDecipherManager {
 
 			next = runGibbsSampler(temperature, next);
 
-			log.info("Iteration " + (i + 1) + " completed in " + (System.currentTimeMillis() - iterationStart) + "ms.");
+			if (knownPlaintextEvaluator != null) {
+				knownProximity = knownPlaintextEvaluator.evaluate(next);
+
+				if (maxKnown < knownProximity) {
+					maxKnown = knownProximity;
+					maxKnownIteration = i + 1;
+				}
+			}
+
+			if (maxBayes == null || maxBayes.getProbability().compareTo(next.getProbability()) < 1) {
+				maxBayes = next;
+				maxBayesIteration = i + 1;
+			}
+
+			log.info("Iteration " + (i + 1) + " complete.  [elapsed=" + (System.currentTimeMillis() - iterationStart)
+					+ "ms, temp=" + temperature + ", proximity=" + knownProximity + "]");
 		}
 
-		log.info("Gibbs sampling completed in " + (System.currentTimeMillis() - start) + "ms (average per iteration: "
-				+ ((double) (System.currentTimeMillis() - start) / (double) i) + "ms).");
+		log.info("Gibbs sampling completed in " + (System.currentTimeMillis() - start) + "ms.  [average="
+				+ ((double) (System.currentTimeMillis() - start) / (double) i) + "ms, bestProbability= "
+				+ maxBayes.getProbability() + ", bestProbabilityIter=" + maxBayesIteration + ", bestKnownProximity="
+				+ maxKnown + ", bestKnownProximityIter=" + maxKnownIteration + "]");
 		log.info(next.toString());
 	}
 
@@ -576,5 +599,15 @@ public class BayesianDecipherManager {
 	@Required
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
+	}
+
+	/**
+	 * This is NOT required. We will not always know the solution. In fact, that should be the rare case.
+	 * 
+	 * @param knownPlaintextEvaluator
+	 *            the knownPlaintextEvaluator to set
+	 */
+	public void setKnownPlaintextEvaluator(KnownPlaintextEvaluator knownPlaintextEvaluator) {
+		this.knownPlaintextEvaluator = knownPlaintextEvaluator;
 	}
 }

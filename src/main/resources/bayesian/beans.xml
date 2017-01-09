@@ -14,6 +14,8 @@ You should have received a copy of the GNU General Public License along with Dec
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
 	profile="bayesian">
 
+	<bean class="com.ciphertool.engine.bayes.KnownPlaintextEvaluator" id="knownPlaintextEvaluator" />
+
 	<bean class="com.ciphertool.engine.bayes.BayesianDecipherManager" id="bayesianDecipherManager">
 		<property name="plaintextEvaluator" ref="plaintextEvaluator" />
 		<property name="cipherName" value="${cipher.name}" />
@@ -24,6 +26,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="samplerIterations" value="${bayes.sampler.iterations}" />
 		<property name="annealingTemperatureMax" value="${bayes.annealing.temperature.max}" />
 		<property name="annealingTemperatureMin" value="${bayes.annealing.temperature.min}" />
+		<property name="knownPlaintextEvaluator" ref="knownPlaintextEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
