@@ -196,7 +196,15 @@ public class BayesianDecipherManager {
 							"Acceptance probability was calculated to be less than zero.  Please review the math as this should not happen.");
 				}
 
-				if (ThreadLocalRandom.current().nextDouble() < acceptanceProbability.doubleValue()) {
+				if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0) {
+					log.info("Solution Probability=" + solution.getProbability() + "\nSolution logProbability="
+							+ solution.getLogProbability() + "\nProposed Probability="
+							+ proposedSolution.getProbability() + "\nProposed logProbability="
+							+ proposedSolution.getLogProbability() + "\nTemperature=" + temperature);
+				}
+
+				if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0
+						|| ThreadLocalRandom.current().nextDouble() < acceptanceProbability.doubleValue()) {
 					solution = proposedSolution;
 				}
 			}

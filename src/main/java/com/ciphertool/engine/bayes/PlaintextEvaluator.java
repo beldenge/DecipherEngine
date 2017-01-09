@@ -107,7 +107,8 @@ public class PlaintextEvaluator {
 		// Calculate the full conditional probability for each possible plaintext substitution
 		BigDecimal probability;
 		NGramIndexNode match = null;
-		for (int i = 0; i < currentSolutionString.length() - order; i++) {
+		for (int i = 0; i < currentSolutionString.length()
+				- order; i += (match == null ? 1 : match.getCumulativeStringValue().length())) {
 			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 
 			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
