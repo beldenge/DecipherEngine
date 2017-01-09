@@ -31,13 +31,14 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
 
 public class CipherSolution {
-	private static Logger			log			= LoggerFactory.getLogger(CipherSolution.class);
+	private static Logger			log				= LoggerFactory.getLogger(CipherSolution.class);
 
-	private static final int		KEY_SIZE	= 54;
+	private static final int		KEY_SIZE		= 54;
 
 	protected Cipher				cipher;
 
-	private BigDecimal				score		= BigDecimal.ZERO;
+	private BigDecimal				probability		= BigDecimal.ZERO;
+	private BigDecimal				logProbability	= BigDecimal.ZERO;
 
 	private Map<String, Plaintext>	mappings;
 
@@ -70,12 +71,30 @@ public class CipherSolution {
 		this.cipher = cipher;
 	}
 
-	public BigDecimal getScore() {
-		return score;
+	/**
+	 * @return the probability
+	 */
+	public BigDecimal getProbability() {
+		return probability;
 	}
 
-	public void setScore(BigDecimal score) {
-		this.score = score;
+	public void setProbability(BigDecimal score) {
+		this.probability = score;
+	}
+
+	/**
+	 * @return the logProbability
+	 */
+	public BigDecimal getLogProbability() {
+		return logProbability;
+	}
+
+	/**
+	 * @param logProbability
+	 *            the logProbability to set
+	 */
+	public void setLogProbability(BigDecimal logProbability) {
+		this.logProbability = logProbability;
 	}
 
 	public Map<String, Plaintext> getMappings() {
@@ -151,7 +170,8 @@ public class CipherSolution {
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone
-		copySolution.setScore(this.score);
+		copySolution.setProbability(this.probability);
+		copySolution.setLogProbability(this.logProbability);
 
 		return copySolution;
 	}
@@ -166,7 +186,8 @@ public class CipherSolution {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Solution [score=" + score.toString() + "]\n");
+		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
+				+ "]\n");
 
 		if (this.cipher != null) {
 			String nextPlaintext = null;

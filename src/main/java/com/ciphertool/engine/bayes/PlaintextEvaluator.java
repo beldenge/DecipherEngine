@@ -24,6 +24,7 @@ import java.math.MathContext;
 
 import javax.annotation.PostConstruct;
 
+import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -69,20 +70,28 @@ public class PlaintextEvaluator {
 		log.debug("unknownWordProbability: {}", unknownWordProbability);
 	}
 
-	public BigDecimal evaluate(CipherSolution chromosome) {
-		BigDecimal total = BigDecimal.ZERO;
-		total = total.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(evaluateLetterNGrams(chromosome), MathContext.DECIMAL128)));
-		total = total.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(evaluateWords(chromosome), MathContext.DECIMAL128)));
+	public EvaluationResults evaluate(CipherSolution solution) {
+		EvaluationResults letterNGramResults = evaluateLetterNGrams(solution);
+		EvaluationResults wordNGramResults = evaluateWords(solution);
 
-		return total;
+		BigDecimal interpolatedProbability = BigDecimal.ZERO;
+		interpolatedProbability = interpolatedProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getProbability(), MathContext.DECIMAL128)));
+		interpolatedProbability = interpolatedProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getProbability(), MathContext.DECIMAL128)));
+
+		BigDecimal interpolatedLogProbability = BigDecimal.ZERO;
+		interpolatedLogProbability = interpolatedLogProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getLogProbability(), MathContext.DECIMAL128)));
+		interpolatedLogProbability = interpolatedLogProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getLogProbability(), MathContext.DECIMAL128)));
+
+		return new EvaluationResults(interpolatedProbability, interpolatedLogProbability);
 	}
 
-	public BigDecimal evaluateLetterNGrams(CipherSolution solution) {
+	public EvaluationResults evaluateLetterNGrams(CipherSolution solution) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
 
 		BigDecimal jointProbability = BigDecimal.ONE;
+		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
 		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length() - order; i++) {
@@ -90,18 +99,21 @@ public class PlaintextEvaluator {
 
 			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
+				jointLogProbability = jointLogProbability.add(convertToLogProbability(match.getTerminalInfo().getProbability()));
 			} else {
 				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathContext.DECIMAL128);
+				jointLogProbability = jointLogProbability.add(convertToLogProbability(unknownLetterNGramProbability));
 			}
 		}
 
-		return jointProbability;
+		return new EvaluationResults(jointProbability, jointLogProbability);
 	}
 
-	public BigDecimal evaluateWords(CipherSolution solution) {
+	public EvaluationResults evaluateWords(CipherSolution solution) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
 
 		BigDecimal jointProbability = BigDecimal.ONE;
+		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
 		NGramIndexNode match = null;
 		for (int i = 0; i < currentSolutionString.length(); i += (match == null ? 1 : match.getCumulativeStringValue().length())) {
@@ -109,14 +121,24 @@ public class PlaintextEvaluator {
 
 			if (match == null) {
 				jointProbability = jointProbability.multiply(unknownWordProbability, MathContext.DECIMAL128);
+				jointLogProbability = jointLogProbability.add(convertToLogProbability(unknownWordProbability));
 			} else {
 				log.debug("matchString: {}", match.getCumulativeStringValue());
 
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
+				jointLogProbability = jointLogProbability.add(convertToLogProbability(match.getTerminalInfo().getProbability()));
 			}
 		}
 
-		return jointProbability;
+		return new EvaluationResults(jointProbability, jointLogProbability);
+	}
+
+	protected static BigDecimal convertToLogProbability(BigDecimal probability) {
+		if (probability == null) {
+			return BigDecimal.ZERO;
+		}
+
+		return BigDecimalMath.log(probability);
 	}
 
 	public void setCipher(Object cipher) {

@@ -30,6 +30,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 
+import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -93,7 +94,9 @@ public class BayesianDecipherManager {
 			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
 
-		initialSolution.setScore(plaintextEvaluator.evaluate(initialSolution));
+		EvaluationResults score = plaintextEvaluator.evaluate(initialSolution);
+		initialSolution.setProbability(score.getProbability());
+		initialSolution.setLogProbability(score.getLogProbability());
 
 		BigDecimal maxTemp = BigDecimal.valueOf(annealingTemperatureMax);
 		BigDecimal minTemp = BigDecimal.valueOf(annealingTemperatureMin);
@@ -139,15 +142,26 @@ public class BayesianDecipherManager {
 
 			CipherSolution proposedSolution = solution.clone();
 			proposedSolution.replaceMapping(entry.getKey(), new Plaintext(proposedLetter.toString()));
-			proposedSolution.setScore(plaintextEvaluator.evaluate(proposedSolution));
+			EvaluationResults score = plaintextEvaluator.evaluate(proposedSolution);
+			proposedSolution.setProbability(score.getProbability());
+			proposedSolution.setLogProbability(score.getLogProbability());
 
-			// For now, we're not doing anything if the same mapping is chosen
-			if (proposedSolution.getScore().compareTo(solution.getScore()) > 1) {
+			/*
+			 * For now, we're not doing anything to prevent the same mapping from being chosen
+			 * 
+			 * The log probability is not really interpolated accurately, so we do the comparison on the real
+			 * probability, and we use the log probability for acceptance probability calculation
+			 */
+			if (proposedSolution.getProbability().compareTo(solution.getProbability()) > 1) {
 				solution = proposedSolution;
 			} else {
 				// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
-				// TODO: use a better implementation of exponent that does not lose precision
-				acceptanceProbability = BigDecimal.valueOf(Math.exp(convertToLogProbability(solution.getScore()).subtract(convertToLogProbability(proposedSolution.getScore())).divide(temperature, MathContext.DECIMAL128).negate().doubleValue()));
+				acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposedSolution.getLogProbability()).divide(temperature, MathContext.DECIMAL128).negate());
+
+				if (acceptanceProbability.compareTo(BigDecimal.ZERO) < 0) {
+					throw new IllegalStateException(
+							"Acceptance probability was calculated to be less than zero.  Please review the math as this should not happen.");
+				}
 
 				if (ThreadLocalRandom.current().nextDouble() < acceptanceProbability.doubleValue()) {
 					solution = proposedSolution;
@@ -416,15 +430,6 @@ public class BayesianDecipherManager {
 		}
 
 		return plaintextDistribution;
-	}
-
-	public BigDecimal convertToLogProbability(BigDecimal probability) {
-		if (probability == null) {
-			return BigDecimal.ZERO;
-		}
-
-		// TODO: use a better implementation of logarithm that does not lose precision
-		return BigDecimal.valueOf(Math.log10(probability.doubleValue()));
 	}
 
 	/**
