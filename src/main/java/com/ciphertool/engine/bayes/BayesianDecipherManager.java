@@ -140,7 +140,7 @@ public class BayesianDecipherManager {
 				}
 			}
 
-			if (maxBayes == null || maxBayes.getProbability().compareTo(next.getProbability()) < 1) {
+			if (maxBayes == null || maxBayes.getProbability().compareTo(next.getProbability()) < 0) {
 				maxBayes = next;
 				maxBayesIteration = i + 1;
 			}
@@ -182,11 +182,14 @@ public class BayesianDecipherManager {
 			 * The log probability is not really interpolated accurately, so we do the comparison on the real
 			 * probability, and we use the log probability for acceptance probability calculation
 			 */
-			if (proposedSolution.getProbability().compareTo(solution.getProbability()) > 1) {
+			if (proposedSolution.getProbability().compareTo(solution.getProbability()) > 0) {
+				log.debug("Better solution found");
 				solution = proposedSolution;
 			} else {
 				// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
 				acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposedSolution.getLogProbability()).divide(temperature, MathContext.DECIMAL32).negate());
+
+				log.debug("Acceptance probability: {}", acceptanceProbability);
 
 				if (acceptanceProbability.compareTo(BigDecimal.ZERO) < 0) {
 					throw new IllegalStateException(

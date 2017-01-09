@@ -61,7 +61,7 @@ public class PlaintextEvaluator {
 	public void init() {
 		BigDecimal weightTotal = BigDecimal.valueOf(letterNGramWeight).add(BigDecimal.valueOf(wordNGramWeight));
 
-		if (BigDecimal.ONE.subtract(weightTotal).abs().compareTo(BigDecimal.ZERO) > 1) {
+		if (BigDecimal.ONE.subtract(weightTotal).abs().compareTo(BigDecimal.ZERO) > 0) {
 			throw new IllegalArgumentException(
 					"The sum of letterNGramWeight, wordNGramWeight, and frequencyWeight must equal exactly 1.0, but letterNGramWeight="
 							+ letterNGramWeight + " and wordNGramWeight=" + wordNGramWeight + " sums to "
