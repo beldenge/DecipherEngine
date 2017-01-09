@@ -20,7 +20,6 @@
 package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ import org.springframework.core.task.TaskExecutor;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
+import com.ciphertool.sherlock.MathConstants;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
@@ -80,7 +80,7 @@ public class BayesianDecipherManager {
 
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
 		// Use a uniform distribution for ciphertext probabilities
-		ciphertextProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathContext.DECIMAL32);
+		ciphertextProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathConstants.PREC_10_HALF_UP);
 
 		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
 			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
@@ -127,7 +127,7 @@ public class BayesianDecipherManager {
 			 * Set temperature as a ratio of the max temperature to the number of iterations left, offset by the min
 			 * temperature so as not to go below it
 			 */
-			temperature = maxTemp.subtract(minTemp).multiply(iterations.subtract(BigDecimal.valueOf(i)).divide(iterations, MathContext.DECIMAL32)).add(minTemp);
+			temperature = maxTemp.subtract(minTemp, MathConstants.PREC_10_HALF_UP).multiply(iterations.subtract(BigDecimal.valueOf(i), MathConstants.PREC_10_HALF_UP).divide(iterations, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP).add(minTemp, MathConstants.PREC_10_HALF_UP);
 
 			next = runGibbsSampler(temperature, next);
 
@@ -187,7 +187,7 @@ public class BayesianDecipherManager {
 				solution = proposedSolution;
 			} else {
 				// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
-				acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposedSolution.getLogProbability()).divide(temperature, MathContext.DECIMAL32).negate());
+				acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposedSolution.getLogProbability(), MathConstants.PREC_10_HALF_UP).divide(temperature, MathConstants.PREC_10_HALF_UP).negate());
 
 				log.debug("Acceptance probability: {}", acceptanceProbability);
 
@@ -244,12 +244,12 @@ public class BayesianDecipherManager {
 				if (lastCharacter.isEmpty()) {
 					jointProbabilityNumerator = jointProbabilityNumerator.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
 							currentCharacter.charAt(0),
-							BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
+							BigDecimal.ZERO))).getProbability(), MathConstants.PREC_10_HALF_UP).multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP);
 
 					if (!ciphertext.getValue().equals(ciphertextKey)) {
 						jointProbabilityDenominator = jointProbabilityDenominator.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
 								currentCharacter.charAt(0),
-								BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
+								BigDecimal.ZERO))).getProbability(), MathConstants.PREC_10_HALF_UP).multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP);
 					}
 				} else {
 					BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
@@ -257,26 +257,26 @@ public class BayesianDecipherManager {
 					// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
 					BigDecimal unigramCount = unigramCounts.get(lastCharacter);
 					BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
-					numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
-					denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+					numerator = alphaHyperparameter.multiply(nGramPriorProbability, MathConstants.PREC_10_HALF_UP).add((nGramCount == null ? BigDecimal.ZERO : nGramCount), MathConstants.PREC_10_HALF_UP);
+					denominator = alphaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 					// Multiply by the source model probability
-					jointProbabilityNumerator = jointProbabilityNumerator.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+					jointProbabilityNumerator = jointProbabilityNumerator.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 					if (!ciphertext.getValue().equals(ciphertextKey)) {
-						jointProbabilityDenominator = jointProbabilityDenominator.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+						jointProbabilityDenominator = jointProbabilityDenominator.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 					}
 
 					BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
 					unigramCount = unigramCounts.get(currentCharacter);
-					numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
-					denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+					numerator = betaHyperparameter.multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP).add((ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount), MathConstants.PREC_10_HALF_UP);
+					denominator = betaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 					// Multiply by the channel model probability
-					jointProbabilityNumerator = jointProbabilityNumerator.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+					jointProbabilityNumerator = jointProbabilityNumerator.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 					if (!ciphertext.getValue().equals(ciphertextKey)) {
-						jointProbabilityDenominator = jointProbabilityDenominator.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+						jointProbabilityDenominator = jointProbabilityDenominator.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 					}
 
 					if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
@@ -284,29 +284,29 @@ public class BayesianDecipherManager {
 					}
 
 					nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
-							+ currentCharacter).add(BigDecimal.ONE));
+							+ currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 				}
 
 				if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
 					ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
 				}
 
-				ciphertextMappingCounts.put(ciphertextMapping, ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
+				ciphertextMappingCounts.put(ciphertextMapping, ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 
 				if (unigramCounts.get(currentCharacter) == null) {
 					unigramCounts.put(currentCharacter, BigDecimal.ZERO);
 				}
 
-				unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+				unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 			}
 
 			plaintextDistribution.add(new LetterProbability(letter,
-					jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL32)));
-			sumOfProbabilities = sumOfProbabilities.add(jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL32));
+					jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP)));
+			sumOfProbabilities = sumOfProbabilities.add(jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 		}
 
 		for (LetterProbability letterProbability : plaintextDistribution) {
-			letterProbability.setProbability(letterProbability.getProbability().divide(sumOfProbabilities, MathContext.DECIMAL32));
+			letterProbability.setProbability(letterProbability.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP));
 		}
 
 		return plaintextDistribution;
@@ -338,53 +338,53 @@ public class BayesianDecipherManager {
 			if (lastCharacter.isEmpty()) {
 				partialProbability = partialProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
 						currentCharacter.charAt(0),
-						BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
+						BigDecimal.ZERO))).getProbability(), MathConstants.PREC_10_HALF_UP).multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP);
 			} else {
 				BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
 						+ currentCharacter).getTerminalInfo().getConditionalProbability();
 				// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
 				BigDecimal unigramCount = unigramCounts.get(lastCharacter);
 				BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
-				numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
-				denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+				numerator = alphaHyperparameter.multiply(nGramPriorProbability, MathConstants.PREC_10_HALF_UP).add((nGramCount == null ? BigDecimal.ZERO : nGramCount), MathConstants.PREC_10_HALF_UP);
+				denominator = alphaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 				// Multiply by the source model probability
-				partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+				partialProbability = partialProbability.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 				BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
 				unigramCount = unigramCounts.get(currentCharacter);
-				numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
-				denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+				numerator = betaHyperparameter.multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP).add((ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount), MathConstants.PREC_10_HALF_UP);
+				denominator = betaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 				// Multiply by the channel model probability
-				partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+				partialProbability = partialProbability.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 				if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
 					nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 				}
 
 				nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
-						+ currentCharacter).add(BigDecimal.ONE));
+						+ currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 			}
 
 			partialProbabilities.add(partialProbability);
 
 			// Don't include in the joint probability if this is the cipher type we are sampling for
 			if (!ciphertext.getValue().equals(ciphertextKey)) {
-				jointProbabilityDenominator = jointProbabilityDenominator.multiply(partialProbability);
+				jointProbabilityDenominator = jointProbabilityDenominator.multiply(partialProbability, MathConstants.PREC_10_HALF_UP);
 			}
 
 			if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
 				ciphertextMappingCounts.put(ciphertextMapping, BigDecimal.ZERO);
 			}
 
-			ciphertextMappingCounts.put(ciphertextMapping, ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
+			ciphertextMappingCounts.put(ciphertextMapping, ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 
 			if (unigramCounts.get(currentCharacter) == null) {
 				unigramCounts.put(currentCharacter, BigDecimal.ZERO);
 			}
 
-			unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+			unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 		}
 
 		List<FutureTask<LetterProbability>> futures = new ArrayList<>(26);
@@ -402,7 +402,7 @@ public class BayesianDecipherManager {
 			try {
 				LetterProbability letterProbability = future.get();
 				plaintextDistribution.add(letterProbability);
-				sumOfProbabilities = sumOfProbabilities.add(letterProbability.getProbability());
+				sumOfProbabilities = sumOfProbabilities.add(letterProbability.getProbability(), MathConstants.PREC_10_HALF_UP);
 			} catch (InterruptedException ie) {
 				log.error("Caught InterruptedException while waiting for JointProbabilityTask ", ie);
 			} catch (ExecutionException ee) {
@@ -411,7 +411,7 @@ public class BayesianDecipherManager {
 		}
 
 		for (LetterProbability letterProbability : plaintextDistribution) {
-			letterProbability.setProbability(letterProbability.getProbability().divide(sumOfProbabilities, MathContext.DECIMAL32));
+			letterProbability.setProbability(letterProbability.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP));
 		}
 
 		return plaintextDistribution;
@@ -442,26 +442,26 @@ public class BayesianDecipherManager {
 				if (lastCharacter.isEmpty()) {
 					partialProbability = partialProbability.multiply(letterUnigramProbabilities.get(letterUnigramProbabilities.indexOf(new LetterProbability(
 							currentCharacter.charAt(0),
-							BigDecimal.ZERO))).getProbability()).multiply(ciphertextProbability);
+							BigDecimal.ZERO))).getProbability(), MathConstants.PREC_10_HALF_UP).multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP);
 				} else {
 					BigDecimal nGramPriorProbability = letterMarkovModel.findLongest(lastCharacter
 							+ currentCharacter).getTerminalInfo().getConditionalProbability();
 					// Any sufficient corpus should contain every possible bigram, so no need to check for unknowns
 					BigDecimal unigramCount = unigramCounts.get(lastCharacter);
 					BigDecimal nGramCount = nGramCounts.get(lastCharacter + currentCharacter);
-					numerator = alphaHyperparameter.multiply(nGramPriorProbability).add(nGramCount == null ? BigDecimal.ZERO : nGramCount);
-					denominator = alphaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+					numerator = alphaHyperparameter.multiply(nGramPriorProbability, MathConstants.PREC_10_HALF_UP).add((nGramCount == null ? BigDecimal.ZERO : nGramCount), MathConstants.PREC_10_HALF_UP);
+					denominator = alphaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 					// Multiply by the source model probability
-					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 					BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping);
 					unigramCount = unigramCounts.get(currentCharacter);
-					numerator = betaHyperparameter.multiply(ciphertextProbability).add(ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount);
-					denominator = betaHyperparameter.add(unigramCount == null ? BigDecimal.ZERO : unigramCount);
+					numerator = betaHyperparameter.multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP).add((ciphertextMappingCount == null ? BigDecimal.ZERO : ciphertextMappingCount), MathConstants.PREC_10_HALF_UP);
+					denominator = betaHyperparameter.add((unigramCount == null ? BigDecimal.ZERO : unigramCount), MathConstants.PREC_10_HALF_UP);
 
 					// Multiply by the channel model probability
-					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathContext.DECIMAL32));
+					partialProbability = partialProbability.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 					// TODO: update counts in an incremental fashion
 					// if (nGramCounts.get(lastCharacter + currentCharacter) == null) {
@@ -469,10 +469,10 @@ public class BayesianDecipherManager {
 					// }
 					//
 					// nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
-					// + currentCharacter).add(BigDecimal.ONE));
+					// + currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 				}
 
-				jointProbabilityNumerator = jointProbabilityNumerator.multiply(partialProbability);
+				jointProbabilityNumerator = jointProbabilityNumerator.multiply(partialProbability, MathConstants.PREC_10_HALF_UP);
 
 				// TODO: update counts in an incremental fashion
 				// if (ciphertextMappingCounts.get(ciphertextMapping) == null) {
@@ -480,18 +480,19 @@ public class BayesianDecipherManager {
 				// }
 				//
 				// ciphertextMappingCounts.put(ciphertextMapping,
-				// ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE));
+				// ciphertextMappingCounts.get(ciphertextMapping).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 				//
 				// if (unigramCounts.get(currentCharacter) == null) {
 				// unigramCounts.put(currentCharacter, BigDecimal.ZERO);
 				// }
 				//
-				// unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE));
+				// unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE,
+				// MathConstants.PREC_10_HALF_UP));
 			}
 		}
 
 		return new LetterProbability(letter,
-				jointProbabilityNumerator.divide(jointProbabilityDenominator, MathContext.DECIMAL32));
+				jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP));
 	}
 
 	/**

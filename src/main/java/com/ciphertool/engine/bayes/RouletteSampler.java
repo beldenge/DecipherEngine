@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ciphertool.genetics.algorithms.selection.BinaryRouletteNode;
 import com.ciphertool.genetics.algorithms.selection.BinaryRouletteTree;
+import com.ciphertool.sherlock.MathConstants;
 
 public class RouletteSampler<T extends Probability<?>> {
 	private Logger				log	= LoggerFactory.getLogger(getClass());
@@ -54,7 +55,7 @@ public class RouletteSampler<T extends Probability<?>> {
 				continue;
 			}
 
-			totalFitness = totalFitness.add(probabilities.get(i).getProbability());
+			totalFitness = totalFitness.add(probabilities.get(i).getProbability(), MathConstants.PREC_10_HALF_UP);
 
 			nodes.add(new BinaryRouletteNode(i, totalFitness));
 		}
