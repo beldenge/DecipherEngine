@@ -159,7 +159,7 @@ public class BayesianDecipherManager {
 	}
 
 	protected CipherSolution runGibbsSampler(BigDecimal temperature, CipherSolution solution) {
-		BigDecimal acceptanceProbability;
+		BigDecimal acceptanceProbability = null;
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 
 		// For each cipher symbol type, run the gibbs sampling
@@ -182,7 +182,7 @@ public class BayesianDecipherManager {
 			 * The log probability is not really interpolated accurately, so we do the comparison on the real
 			 * probability, and we use the log probability for acceptance probability calculation
 			 */
-			if (proposedSolution.getProbability().compareTo(solution.getProbability()) > 0) {
+			if (proposedSolution.getLogProbability().compareTo(solution.getLogProbability()) > 0) {
 				log.debug("Better solution found");
 				solution = proposedSolution;
 			} else {
@@ -194,13 +194,6 @@ public class BayesianDecipherManager {
 				if (acceptanceProbability.compareTo(BigDecimal.ZERO) < 0) {
 					throw new IllegalStateException(
 							"Acceptance probability was calculated to be less than zero.  Please review the math as this should not happen.");
-				}
-
-				if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0) {
-					log.info("Solution Probability=" + solution.getProbability() + "\nSolution logProbability="
-							+ solution.getLogProbability() + "\nProposed Probability="
-							+ proposedSolution.getProbability() + "\nProposed logProbability="
-							+ proposedSolution.getLogProbability() + "\nTemperature=" + temperature);
 				}
 
 				if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0
