@@ -69,10 +69,10 @@ public class PlaintextEvaluator {
 		}
 
 		unknownLetterNGramProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()
-				+ 1), MathContext.DECIMAL128);
+				+ 1), MathContext.DECIMAL32);
 
 		unknownWordProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(wordMarkovModel.getRootNode().getTerminalInfo().getCount()
-				+ 1), MathContext.DECIMAL128);
+				+ 1), MathContext.DECIMAL32);
 
 		log.debug("unknownLetterNGramProbability: {}", unknownLetterNGramProbability);
 		log.debug("unknownWordProbability: {}", unknownWordProbability);
@@ -83,12 +83,12 @@ public class PlaintextEvaluator {
 		EvaluationResults wordNGramResults = evaluateWords(solution);
 
 		BigDecimal interpolatedProbability = BigDecimal.ZERO;
-		interpolatedProbability = interpolatedProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getProbability(), MathContext.DECIMAL128)));
-		interpolatedProbability = interpolatedProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getProbability(), MathContext.DECIMAL128)));
+		interpolatedProbability = interpolatedProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getProbability(), MathContext.DECIMAL32)));
+		interpolatedProbability = interpolatedProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getProbability(), MathContext.DECIMAL32)));
 
 		BigDecimal interpolatedLogProbability = BigDecimal.ZERO;
-		interpolatedLogProbability = interpolatedLogProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getLogProbability(), MathContext.DECIMAL128)));
-		interpolatedLogProbability = interpolatedLogProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getLogProbability(), MathContext.DECIMAL128)));
+		interpolatedLogProbability = interpolatedLogProbability.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getLogProbability(), MathContext.DECIMAL32)));
+		interpolatedLogProbability = interpolatedLogProbability.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getLogProbability(), MathContext.DECIMAL32)));
 
 		return new EvaluationResults(interpolatedProbability, interpolatedLogProbability);
 	}
@@ -111,10 +111,10 @@ public class PlaintextEvaluator {
 			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
 
 			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
-				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
+				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL32);
 				probability = match.getTerminalInfo().getProbability();
 			} else {
-				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathContext.DECIMAL128);
+				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathContext.DECIMAL32);
 				probability = unknownWordProbability;
 			}
 
@@ -152,12 +152,12 @@ public class PlaintextEvaluator {
 			match = wordMarkovModel.findLongest(currentSolutionString.substring(i));
 
 			if (match == null) {
-				jointProbability = jointProbability.multiply(unknownWordProbability, MathContext.DECIMAL128);
+				jointProbability = jointProbability.multiply(unknownWordProbability, MathContext.DECIMAL32);
 				probability = unknownWordProbability;
 			} else {
 				log.debug("matchString: {}", match.getCumulativeStringValue());
 
-				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL128);
+				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathContext.DECIMAL32);
 				probability = match.getTerminalInfo().getProbability();
 			}
 
