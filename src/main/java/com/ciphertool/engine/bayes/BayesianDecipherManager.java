@@ -164,7 +164,7 @@ public class BayesianDecipherManager {
 
 		// For each cipher symbol type, run the gibbs sampling
 		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
-			List<LetterProbability> plaintextDistribution = efficientlyComputeDistribution(entry.getKey(), solution);
+			List<LetterProbability> plaintextDistribution = computeDistribution(entry.getKey(), solution);
 
 			rouletteSampler.reIndex(plaintextDistribution);
 
@@ -215,6 +215,7 @@ public class BayesianDecipherManager {
 		for (Character letter : LOWERCASE_LETTERS) {
 			BigDecimal jointProbabilityNumerator = BigDecimal.ONE;
 			BigDecimal jointProbabilityDenominator = BigDecimal.ONE;
+			BigDecimal conditionalProbability = null;
 			BigDecimal numerator;
 			BigDecimal denominator;
 			String currentCharacter = "";
@@ -276,7 +277,7 @@ public class BayesianDecipherManager {
 						nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 					}
 
-					nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
+					nGramCounts.put(lastCharacter + currentCharacter, nGramCounts.get(lastCharacter
 							+ currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 				}
 
@@ -293,9 +294,9 @@ public class BayesianDecipherManager {
 				unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 			}
 
-			plaintextDistribution.add(new LetterProbability(letter,
-					jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP)));
-			sumOfProbabilities = sumOfProbabilities.add(jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
+			conditionalProbability = jointProbabilityNumerator.divide(jointProbabilityDenominator, MathConstants.PREC_10_HALF_UP);
+			plaintextDistribution.add(new LetterProbability(letter, conditionalProbability));
+			sumOfProbabilities = sumOfProbabilities.add(conditionalProbability, MathConstants.PREC_10_HALF_UP);
 		}
 
 		for (LetterProbability letterProbability : plaintextDistribution) {
@@ -356,7 +357,7 @@ public class BayesianDecipherManager {
 					nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 				}
 
-				nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
+				nGramCounts.put(lastCharacter + currentCharacter, nGramCounts.get(lastCharacter
 						+ currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 			}
 
@@ -461,7 +462,7 @@ public class BayesianDecipherManager {
 					// nGramCounts.put(lastCharacter + currentCharacter, BigDecimal.ZERO);
 					// }
 					//
-					// nGramCounts.put(currentCharacter, nGramCounts.get(lastCharacter
+					// nGramCounts.put(lastCharacter + currentCharacter, nGramCounts.get(lastCharacter
 					// + currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 				}
 
