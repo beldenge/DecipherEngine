@@ -114,9 +114,11 @@ public class PlaintextEvaluator {
 			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
 				probability = match.getTerminalInfo().getProbability();
+				log.debug("Letter N-Gram Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
 				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathConstants.PREC_10_HALF_UP);
 				probability = unknownWordProbability;
+				log.debug("No Letter N-Gram Match");
 			}
 
 			task = new FutureTask<>(new CovertLogProbabilityTask(probability));
@@ -155,11 +157,11 @@ public class PlaintextEvaluator {
 			if (match == null) {
 				jointProbability = jointProbability.multiply(unknownWordProbability, MathConstants.PREC_10_HALF_UP);
 				probability = unknownWordProbability;
+				log.debug("No Word Match");
 			} else {
-				log.debug("matchString: {}", match.getCumulativeStringValue());
-
 				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
 				probability = match.getTerminalInfo().getProbability();
+				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			}
 
 			task = new FutureTask<>(new CovertLogProbabilityTask(probability));

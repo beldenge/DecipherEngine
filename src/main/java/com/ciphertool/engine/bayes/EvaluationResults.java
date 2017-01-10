@@ -63,4 +63,9 @@ public class EvaluationResults {
 	public void setLogProbability(BigDecimal logProbability) {
 		this.logProbability = logProbability;
 	}
+
+	@Override
+	public String toString() {
+		return "EvaluationResults [probability=" + probability + ", logProbability=" + logProbability + "]";
+	}
 }
