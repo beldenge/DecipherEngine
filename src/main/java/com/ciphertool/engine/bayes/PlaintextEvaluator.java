@@ -199,16 +199,8 @@ public class PlaintextEvaluator {
 
 		@Override
 		public BigDecimal call() throws Exception {
-			return convertToLogProbability(this.probability);
+			return BigDecimalMath.log(this.probability);
 		}
-	}
-
-	protected static BigDecimal convertToLogProbability(BigDecimal probability) {
-		if (probability == null) {
-			return BigDecimal.ZERO;
-		}
-
-		return BigDecimalMath.log(probability);
 	}
 
 	public void setCipher(Object cipher) {
