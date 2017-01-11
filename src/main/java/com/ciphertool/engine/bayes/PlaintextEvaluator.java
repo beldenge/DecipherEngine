@@ -41,21 +41,23 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class PlaintextEvaluator {
-	private Logger			log	= LoggerFactory.getLogger(getClass());
+	private Logger				log					= LoggerFactory.getLogger(getClass());
 
-	protected Cipher		cipher;
+	private static final int	AVERAGE_WORD_SIZE	= 5;
 
-	private MarkovModel		letterMarkovModel;
-	private MarkovModel		wordMarkovModel;
+	protected Cipher			cipher;
 
-	private int				lastRowBegin;
-	private double			letterNGramWeight;
-	private double			wordNGramWeight;
+	private MarkovModel			letterMarkovModel;
+	private MarkovModel			wordMarkovModel;
 
-	private BigDecimal		unknownLetterNGramProbability;
-	private BigDecimal		unknownWordProbability;
+	private int					lastRowBegin;
+	private double				letterNGramWeight;
+	private double				wordNGramWeight;
 
-	private TaskExecutor	taskExecutor;
+	private BigDecimal			unknownLetterNGramProbability;
+	private BigDecimal			unknownWordProbability;
+
+	private TaskExecutor		taskExecutor;
 
 	@PostConstruct
 	public void init() {
@@ -101,7 +103,7 @@ public class PlaintextEvaluator {
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(26);
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(currentSolutionString.length() - order);
 		FutureTask<BigDecimal> task;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
@@ -145,7 +147,7 @@ public class PlaintextEvaluator {
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(26);
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(currentSolutionString.length() / AVERAGE_WORD_SIZE);
 		FutureTask<BigDecimal> task;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
