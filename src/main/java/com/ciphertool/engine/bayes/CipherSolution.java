@@ -22,7 +22,9 @@ package com.ciphertool.engine.bayes;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,17 +35,17 @@ import com.ciphertool.engine.entities.Ciphertext;
 public class CipherSolution {
 	private static Logger			log				= LoggerFactory.getLogger(CipherSolution.class);
 
-	private static final int		KEY_SIZE		= 54;
-
 	protected Cipher				cipher;
 
 	private BigDecimal				probability		= BigDecimal.ZERO;
 	private BigDecimal				logProbability	= BigDecimal.ZERO;
 
 	private Map<String, Plaintext>	mappings;
+	private Set<WordBoundary>		wordBoundaries;
 
 	public CipherSolution() {
 		mappings = new HashMap<>();
+		wordBoundaries = new HashSet<>();
 	}
 
 	public CipherSolution(Cipher cipher, int numCiphertext) {
@@ -54,6 +56,7 @@ public class CipherSolution {
 		this.cipher = cipher;
 
 		mappings = new HashMap<>(numCiphertext);
+		wordBoundaries = new HashSet<>();
 	}
 
 	/**
@@ -130,6 +133,24 @@ public class CipherSolution {
 		return this.mappings.remove(key);
 	}
 
+	public Set<WordBoundary> getWordBoundaries() {
+		return Collections.unmodifiableSet(this.wordBoundaries);
+	}
+
+	public void addWordBoundary(WordBoundary wordBoundary) {
+		if (null == wordBoundary) {
+			log.warn("Attempted to insert a null WordBoundary CipherSolution.  Returning. ");
+
+			return;
+		}
+
+		this.wordBoundaries.add(wordBoundary);
+	}
+
+	public void removeWordBoundary(WordBoundary wordBoundary) {
+		this.wordBoundaries.remove(wordBoundary);
+	}
+
 	/*
 	 * This does the same thing as putMapping(), and exists solely for semantic consistency.
 	 */
@@ -151,22 +172,15 @@ public class CipherSolution {
 		this.mappings.put(key, newPlaintext);
 	}
 
-	public Integer actualSize() {
-		return this.mappings.size();
-	}
-
-	public Integer targetSize() {
-		return KEY_SIZE;
-	}
-
 	public CipherSolution clone() {
 		CipherSolution copySolution = new CipherSolution(this.cipher, this.mappings.size());
 
-		Plaintext nextPlaintext = null;
-		for (String key : this.mappings.keySet()) {
-			nextPlaintext = this.mappings.get(key);
+		for (Map.Entry<String, Plaintext> entry : this.mappings.entrySet()) {
+			copySolution.putMapping(entry.getKey(), entry.getValue().clone());
+		}
 
-			copySolution.putMapping(key, nextPlaintext);
+		for (WordBoundary boundary : this.wordBoundaries) {
+			copySolution.addWordBoundary(boundary.clone());
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone

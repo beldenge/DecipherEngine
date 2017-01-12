@@ -89,6 +89,7 @@ public class BayesianDecipherManager {
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 		rouletteSampler.reIndex(letterUnigramProbabilities);
+		Double wordBoundaryProbability = (double) 1.0 / (double) LanguageConstants.AVERAGE_WORD_SIZE;
 
 		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(ciphertext -> {
 			// Pick a plaintext at random according to the language model
@@ -96,6 +97,12 @@ public class BayesianDecipherManager {
 
 			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
+
+		for (int i = 1; i < cipher.getCiphertextCharacters().size(); i++) {
+			if (ThreadLocalRandom.current().nextDouble() < wordBoundaryProbability) {
+				initialSolution.addWordBoundary(new WordBoundary(i - 1, i));
+			}
+		}
 
 		EvaluationResults score = computeConditionalProbability(initialSolution);
 		initialSolution.setProbability(score.getProbability());
@@ -126,7 +133,7 @@ public class BayesianDecipherManager {
 			 */
 			temperature = maxTemp.subtract(minTemp, MathConstants.PREC_10_HALF_UP).multiply(iterations.subtract(BigDecimal.valueOf(i), MathConstants.PREC_10_HALF_UP).divide(iterations, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP).add(minTemp, MathConstants.PREC_10_HALF_UP);
 
-			next = runGibbsSampler(temperature, next);
+			next = runGibbsLetterSampler(temperature, next);
 
 			if (knownPlaintextEvaluator != null) {
 				knownProximity = knownPlaintextEvaluator.evaluate(next);
@@ -155,7 +162,7 @@ public class BayesianDecipherManager {
 		log.info(next.toString());
 	}
 
-	protected CipherSolution runGibbsSampler(BigDecimal temperature, CipherSolution solution) {
+	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {
 		BigDecimal acceptanceProbability = null;
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 
@@ -305,6 +312,10 @@ public class BayesianDecipherManager {
 		sumOfProbabilities = sumOfProbabilities.add(conditionalResults.getLogProbability(), MathConstants.PREC_10_HALF_UP);
 
 		return new EvaluationResults(productOfProbabilities, sumOfProbabilities);
+	}
+
+	protected CipherSolution runGibbsWordBoundarySampler(BigDecimal temperature, CipherSolution solution) {
+		return null;
 	}
 
 	/**
