@@ -22,9 +22,6 @@ package com.ciphertool.engine.bayes;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.PostConstruct;
 
@@ -32,7 +29,6 @@ import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.core.task.TaskExecutor;
 
 import com.ciphertool.engine.common.WordGraphUtils;
 import com.ciphertool.engine.entities.Cipher;
@@ -41,21 +37,19 @@ import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class PlaintextEvaluator {
-	private Logger			log	= LoggerFactory.getLogger(getClass());
+	private Logger		log	= LoggerFactory.getLogger(getClass());
 
-	protected Cipher		cipher;
+	protected Cipher	cipher;
 
-	private MarkovModel		letterMarkovModel;
-	private MarkovModel		wordMarkovModel;
+	private MarkovModel	letterMarkovModel;
+	private MarkovModel	wordMarkovModel;
 
-	private int				lastRowBegin;
-	private double			letterNGramWeight;
-	private double			wordNGramWeight;
+	private int			lastRowBegin;
+	private double		letterNGramWeight;
+	private double		wordNGramWeight;
 
-	private BigDecimal		unknownLetterNGramProbability;
-	private BigDecimal		unknownWordProbability;
-
-	private TaskExecutor	taskExecutor;
+	private BigDecimal	unknownLetterNGramProbability;
+	private BigDecimal	unknownWordProbability;
 
 	@PostConstruct
 	public void init() {
@@ -79,147 +73,147 @@ public class PlaintextEvaluator {
 	}
 
 	public EvaluationResults evaluate(CipherSolution solution) {
-		EvaluationResults letterNGramResults = evaluateLetterNGrams(solution);
-		EvaluationResults wordNGramResults = evaluateWords(solution);
-
-		BigDecimal interpolatedProbability = BigDecimal.ZERO;
-		interpolatedProbability = interpolatedProbability.add(((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
-		interpolatedProbability = interpolatedProbability.add(((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
-
-		BigDecimal interpolatedLogProbability = BigDecimal.ZERO;
-		interpolatedLogProbability = interpolatedLogProbability.add(((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramResults.getLogProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
-		interpolatedLogProbability = interpolatedLogProbability.add(((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordNGramResults.getLogProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
-
-		return new EvaluationResults(interpolatedProbability, interpolatedLogProbability);
+		return evaluate(null, solution);
 	}
 
-	public EvaluationResults evaluateLetterNGrams(CipherSolution solution) {
-		List<String> words = transformToWordList(solution);
+	public EvaluationResults evaluate(String ciphertextKey, CipherSolution solution) {
+		BigDecimal interpolatedProbability = null;
+		BigDecimal interpolatedLogProbability = null;
+		WordProbability existingProbability = null;
+		BigDecimal newProbability = solution.getProbability();
+		BigDecimal newLogProbability = solution.getLogProbability();
 
-		BigDecimal jointProbability = BigDecimal.ONE;
-		BigDecimal jointLogProbability = BigDecimal.ZERO;
+		List<WordProbability> letterNGramResults = evaluateLetterNGrams(ciphertextKey, solution);
+		List<WordProbability> wordNGramResults = evaluateWords(ciphertextKey, solution);
+
+		if (letterNGramResults.size() != wordNGramResults.size()) {
+			throw new IllegalStateException(
+					"Cannot interpolate probabilities from language model because the number of probabilities does not match.  letterNGrams="
+							+ letterNGramResults.size() + ", words=" + wordNGramResults.size());
+		}
+
+		for (WordProbability wordProbability : wordNGramResults) {
+			WordProbability letterNGramProbability;
+
+			try {
+				letterNGramProbability = letterNGramResults.get(letterNGramResults.indexOf(wordProbability));
+			} catch (IndexOutOfBoundsException ioobe) {
+				throw new IllegalStateException(
+						"Cannot interpolate probabilities from language model because a mismatch was found.  No letter n-gram found for: "
+								+ wordProbability);
+			}
+
+			interpolatedProbability = BigDecimal.ZERO;
+			interpolatedProbability = interpolatedProbability.add(((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramProbability.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
+			interpolatedProbability = interpolatedProbability.add(((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordProbability.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
+
+			interpolatedLogProbability = BigDecimalMath.log(interpolatedProbability);
+
+			if (solution.getWordProbabilities().contains(wordProbability)) {
+				existingProbability = solution.getWordProbabilities().get(solution.getWordProbabilities().indexOf(wordProbability));
+
+				newProbability = newProbability.divide(existingProbability.getProbability(), MathConstants.PREC_10_HALF_UP).multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
+				newLogProbability = newLogProbability.subtract(existingProbability.getLogProbability(), MathConstants.PREC_10_HALF_UP).add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
+
+				solution.replaceWordProbability(new WordProbability(wordProbability.getPrevious(),
+						wordProbability.getNext(), wordProbability.getValue(), interpolatedProbability,
+						interpolatedLogProbability));
+			} else {
+				newProbability = newProbability.multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
+				newLogProbability = newLogProbability.add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
+
+				solution.addWordProbability(new WordProbability(wordProbability.getPrevious(),
+						wordProbability.getNext(), wordProbability.getValue(), interpolatedProbability,
+						interpolatedLogProbability));
+			}
+		}
+
+		return new EvaluationResults(newProbability, newLogProbability);
+	}
+
+	public List<WordProbability> evaluateLetterNGrams(String ciphertextKey, CipherSolution solution) {
+		List<WordProbability> words = transformToWordList(ciphertextKey, solution);
 
 		int order = letterMarkovModel.getOrder();
 
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(words.size());
-		FutureTask<BigDecimal> task;
-
-		// Calculate the full conditional probability for each possible plaintext substitution
-		BigDecimal probability;
+		BigDecimal nGramProbability = null;
+		BigDecimal probability = null;
 		NGramIndexNode match = null;
-		for (String word : words) {
-			for (int i = 0; i <= word.length() - order; i++) {
-				match = letterMarkovModel.findLongest(word.substring(i, i + order));
+
+		for (WordProbability word : words) {
+			nGramProbability = BigDecimal.ONE;
+
+			for (int i = 0; i <= word.getValue().length() - order; i++) {
+				match = letterMarkovModel.findLongest(word.getValue().substring(i, i + order));
 
 				if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
-					jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
 					probability = match.getTerminalInfo().getProbability();
 					log.debug("Letter N-Gram Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 				} else {
-					jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathConstants.PREC_10_HALF_UP);
 					probability = unknownWordProbability;
 					log.debug("No Letter N-Gram Match");
 				}
 
-				task = new FutureTask<>(new CovertLogProbabilityTask(probability));
-				futures.add(task);
-				this.taskExecutor.execute(task);
-			}
-		}
-
-		for (FutureTask<BigDecimal> future : futures) {
-			try {
-				jointLogProbability = jointLogProbability.add(future.get(), MathConstants.PREC_10_HALF_UP);
-			} catch (InterruptedException ie) {
-				log.error("Caught InterruptedException while waiting for BigDecimal ", ie);
-			} catch (ExecutionException ee) {
-				log.error("Caught ExecutionException while waiting for BigDecimal ", ee);
-			}
-		}
-
-		return new EvaluationResults(jointProbability, jointLogProbability);
-	}
-
-	public EvaluationResults evaluateWords(CipherSolution solution) {
-		List<String> words = transformToWordList(solution);
-
-		BigDecimal jointProbability = BigDecimal.ONE;
-		BigDecimal jointLogProbability = BigDecimal.ZERO;
-
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(words.size());
-		FutureTask<BigDecimal> task;
-
-		// Calculate the full conditional probability for each possible plaintext substitution
-		NGramIndexNode match = null;
-		BigDecimal probability;
-		for (String word : words) {
-			match = wordMarkovModel.findLongest(word);
-
-			if (match == null) {
-				jointProbability = jointProbability.multiply(unknownWordProbability, MathConstants.PREC_10_HALF_UP);
-				probability = unknownWordProbability;
-				log.debug("No Word Match");
-			} else {
-				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
-				probability = match.getTerminalInfo().getProbability();
-				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
+				nGramProbability = nGramProbability.multiply(probability, MathConstants.PREC_10_HALF_UP);
 			}
 
-			task = new FutureTask<>(new CovertLogProbabilityTask(probability));
-			futures.add(task);
-			this.taskExecutor.execute(task);
+			word.setProbability(nGramProbability);
 		}
-
-		for (FutureTask<BigDecimal> future : futures) {
-			try {
-				jointLogProbability = jointLogProbability.add(future.get(), MathConstants.PREC_10_HALF_UP);
-			} catch (InterruptedException ie) {
-				log.error("Caught InterruptedException while waiting for BigDecimal ", ie);
-			} catch (ExecutionException ee) {
-				log.error("Caught ExecutionException while waiting for BigDecimal ", ee);
-			}
-		}
-
-		return new EvaluationResults(jointProbability, jointLogProbability);
-	}
-
-	protected List<String> transformToWordList(CipherSolution solution) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
-
-		List<String> words = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < currentSolutionString.length(); i++) {
-			sb.append(currentSolutionString.charAt(i));
-
-			if (i < (currentSolutionString.length() - 1) && solution.getWordBoundaries().contains(new WordBoundary(
-					i))) {
-				words.add(sb.toString());
-				sb = new StringBuilder();
-			}
-		}
-
-		words.add(sb.toString());
 
 		return words;
 	}
 
-	/**
-	 * A concurrent task for computing log probability.
-	 */
-	protected class CovertLogProbabilityTask implements Callable<BigDecimal> {
-		private BigDecimal probability;
+	public List<WordProbability> evaluateWords(String ciphertextKey, CipherSolution solution) {
+		List<WordProbability> words = transformToWordList(ciphertextKey, solution);
 
-		/**
-		 * @param probability
-		 */
-		public CovertLogProbabilityTask(BigDecimal probability) {
-			this.probability = probability;
+		NGramIndexNode match = null;
+		BigDecimal probability;
+		for (WordProbability word : words) {
+			match = wordMarkovModel.findLongest(word.getValue());
+
+			if (match == null) {
+				probability = unknownWordProbability;
+				log.debug("No Word Match");
+			} else {
+				probability = match.getTerminalInfo().getProbability();
+				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
+			}
+
+			word.setProbability(probability);
 		}
 
-		@Override
-		public BigDecimal call() throws Exception {
-			return BigDecimalMath.log(this.probability);
+		return words;
+	}
+
+	protected List<WordProbability> transformToWordList(String ciphertextKey, CipherSolution solution) {
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
+
+		List<WordProbability> words = new ArrayList<>();
+		Integer begin = null;
+		boolean add = false;
+
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			if (ciphertextKey == null || ciphertextKey.equals(cipher.getCiphertextCharacters().get(i).getValue())) {
+				add = true;
+			}
+
+			if (i < (currentSolutionString.length() - 1) && solution.getWordBoundaries().contains(i)) {
+				if (add) {
+					words.add(new WordProbability(begin, i, currentSolutionString.substring((begin == null ? 0 : begin
+							+ 1), i + 1)));
+				}
+
+				begin = i;
+				add = false;
+			}
 		}
+
+		if (add) {
+			words.add(new WordProbability(begin, null, currentSolutionString.substring((begin == null ? 0 : begin
+					+ 1), currentSolutionString.length())));
+		}
+
+		return words;
 	}
 
 	public void setCipher(Object cipher) {
@@ -262,14 +256,5 @@ public class PlaintextEvaluator {
 	@Required
 	public void setWordNGramWeight(double wordNGramWeight) {
 		this.wordNGramWeight = wordNGramWeight;
-	}
-
-	/**
-	 * @param taskExecutor
-	 *            the taskExecutor to set
-	 */
-	@Required
-	public void setTaskExecutor(TaskExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
 	}
 }

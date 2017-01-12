@@ -20,9 +20,11 @@
 package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,15 +39,17 @@ public class CipherSolution {
 
 	protected Cipher				cipher;
 
-	private BigDecimal				probability		= BigDecimal.ZERO;
+	private BigDecimal				probability		= BigDecimal.ONE;
 	private BigDecimal				logProbability	= BigDecimal.ZERO;
 
 	private Map<String, Plaintext>	mappings;
-	private Set<WordBoundary>		wordBoundaries;
+	private Set<Integer>			wordBoundaries;
+	private List<WordProbability>	wordProbabilities;
 
 	public CipherSolution() {
 		mappings = new HashMap<>();
 		wordBoundaries = new HashSet<>();
+		wordProbabilities = new ArrayList<>();
 	}
 
 	public CipherSolution(Cipher cipher, int numCiphertext) {
@@ -57,6 +61,7 @@ public class CipherSolution {
 
 		mappings = new HashMap<>(numCiphertext);
 		wordBoundaries = new HashSet<>();
+		wordProbabilities = new ArrayList<>();
 	}
 
 	/**
@@ -133,24 +138,6 @@ public class CipherSolution {
 		return this.mappings.remove(key);
 	}
 
-	public Set<WordBoundary> getWordBoundaries() {
-		return Collections.unmodifiableSet(this.wordBoundaries);
-	}
-
-	public void addWordBoundary(WordBoundary wordBoundary) {
-		if (null == wordBoundary) {
-			log.warn("Attempted to insert a null WordBoundary CipherSolution.  Returning. ");
-
-			return;
-		}
-
-		this.wordBoundaries.add(wordBoundary);
-	}
-
-	public boolean removeWordBoundary(WordBoundary wordBoundary) {
-		return this.wordBoundaries.remove(wordBoundary);
-	}
-
 	/*
 	 * This does the same thing as putMapping(), and exists solely for semantic consistency.
 	 */
@@ -172,6 +159,61 @@ public class CipherSolution {
 		this.mappings.put(key, newPlaintext);
 	}
 
+	public Set<Integer> getWordBoundaries() {
+		return Collections.unmodifiableSet(this.wordBoundaries);
+	}
+
+	public void addWordBoundary(Integer wordBoundary) {
+		if (null == wordBoundary) {
+			log.warn("Attempted to insert a null WordBoundary CipherSolution.  Returning. ");
+
+			return;
+		}
+
+		this.wordBoundaries.add(wordBoundary);
+	}
+
+	public boolean removeWordBoundary(Integer wordBoundary) {
+		return this.wordBoundaries.remove(wordBoundary);
+	}
+
+	public List<WordProbability> getWordProbabilities() {
+		return Collections.unmodifiableList(this.wordProbabilities);
+	}
+
+	public void addWordProbability(WordProbability wordProbability) {
+		if (null == wordProbability) {
+			log.warn("Attempted to insert a null WordProbability CipherSolution.  Returning. ");
+
+			return;
+		}
+
+		this.wordProbabilities.add(wordProbability);
+	}
+
+	public boolean removeWordProbability(WordProbability wordProbability) {
+		return this.wordProbabilities.remove(wordProbability);
+	}
+
+	public void replaceWordProbability(WordProbability wordProbability) {
+		if (null == wordProbability) {
+			log.warn("Attempted to replace a WordProbability from CipherSolution, but the supplied value was null.  Cannot continue. "
+					+ this);
+
+			return;
+		}
+
+		if (!this.wordProbabilities.contains(wordProbability)) {
+			log.warn("Attempted to replace a WordProbability from CipherSolution which does not exist.  Cannot continue: "
+					+ wordProbability);
+
+			return;
+		}
+
+		this.removeWordProbability(wordProbability);
+		this.addWordProbability(wordProbability);
+	}
+
 	public CipherSolution clone() {
 		CipherSolution copySolution = new CipherSolution(this.cipher, this.mappings.size());
 
@@ -179,8 +221,12 @@ public class CipherSolution {
 			copySolution.putMapping(entry.getKey(), entry.getValue().clone());
 		}
 
-		for (WordBoundary boundary : this.wordBoundaries) {
-			copySolution.addWordBoundary(boundary.clone());
+		for (Integer boundary : this.wordBoundaries) {
+			copySolution.addWordBoundary(boundary.intValue());
+		}
+
+		for (WordProbability probability : this.wordProbabilities) {
+			copySolution.addWordProbability(probability.clone());
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone

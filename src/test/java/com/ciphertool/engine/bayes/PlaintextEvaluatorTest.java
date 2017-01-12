@@ -4,6 +4,8 @@ import static org.mockito.Mockito.spy;
 
 import java.util.concurrent.ExecutionException;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -81,106 +83,106 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		solution.putMapping("backj", new Plaintext("x"));
 		solution.putMapping("box", new Plaintext("y"));
 
-		solution.addWordBoundary(new WordBoundary(0)); // I
-		solution.addWordBoundary(new WordBoundary(4)); // like
-		solution.addWordBoundary(new WordBoundary(11)); // killing
-		solution.addWordBoundary(new WordBoundary(17)); // people
-		solution.addWordBoundary(new WordBoundary(24)); // because
-		solution.addWordBoundary(new WordBoundary(26)); // it
-		solution.addWordBoundary(new WordBoundary(28)); // is
-		solution.addWordBoundary(new WordBoundary(30)); // so
-		solution.addWordBoundary(new WordBoundary(34)); // much
-		solution.addWordBoundary(new WordBoundary(37)); // fun
-		solution.addWordBoundary(new WordBoundary(39)); // it
-		solution.addWordBoundary(new WordBoundary(41)); // is
-		solution.addWordBoundary(new WordBoundary(45)); // more
-		solution.addWordBoundary(new WordBoundary(48)); // fun
-		solution.addWordBoundary(new WordBoundary(52)); // than
-		solution.addWordBoundary(new WordBoundary(59)); // killing
-		solution.addWordBoundary(new WordBoundary(63)); // wild
-		solution.addWordBoundary(new WordBoundary(67)); // game
-		solution.addWordBoundary(new WordBoundary(69)); // in
-		solution.addWordBoundary(new WordBoundary(72)); // the
-		solution.addWordBoundary(new WordBoundary(79)); // forrest
-		solution.addWordBoundary(new WordBoundary(86)); // because
-		solution.addWordBoundary(new WordBoundary(89)); // man
-		solution.addWordBoundary(new WordBoundary(91)); // is
-		solution.addWordBoundary(new WordBoundary(94)); // the
-		solution.addWordBoundary(new WordBoundary(98)); // most
-		solution.addWordBoundary(new WordBoundary(107)); // dangeroue
-		solution.addWordBoundary(new WordBoundary(113)); // anamal
-		solution.addWordBoundary(new WordBoundary(115)); // of
-		solution.addWordBoundary(new WordBoundary(118)); // all
-		solution.addWordBoundary(new WordBoundary(120)); // to
-		solution.addWordBoundary(new WordBoundary(124)); // kill
-		solution.addWordBoundary(new WordBoundary(133)); // something
-		solution.addWordBoundary(new WordBoundary(138)); // gives
-		solution.addWordBoundary(new WordBoundary(140)); // me
-		solution.addWordBoundary(new WordBoundary(143)); // the
-		solution.addWordBoundary(new WordBoundary(147)); // moat
-		solution.addWordBoundary(new WordBoundary(156)); // thrilling
-		solution.addWordBoundary(new WordBoundary(165)); // experence
-		solution.addWordBoundary(new WordBoundary(167)); // it
-		solution.addWordBoundary(new WordBoundary(169)); // is
-		solution.addWordBoundary(new WordBoundary(173)); // even
-		solution.addWordBoundary(new WordBoundary(179)); // better
-		solution.addWordBoundary(new WordBoundary(183)); // than
-		solution.addWordBoundary(new WordBoundary(190)); // getting
-		solution.addWordBoundary(new WordBoundary(194)); // your
-		solution.addWordBoundary(new WordBoundary(199)); // rocks
-		solution.addWordBoundary(new WordBoundary(202)); // off
-		solution.addWordBoundary(new WordBoundary(206)); // with
-		solution.addWordBoundary(new WordBoundary(207)); // a
-		solution.addWordBoundary(new WordBoundary(211)); // girl
-		solution.addWordBoundary(new WordBoundary(214)); // the
-		solution.addWordBoundary(new WordBoundary(218)); // best
-		solution.addWordBoundary(new WordBoundary(222)); // part
-		solution.addWordBoundary(new WordBoundary(224)); // of
-		solution.addWordBoundary(new WordBoundary(226)); // it
-		solution.addWordBoundary(new WordBoundary(228)); // ia
-		solution.addWordBoundary(new WordBoundary(232)); // thae
-		solution.addWordBoundary(new WordBoundary(236)); // when
-		solution.addWordBoundary(new WordBoundary(237)); // i
-		solution.addWordBoundary(new WordBoundary(240)); // die
-		solution.addWordBoundary(new WordBoundary(241)); // i
-		solution.addWordBoundary(new WordBoundary(245)); // will
-		solution.addWordBoundary(new WordBoundary(247)); // be
-		solution.addWordBoundary(new WordBoundary(253)); // reborn
-		solution.addWordBoundary(new WordBoundary(255)); // in
-		solution.addWordBoundary(new WordBoundary(263)); // paradice
-		solution.addWordBoundary(new WordBoundary(266)); // snd
-		solution.addWordBoundary(new WordBoundary(269)); // all
-		solution.addWordBoundary(new WordBoundary(272)); // the
-		solution.addWordBoundary(new WordBoundary(273)); // i
-		solution.addWordBoundary(new WordBoundary(277)); // have
-		solution.addWordBoundary(new WordBoundary(283)); // killed
-		solution.addWordBoundary(new WordBoundary(287)); // will
-		solution.addWordBoundary(new WordBoundary(293)); // become
-		solution.addWordBoundary(new WordBoundary(295)); // my
-		solution.addWordBoundary(new WordBoundary(301)); // slaves
-		solution.addWordBoundary(new WordBoundary(302)); // i
-		solution.addWordBoundary(new WordBoundary(306)); // will
-		solution.addWordBoundary(new WordBoundary(309)); // not
-		solution.addWordBoundary(new WordBoundary(313)); // give
-		solution.addWordBoundary(new WordBoundary(316)); // you
-		solution.addWordBoundary(new WordBoundary(318)); // my
-		solution.addWordBoundary(new WordBoundary(322)); // name
-		solution.addWordBoundary(new WordBoundary(329)); // because
-		solution.addWordBoundary(new WordBoundary(332)); // you
-		solution.addWordBoundary(new WordBoundary(336)); // will
-		solution.addWordBoundary(new WordBoundary(339)); // try
-		solution.addWordBoundary(new WordBoundary(341)); // to
-		solution.addWordBoundary(new WordBoundary(345)); // sloi
-		solution.addWordBoundary(new WordBoundary(349)); // down
-		solution.addWordBoundary(new WordBoundary(351)); // or
-		solution.addWordBoundary(new WordBoundary(355)); // stop
-		solution.addWordBoundary(new WordBoundary(357)); // my
-		solution.addWordBoundary(new WordBoundary(367)); // collecting
-		solution.addWordBoundary(new WordBoundary(369)); // of
-		solution.addWordBoundary(new WordBoundary(375)); // slaves
-		solution.addWordBoundary(new WordBoundary(378)); // for
-		solution.addWordBoundary(new WordBoundary(380)); // my
-		solution.addWordBoundary(new WordBoundary(389)); // afterlife
+		solution.addWordBoundary(0); // I
+		solution.addWordBoundary(4); // like
+		solution.addWordBoundary(11); // killing
+		solution.addWordBoundary(17); // people
+		solution.addWordBoundary(24); // because
+		solution.addWordBoundary(26); // it
+		solution.addWordBoundary(28); // is
+		solution.addWordBoundary(30); // so
+		solution.addWordBoundary(34); // much
+		solution.addWordBoundary(37); // fun
+		solution.addWordBoundary(39); // it
+		solution.addWordBoundary(41); // is
+		solution.addWordBoundary(45); // more
+		solution.addWordBoundary(48); // fun
+		solution.addWordBoundary(52); // than
+		solution.addWordBoundary(59); // killing
+		solution.addWordBoundary(63); // wild
+		solution.addWordBoundary(67); // game
+		solution.addWordBoundary(69); // in
+		solution.addWordBoundary(72); // the
+		solution.addWordBoundary(79); // forrest
+		solution.addWordBoundary(86); // because
+		solution.addWordBoundary(89); // man
+		solution.addWordBoundary(91); // is
+		solution.addWordBoundary(94); // the
+		solution.addWordBoundary(98); // most
+		solution.addWordBoundary(107); // dangeroue
+		solution.addWordBoundary(113); // anamal
+		solution.addWordBoundary(115); // of
+		solution.addWordBoundary(118); // all
+		solution.addWordBoundary(120); // to
+		solution.addWordBoundary(124); // kill
+		solution.addWordBoundary(133); // something
+		solution.addWordBoundary(138); // gives
+		solution.addWordBoundary(140); // me
+		solution.addWordBoundary(143); // the
+		solution.addWordBoundary(147); // moat
+		solution.addWordBoundary(156); // thrilling
+		solution.addWordBoundary(165); // experence
+		solution.addWordBoundary(167); // it
+		solution.addWordBoundary(169); // is
+		solution.addWordBoundary(173); // even
+		solution.addWordBoundary(179); // better
+		solution.addWordBoundary(183); // than
+		solution.addWordBoundary(190); // getting
+		solution.addWordBoundary(194); // your
+		solution.addWordBoundary(199); // rocks
+		solution.addWordBoundary(202); // off
+		solution.addWordBoundary(206); // with
+		solution.addWordBoundary(207); // a
+		solution.addWordBoundary(211); // girl
+		solution.addWordBoundary(214); // the
+		solution.addWordBoundary(218); // best
+		solution.addWordBoundary(222); // part
+		solution.addWordBoundary(224); // of
+		solution.addWordBoundary(226); // it
+		solution.addWordBoundary(228); // ia
+		solution.addWordBoundary(232); // thae
+		solution.addWordBoundary(236); // when
+		solution.addWordBoundary(237); // i
+		solution.addWordBoundary(240); // die
+		solution.addWordBoundary(241); // i
+		solution.addWordBoundary(245); // will
+		solution.addWordBoundary(247); // be
+		solution.addWordBoundary(253); // reborn
+		solution.addWordBoundary(255); // in
+		solution.addWordBoundary(263); // paradice
+		solution.addWordBoundary(266); // snd
+		solution.addWordBoundary(269); // all
+		solution.addWordBoundary(272); // the
+		solution.addWordBoundary(273); // i
+		solution.addWordBoundary(277); // have
+		solution.addWordBoundary(283); // killed
+		solution.addWordBoundary(287); // will
+		solution.addWordBoundary(293); // become
+		solution.addWordBoundary(295); // my
+		solution.addWordBoundary(301); // slaves
+		solution.addWordBoundary(302); // i
+		solution.addWordBoundary(306); // will
+		solution.addWordBoundary(309); // not
+		solution.addWordBoundary(313); // give
+		solution.addWordBoundary(316); // you
+		solution.addWordBoundary(318); // my
+		solution.addWordBoundary(322); // name
+		solution.addWordBoundary(329); // because
+		solution.addWordBoundary(332); // you
+		solution.addWordBoundary(336); // will
+		solution.addWordBoundary(339); // try
+		solution.addWordBoundary(341); // to
+		solution.addWordBoundary(345); // sloi
+		solution.addWordBoundary(349); // down
+		solution.addWordBoundary(351); // or
+		solution.addWordBoundary(355); // stop
+		solution.addWordBoundary(357); // my
+		solution.addWordBoundary(367); // collecting
+		solution.addWordBoundary(369); // of
+		solution.addWordBoundary(375); // slaves
+		solution.addWordBoundary(378); // for
+		solution.addWordBoundary(380); // my
+		solution.addWordBoundary(389); // afterlife
 
 		solution.setCipher(zodiac408);
 	}
@@ -223,7 +225,6 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator.setCipher(zodiac408);
 		plaintextEvaluator.setLetterNGramWeight(0.1);
 		plaintextEvaluator.setWordNGramWeight(0.9);
-		plaintextEvaluator.setTaskExecutor(taskExecutorSpy);
 		plaintextEvaluator.init();
 	}
 

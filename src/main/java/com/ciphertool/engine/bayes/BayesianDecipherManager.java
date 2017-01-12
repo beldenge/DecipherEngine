@@ -100,11 +100,11 @@ public class BayesianDecipherManager {
 
 		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
 			if (ThreadLocalRandom.current().nextDouble() < wordBoundaryProbability) {
-				initialSolution.addWordBoundary(new WordBoundary(i));
+				initialSolution.addWordBoundary(i);
 			}
 		}
 
-		EvaluationResults score = computeConditionalProbability(initialSolution);
+		EvaluationResults score = computeConditionalProbability(null, initialSolution);
 		initialSolution.setProbability(score.getProbability());
 		initialSolution.setLogProbability(score.getLogProbability());
 
@@ -177,7 +177,7 @@ public class BayesianDecipherManager {
 			CipherSolution proposal = solution.clone();
 			proposal.replaceMapping(entry.getKey(), new Plaintext(proposedLetter.toString()));
 
-			EvaluationResults score = computeConditionalProbability(proposal);
+			EvaluationResults score = computeConditionalProbability(null, proposal);
 			proposal.setProbability(score.getProbability());
 			proposal.setLogProbability(score.getLogProbability());
 
@@ -198,7 +198,7 @@ public class BayesianDecipherManager {
 			conditionalSolution = solution.clone();
 			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
 
-			conditionalResults = computeConditionalProbability(conditionalSolution);
+			conditionalResults = computeConditionalProbability(ciphertextKey, conditionalSolution);
 
 			plaintextDistribution.add(new LetterProbability(letter, conditionalResults.getProbability()));
 			sumOfProbabilities = sumOfProbabilities.add(conditionalResults.getProbability(), MathConstants.PREC_10_HALF_UP);
@@ -211,7 +211,7 @@ public class BayesianDecipherManager {
 		return plaintextDistribution;
 	}
 
-	protected EvaluationResults computeConditionalProbability(CipherSolution conditionalSolution) {
+	protected EvaluationResults computeConditionalProbability(String ciphertextKey, CipherSolution conditionalSolution) {
 		BigDecimal productOfProbabilities = BigDecimal.ONE;
 		BigDecimal sumOfProbabilities = BigDecimal.ZERO;
 		BigDecimal numerator;
@@ -282,7 +282,7 @@ public class BayesianDecipherManager {
 			unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 		}
 
-		conditionalResults = plaintextEvaluator.evaluate(conditionalSolution);
+		conditionalResults = plaintextEvaluator.evaluate(ciphertextKey, conditionalSolution);
 
 		// Multiply by the prior to satisfy bayes' rule
 		productOfProbabilities = productOfProbabilities.multiply(conditionalResults.getProbability(), MathConstants.PREC_10_HALF_UP);
@@ -292,7 +292,7 @@ public class BayesianDecipherManager {
 	}
 
 	protected CipherSolution runGibbsWordBoundarySampler(BigDecimal temperature, CipherSolution solution) {
-		WordBoundary nextBoundary = null;
+		int nextBoundary;
 		EvaluationResults addBoundaryProbability = null;
 		EvaluationResults removeBoundaryProbability = null;
 		BigDecimal sumOfLogProbabilities = null;
@@ -303,15 +303,15 @@ public class BayesianDecipherManager {
 		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
 			sumOfLogProbabilities = null;
 			boundaryProbabilities = new ArrayList<>();
-			nextBoundary = new WordBoundary(i);
+			nextBoundary = i;
 
 			proposal = solution.clone();
 
 			proposal.addWordBoundary(nextBoundary);
-			addBoundaryProbability = computeConditionalProbability(proposal);
+			addBoundaryProbability = computeConditionalProbability(null, proposal);
 
 			proposal.removeWordBoundary(nextBoundary);
-			removeBoundaryProbability = computeConditionalProbability(proposal);
+			removeBoundaryProbability = computeConditionalProbability(null, proposal);
 
 			sumOfLogProbabilities = addBoundaryProbability.getLogProbability().add(removeBoundaryProbability.getLogProbability());
 
