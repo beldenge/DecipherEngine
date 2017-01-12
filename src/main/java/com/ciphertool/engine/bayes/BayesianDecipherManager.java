@@ -134,6 +134,7 @@ public class BayesianDecipherManager {
 			temperature = maxTemp.subtract(minTemp, MathConstants.PREC_10_HALF_UP).multiply(iterations.subtract(BigDecimal.valueOf(i), MathConstants.PREC_10_HALF_UP).divide(iterations, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP).add(minTemp, MathConstants.PREC_10_HALF_UP);
 
 			next = runGibbsLetterSampler(temperature, next);
+			next = runGibbsWordBoundarySampler(temperature, next);
 
 			if (knownPlaintextEvaluator != null) {
 				knownProximity = knownPlaintextEvaluator.evaluate(next);
@@ -163,7 +164,6 @@ public class BayesianDecipherManager {
 	}
 
 	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {
-		BigDecimal acceptanceProbability = null;
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 
 		// For each cipher symbol type, run the gibbs sampling
@@ -174,37 +174,14 @@ public class BayesianDecipherManager {
 
 			Character proposedLetter = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution)).getValue();
 
-			CipherSolution proposedSolution = solution.clone();
-			proposedSolution.replaceMapping(entry.getKey(), new Plaintext(proposedLetter.toString()));
-			EvaluationResults score = plaintextEvaluator.evaluate(proposedSolution);
-			proposedSolution.setProbability(score.getProbability());
-			proposedSolution.setLogProbability(score.getLogProbability());
+			CipherSolution proposal = solution.clone();
+			proposal.replaceMapping(entry.getKey(), new Plaintext(proposedLetter.toString()));
 
-			/*
-			 * For now, we're not doing anything to prevent the same mapping from being chosen
-			 * 
-			 * The log probability is not really interpolated accurately, so we do the comparison on the real
-			 * probability, and we use the log probability for acceptance probability calculation
-			 */
-			if (proposedSolution.getLogProbability().compareTo(solution.getLogProbability()) > 0) {
-				log.debug("Better solution found");
-				solution = proposedSolution;
-			} else {
-				// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
-				acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposedSolution.getLogProbability(), MathConstants.PREC_10_HALF_UP).divide(temperature, MathConstants.PREC_10_HALF_UP).negate());
+			EvaluationResults score = computeConditionalProbability(proposal);
+			proposal.setProbability(score.getProbability());
+			proposal.setLogProbability(score.getLogProbability());
 
-				log.debug("Acceptance probability: {}", acceptanceProbability);
-
-				if (acceptanceProbability.compareTo(BigDecimal.ZERO) < 0) {
-					throw new IllegalStateException(
-							"Acceptance probability was calculated to be less than zero.  Please review the math as this should not happen.");
-				}
-
-				if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0
-						|| ThreadLocalRandom.current().nextDouble() < acceptanceProbability.doubleValue()) {
-					solution = proposedSolution;
-				}
-			}
+			solution = selectNext(temperature, solution, proposal);
 		}
 
 		return solution;
@@ -315,7 +292,81 @@ public class BayesianDecipherManager {
 	}
 
 	protected CipherSolution runGibbsWordBoundarySampler(BigDecimal temperature, CipherSolution solution) {
-		return null;
+		WordBoundary nextBoundary = null;
+		EvaluationResults addBoundaryProbability = null;
+		EvaluationResults removeBoundaryProbability = null;
+		BigDecimal sumOfLogProbabilities = null;
+		List<BoundaryProbability> boundaryProbabilities = null;
+		boolean isAddBoundary;
+		CipherSolution proposal;
+
+		for (int i = 1; i < cipher.getCiphertextCharacters().size(); i++) {
+			sumOfLogProbabilities = null;
+			boundaryProbabilities = new ArrayList<>();
+			nextBoundary = new WordBoundary(i - 1, i);
+
+			proposal = solution.clone();
+
+			proposal.addWordBoundary(nextBoundary);
+			// TODO: need to compute entire joint probability, not just language model prior
+			addBoundaryProbability = plaintextEvaluator.evaluate(proposal);
+
+			proposal.removeWordBoundary(nextBoundary);
+			// TODO: need to compute entire joint probability, not just language model prior
+			removeBoundaryProbability = plaintextEvaluator.evaluate(proposal);
+
+			sumOfLogProbabilities = addBoundaryProbability.getLogProbability().add(removeBoundaryProbability.getLogProbability());
+
+			boundaryProbabilities.add(new BoundaryProbability(true,
+					addBoundaryProbability.getLogProbability().divide(sumOfLogProbabilities, MathConstants.PREC_10_HALF_UP)));
+			boundaryProbabilities.add(new BoundaryProbability(false,
+					removeBoundaryProbability.getLogProbability().divide(sumOfLogProbabilities, MathConstants.PREC_10_HALF_UP)));
+
+			RouletteSampler<BoundaryProbability> rouletteSampler = new RouletteSampler<>();
+			rouletteSampler.reIndex(boundaryProbabilities);
+
+			isAddBoundary = boundaryProbabilities.get(rouletteSampler.getNextIndex(boundaryProbabilities)).getValue();
+
+			if (isAddBoundary) {
+				proposal.addWordBoundary(nextBoundary);
+				proposal.setProbability(addBoundaryProbability.getProbability());
+				proposal.setLogProbability(addBoundaryProbability.getLogProbability());
+			} else {
+				proposal.removeWordBoundary(nextBoundary);
+				proposal.setProbability(removeBoundaryProbability.getProbability());
+				proposal.setLogProbability(removeBoundaryProbability.getLogProbability());
+			}
+
+			solution = selectNext(temperature, solution, proposal);
+		}
+
+		return solution;
+	}
+
+	protected CipherSolution selectNext(BigDecimal temperature, CipherSolution solution, CipherSolution proposal) {
+		BigDecimal acceptanceProbability = null;
+
+		if (proposal.getLogProbability().compareTo(solution.getLogProbability()) > 0) {
+			log.debug("Better solution found");
+			return proposal;
+		} else {
+			// Need to convert to log probabilities in order for the acceptance probability calculation to be useful
+			acceptanceProbability = BigDecimalMath.exp(solution.getLogProbability().subtract(proposal.getLogProbability(), MathConstants.PREC_10_HALF_UP).divide(temperature, MathConstants.PREC_10_HALF_UP).negate());
+
+			log.debug("Acceptance probability: {}", acceptanceProbability);
+
+			if (acceptanceProbability.compareTo(BigDecimal.ZERO) < 0) {
+				throw new IllegalStateException(
+						"Acceptance probability was calculated to be less than zero.  Please review the math as this should not happen.");
+			}
+
+			if (acceptanceProbability.compareTo(BigDecimal.ONE) > 0
+					|| ThreadLocalRandom.current().nextDouble() < acceptanceProbability.doubleValue()) {
+				return proposal;
+			}
+		}
+
+		return solution;
 	}
 
 	/**

@@ -147,8 +147,8 @@ public class CipherSolution {
 		this.wordBoundaries.add(wordBoundary);
 	}
 
-	public void removeWordBoundary(WordBoundary wordBoundary) {
-		this.wordBoundaries.remove(wordBoundary);
+	public boolean removeWordBoundary(WordBoundary wordBoundary) {
+		return this.wordBoundaries.remove(wordBoundary);
 	}
 
 	/*
