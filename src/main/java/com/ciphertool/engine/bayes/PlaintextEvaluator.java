@@ -94,36 +94,37 @@ public class PlaintextEvaluator {
 	}
 
 	public EvaluationResults evaluateLetterNGrams(CipherSolution solution) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
-
-		int order = letterMarkovModel.getOrder();
+		List<String> words = transformToWordList(solution);
 
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(currentSolutionString.length() - order);
+		int order = letterMarkovModel.getOrder();
+
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(words.size());
 		FutureTask<BigDecimal> task;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		BigDecimal probability;
 		NGramIndexNode match = null;
-		for (int i = 0; i < currentSolutionString.length()
-				- order; i += (match == null ? 1 : match.getCumulativeStringValue().length())) {
-			match = letterMarkovModel.findLongest(currentSolutionString.substring(i, i + order));
+		for (String word : words) {
+			for (int i = 0; i <= word.length() - order; i++) {
+				match = letterMarkovModel.findLongest(word.substring(i, i + order));
 
-			if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
-				jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
-				probability = match.getTerminalInfo().getProbability();
-				log.debug("Letter N-Gram Match={}, Probability={}", match.getCumulativeStringValue(), probability);
-			} else {
-				jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathConstants.PREC_10_HALF_UP);
-				probability = unknownWordProbability;
-				log.debug("No Letter N-Gram Match");
+				if (match != null && match.getTerminalInfo().getLevel() == letterMarkovModel.getOrder()) {
+					jointProbability = jointProbability.multiply(match.getTerminalInfo().getProbability(), MathConstants.PREC_10_HALF_UP);
+					probability = match.getTerminalInfo().getProbability();
+					log.debug("Letter N-Gram Match={}, Probability={}", match.getCumulativeStringValue(), probability);
+				} else {
+					jointProbability = jointProbability.multiply(unknownLetterNGramProbability, MathConstants.PREC_10_HALF_UP);
+					probability = unknownWordProbability;
+					log.debug("No Letter N-Gram Match");
+				}
+
+				task = new FutureTask<>(new CovertLogProbabilityTask(probability));
+				futures.add(task);
+				this.taskExecutor.execute(task);
 			}
-
-			task = new FutureTask<>(new CovertLogProbabilityTask(probability));
-			futures.add(task);
-			this.taskExecutor.execute(task);
 		}
 
 		for (FutureTask<BigDecimal> future : futures) {
@@ -140,20 +141,19 @@ public class PlaintextEvaluator {
 	}
 
 	public EvaluationResults evaluateWords(CipherSolution solution) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
+		List<String> words = transformToWordList(solution);
 
 		BigDecimal jointProbability = BigDecimal.ONE;
 		BigDecimal jointLogProbability = BigDecimal.ZERO;
 
-		List<FutureTask<BigDecimal>> futures = new ArrayList<>(currentSolutionString.length()
-				/ LanguageConstants.AVERAGE_WORD_SIZE);
+		List<FutureTask<BigDecimal>> futures = new ArrayList<>(words.size());
 		FutureTask<BigDecimal> task;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		NGramIndexNode match = null;
 		BigDecimal probability;
-		for (int i = 0; i < currentSolutionString.length(); i += (match == null ? 1 : match.getCumulativeStringValue().length())) {
-			match = wordMarkovModel.findLongest(currentSolutionString.substring(i));
+		for (String word : words) {
+			match = wordMarkovModel.findLongest(word);
 
 			if (match == null) {
 				jointProbability = jointProbability.multiply(unknownWordProbability, MathConstants.PREC_10_HALF_UP);
@@ -181,6 +181,26 @@ public class PlaintextEvaluator {
 		}
 
 		return new EvaluationResults(jointProbability, jointLogProbability);
+	}
+
+	protected List<String> transformToWordList(CipherSolution solution) {
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
+
+		List<String> words = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < currentSolutionString.length(); i++) {
+			sb.append(currentSolutionString.charAt(i));
+
+			if (i < (currentSolutionString.length() - 1) && solution.getWordBoundaries().contains(new WordBoundary(
+					i))) {
+				words.add(sb.toString());
+				sb = new StringBuilder();
+			}
+		}
+
+		words.add(sb.toString());
+
+		return words;
 	}
 
 	/**

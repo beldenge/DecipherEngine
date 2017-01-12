@@ -20,18 +20,14 @@
 package com.ciphertool.engine.bayes;
 
 public class WordBoundary {
-	private int	previousIndex;
-	private int	nextIndex;
+	private int previousIndex;
 
 	/**
 	 * @param previousIndex
 	 *            the previous index
-	 * @param nextIndex
-	 *            the next index
 	 */
-	public WordBoundary(int previousIndex, int nextIndex) {
+	public WordBoundary(int previousIndex) {
 		this.previousIndex = previousIndex;
-		this.nextIndex = nextIndex;
 	}
 
 	/**
@@ -41,22 +37,14 @@ public class WordBoundary {
 		return previousIndex;
 	}
 
-	/**
-	 * @return the nextIndex
-	 */
-	public int getNextIndex() {
-		return nextIndex;
-	}
-
 	public WordBoundary clone() {
-		return new WordBoundary(this.previousIndex, this.nextIndex);
+		return new WordBoundary(this.previousIndex);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + nextIndex;
 		result = prime * result + previousIndex;
 		return result;
 	}
@@ -73,9 +61,6 @@ public class WordBoundary {
 			return false;
 		}
 		WordBoundary other = (WordBoundary) obj;
-		if (nextIndex != other.nextIndex) {
-			return false;
-		}
 		if (previousIndex != other.previousIndex) {
 			return false;
 		}
@@ -84,6 +69,6 @@ public class WordBoundary {
 
 	@Override
 	public String toString() {
-		return "WordBoundary [previousIndex=" + previousIndex + ", nextIndex=" + nextIndex + "]";
+		return "WordBoundary [previousIndex=" + previousIndex + "]";
 	}
 }

@@ -98,9 +98,9 @@ public class BayesianDecipherManager {
 			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
 
-		for (int i = 1; i < cipher.getCiphertextCharacters().size(); i++) {
+		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
 			if (ThreadLocalRandom.current().nextDouble() < wordBoundaryProbability) {
-				initialSolution.addWordBoundary(new WordBoundary(i - 1, i));
+				initialSolution.addWordBoundary(new WordBoundary(i));
 			}
 		}
 
@@ -300,20 +300,18 @@ public class BayesianDecipherManager {
 		boolean isAddBoundary;
 		CipherSolution proposal;
 
-		for (int i = 1; i < cipher.getCiphertextCharacters().size(); i++) {
+		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
 			sumOfLogProbabilities = null;
 			boundaryProbabilities = new ArrayList<>();
-			nextBoundary = new WordBoundary(i - 1, i);
+			nextBoundary = new WordBoundary(i);
 
 			proposal = solution.clone();
 
 			proposal.addWordBoundary(nextBoundary);
-			// TODO: need to compute entire joint probability, not just language model prior
-			addBoundaryProbability = plaintextEvaluator.evaluate(proposal);
+			addBoundaryProbability = computeConditionalProbability(proposal);
 
 			proposal.removeWordBoundary(nextBoundary);
-			// TODO: need to compute entire joint probability, not just language model prior
-			removeBoundaryProbability = plaintextEvaluator.evaluate(proposal);
+			removeBoundaryProbability = computeConditionalProbability(proposal);
 
 			sumOfLogProbabilities = addBoundaryProbability.getLogProbability().add(removeBoundaryProbability.getLogProbability());
 
