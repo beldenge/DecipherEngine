@@ -222,6 +222,16 @@ public class BayesianDecipherManager {
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
 			conditionalSolution = modified.clone();
+
+			if (conditionalSolution.getMappings().get(ciphertextKey).equals(new Plaintext(letter.toString()))) {
+				// No need to re-score the solution in this case
+				plaintextDistribution.add(new SolutionProbability(conditionalSolution,
+						conditionalSolution.getProbability()));
+				sumOfProbabilities = sumOfProbabilities.add(conditionalSolution.getProbability(), MathConstants.PREC_10_HALF_UP);
+
+				continue;
+			}
+
 			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
 
 			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
