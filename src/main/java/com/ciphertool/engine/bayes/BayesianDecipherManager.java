@@ -110,7 +110,11 @@ public class BayesianDecipherManager {
 			}
 		}
 
-		computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, initialSolution);
+		PartialDerivation initialDerivation = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, initialSolution);
+		EvaluationResults initialPlaintextResults = plaintextEvaluator.evaluate(initialSolution);
+		initialSolution.setProbability(initialDerivation.getProductOfProbabilities().multiply(initialPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
+		initialSolution.setLogProbability(initialDerivation.getSumOfProbabilities().add(initialPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
+		log.info(initialSolution.toString());
 
 		BigDecimal maxTemp = BigDecimal.valueOf(annealingTemperatureMax);
 		BigDecimal minTemp = BigDecimal.valueOf(annealingTemperatureMin);
@@ -157,6 +161,7 @@ public class BayesianDecipherManager {
 			log.info("Iteration " + (i + 1) + " complete.  [elapsed=" + (System.currentTimeMillis() - iterationStart)
 					+ "ms, temp=" + String.format("%1$,.2f", temperature) + ", proximity="
 					+ String.format("%1$,.2f", knownProximity) + ", probability=" + next.getProbability() + "]");
+			log.info(next.toString());
 		}
 
 		log.info("Gibbs sampling completed in " + (System.currentTimeMillis() - start) + "ms.  [average="
@@ -164,7 +169,6 @@ public class BayesianDecipherManager {
 				+ maxKnownIteration + ", bestKnownProximity=" + String.format("%1$,.2f", maxKnown)
 				+ ", bestProbabilityIter=" + maxBayesIteration + ", bestProbability= " + maxBayes.getProbability()
 				+ "]");
-		log.info(next.toString());
 	}
 
 	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {
@@ -346,14 +350,14 @@ public class BayesianDecipherManager {
 			addDerivationResults = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, addProposal);
 			addPlaintextResults = plaintextEvaluator.evaluate(addProposal);
 			addProposal.setProbability(addDerivationResults.getProductOfProbabilities().multiply(addPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
-			addProposal.setLogProbability(addDerivationResults.getSumOfProbabilities().multiply(addPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
+			addProposal.setLogProbability(addDerivationResults.getSumOfProbabilities().add(addPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 
 			removeProposal = solution.clone();
 			removeProposal.removeWordBoundary(nextBoundary);
 			removeDerivationResults = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, removeProposal);
 			removePlaintextResults = plaintextEvaluator.evaluate(removeProposal);
 			removeProposal.setProbability(removeDerivationResults.getProductOfProbabilities().multiply(removePlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
-			removeProposal.setLogProbability(removeDerivationResults.getSumOfProbabilities().multiply(removePlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
+			removeProposal.setLogProbability(removeDerivationResults.getSumOfProbabilities().add(removePlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 
 			sumOfProbabilities = addProposal.getProbability().add(removeProposal.getProbability());
 

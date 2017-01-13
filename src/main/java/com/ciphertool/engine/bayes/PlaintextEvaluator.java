@@ -147,19 +147,23 @@ public class PlaintextEvaluator {
 		List<WordProbability> words = transformToWordList(ciphertextKey, includeCiphertextParameterOnly, solution);
 
 		NGramIndexNode match = null;
-		BigDecimal probability;
+		BigDecimal probability = null;
 		for (WordProbability word : words) {
-			match = wordMarkovModel.findLongest(word.getValue());
+			word.setProbability(BigDecimal.ONE);
 
-			if (match == null) {
-				probability = unknownWordProbability;
-				log.debug("No Word Match");
-			} else {
-				probability = match.getTerminalInfo().getProbability();
-				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
+			for (int i = 0; i < word.getValue().length(); i += (match == null ? 0 : match.getCumulativeStringValue().length())) {
+				match = wordMarkovModel.findLongest(word.getValue().substring(i, word.getValue().length()));
+
+				if (match == null) {
+					probability = unknownWordProbability;
+					log.debug("No Word Match");
+				} else {
+					probability = match.getTerminalInfo().getProbability();
+					log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
+				}
 			}
 
-			word.setProbability(probability);
+			word.setProbability(word.getProbability().multiply(probability, MathConstants.PREC_10_HALF_UP));
 		}
 
 		return words;
