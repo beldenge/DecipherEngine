@@ -25,7 +25,6 @@ public class WordProbability implements Probability<String> {
 	private Integer		previous;
 	private Integer		next;
 	private BigDecimal	probability;
-	private BigDecimal	logProbability;
 	private String		value;
 
 	/**
@@ -54,17 +53,15 @@ public class WordProbability implements Probability<String> {
 	 * @param value
 	 *            the word String
 	 */
-	public WordProbability(Integer previous, Integer next, String value, BigDecimal probability,
-			BigDecimal logProbability) {
+	public WordProbability(Integer previous, Integer next, String value, BigDecimal probability) {
 		this.previous = previous;
 		this.next = next;
 		this.probability = probability;
-		this.logProbability = logProbability;
 		this.value = value;
 	}
 
 	public WordProbability clone() {
-		return new WordProbability(this.previous, this.next, this.value, this.probability, this.logProbability);
+		return new WordProbability(this.previous, this.next, this.value, this.probability);
 	}
 
 	/**
@@ -95,21 +92,6 @@ public class WordProbability implements Probability<String> {
 	 */
 	public void setProbability(BigDecimal probability) {
 		this.probability = probability;
-	}
-
-	/**
-	 * @return the logProbability
-	 */
-	public BigDecimal getLogProbability() {
-		return logProbability;
-	}
-
-	/**
-	 * @param logProbability
-	 *            the logProbability to set
-	 */
-	public void setLogProbability(BigDecimal logProbability) {
-		this.logProbability = logProbability;
 	}
 
 	/**
@@ -168,7 +150,7 @@ public class WordProbability implements Probability<String> {
 
 	@Override
 	public String toString() {
-		return "WordProbability [previous=" + previous + ", next=" + next + ", probability=" + probability
-				+ ", logProbability=" + logProbability + ", value=" + value + "]";
+		return "WordProbability [previous=" + previous + ", next=" + next + ", probability=" + probability + ", value="
+				+ value + "]";
 	}
 }

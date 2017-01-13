@@ -20,11 +20,9 @@
 package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,12 +42,10 @@ public class CipherSolution {
 
 	private Map<String, Plaintext>	mappings;
 	private Set<Integer>			wordBoundaries;
-	private List<WordProbability>	wordProbabilities;
 
 	public CipherSolution() {
 		mappings = new HashMap<>();
 		wordBoundaries = new HashSet<>();
-		wordProbabilities = new ArrayList<>();
 	}
 
 	public CipherSolution(Cipher cipher, int numCiphertext) {
@@ -61,7 +57,6 @@ public class CipherSolution {
 
 		mappings = new HashMap<>(numCiphertext);
 		wordBoundaries = new HashSet<>();
-		wordProbabilities = new ArrayList<>();
 	}
 
 	/**
@@ -177,43 +172,6 @@ public class CipherSolution {
 		return this.wordBoundaries.remove(wordBoundary);
 	}
 
-	public List<WordProbability> getWordProbabilities() {
-		return Collections.unmodifiableList(this.wordProbabilities);
-	}
-
-	public void addWordProbability(WordProbability wordProbability) {
-		if (null == wordProbability) {
-			log.warn("Attempted to insert a null WordProbability CipherSolution.  Returning. ");
-
-			return;
-		}
-
-		this.wordProbabilities.add(wordProbability);
-	}
-
-	public boolean removeWordProbability(WordProbability wordProbability) {
-		return this.wordProbabilities.remove(wordProbability);
-	}
-
-	public void replaceWordProbability(WordProbability wordProbability) {
-		if (null == wordProbability) {
-			log.warn("Attempted to replace a WordProbability from CipherSolution, but the supplied value was null.  Cannot continue. "
-					+ this);
-
-			return;
-		}
-
-		if (!this.wordProbabilities.contains(wordProbability)) {
-			log.warn("Attempted to replace a WordProbability from CipherSolution which does not exist.  Cannot continue: "
-					+ wordProbability);
-
-			return;
-		}
-
-		this.removeWordProbability(wordProbability);
-		this.addWordProbability(wordProbability);
-	}
-
 	public CipherSolution clone() {
 		CipherSolution copySolution = new CipherSolution(this.cipher, this.mappings.size());
 
@@ -223,10 +181,6 @@ public class CipherSolution {
 
 		for (Integer boundary : this.wordBoundaries) {
 			copySolution.addWordBoundary(boundary.intValue());
-		}
-
-		for (WordProbability probability : this.wordProbabilities) {
-			copySolution.addWordProbability(probability.clone());
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone

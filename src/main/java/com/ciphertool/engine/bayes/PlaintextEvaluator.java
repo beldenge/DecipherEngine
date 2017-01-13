@@ -31,15 +31,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
-import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.sherlock.MathConstants;
 import com.ciphertool.sherlock.markov.MarkovModel;
 import com.ciphertool.sherlock.markov.NGramIndexNode;
 
 public class PlaintextEvaluator {
 	private Logger		log	= LoggerFactory.getLogger(getClass());
-
-	protected Cipher	cipher;
 
 	private MarkovModel	letterMarkovModel;
 	private MarkovModel	wordMarkovModel;
@@ -72,18 +69,17 @@ public class PlaintextEvaluator {
 	}
 
 	public EvaluationResults evaluate(CipherSolution solution) {
-		return evaluate(null, solution);
+		return evaluate(null, false, solution);
 	}
 
-	public EvaluationResults evaluate(String ciphertextKey, CipherSolution solution) {
+	public EvaluationResults evaluate(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
 		BigDecimal interpolatedProbability = null;
 		BigDecimal interpolatedLogProbability = null;
-		WordProbability existingProbability = null;
 		BigDecimal newProbability = BigDecimal.ONE;
 		BigDecimal newLogProbability = BigDecimal.ZERO;
 
-		List<WordProbability> letterNGramResults = evaluateLetterNGrams(ciphertextKey, solution);
-		List<WordProbability> wordNGramResults = evaluateWords(ciphertextKey, solution);
+		List<WordProbability> letterNGramResults = evaluateLetterNGrams(ciphertextKey, includeCiphertextParameterOnly, solution);
+		List<WordProbability> wordNGramResults = evaluateWords(ciphertextKey, includeCiphertextParameterOnly, solution);
 
 		if (letterNGramResults.size() != wordNGramResults.size()) {
 			throw new IllegalStateException(
@@ -108,30 +104,15 @@ public class PlaintextEvaluator {
 
 			interpolatedLogProbability = BigDecimalMath.log(interpolatedProbability);
 
-			if (solution.getWordProbabilities().contains(wordProbability)) {
-				existingProbability = solution.getWordProbabilities().get(solution.getWordProbabilities().indexOf(wordProbability));
-
-				newProbability = newProbability.divide(existingProbability.getProbability(), MathConstants.PREC_10_HALF_UP).multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
-				newLogProbability = newLogProbability.subtract(existingProbability.getLogProbability(), MathConstants.PREC_10_HALF_UP).add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
-
-				solution.replaceWordProbability(new WordProbability(wordProbability.getPrevious(),
-						wordProbability.getNext(), wordProbability.getValue(), interpolatedProbability,
-						interpolatedLogProbability));
-			} else {
-				newProbability = newProbability.multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
-				newLogProbability = newLogProbability.add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
-
-				solution.addWordProbability(new WordProbability(wordProbability.getPrevious(),
-						wordProbability.getNext(), wordProbability.getValue(), interpolatedProbability,
-						interpolatedLogProbability));
-			}
+			newProbability = newProbability.multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
+			newLogProbability = newLogProbability.add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
 		}
 
 		return new EvaluationResults(newProbability, newLogProbability);
 	}
 
-	public List<WordProbability> evaluateLetterNGrams(String ciphertextKey, CipherSolution solution) {
-		List<WordProbability> words = transformToWordList(ciphertextKey, solution);
+	public List<WordProbability> evaluateLetterNGrams(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
+		List<WordProbability> words = transformToWordList(ciphertextKey, includeCiphertextParameterOnly, solution);
 
 		int order = letterMarkovModel.getOrder();
 
@@ -162,8 +143,8 @@ public class PlaintextEvaluator {
 		return words;
 	}
 
-	public List<WordProbability> evaluateWords(String ciphertextKey, CipherSolution solution) {
-		List<WordProbability> words = transformToWordList(ciphertextKey, solution);
+	public List<WordProbability> evaluateWords(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
+		List<WordProbability> words = transformToWordList(ciphertextKey, includeCiphertextParameterOnly, solution);
 
 		NGramIndexNode match = null;
 		BigDecimal probability;
@@ -184,15 +165,25 @@ public class PlaintextEvaluator {
 		return words;
 	}
 
-	protected List<WordProbability> transformToWordList(String ciphertextKey, CipherSolution solution) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, this.cipher.getCiphertextCharacters().size());
+	protected List<WordProbability> transformToWordList(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, solution.getCipher().getCiphertextCharacters().size());
 
 		List<WordProbability> words = new ArrayList<>();
 		Integer begin = null;
 		boolean add = false;
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
-			if (ciphertextKey == null || ciphertextKey.equals(cipher.getCiphertextCharacters().get(i).getValue())) {
+			if (ciphertextKey == null) {
+				add = true;
+			} else if (includeCiphertextParameterOnly) {
+				if (ciphertextKey.equals(solution.getCipher().getCiphertextCharacters().get(i).getValue())) {
+					add = true;
+				} else {
+					add = false;
+				}
+			} else if (ciphertextKey.equals(solution.getCipher().getCiphertextCharacters().get(i).getValue())) {
+				add = false;
+			} else {
 				add = true;
 			}
 
@@ -213,10 +204,6 @@ public class PlaintextEvaluator {
 		}
 
 		return words;
-	}
-
-	public void setCipher(Cipher cipher) {
-		this.cipher = cipher;
 	}
 
 	/**

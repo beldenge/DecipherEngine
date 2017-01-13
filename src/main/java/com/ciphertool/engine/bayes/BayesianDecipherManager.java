@@ -81,8 +81,6 @@ public class BayesianDecipherManager {
 			this.cipher.removeCiphertextCharacter(this.cipher.getCiphertextCharacters().get(lastRowBegin));
 		}
 
-		plaintextEvaluator.setCipher(cipher);
-
 		cipherKeySize = (int) cipher.getCiphertextCharacters().stream().map(c -> c.getValue()).distinct().count();
 		// Use a uniform distribution for ciphertext probabilities
 		ciphertextProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(cipherKeySize), MathConstants.PREC_10_HALF_UP);
@@ -112,7 +110,7 @@ public class BayesianDecipherManager {
 			}
 		}
 
-		computeDerivationProbability(null, null, null, initialSolution);
+		computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, initialSolution);
 
 		BigDecimal maxTemp = BigDecimal.valueOf(annealingTemperatureMax);
 		BigDecimal minTemp = BigDecimal.valueOf(annealingTemperatureMin);
@@ -171,44 +169,63 @@ public class BayesianDecipherManager {
 
 	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {
 		RouletteSampler<SolutionProbability> rouletteSampler = new RouletteSampler<>();
-		CipherSolution next = solution.clone();
 		CipherSolution proposal = null;
 
 		// For each cipher symbol type, run the gibbs sampling
 		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
-			int affectedCount = moveAffectedWindowsToEnd(entry.getKey(), next);
-
-			List<SolutionProbability> plaintextDistribution = computeDistribution(affectedCount, entry.getKey(), next);
+			List<SolutionProbability> plaintextDistribution = computeDistribution(entry.getKey(), solution);
 
 			rouletteSampler.reIndex(plaintextDistribution);
 
 			proposal = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution)).getValue();
 
-			next = selectNext(temperature, next, proposal);
-
-			// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
-			next.setCipher(this.cipher);
+			solution = selectNext(temperature, solution, proposal);
 		}
 
 		return solution;
 	}
 
-	protected List<SolutionProbability> computeDistribution(int affectedCount, String ciphertextKey, CipherSolution solution) {
+	protected List<SolutionProbability> computeDistribution(String ciphertextKey, CipherSolution solution) {
 		List<SolutionProbability> plaintextDistribution = new ArrayList<>();
 		BigDecimal sumOfProbabilities = BigDecimal.ZERO;
 		CipherSolution conditionalSolution = null;
-		PartialDerivation partialDerivation = computePartialDerivationProbability(affectedCount, ciphertextKey, solution);
+		PartialDerivation derivationProbability;
+		EvaluationResults remainingPlaintextResults;
+		CipherSolution temp;
+
+		EvaluationResults partialPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, false, solution);
+
+		CipherSolution modified = solution.clone();
+		int affectedCount = moveAffectedWindowsToEnd(ciphertextKey, modified);
+
+		int end = solution.getCipher().getCiphertextCharacters().size() - affectedCount;
+		PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, ciphertextKey, modified);
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
-			conditionalSolution = solution.clone();
+			conditionalSolution = modified.clone();
 			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
 
-			computeDerivationProbability(partialDerivation, affectedCount, ciphertextKey, conditionalSolution);
+			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
+			derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), ciphertextKey, conditionalSolution);
+
+			/*
+			 * We can't use the modified clone since its ciphertext was moved around, and we need to preserve word
+			 * boundaries
+			 */
+			temp = solution.clone();
+			temp.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
+			remainingPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, true, temp);
+
+			conditionalSolution.setProbability(derivationProbability.getProductOfProbabilities().multiply(partialPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP).multiply(remainingPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
+			conditionalSolution.setLogProbability(derivationProbability.getSumOfProbabilities().add(partialPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP).add(remainingPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 
 			plaintextDistribution.add(new SolutionProbability(conditionalSolution,
 					conditionalSolution.getProbability()));
 			sumOfProbabilities = sumOfProbabilities.add(conditionalSolution.getProbability(), MathConstants.PREC_10_HALF_UP);
+
+			// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
+			conditionalSolution.setCipher(this.cipher);
 		}
 
 		// Normalize the probabilities
@@ -220,32 +237,7 @@ public class BayesianDecipherManager {
 		return plaintextDistribution;
 	}
 
-	protected PartialDerivation computePartialDerivationProbability(int affectedCount, String ciphertextKey, CipherSolution derivation) {
-		BigDecimal productOfProbabilities = BigDecimal.ONE;
-		BigDecimal sumOfProbabilities = BigDecimal.ZERO;
-		Map<String, BigDecimal> unigramCounts = new HashMap<>();
-		Map<String, BigDecimal> bigramCounts = new HashMap<>();
-		Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts = new HashMap<>();
-		String lastCharacter = null;
-		String ciphertext = null;
-		PartialProbabilities partialProbabilities;
-
-		for (int i = 0; i < derivation.getCipher().getCiphertextCharacters().size() - affectedCount; i++) {
-			ciphertext = derivation.getCipher().getCiphertextCharacters().get(i).getValue();
-
-			partialProbabilities = computePosition(productOfProbabilities, sumOfProbabilities, unigramCounts, bigramCounts, ciphertextMappingCounts, lastCharacter, ciphertext, derivation);
-
-			productOfProbabilities = partialProbabilities.getProductOfProbabilities();
-			sumOfProbabilities = partialProbabilities.getSumOfProbabilities();
-
-			lastCharacter = derivation.getMappings().get(ciphertext).getValue();
-		}
-
-		return new PartialDerivation(productOfProbabilities, sumOfProbabilities, unigramCounts, bigramCounts,
-				ciphertextMappingCounts);
-	}
-
-	protected void computeDerivationProbability(PartialDerivation partialDerivation, Integer affectedCount, String ciphertextKey, CipherSolution derivation) {
+	protected PartialDerivation computePartialDerivationProbability(PartialDerivation partialDerivation, int start, int end, String ciphertextKey, CipherSolution derivation) {
 		BigDecimal productOfProbabilities = (partialDerivation == null ? BigDecimal.ONE : partialDerivation.getProductOfProbabilities());
 		BigDecimal sumOfProbabilities = (partialDerivation == null ? BigDecimal.ZERO : partialDerivation.getSumOfProbabilities());
 		Map<String, BigDecimal> unigramCounts = (partialDerivation == null ? new HashMap<>() : new HashMap<>(
@@ -255,34 +247,25 @@ public class BayesianDecipherManager {
 		Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts = (partialDerivation == null ? new HashMap<>() : new HashMap<>(
 				partialDerivation.getCiphertextMappingCounts()));
 		String lastCharacter = null;
-		EvaluationResults derivationResults = null;
 		String ciphertext = null;
-		PartialProbabilities partialProbabilities;
-		int start = (affectedCount == null ? 0 : derivation.getCipher().getCiphertextCharacters().size()
-				- affectedCount);
+		EvaluationResults partialProbabilities;
 
-		for (int i = start; i < derivation.getCipher().getCiphertextCharacters().size(); i++) {
+		for (int i = start; i < end; i++) {
 			ciphertext = derivation.getCipher().getCiphertextCharacters().get(i).getValue();
 
 			partialProbabilities = computePosition(productOfProbabilities, sumOfProbabilities, unigramCounts, bigramCounts, ciphertextMappingCounts, lastCharacter, ciphertext, derivation);
 
-			productOfProbabilities = partialProbabilities.getProductOfProbabilities();
-			sumOfProbabilities = partialProbabilities.getSumOfProbabilities();
+			productOfProbabilities = partialProbabilities.getProbability();
+			sumOfProbabilities = partialProbabilities.getLogProbability();
 
 			lastCharacter = derivation.getMappings().get(ciphertext).getValue();
 		}
 
-		derivationResults = plaintextEvaluator.evaluate(ciphertextKey, derivation);
-
-		// Multiply by the prior to satisfy bayes' rule
-		productOfProbabilities = productOfProbabilities.multiply(derivationResults.getProbability(), MathConstants.PREC_10_HALF_UP);
-		sumOfProbabilities = sumOfProbabilities.add(derivationResults.getLogProbability(), MathConstants.PREC_10_HALF_UP);
-
-		derivation.setProbability(productOfProbabilities);
-		derivation.setLogProbability(sumOfProbabilities);
+		return new PartialDerivation(productOfProbabilities, sumOfProbabilities, unigramCounts, bigramCounts,
+				ciphertextMappingCounts);
 	}
 
-	protected PartialProbabilities computePosition(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities, Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts, Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts, String lastCharacter, String ciphertext, CipherSolution derivation) {
+	protected EvaluationResults computePosition(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities, Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts, Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts, String lastCharacter, String ciphertext, CipherSolution derivation) {
 		String currentCharacter = derivation.getMappings().get(ciphertext).getValue();
 
 		CiphertextMapping ciphertextMapping = new CiphertextMapping(ciphertext, new Plaintext(currentCharacter));
@@ -337,37 +320,47 @@ public class BayesianDecipherManager {
 
 		unigramCounts.put(currentCharacter, unigramCounts.get(currentCharacter).add(BigDecimal.ONE, MathConstants.PREC_10_HALF_UP));
 
-		return new PartialProbabilities(productOfProbabilities, sumOfProbabilities);
+		return new EvaluationResults(productOfProbabilities, sumOfProbabilities);
 	}
 
 	protected CipherSolution runGibbsWordBoundarySampler(BigDecimal temperature, CipherSolution solution) {
 		int nextBoundary;
-		BigDecimal sumOfLogProbabilities = null;
+		BigDecimal sumOfProbabilities = null;
 		List<BoundaryProbability> boundaryProbabilities = null;
 		boolean isAddBoundary = false;
 		CipherSolution addProposal = null;
 		CipherSolution removeProposal = null;
 		CipherSolution proposal = null;
+		PartialDerivation addDerivationResults = null;
+		PartialDerivation removeDerivationResults = null;
+		EvaluationResults addPlaintextResults = null;
+		EvaluationResults removePlaintextResults = null;
 
 		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
-			sumOfLogProbabilities = null;
+			sumOfProbabilities = null;
 			boundaryProbabilities = new ArrayList<>();
 			nextBoundary = i;
 
 			addProposal = solution.clone();
 			addProposal.addWordBoundary(nextBoundary);
-			computeDerivationProbability(null, null, null, addProposal);
+			addDerivationResults = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, addProposal);
+			addPlaintextResults = plaintextEvaluator.evaluate(addProposal);
+			addProposal.setProbability(addDerivationResults.getProductOfProbabilities().multiply(addPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
+			addProposal.setLogProbability(addDerivationResults.getSumOfProbabilities().multiply(addPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 
 			removeProposal = solution.clone();
 			removeProposal.removeWordBoundary(nextBoundary);
-			computeDerivationProbability(null, null, null, removeProposal);
+			removeDerivationResults = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, removeProposal);
+			removePlaintextResults = plaintextEvaluator.evaluate(removeProposal);
+			removeProposal.setProbability(removeDerivationResults.getProductOfProbabilities().multiply(removePlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
+			removeProposal.setLogProbability(removeDerivationResults.getSumOfProbabilities().multiply(removePlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 
-			sumOfLogProbabilities = addProposal.getLogProbability().add(removeProposal.getLogProbability());
+			sumOfProbabilities = addProposal.getProbability().add(removeProposal.getProbability());
 
 			boundaryProbabilities.add(new BoundaryProbability(true,
-					addProposal.getLogProbability().divide(sumOfLogProbabilities, MathConstants.PREC_10_HALF_UP)));
+					addProposal.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP)));
 			boundaryProbabilities.add(new BoundaryProbability(false,
-					removeProposal.getLogProbability().divide(sumOfLogProbabilities, MathConstants.PREC_10_HALF_UP)));
+					removeProposal.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP)));
 
 			RouletteSampler<BoundaryProbability> rouletteSampler = new RouletteSampler<>();
 			rouletteSampler.reIndex(boundaryProbabilities);

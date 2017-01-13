@@ -220,7 +220,6 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator = new PlaintextEvaluator();
 		plaintextEvaluator.setLetterMarkovModel(letterMarkovModel);
 		plaintextEvaluator.setWordMarkovModel(wordMarkovModel);
-		plaintextEvaluator.setCipher(zodiac408);
 		plaintextEvaluator.setLetterNGramWeight(0.1);
 		plaintextEvaluator.setWordNGramWeight(0.9);
 		plaintextEvaluator.init();

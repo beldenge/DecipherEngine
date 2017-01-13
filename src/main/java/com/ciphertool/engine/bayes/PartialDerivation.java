@@ -35,6 +35,18 @@ public class PartialDerivation {
 	 *            the product of probabilities
 	 * @param sumOfProbabilities
 	 *            the sum of probabilities
+	 */
+	public PartialDerivation(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities) {
+		super();
+		this.productOfProbabilities = productOfProbabilities;
+		this.sumOfProbabilities = sumOfProbabilities;
+	}
+
+	/**
+	 * @param productOfProbabilities
+	 *            the product of probabilities
+	 * @param sumOfProbabilities
+	 *            the sum of probabilities
 	 * @param unigramCounts
 	 *            the unigram counts
 	 * @param bigramCounts
@@ -45,7 +57,6 @@ public class PartialDerivation {
 	public PartialDerivation(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities,
 			Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts,
 			Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts) {
-		super();
 		this.productOfProbabilities = productOfProbabilities;
 		this.sumOfProbabilities = sumOfProbabilities;
 		this.unigramCounts = unigramCounts;
