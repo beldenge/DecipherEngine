@@ -44,7 +44,6 @@ public class PlaintextEvaluator {
 	private MarkovModel	letterMarkovModel;
 	private MarkovModel	wordMarkovModel;
 
-	private int			lastRowBegin;
 	private double		letterNGramWeight;
 	private double		wordNGramWeight;
 
@@ -80,8 +79,8 @@ public class PlaintextEvaluator {
 		BigDecimal interpolatedProbability = null;
 		BigDecimal interpolatedLogProbability = null;
 		WordProbability existingProbability = null;
-		BigDecimal newProbability = solution.getProbability();
-		BigDecimal newLogProbability = solution.getLogProbability();
+		BigDecimal newProbability = BigDecimal.ONE;
+		BigDecimal newLogProbability = BigDecimal.ZERO;
 
 		List<WordProbability> letterNGramResults = evaluateLetterNGrams(ciphertextKey, solution);
 		List<WordProbability> wordNGramResults = evaluateWords(ciphertextKey, solution);
@@ -186,7 +185,7 @@ public class PlaintextEvaluator {
 	}
 
 	protected List<WordProbability> transformToWordList(String ciphertextKey, CipherSolution solution) {
-		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, lastRowBegin);
+		String currentSolutionString = WordGraphUtils.getSolutionAsString(solution).substring(0, this.cipher.getCiphertextCharacters().size());
 
 		List<WordProbability> words = new ArrayList<>();
 		Integer begin = null;
@@ -216,10 +215,8 @@ public class PlaintextEvaluator {
 		return words;
 	}
 
-	public void setCipher(Object cipher) {
-		this.cipher = (Cipher) cipher;
-
-		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
+	public void setCipher(Cipher cipher) {
+		this.cipher = cipher;
 	}
 
 	/**

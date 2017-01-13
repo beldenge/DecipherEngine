@@ -265,9 +265,17 @@ public class CipherSolution {
 				 * break.
 				 */
 				if (((i + 1) % this.cipher.getColumns()) == 0) {
+					if (wordBoundaries.contains(i)) {
+						sb.append("|");
+					}
+
 					sb.append("\n");
 				} else {
-					sb.append(" ");
+					if (wordBoundaries.contains(i)) {
+						sb.append("|");
+					} else {
+						sb.append(" ");
+					}
 				}
 			}
 		}

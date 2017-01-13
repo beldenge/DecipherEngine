@@ -119,6 +119,18 @@ public class Cipher implements Serializable {
 		this.hasKnownSolution = hasKnownSolution;
 	}
 
+	public Cipher clone() {
+		Cipher cloned = new Cipher(this.name, this.rows, this.columns);
+		cloned.setId(this.id);
+		cloned.setHasKnownSolution(this.hasKnownSolution);
+
+		for (Ciphertext ciphertext : this.ciphertextCharacters) {
+			cloned.addCiphertextCharacter(ciphertext.clone());
+		}
+
+		return cloned;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

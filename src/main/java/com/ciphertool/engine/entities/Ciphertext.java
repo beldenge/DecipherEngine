@@ -49,6 +49,10 @@ public class Ciphertext {
 		this.value = value;
 	}
 
+	public Ciphertext clone() {
+		return new Ciphertext(this.ciphertextId, this.value);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
