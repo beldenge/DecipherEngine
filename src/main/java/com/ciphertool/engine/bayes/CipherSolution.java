@@ -33,12 +33,16 @@ import com.ciphertool.engine.entities.Cipher;
 import com.ciphertool.engine.entities.Ciphertext;
 
 public class CipherSolution {
-	private static Logger			log				= LoggerFactory.getLogger(CipherSolution.class);
+	private static Logger			log								= LoggerFactory.getLogger(CipherSolution.class);
 
 	protected Cipher				cipher;
 
-	private BigDecimal				probability		= BigDecimal.ONE;
-	private BigDecimal				logProbability	= BigDecimal.ZERO;
+	private BigDecimal				probability						= BigDecimal.ONE;
+	private BigDecimal				logProbability					= BigDecimal.ZERO;
+	private BigDecimal				generativeModelProbability		= BigDecimal.ONE;
+	private BigDecimal				generativeModelLogProbability	= BigDecimal.ZERO;
+	private BigDecimal				languageModelProbability		= BigDecimal.ONE;
+	private BigDecimal				languageModelLogProbability		= BigDecimal.ZERO;
 
 	private Map<String, Plaintext>	mappings;
 	private Set<Integer>			wordBoundaries;
@@ -98,6 +102,66 @@ public class CipherSolution {
 	 */
 	public void setLogProbability(BigDecimal logProbability) {
 		this.logProbability = logProbability;
+	}
+
+	/**
+	 * @return the generativeModelProbability
+	 */
+	public BigDecimal getGenerativeModelProbability() {
+		return generativeModelProbability;
+	}
+
+	/**
+	 * @param generativeModelProbability
+	 *            the generativeModelProbability to set
+	 */
+	public void setGenerativeModelProbability(BigDecimal generativeModelProbability) {
+		this.generativeModelProbability = generativeModelProbability;
+	}
+
+	/**
+	 * @return the generativeModelLogProbability
+	 */
+	public BigDecimal getGenerativeModelLogProbability() {
+		return generativeModelLogProbability;
+	}
+
+	/**
+	 * @param generativeModelLogProbability
+	 *            the generativeModelLogProbability to set
+	 */
+	public void setGenerativeModelLogProbability(BigDecimal generativeModelLogProbability) {
+		this.generativeModelLogProbability = generativeModelLogProbability;
+	}
+
+	/**
+	 * @return the languageModelProbability
+	 */
+	public BigDecimal getLanguageModelProbability() {
+		return languageModelProbability;
+	}
+
+	/**
+	 * @param languageModelProbability
+	 *            the languageModelProbability to set
+	 */
+	public void setLanguageModelProbability(BigDecimal languageModelProbability) {
+		this.languageModelProbability = languageModelProbability;
+	}
+
+	/**
+	 * @return the languageModelLogProbability
+	 */
+	public BigDecimal getLanguageModelLogProbability() {
+		return languageModelLogProbability;
+	}
+
+	/**
+	 * @param languageModelLogProbability
+	 *            the languageModelLogProbability to set
+	 */
+	public void setLanguageModelLogProbability(BigDecimal languageModelLogProbability) {
+		this.languageModelLogProbability = languageModelLogProbability;
 	}
 
 	public Map<String, Plaintext> getMappings() {
@@ -186,6 +250,10 @@ public class CipherSolution {
 		// We need to set these values last to maintain whether evaluation is needed on the clone
 		copySolution.setProbability(this.probability);
 		copySolution.setLogProbability(this.logProbability);
+		copySolution.setGenerativeModelProbability(this.generativeModelProbability);
+		copySolution.setGenerativeModelLogProbability(this.generativeModelLogProbability);
+		copySolution.setLanguageModelProbability(this.languageModelProbability);
+		copySolution.setLanguageModelLogProbability(this.languageModelLogProbability);
 
 		return copySolution;
 	}
@@ -201,7 +269,10 @@ public class CipherSolution {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
-				+ "]\n");
+				+ "generativeModelProbability=" + generativeModelProbability.toString()
+				+ ", generativeModelLogProbability=" + generativeModelLogProbability.toString()
+				+ "languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
+				+ languageModelLogProbability.toString() + "]\n");
 
 		if (this.cipher != null) {
 			String nextPlaintext = null;
