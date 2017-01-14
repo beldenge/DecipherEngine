@@ -150,21 +150,22 @@ public class PlaintextEvaluator {
 		NGramIndexNode match = null;
 		BigDecimal probability = null;
 		for (WordProbability word : words) {
-			word.setProbability(BigDecimal.ONE);
+			probability = BigDecimal.ONE;
 
-			for (int i = 0; i < word.getValue().length(); i += (match == null ? 0 : match.getCumulativeStringValue().length())) {
-				match = wordMarkovModel.findLongest(word.getValue().substring(i, word.getValue().length()));
+			match = wordMarkovModel.findLongest(word.getValue());
 
-				if (match == null) {
-					probability = unknownWordProbability;
-					log.debug("No Word Match");
-				} else {
-					probability = match.getTerminalInfo().getProbability();
-					log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
-				}
+			if (match != null) {
+				probability = match.getTerminalInfo().getProbability();
+				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			}
 
-			word.setProbability(word.getProbability().multiply(probability, MathConstants.PREC_10_HALF_UP));
+			if (match == null || match.getCumulativeStringValue().length() < word.getValue().length()) {
+				probability = probability.multiply(unknownWordProbability.pow(word.getValue().length()
+						- (match == null ? 0 : match.getCumulativeStringValue().length()), MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
+				log.debug("No Word Match");
+			}
+
+			word.setProbability(probability);
 		}
 
 		return words;

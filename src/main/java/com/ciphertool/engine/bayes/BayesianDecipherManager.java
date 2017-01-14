@@ -25,6 +25,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
@@ -203,13 +206,85 @@ public class BayesianDecipherManager {
 		return solution;
 	}
 
+	/**
+	 * A concurrent task for computing the letter probability during Gibbs sampling.
+	 */
+	protected class LetterProbabilityTask implements Callable<CipherSolution> {
+		private CipherSolution		originalSolution;
+		private Character			letter;
+		private PartialDerivation	partialDerivation;
+		private EvaluationResults	partialPlaintextResults;
+		private int					affectedCount;
+		private String				ciphertextKey;
+		private CipherSolution		modified;
+
+		/**
+		 * @param originalSolution
+		 *            the original unmodified solution
+		 * @param letter
+		 *            the letter to sample for
+		 * @param partialDerivation
+		 *            the partial derivation
+		 * @param partialPlaintextResults
+		 *            the partial plaintext results
+		 * @param affectedCount
+		 *            the affected count
+		 * @param ciphertextKey
+		 *            the ciphertext key
+		 * @param modified
+		 *            the modified solution
+		 */
+		public LetterProbabilityTask(CipherSolution originalSolution, Character letter,
+				PartialDerivation partialDerivation, EvaluationResults partialPlaintextResults, int affectedCount,
+				String ciphertextKey, CipherSolution modified) {
+			this.originalSolution = originalSolution;
+			this.letter = letter;
+			this.partialDerivation = partialDerivation;
+			this.partialPlaintextResults = partialPlaintextResults;
+			this.affectedCount = affectedCount;
+			this.ciphertextKey = ciphertextKey;
+			this.modified = modified;
+		}
+
+		@Override
+		public CipherSolution call() throws Exception {
+			CipherSolution conditionalSolution = modified.clone();
+
+			if (conditionalSolution.getMappings().get(ciphertextKey).equals(new Plaintext(letter.toString()))) {
+				// No need to re-score the solution in this case
+				return conditionalSolution;
+			}
+
+			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
+
+			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
+			PartialDerivation derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), ciphertextKey, conditionalSolution);
+
+			/*
+			 * We can't use the modified clone since its ciphertext was moved around, and we need to preserve word
+			 * boundaries
+			 */
+			CipherSolution temp = originalSolution.clone();
+			temp.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
+			EvaluationResults remainingPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, true, temp);
+
+			conditionalSolution.setGenerativeModelProbability(derivationProbability.getProductOfProbabilities());
+			conditionalSolution.setGenerativeModelLogProbability(derivationProbability.getSumOfProbabilities());
+			conditionalSolution.setLanguageModelProbability(partialPlaintextResults.getProbability().multiply(remainingPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
+			conditionalSolution.setLanguageModelLogProbability(partialPlaintextResults.getLogProbability().add(remainingPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
+			conditionalSolution.setProbability(derivationProbability.getProductOfProbabilities().multiply(conditionalSolution.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
+			conditionalSolution.setLogProbability(derivationProbability.getSumOfProbabilities().add(conditionalSolution.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
+
+			// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
+			conditionalSolution.setCipher(cipher);
+
+			return conditionalSolution;
+		}
+	}
+
 	protected List<SolutionProbability> computeDistribution(String ciphertextKey, CipherSolution solution) {
 		List<SolutionProbability> plaintextDistribution = new ArrayList<>();
 		BigDecimal sumOfProbabilities = BigDecimal.ZERO;
-		CipherSolution conditionalSolution = null;
-		PartialDerivation derivationProbability;
-		EvaluationResults remainingPlaintextResults;
-		CipherSolution temp;
 
 		EvaluationResults partialPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, false, solution);
 
@@ -219,45 +294,30 @@ public class BayesianDecipherManager {
 		int end = solution.getCipher().getCiphertextCharacters().size() - affectedCount;
 		PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, ciphertextKey, modified);
 
+		List<FutureTask<CipherSolution>> futures = new ArrayList<FutureTask<CipherSolution>>(26);
+		FutureTask<CipherSolution> task;
+
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
-			conditionalSolution = modified.clone();
+			task = new FutureTask<CipherSolution>(new LetterProbabilityTask(solution, letter, partialDerivation,
+					partialPlaintextResults, affectedCount, ciphertextKey, modified));
+			futures.add(task);
+			this.taskExecutor.execute(task);
+		}
 
-			if (conditionalSolution.getMappings().get(ciphertextKey).equals(new Plaintext(letter.toString()))) {
-				// No need to re-score the solution in this case
-				plaintextDistribution.add(new SolutionProbability(conditionalSolution,
-						conditionalSolution.getProbability()));
-				sumOfProbabilities = sumOfProbabilities.add(conditionalSolution.getProbability(), MathConstants.PREC_10_HALF_UP);
+		CipherSolution next;
 
-				continue;
+		for (FutureTask<CipherSolution> future : futures) {
+			try {
+				next = future.get();
+
+				plaintextDistribution.add(new SolutionProbability(next, next.getProbability()));
+				sumOfProbabilities = sumOfProbabilities.add(next.getProbability(), MathConstants.PREC_10_HALF_UP);
+			} catch (InterruptedException ie) {
+				log.error("Caught InterruptedException while waiting for LetterProbabilityTask ", ie);
+			} catch (ExecutionException ee) {
+				log.error("Caught ExecutionException while waiting for LetterProbabilityTask ", ee);
 			}
-
-			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
-
-			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
-			derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), ciphertextKey, conditionalSolution);
-
-			/*
-			 * We can't use the modified clone since its ciphertext was moved around, and we need to preserve word
-			 * boundaries
-			 */
-			temp = solution.clone();
-			temp.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
-			remainingPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, true, temp);
-
-			conditionalSolution.setGenerativeModelProbability(derivationProbability.getProductOfProbabilities());
-			conditionalSolution.setGenerativeModelLogProbability(derivationProbability.getSumOfProbabilities());
-			conditionalSolution.setLanguageModelProbability(partialPlaintextResults.getProbability().multiply(remainingPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
-			conditionalSolution.setLanguageModelLogProbability(partialPlaintextResults.getLogProbability().add(remainingPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
-			conditionalSolution.setProbability(derivationProbability.getProductOfProbabilities().multiply(conditionalSolution.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
-			conditionalSolution.setLogProbability(derivationProbability.getSumOfProbabilities().add(conditionalSolution.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
-
-			plaintextDistribution.add(new SolutionProbability(conditionalSolution,
-					conditionalSolution.getProbability()));
-			sumOfProbabilities = sumOfProbabilities.add(conditionalSolution.getProbability(), MathConstants.PREC_10_HALF_UP);
-
-			// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
-			conditionalSolution.setCipher(this.cipher);
 		}
 
 		// Normalize the probabilities
