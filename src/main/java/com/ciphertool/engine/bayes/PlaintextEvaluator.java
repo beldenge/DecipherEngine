@@ -98,8 +98,7 @@ public class PlaintextEvaluator {
 								+ wordProbability);
 			}
 
-			interpolatedProbability = BigDecimal.ZERO;
-			interpolatedProbability = interpolatedProbability.add(((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramProbability.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
+			interpolatedProbability = ((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramProbability.getProbability(), MathConstants.PREC_10_HALF_UP)));
 			interpolatedProbability = interpolatedProbability.add(((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordProbability.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
 
 			interpolatedLogProbability = BigDecimalMath.log(interpolatedProbability);
@@ -150,18 +149,13 @@ public class PlaintextEvaluator {
 		NGramIndexNode match = null;
 		BigDecimal probability = null;
 		for (WordProbability word : words) {
-			probability = BigDecimal.ONE;
-
 			match = wordMarkovModel.findLongest(word.getValue());
 
 			if (match != null) {
 				probability = match.getTerminalInfo().getProbability();
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
-			}
-
-			if (match == null || match.getCumulativeStringValue().length() < word.getValue().length()) {
-				probability = probability.multiply(unknownWordProbability.pow(word.getValue().length()
-						- (match == null ? 0 : match.getCumulativeStringValue().length()), MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
+			} else {
+				probability = unknownWordProbability;
 				log.debug("No Word Match");
 			}
 

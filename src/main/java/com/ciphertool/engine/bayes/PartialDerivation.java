@@ -24,11 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PartialDerivation {
-	BigDecimal							productOfProbabilities	= BigDecimal.ONE;
-	BigDecimal							sumOfProbabilities		= BigDecimal.ZERO;
-	Map<String, BigDecimal>				unigramCounts			= new HashMap<>();
-	Map<String, BigDecimal>				bigramCounts			= new HashMap<>();
-	Map<CiphertextMapping, BigDecimal>	ciphertextMappingCounts	= new HashMap<>();
+	private BigDecimal							productOfProbabilities	= BigDecimal.ONE;
+	private BigDecimal							sumOfProbabilities		= BigDecimal.ZERO;
+	private Map<String, BigDecimal>				unigramCounts			= new HashMap<>();
+	private Map<String, BigDecimal>				bigramCounts			= new HashMap<>();
+	private Map<CiphertextMapping, BigDecimal>	ciphertextMappingCounts	= new HashMap<>();
+	private String								lastCharacter;
 
 	/**
 	 * @param productOfProbabilities
@@ -37,7 +38,6 @@ public class PartialDerivation {
 	 *            the sum of probabilities
 	 */
 	public PartialDerivation(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities) {
-		super();
 		this.productOfProbabilities = productOfProbabilities;
 		this.sumOfProbabilities = sumOfProbabilities;
 	}
@@ -53,15 +53,18 @@ public class PartialDerivation {
 	 *            the bigram counts
 	 * @param ciphertextMappingCounts
 	 *            the ciphertext mapping counts
+	 * @param lastCharacter
+	 *            the last character
 	 */
 	public PartialDerivation(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities,
 			Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts,
-			Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts) {
+			Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts, String lastCharacter) {
 		this.productOfProbabilities = productOfProbabilities;
 		this.sumOfProbabilities = sumOfProbabilities;
 		this.unigramCounts = unigramCounts;
 		this.bigramCounts = bigramCounts;
 		this.ciphertextMappingCounts = ciphertextMappingCounts;
+		this.lastCharacter = lastCharacter;
 	}
 
 	/**
@@ -97,5 +100,12 @@ public class PartialDerivation {
 	 */
 	public Map<CiphertextMapping, BigDecimal> getCiphertextMappingCounts() {
 		return ciphertextMappingCounts;
+	}
+
+	/**
+	 * @return the lastCharacter
+	 */
+	public String getLastCharacter() {
+		return lastCharacter;
 	}
 }

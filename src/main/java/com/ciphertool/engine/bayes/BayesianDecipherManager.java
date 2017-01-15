@@ -113,7 +113,7 @@ public class BayesianDecipherManager {
 			}
 		}
 
-		PartialDerivation initialDerivation = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), null, initialSolution);
+		PartialDerivation initialDerivation = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), initialSolution);
 		EvaluationResults initialPlaintextResults = plaintextEvaluator.evaluate(initialSolution);
 		initialSolution.setGenerativeModelProbability(initialDerivation.getProductOfProbabilities());
 		initialSolution.setGenerativeModelLogProbability(initialDerivation.getSumOfProbabilities());
@@ -216,7 +216,7 @@ public class BayesianDecipherManager {
 		private EvaluationResults	partialPlaintextResults;
 		private int					affectedCount;
 		private String				ciphertextKey;
-		private CipherSolution		modified;
+		private CipherSolution		conditionalSolution;
 
 		/**
 		 * @param originalSolution
@@ -243,13 +243,11 @@ public class BayesianDecipherManager {
 			this.partialPlaintextResults = partialPlaintextResults;
 			this.affectedCount = affectedCount;
 			this.ciphertextKey = ciphertextKey;
-			this.modified = modified;
+			this.conditionalSolution = modified;
 		}
 
 		@Override
 		public CipherSolution call() throws Exception {
-			CipherSolution conditionalSolution = modified.clone();
-
 			if (conditionalSolution.getMappings().get(ciphertextKey).equals(new Plaintext(letter.toString()))) {
 				// No need to re-score the solution in this case
 				return conditionalSolution;
@@ -258,15 +256,14 @@ public class BayesianDecipherManager {
 			conditionalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
 
 			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
-			PartialDerivation derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), ciphertextKey, conditionalSolution);
+			PartialDerivation derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), conditionalSolution);
 
 			/*
 			 * We can't use the modified clone since its ciphertext was moved around, and we need to preserve word
 			 * boundaries
 			 */
-			CipherSolution temp = originalSolution.clone();
-			temp.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
-			EvaluationResults remainingPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, true, temp);
+			originalSolution.replaceMapping(ciphertextKey, new Plaintext(letter.toString()));
+			EvaluationResults remainingPlaintextResults = plaintextEvaluator.evaluate(ciphertextKey, true, originalSolution);
 
 			conditionalSolution.setGenerativeModelProbability(derivationProbability.getProductOfProbabilities());
 			conditionalSolution.setGenerativeModelLogProbability(derivationProbability.getSumOfProbabilities());
@@ -274,9 +271,6 @@ public class BayesianDecipherManager {
 			conditionalSolution.setLanguageModelLogProbability(partialPlaintextResults.getLogProbability().add(remainingPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
 			conditionalSolution.setProbability(derivationProbability.getProductOfProbabilities().multiply(conditionalSolution.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
 			conditionalSolution.setLogProbability(derivationProbability.getSumOfProbabilities().add(conditionalSolution.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
-
-			// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
-			conditionalSolution.setCipher(cipher);
 
 			return conditionalSolution;
 		}
@@ -292,15 +286,15 @@ public class BayesianDecipherManager {
 		int affectedCount = moveAffectedWindowsToEnd(ciphertextKey, modified);
 
 		int end = solution.getCipher().getCiphertextCharacters().size() - affectedCount;
-		PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, ciphertextKey, modified);
+		PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, modified);
 
 		List<FutureTask<CipherSolution>> futures = new ArrayList<FutureTask<CipherSolution>>(26);
 		FutureTask<CipherSolution> task;
 
 		// Calculate the full conditional probability for each possible plaintext substitution
 		for (Character letter : LOWERCASE_LETTERS) {
-			task = new FutureTask<CipherSolution>(new LetterProbabilityTask(solution, letter, partialDerivation,
-					partialPlaintextResults, affectedCount, ciphertextKey, modified));
+			task = new FutureTask<CipherSolution>(new LetterProbabilityTask(solution.clone(), letter, partialDerivation,
+					partialPlaintextResults, affectedCount, ciphertextKey, modified.clone()));
 			futures.add(task);
 			this.taskExecutor.execute(task);
 		}
@@ -310,6 +304,9 @@ public class BayesianDecipherManager {
 		for (FutureTask<CipherSolution> future : futures) {
 			try {
 				next = future.get();
+
+				// Reset to the original cipher, since it was modified by moveAffectedWindowsToEnd()
+				next.setCipher(cipher);
 
 				plaintextDistribution.add(new SolutionProbability(next, next.getProbability()));
 				sumOfProbabilities = sumOfProbabilities.add(next.getProbability(), MathConstants.PREC_10_HALF_UP);
@@ -329,7 +326,7 @@ public class BayesianDecipherManager {
 		return plaintextDistribution;
 	}
 
-	protected PartialDerivation computePartialDerivationProbability(PartialDerivation partialDerivation, int start, int end, String ciphertextKey, CipherSolution derivation) {
+	protected PartialDerivation computePartialDerivationProbability(PartialDerivation partialDerivation, int start, int end, CipherSolution derivation) {
 		BigDecimal productOfProbabilities = (partialDerivation == null ? BigDecimal.ONE : partialDerivation.getProductOfProbabilities());
 		BigDecimal sumOfProbabilities = (partialDerivation == null ? BigDecimal.ZERO : partialDerivation.getSumOfProbabilities());
 		Map<String, BigDecimal> unigramCounts = (partialDerivation == null ? new HashMap<>() : new HashMap<>(
@@ -338,7 +335,7 @@ public class BayesianDecipherManager {
 				partialDerivation.getBigramCounts()));
 		Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts = (partialDerivation == null ? new HashMap<>() : new HashMap<>(
 				partialDerivation.getCiphertextMappingCounts()));
-		String lastCharacter = null;
+		String lastCharacter = (partialDerivation == null ? null : partialDerivation.getLastCharacter());
 		String ciphertext = null;
 		EvaluationResults partialProbabilities;
 
@@ -354,7 +351,7 @@ public class BayesianDecipherManager {
 		}
 
 		return new PartialDerivation(productOfProbabilities, sumOfProbabilities, unigramCounts, bigramCounts,
-				ciphertextMappingCounts);
+				ciphertextMappingCounts, lastCharacter);
 	}
 
 	protected EvaluationResults computePosition(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities, Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts, Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts, String lastCharacter, String ciphertext, CipherSolution derivation) {
