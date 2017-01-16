@@ -1,0 +1,20 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd"
+	updateCheck="false"
+	monitoring="autodetect"
+	dynamicConfig="false">
+
+	<diskStore path="java.io.tmpdir" />
+
+	<cache name="logarithmCache"
+		maxEntriesLocalHeap="1000"
+		maxEntriesLocalDisk="2000"
+		eternal="false"
+		timeToIdleSeconds="0"
+		timeToLiveSeconds="0"
+		memoryStoreEvictionPolicy="LFU"
+		transactionalMode="off">
+		<persistence strategy="localTempSwap" />
+	</cache>
+
+</ehcache>

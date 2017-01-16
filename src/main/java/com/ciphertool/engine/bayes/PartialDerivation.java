@@ -24,12 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PartialDerivation {
-	private BigDecimal							productOfProbabilities	= BigDecimal.ONE;
-	private BigDecimal							sumOfProbabilities		= BigDecimal.ZERO;
-	private Map<String, BigDecimal>				unigramCounts			= new HashMap<>();
-	private Map<String, BigDecimal>				bigramCounts			= new HashMap<>();
-	private Map<CiphertextMapping, BigDecimal>	ciphertextMappingCounts	= new HashMap<>();
-	private String								lastCharacter;
+	private BigDecimal						productOfProbabilities	= BigDecimal.ONE;
+	private BigDecimal						sumOfProbabilities		= BigDecimal.ZERO;
+	private Map<String, Integer>			unigramCounts			= new HashMap<>();
+	private Map<String, Integer>			bigramCounts			= new HashMap<>();
+	private Map<CiphertextMapping, Integer>	ciphertextMappingCounts	= new HashMap<>();
+	private String							lastCharacter;
 
 	/**
 	 * @param productOfProbabilities
@@ -57,8 +57,8 @@ public class PartialDerivation {
 	 *            the last character
 	 */
 	public PartialDerivation(BigDecimal productOfProbabilities, BigDecimal sumOfProbabilities,
-			Map<String, BigDecimal> unigramCounts, Map<String, BigDecimal> bigramCounts,
-			Map<CiphertextMapping, BigDecimal> ciphertextMappingCounts, String lastCharacter) {
+			Map<String, Integer> unigramCounts, Map<String, Integer> bigramCounts,
+			Map<CiphertextMapping, Integer> ciphertextMappingCounts, String lastCharacter) {
 		this.productOfProbabilities = productOfProbabilities;
 		this.sumOfProbabilities = sumOfProbabilities;
 		this.unigramCounts = unigramCounts;
@@ -84,21 +84,21 @@ public class PartialDerivation {
 	/**
 	 * @return the unigramCounts
 	 */
-	public Map<String, BigDecimal> getUnigramCounts() {
+	public Map<String, Integer> getUnigramCounts() {
 		return unigramCounts;
 	}
 
 	/**
 	 * @return the bigramCounts
 	 */
-	public Map<String, BigDecimal> getBigramCounts() {
+	public Map<String, Integer> getBigramCounts() {
 		return bigramCounts;
 	}
 
 	/**
 	 * @return the ciphertextMappingCounts
 	 */
-	public Map<CiphertextMapping, BigDecimal> getCiphertextMappingCounts() {
+	public Map<CiphertextMapping, Integer> getCiphertextMappingCounts() {
 		return ciphertextMappingCounts;
 	}
 

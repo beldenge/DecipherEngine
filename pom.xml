@@ -188,25 +188,25 @@ You should have received a copy of the GNU General Public License along with Dec
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>4.3.3.RELEASE</version>
+			<version>4.3.5.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>4.3.3.RELEASE</version>
+			<version>4.3.5.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.3.3.RELEASE</version>
+			<version>4.3.5.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>4.3.3.RELEASE</version>
+			<version>4.3.5.RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -224,6 +224,18 @@ You should have received a copy of the GNU General Public License along with Dec
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>1.9.4.RELEASE</version>
+		</dependency>
+
+		<!-- Support for Ehcache -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.3.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>2.10.3</version>
 		</dependency>
 	</dependencies>
 </project>

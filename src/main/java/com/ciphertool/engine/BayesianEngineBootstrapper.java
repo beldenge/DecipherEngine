@@ -25,7 +25,10 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.ciphertool.engine.bayes.BayesianDecipherManager;
 
 public class BayesianEngineBootstrapper {
 	private static Logger				log							= LoggerFactory.getLogger(BayesianEngineBootstrapper.class);
@@ -33,7 +36,6 @@ public class BayesianEngineBootstrapper {
 	private static final String			SPRING_PROFILES_ACTIVE_KEY	= "spring.profiles.active";
 	private static final String			SPRING_PROFILE				= "bayesian";
 
-	@SuppressWarnings("unused")
 	private static ApplicationContext	context;
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -58,5 +60,11 @@ public class BayesianEngineBootstrapper {
 		context = new ClassPathXmlApplicationContext("bootstrapContext.xml");
 
 		log.info("Spring application context started successfully in " + (System.currentTimeMillis() - start) + "ms.");
+
+		BayesianDecipherManager manager = context.getBean(BayesianDecipherManager.class);
+		manager.run();
+
+		// Apparently this is required to cleanup after Ehcache, but I'm not entirely sure.
+		((ConfigurableApplicationContext) context).close();
 	}
 }

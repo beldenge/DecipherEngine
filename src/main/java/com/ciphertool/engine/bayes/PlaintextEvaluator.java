@@ -25,7 +25,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.nevec.rjm.BigDecimalMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -46,6 +45,8 @@ public class PlaintextEvaluator {
 
 	private BigDecimal	unknownLetterNGramProbability;
 	private BigDecimal	unknownWordProbability;
+
+	private MathCache	bigDecimalFunctions;
 
 	@PostConstruct
 	public void init() {
@@ -78,9 +79,14 @@ public class PlaintextEvaluator {
 		BigDecimal newProbability = BigDecimal.ONE;
 		BigDecimal newLogProbability = BigDecimal.ZERO;
 
+		long startLetter = System.currentTimeMillis();
 		List<WordProbability> letterNGramResults = evaluateLetterNGrams(ciphertextKey, includeCiphertextParameterOnly, solution);
+		log.debug("Letter N-Grams took {}ms.", (System.currentTimeMillis() - startLetter));
+		long startWord = System.currentTimeMillis();
 		List<WordProbability> wordNGramResults = evaluateWords(ciphertextKey, includeCiphertextParameterOnly, solution);
+		log.debug("Word N-Grams took {}ms.", (System.currentTimeMillis() - startWord));
 
+		long startRemaining = System.currentTimeMillis();
 		if (letterNGramResults.size() != wordNGramResults.size()) {
 			throw new IllegalStateException(
 					"Cannot interpolate probabilities from language model because the number of probabilities does not match.  letterNGrams="
@@ -101,13 +107,33 @@ public class PlaintextEvaluator {
 			interpolatedProbability = ((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(letterNGramProbability.getProbability(), MathConstants.PREC_10_HALF_UP)));
 			interpolatedProbability = interpolatedProbability.add(((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(wordProbability.getProbability(), MathConstants.PREC_10_HALF_UP))), MathConstants.PREC_10_HALF_UP);
 
-			interpolatedLogProbability = BigDecimalMath.log(interpolatedProbability);
+			interpolatedLogProbability = bigDecimalFunctions.log(interpolatedProbability);
 
 			newProbability = newProbability.multiply(interpolatedProbability, MathConstants.PREC_10_HALF_UP);
 			newLogProbability = newLogProbability.add(interpolatedLogProbability, MathConstants.PREC_10_HALF_UP);
 		}
+		log.debug("Rest of plaintext took {}ms.", (System.currentTimeMillis() - startRemaining));
 
 		return new EvaluationResults(newProbability, newLogProbability);
+	}
+
+	public void evaluateWordCount(CipherSolution solution) {
+		int expectedWordCount = solution.getCipher().getCiphertextCharacters().size()
+				/ LanguageConstants.AVERAGE_WORD_SIZE;
+		int wordCountDifference = expectedWordCount - (solution.getWordBoundaries().size() + 1);
+
+		BigDecimal newProbability = solution.getLanguageModelProbability();
+		BigDecimal newLogProbability = solution.getLanguageModelLogProbability();
+
+		BigDecimal unknownWordLogProbability = bigDecimalFunctions.log(unknownWordProbability);
+
+		for (int i = 0; i < wordCountDifference; i++) {
+			newProbability = newProbability.multiply(unknownWordProbability, MathConstants.PREC_10_HALF_UP);
+			newLogProbability = newLogProbability.add(unknownWordLogProbability, MathConstants.PREC_10_HALF_UP);
+		}
+
+		solution.setLanguageModelProbability(newProbability);
+		solution.setLanguageModelLogProbability(newLogProbability);
 	}
 
 	public List<WordProbability> evaluateLetterNGrams(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
@@ -241,4 +267,14 @@ public class PlaintextEvaluator {
 	public void setWordNGramWeight(double wordNGramWeight) {
 		this.wordNGramWeight = wordNGramWeight;
 	}
+
+	/**
+	 * @param bigDecimalFunctions
+	 *            the bigDecimalFunctions to set
+	 */
+	@Required
+	public void setBigDecimalFunctions(MathCache bigDecimalFunctions) {
+		this.bigDecimalFunctions = bigDecimalFunctions;
+	}
+
 }

@@ -10,9 +10,27 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 	
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/cache
+			http://www.springframework.org/schema/cache/spring-cache.xsd"
 	profile="bayesian">
+
+	<cache:annotation-driven />
+
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="ehcache" />
+	</bean>
+
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:bayesian/ehcache.xml"/>
+		<property name="shared" value="true" />
+	</bean>
+
+	<bean id="bigDecimalFunctions" class="com.ciphertool.engine.bayes.BigDecimalFunctions"/>
 
 	<bean class="com.ciphertool.engine.bayes.KnownPlaintextEvaluator" id="knownPlaintextEvaluator" />
 
@@ -28,6 +46,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="annealingTemperatureMin" value="${bayes.annealing.temperature.min}" />
 		<property name="knownPlaintextEvaluator" ref="knownPlaintextEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="bigDecimalFunctions" ref="bigDecimalFunctions" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.bayes.PlaintextEvaluator" id="plaintextEvaluator">
@@ -35,5 +54,6 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="wordMarkovModel" ref="wordMarkovModel" />
 		<property name="letterNGramWeight" value="${bayes.letterNGram.weight}" />
 		<property name="wordNGramWeight" value="${bayes.wordNGram.weight}" />
+		<property name="bigDecimalFunctions" ref="bigDecimalFunctions" />
 	</bean>
 </beans>
