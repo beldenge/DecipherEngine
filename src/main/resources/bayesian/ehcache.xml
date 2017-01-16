@@ -7,8 +7,8 @@
 	<diskStore path="java.io.tmpdir" />
 
 	<cache name="logarithmCache"
-		maxEntriesLocalHeap="1000"
-		maxEntriesLocalDisk="2000"
+		maxEntriesLocalHeap="100000"
+		maxEntriesLocalDisk="200000"
 		eternal="false"
 		timeToIdleSeconds="0"
 		timeToLiveSeconds="0"
