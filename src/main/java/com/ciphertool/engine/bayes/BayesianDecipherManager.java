@@ -122,7 +122,6 @@ public class BayesianDecipherManager {
 		initialSolution.setGenerativeModelLogProbability(initialDerivation.getSumOfProbabilities());
 		initialSolution.setLanguageModelProbability(initialPlaintextResults.getProbability());
 		initialSolution.setLanguageModelLogProbability(initialPlaintextResults.getLogProbability());
-		plaintextEvaluator.evaluateWordCount(initialSolution);
 		initialSolution.setProbability(initialDerivation.getProductOfProbabilities().multiply(initialSolution.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
 		initialSolution.setLogProbability(initialDerivation.getSumOfProbabilities().add(initialSolution.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
 		log.info(initialSolution.toString());
@@ -278,7 +277,6 @@ public class BayesianDecipherManager {
 			conditionalSolution.setGenerativeModelLogProbability(derivationProbability.getSumOfProbabilities());
 			conditionalSolution.setLanguageModelProbability(partialPlaintextResults.getProbability().multiply(remainingPlaintextResults.getProbability(), MathConstants.PREC_10_HALF_UP));
 			conditionalSolution.setLanguageModelLogProbability(partialPlaintextResults.getLogProbability().add(remainingPlaintextResults.getLogProbability(), MathConstants.PREC_10_HALF_UP));
-			plaintextEvaluator.evaluateWordCount(conditionalSolution);
 			conditionalSolution.setProbability(derivationProbability.getProductOfProbabilities().multiply(conditionalSolution.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
 			conditionalSolution.setLogProbability(derivationProbability.getSumOfProbabilities().add(conditionalSolution.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
 
@@ -445,7 +443,6 @@ public class BayesianDecipherManager {
 				addPlaintextResults = plaintextEvaluator.evaluate(addProposal);
 				addProposal.setLanguageModelProbability(addPlaintextResults.getProbability());
 				addProposal.setLanguageModelLogProbability(addPlaintextResults.getLogProbability());
-				plaintextEvaluator.evaluateWordCount(addProposal);
 				addProposal.setProbability(addProposal.getGenerativeModelProbability().multiply(addProposal.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
 				addProposal.setLogProbability(addProposal.getGenerativeModelLogProbability().add(addProposal.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
 			}
@@ -456,7 +453,6 @@ public class BayesianDecipherManager {
 				removePlaintextResults = plaintextEvaluator.evaluate(removeProposal);
 				removeProposal.setLanguageModelProbability(removePlaintextResults.getProbability());
 				removeProposal.setLanguageModelLogProbability(removePlaintextResults.getLogProbability());
-				plaintextEvaluator.evaluateWordCount(removeProposal);
 				removeProposal.setProbability(removeProposal.getGenerativeModelProbability().multiply(removeProposal.getLanguageModelProbability(), MathConstants.PREC_10_HALF_UP));
 				removeProposal.setLogProbability(removeProposal.getGenerativeModelLogProbability().add(removeProposal.getLanguageModelLogProbability(), MathConstants.PREC_10_HALF_UP));
 			}

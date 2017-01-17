@@ -222,6 +222,7 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator.setWordMarkovModel(wordMarkovModel);
 		plaintextEvaluator.setLetterNGramWeight(0.1);
 		plaintextEvaluator.setWordNGramWeight(0.9);
+		plaintextEvaluator.setBigDecimalFunctions(new BigDecimalFunctions());
 		plaintextEvaluator.init();
 	}
 

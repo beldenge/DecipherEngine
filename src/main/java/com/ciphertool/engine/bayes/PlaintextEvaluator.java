@@ -117,25 +117,6 @@ public class PlaintextEvaluator {
 		return new EvaluationResults(newProbability, newLogProbability);
 	}
 
-	public void evaluateWordCount(CipherSolution solution) {
-		int expectedWordCount = solution.getCipher().getCiphertextCharacters().size()
-				/ LanguageConstants.AVERAGE_WORD_SIZE;
-		int wordCountDifference = expectedWordCount - (solution.getWordBoundaries().size() + 1);
-
-		BigDecimal newProbability = solution.getLanguageModelProbability();
-		BigDecimal newLogProbability = solution.getLanguageModelLogProbability();
-
-		BigDecimal unknownWordLogProbability = bigDecimalFunctions.log(unknownWordProbability);
-
-		for (int i = 0; i < wordCountDifference; i++) {
-			newProbability = newProbability.multiply(unknownWordProbability, MathConstants.PREC_10_HALF_UP);
-			newLogProbability = newLogProbability.add(unknownWordLogProbability, MathConstants.PREC_10_HALF_UP);
-		}
-
-		solution.setLanguageModelProbability(newProbability);
-		solution.setLanguageModelLogProbability(newLogProbability);
-	}
-
 	public List<WordProbability> evaluateLetterNGrams(String ciphertextKey, boolean includeCiphertextParameterOnly, CipherSolution solution) {
 		List<WordProbability> words = transformToWordList(ciphertextKey, includeCiphertextParameterOnly, solution);
 
@@ -175,13 +156,19 @@ public class PlaintextEvaluator {
 		NGramIndexNode match = null;
 		BigDecimal probability = null;
 		for (WordProbability word : words) {
-			match = wordMarkovModel.findLongest(word.getValue());
+			match = wordMarkovModel.find(word.getValue());
 
 			if (match != null) {
 				probability = match.getTerminalInfo().getProbability();
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
-				probability = unknownWordProbability;
+				if (word.getValue().length() <= 15) {
+					probability = unknownWordProbability;
+				} else {
+					// Penalize long sequences with an exponential weight as a function of the length of the sequence
+					probability = unknownWordProbability.divide(BigDecimal.valueOf(10.0).pow(word.getValue().length()
+							- 2, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
+				}
 				log.debug("No Word Match");
 			}
 

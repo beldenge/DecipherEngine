@@ -269,7 +269,7 @@ public class CipherSolution {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
-				+ "generativeModelProbability=" + generativeModelProbability.toString()
+				+ ", generativeModelProbability=" + generativeModelProbability.toString()
 				+ ", generativeModelLogProbability=" + generativeModelLogProbability.toString()
 				+ "languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
 				+ languageModelLogProbability.toString() + "]\n");
