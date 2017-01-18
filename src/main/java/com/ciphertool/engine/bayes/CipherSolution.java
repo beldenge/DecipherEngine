@@ -271,7 +271,7 @@ public class CipherSolution {
 		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
 				+ ", generativeModelProbability=" + generativeModelProbability.toString()
 				+ ", generativeModelLogProbability=" + generativeModelLogProbability.toString()
-				+ "languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
+				+ ", languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
 				+ languageModelLogProbability.toString() + "]\n");
 
 		if (this.cipher != null) {

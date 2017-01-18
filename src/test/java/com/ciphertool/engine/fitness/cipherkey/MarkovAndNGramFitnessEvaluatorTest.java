@@ -138,7 +138,6 @@ public class MarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluatorTestBase
 		wordNGramMarkovImporter = new WordNGramMarkovImporter();
 		wordNGramMarkovImporter.setWordMarkovModel(wordMarkovModel);
 		wordNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
-		wordNGramMarkovImporter.setMinCount(1);
 		wordNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		wordNGramMarkovImporter.importCorpus();
 

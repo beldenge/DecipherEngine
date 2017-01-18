@@ -134,7 +134,7 @@ public class BayesianDecipherManager {
 		CipherSolution next = initialSolution;
 		CipherSolution maxBayes = null;
 		int maxBayesIteration = 0;
-		Double maxKnown = 0.0;
+		CipherSolution maxKnown = null;
 		int maxKnownIteration = 0;
 
 		log.info("Running Gibbs sampler for " + samplerIterations + " iterations.");
@@ -166,8 +166,8 @@ public class BayesianDecipherManager {
 			if (knownPlaintextEvaluator != null) {
 				knownProximity = knownPlaintextEvaluator.evaluate(next);
 
-				if (maxKnown < knownProximity) {
-					maxKnown = knownProximity;
+				if (maxKnown == null || maxKnown.getProbability().compareTo(BigDecimal.valueOf(knownProximity)) < 0) {
+					maxKnown = next;
 					maxKnownIteration = i + 1;
 				}
 			}
@@ -185,10 +185,9 @@ public class BayesianDecipherManager {
 		}
 
 		log.info("Gibbs sampling completed in " + (System.currentTimeMillis() - start) + "ms.  [average="
-				+ ((double) (System.currentTimeMillis() - start) / (double) i) + "ms, bestKnownProximityIter="
-				+ maxKnownIteration + ", bestKnownProximity=" + String.format("%1$,.2f", maxKnown)
-				+ ", bestProbabilityIter=" + maxBayesIteration + ", bestProbability= " + maxBayes.getProbability()
-				+ "]");
+				+ ((double) (System.currentTimeMillis() - start) / (double) i) + "]");
+		log.info("Best known found at iteration " + maxKnownIteration + ": " + maxKnown);
+		log.info("Best probability found at iteration " + maxBayesIteration + ": " + maxBayes);
 	}
 
 	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {

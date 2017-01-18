@@ -62,11 +62,11 @@ public class PlaintextEvaluator {
 		unknownLetterNGramProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()
 				+ 1), MathConstants.PREC_10_HALF_UP);
 
-		unknownWordProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(wordMarkovModel.getRootNode().getTerminalInfo().getCount()
+		unknownWordProbability = BigDecimal.valueOf(wordMarkovModel.getNumWithCountOfOne()).divide(BigDecimal.valueOf(wordMarkovModel.getRootNode().getTerminalInfo().getCount()
 				+ 1), MathConstants.PREC_10_HALF_UP);
 
-		log.debug("unknownLetterNGramProbability: {}", unknownLetterNGramProbability);
-		log.debug("unknownWordProbability: {}", unknownWordProbability);
+		log.info("unknownLetterNGramProbability: {}", unknownLetterNGramProbability);
+		log.info("unknownWordProbability: {}", unknownWordProbability);
 	}
 
 	public EvaluationResults evaluate(CipherSolution solution) {
@@ -127,7 +127,7 @@ public class PlaintextEvaluator {
 		NGramIndexNode match = null;
 
 		for (WordProbability word : words) {
-			nGramProbability = BigDecimal.ONE;
+			nGramProbability = null;
 
 			// Loop over all indices so that non-matching indices negatively affect the probabitliy
 			for (int i = 0; i <= word.getValue().length() - order; i++) {
@@ -137,14 +137,14 @@ public class PlaintextEvaluator {
 					probability = match.getTerminalInfo().getProbability();
 					log.debug("Letter N-Gram Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 				} else {
-					probability = unknownWordProbability;
+					probability = unknownLetterNGramProbability;
 					log.debug("No Letter N-Gram Match");
 				}
 
-				nGramProbability = nGramProbability.multiply(probability, MathConstants.PREC_10_HALF_UP);
+				nGramProbability = (nGramProbability == null ? probability : nGramProbability.multiply(probability, MathConstants.PREC_10_HALF_UP));
 			}
 
-			word.setProbability(nGramProbability);
+			word.setProbability(nGramProbability == null ? unknownLetterNGramProbability : nGramProbability);
 		}
 
 		return words;
@@ -162,13 +162,10 @@ public class PlaintextEvaluator {
 				probability = match.getTerminalInfo().getProbability();
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
-				if (word.getValue().length() <= 10) {
-					probability = unknownWordProbability;
-				} else {
-					// Penalize long sequences with an exponential weight as a function of the length of the sequence
-					probability = unknownWordProbability.divide(BigDecimal.valueOf(10.0).pow(word.getValue().length()
-							- 2, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
-				}
+				// Penalize long sequences with an exponential weight as a function of the length of the sequence
+				probability = unknownWordProbability.divide(BigDecimal.valueOf(10.0).pow(word.getValue().length()
+						- 2, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
+
 				log.debug("No Word Match");
 			}
 
