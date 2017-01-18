@@ -100,12 +100,12 @@ public class BayesianDecipherManager {
 		CipherSolution initialSolution = new CipherSolution(cipher, cipherKeySize);
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
-		rouletteSampler.reIndex(letterUnigramProbabilities);
+		BigDecimal totalProbability = rouletteSampler.reIndex(letterUnigramProbabilities);
 		Double wordBoundaryProbability = (double) 1.0 / (double) LanguageConstants.AVERAGE_WORD_SIZE;
 
 		cipher.getCiphertextCharacters().stream().map(ciphertext -> ciphertext.getValue()).distinct().forEach(ciphertext -> {
 			// Pick a plaintext at random according to the language model
-			String nextPlaintext = letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities)).getValue().toString();
+			String nextPlaintext = letterUnigramProbabilities.get(rouletteSampler.getNextIndex(letterUnigramProbabilities, totalProbability)).getValue().toString();
 
 			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
@@ -194,14 +194,15 @@ public class BayesianDecipherManager {
 	protected CipherSolution runGibbsLetterSampler(BigDecimal temperature, CipherSolution solution) {
 		RouletteSampler<SolutionProbability> rouletteSampler = new RouletteSampler<>();
 		CipherSolution proposal = null;
+		BigDecimal totalProbability;
 
 		// For each cipher symbol type, run the gibbs sampling
 		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
 			List<SolutionProbability> plaintextDistribution = computeDistribution(entry.getKey(), solution);
 
-			rouletteSampler.reIndex(plaintextDistribution);
+			totalProbability = rouletteSampler.reIndex(plaintextDistribution);
 
-			proposal = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution)).getValue();
+			proposal = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution, totalProbability)).getValue();
 
 			solution = selectNext(temperature, solution, proposal);
 		}
@@ -431,9 +432,10 @@ public class BayesianDecipherManager {
 		CipherSolution proposal = null;
 		EvaluationResults addPlaintextResults = null;
 		EvaluationResults removePlaintextResults = null;
+		BigDecimal totalProbability;
+		RouletteSampler<BoundaryProbability> rouletteSampler = new RouletteSampler<>();
 
 		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
-			sumOfProbabilities = null;
 			boundaryProbabilities = new ArrayList<>();
 			nextBoundary = i;
 
@@ -464,10 +466,9 @@ public class BayesianDecipherManager {
 			boundaryProbabilities.add(new BoundaryProbability(false,
 					removeProposal.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP)));
 
-			RouletteSampler<BoundaryProbability> rouletteSampler = new RouletteSampler<>();
-			rouletteSampler.reIndex(boundaryProbabilities);
+			totalProbability = rouletteSampler.reIndex(boundaryProbabilities);
 
-			isAddBoundary = boundaryProbabilities.get(rouletteSampler.getNextIndex(boundaryProbabilities)).getValue();
+			isAddBoundary = boundaryProbabilities.get(rouletteSampler.getNextIndex(boundaryProbabilities, totalProbability)).getValue();
 
 			if (isAddBoundary) {
 				proposal = addProposal;

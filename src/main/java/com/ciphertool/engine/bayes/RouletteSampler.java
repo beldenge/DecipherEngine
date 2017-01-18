@@ -36,12 +36,12 @@ public class RouletteSampler<T extends Probability<?>> {
 
 	private BinaryRouletteTree	rouletteWheel;
 
-	public synchronized void reIndex(List<T> probabilities) {
+	public synchronized BigDecimal reIndex(List<T> probabilities) {
 		this.rouletteWheel = new BinaryRouletteTree();
 
 		List<BinaryRouletteNode> nodes = new ArrayList<BinaryRouletteNode>();
 
-		BigDecimal totalFitness = BigDecimal.ZERO;
+		BigDecimal totalProbability = BigDecimal.ZERO;
 
 		for (int i = 0; i < probabilities.size(); i++) {
 			if (probabilities.get(i) == null || probabilities.get(i).getProbability().equals(BigDecimal.ZERO)) {
@@ -55,14 +55,16 @@ public class RouletteSampler<T extends Probability<?>> {
 				continue;
 			}
 
-			totalFitness = totalFitness.add(probabilities.get(i).getProbability(), MathConstants.PREC_10_HALF_UP);
+			totalProbability = totalProbability.add(probabilities.get(i).getProbability(), MathConstants.PREC_10_HALF_UP);
 
-			nodes.add(new BinaryRouletteNode(i, totalFitness));
+			nodes.add(new BinaryRouletteNode(i, totalProbability));
 		}
 
-		if (totalFitness.compareTo(BigDecimal.ZERO) > 0) {
+		if (totalProbability.compareTo(BigDecimal.ZERO) > 0) {
 			addToTreeBalanced(nodes);
 		}
+
+		return totalProbability;
 	}
 
 	protected void addToTreeBalanced(List<BinaryRouletteNode> nodes) {
@@ -83,14 +85,20 @@ public class RouletteSampler<T extends Probability<?>> {
 		addToTreeBalanced(nodes.subList(half + 1, nodes.size()));
 	}
 
-	public int getNextIndex(List<T> probabilities) {
+	public int getNextIndex(List<T> probabilities, BigDecimal totalProbability) {
 		if (probabilities == null || probabilities.isEmpty()) {
-			log.warn("Attempted to select an individual from a null or empty population.  Unable to continue.");
+			log.error("Attempted to select a probability from a null or empty distribution.  Unable to continue.");
 
 			return -1;
 		}
 
-		BigDecimal randomIndex = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble());
+		if (BigDecimal.ONE.subtract(totalProbability).abs().compareTo(BigDecimal.valueOf(0.0001)) > 0) {
+			log.error("Attempted to select from a probability distribution that does not sum to 1.  Unable to continue.");
+
+			return -1;
+		}
+
+		BigDecimal randomIndex = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble()).multiply(totalProbability);
 
 		BinaryRouletteNode winner = this.rouletteWheel.find(randomIndex);
 

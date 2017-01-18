@@ -19,7 +19,7 @@
 
 package com.ciphertool.engine.bayes;
 
-import static org.mockito.Mockito.spy;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -28,45 +28,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-
-import com.ciphertool.sherlock.etl.importers.LetterNGramMarkovImporter;
-import com.ciphertool.sherlock.markov.MarkovModel;
-import com.ciphertool.sherlock.markov.NGramIndexNode;
+import org.junit.Test;
 
 public class RouletteSamplerTest {
 
-	// @Test
+	@Test
 	public void testSampling() {
-		ThreadPoolTaskExecutor taskExecutorSpy = spy(new ThreadPoolTaskExecutor());
-		taskExecutorSpy.setCorePoolSize(4);
-		taskExecutorSpy.setMaxPoolSize(4);
-		taskExecutorSpy.setQueueCapacity(1000000);
-		taskExecutorSpy.setKeepAliveSeconds(1);
-		taskExecutorSpy.setAllowCoreThreadTimeOut(true);
-		taskExecutorSpy.initialize();
-
-		MarkovModel letterMarkovModel = new MarkovModel();
-		letterMarkovModel.setOrder(3);
-		letterMarkovModel.setTaskExecutor(taskExecutorSpy);
-
-		LetterNGramMarkovImporter importer = new LetterNGramMarkovImporter();
-		importer.setLetterMarkovModel(letterMarkovModel);
-		importer.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
-		importer.setMinCount(2);
-		importer.setTaskExecutor(taskExecutorSpy);
-		importer.importCorpus();
-
 		List<LetterProbability> letterUnigramProbabilities = new ArrayList<>();
 
-		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
-			letterUnigramProbabilities.add(new LetterProbability(entry.getKey(),
-					entry.getValue().getTerminalInfo().getProbability()));
-		}
+		letterUnigramProbabilities.add(new LetterProbability('a', BigDecimal.valueOf(0.07916)));
+		letterUnigramProbabilities.add(new LetterProbability('b', BigDecimal.valueOf(0.01543)));
+		letterUnigramProbabilities.add(new LetterProbability('c', BigDecimal.valueOf(0.03037)));
+		letterUnigramProbabilities.add(new LetterProbability('d', BigDecimal.valueOf(0.03962)));
+		letterUnigramProbabilities.add(new LetterProbability('e', BigDecimal.valueOf(0.12454)));
+		letterUnigramProbabilities.add(new LetterProbability('f', BigDecimal.valueOf(0.02233)));
+		letterUnigramProbabilities.add(new LetterProbability('g', BigDecimal.valueOf(0.01981)));
+		letterUnigramProbabilities.add(new LetterProbability('h', BigDecimal.valueOf(0.05323)));
+		letterUnigramProbabilities.add(new LetterProbability('i', BigDecimal.valueOf(0.07300)));
+		letterUnigramProbabilities.add(new LetterProbability('j', BigDecimal.valueOf(0.00163)));
+		letterUnigramProbabilities.add(new LetterProbability('k', BigDecimal.valueOf(0.00701)));
+		letterUnigramProbabilities.add(new LetterProbability('l', BigDecimal.valueOf(0.04058)));
+		letterUnigramProbabilities.add(new LetterProbability('m', BigDecimal.valueOf(0.02403)));
+		letterUnigramProbabilities.add(new LetterProbability('n', BigDecimal.valueOf(0.07289)));
+		letterUnigramProbabilities.add(new LetterProbability('o', BigDecimal.valueOf(0.07603)));
+		letterUnigramProbabilities.add(new LetterProbability('p', BigDecimal.valueOf(0.02002)));
+		letterUnigramProbabilities.add(new LetterProbability('q', BigDecimal.valueOf(0.00104)));
+		letterUnigramProbabilities.add(new LetterProbability('r', BigDecimal.valueOf(0.06124)));
+		letterUnigramProbabilities.add(new LetterProbability('s', BigDecimal.valueOf(0.06438)));
+		letterUnigramProbabilities.add(new LetterProbability('t', BigDecimal.valueOf(0.09284)));
+		letterUnigramProbabilities.add(new LetterProbability('u', BigDecimal.valueOf(0.02905)));
+		letterUnigramProbabilities.add(new LetterProbability('v', BigDecimal.valueOf(0.01068)));
+		letterUnigramProbabilities.add(new LetterProbability('w', BigDecimal.valueOf(0.01930)));
+		letterUnigramProbabilities.add(new LetterProbability('x', BigDecimal.valueOf(0.00226)));
+		letterUnigramProbabilities.add(new LetterProbability('y', BigDecimal.valueOf(0.01888)));
+		letterUnigramProbabilities.add(new LetterProbability('z', BigDecimal.valueOf(0.00068)));
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
 
-		rouletteSampler.reIndex(letterUnigramProbabilities);
+		BigDecimal totalProbability = rouletteSampler.reIndex(letterUnigramProbabilities);
 
 		Map<Character, Integer> characterCounts = new HashMap<>();
 		int nextIndex;
@@ -74,7 +73,7 @@ public class RouletteSamplerTest {
 		int i = 0;
 
 		for (; i < 1000000; i++) {
-			nextIndex = rouletteSampler.getNextIndex(letterUnigramProbabilities);
+			nextIndex = rouletteSampler.getNextIndex(letterUnigramProbabilities, totalProbability);
 
 			if (characterCounts.get(letterUnigramProbabilities.get(nextIndex).getValue()) == null) {
 				characterCounts.put(letterUnigramProbabilities.get(nextIndex).getValue(), 1);
@@ -84,14 +83,16 @@ public class RouletteSamplerTest {
 					+ 1);
 		}
 
-		for (Map.Entry<Character, NGramIndexNode> entry : letterMarkovModel.getRootNode().getTransitions().entrySet()) {
-			BigDecimal actual = entry.getValue().getTerminalInfo().getProbability().setScale(5, RoundingMode.HALF_UP);
-			BigDecimal estimated = BigDecimal.valueOf(((double) characterCounts.get(entry.getKey())
+		for (LetterProbability letterProbability : letterUnigramProbabilities) {
+			BigDecimal actual = letterProbability.getProbability().setScale(5, RoundingMode.HALF_UP);
+			BigDecimal estimated = BigDecimal.valueOf(((double) characterCounts.get(letterProbability.getValue())
 					/ (double) i)).setScale(5, RoundingMode.HALF_UP);
+			BigDecimal difference = actual.subtract(estimated).abs().setScale(5, RoundingMode.HALF_UP);
 
-			System.out.printf(entry.getKey() + ": actual=" + actual.toString() + ", estimated=" + estimated.toString()
-					+ ", difference=" + actual.subtract(estimated).abs().setScale(5, RoundingMode.HALF_UP).toString()
-					+ "\n");
+			assertTrue(difference.compareTo(BigDecimal.valueOf(0.001)) < 0);
+
+			System.out.printf(letterProbability.getValue() + ": actual=" + actual.toString() + ", estimated="
+					+ estimated.toString() + ", difference=" + difference.toString() + "\n");
 		}
 	}
 }

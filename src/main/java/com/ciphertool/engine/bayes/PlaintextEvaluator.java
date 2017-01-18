@@ -162,7 +162,7 @@ public class PlaintextEvaluator {
 				probability = match.getTerminalInfo().getProbability();
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
-				if (word.getValue().length() <= 15) {
+				if (word.getValue().length() <= 10) {
 					probability = unknownWordProbability;
 				} else {
 					// Penalize long sequences with an exponential weight as a function of the length of the sequence
