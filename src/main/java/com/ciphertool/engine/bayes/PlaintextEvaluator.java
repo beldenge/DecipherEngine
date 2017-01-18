@@ -163,7 +163,7 @@ public class PlaintextEvaluator {
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
 				// Penalize long sequences with an exponential weight as a function of the length of the sequence
-				probability = unknownWordProbability.divide(BigDecimal.valueOf(10.0).pow(word.getValue().length()
+				probability = unknownWordProbability.divide(BigDecimal.valueOf(20.0).pow(word.getValue().length()
 						- 2, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 				log.debug("No Word Match");
