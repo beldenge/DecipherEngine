@@ -43,6 +43,7 @@ public class CipherSolution {
 	private BigDecimal				generativeModelLogProbability	= BigDecimal.ZERO;
 	private BigDecimal				languageModelProbability		= BigDecimal.ONE;
 	private BigDecimal				languageModelLogProbability		= BigDecimal.ZERO;
+	private BigDecimal				knownSolutionProximity			= null;
 
 	private Map<String, Plaintext>	mappings;
 	private Set<Integer>			wordBoundaries;
@@ -164,6 +165,21 @@ public class CipherSolution {
 		this.languageModelLogProbability = languageModelLogProbability;
 	}
 
+	/**
+	 * @return the knownSolutionProximity
+	 */
+	public BigDecimal getKnownSolutionProximity() {
+		return knownSolutionProximity;
+	}
+
+	/**
+	 * @param knownSolutionProximity
+	 *            the knownSolutionProximity to set
+	 */
+	public void setKnownSolutionProximity(BigDecimal knownSolutionProximity) {
+		this.knownSolutionProximity = knownSolutionProximity;
+	}
+
 	public Map<String, Plaintext> getMappings() {
 		return Collections.unmodifiableMap(mappings);
 	}
@@ -269,6 +285,8 @@ public class CipherSolution {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
+				+ (knownSolutionProximity != null ? ", proximity="
+						+ String.format("%1$,.2f", knownSolutionProximity.doubleValue() * 100.0) + "%" : "")
 				+ ", generativeModelProbability=" + generativeModelProbability.toString()
 				+ ", generativeModelLogProbability=" + generativeModelLogProbability.toString()
 				+ ", languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
