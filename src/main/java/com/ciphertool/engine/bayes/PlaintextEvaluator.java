@@ -129,7 +129,7 @@ public class PlaintextEvaluator {
 		for (WordProbability word : words) {
 			nGramProbability = null;
 
-			// Loop over all indices so that non-matching indices negatively affect the probabitliy
+			// Loop over all indices so that non-matching indices negatively affect the probability
 			for (int i = 0; i <= word.getValue().length() - order; i++) {
 				match = letterMarkovModel.findLongest(word.getValue().substring(i, i + order));
 
