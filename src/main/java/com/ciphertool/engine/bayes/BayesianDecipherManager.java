@@ -383,21 +383,25 @@ public class BayesianDecipherManager {
 			BigDecimal nGramCount = bigramCounts.get(lastCharacter
 					+ currentCharacter) == null ? BigDecimal.ZERO : BigDecimal.valueOf(bigramCounts.get(lastCharacter
 							+ currentCharacter));
+
 			BigDecimal numerator = alphaHyperparameter.multiply(nGramPriorProbability, MathConstants.PREC_10_HALF_UP).add(nGramCount, MathConstants.PREC_10_HALF_UP);
 			BigDecimal denominator = alphaHyperparameter.add(unigramCount, MathConstants.PREC_10_HALF_UP);
+			BigDecimal sourcePart = numerator.divide(denominator, MathConstants.PREC_10_HALF_UP);
 
 			// Multiply by the source model probability
-			productOfProbabilities = productOfProbabilities.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
-			sumOfProbabilities = sumOfProbabilities.add(bigDecimalFunctions.log(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP)), MathConstants.PREC_10_HALF_UP);
+			productOfProbabilities = productOfProbabilities.multiply(sourcePart, MathConstants.PREC_10_HALF_UP);
+			sumOfProbabilities = sumOfProbabilities.add(bigDecimalFunctions.log(sourcePart), MathConstants.PREC_10_HALF_UP);
 
 			BigDecimal ciphertextMappingCount = ciphertextMappingCounts.get(ciphertextMapping) == null ? BigDecimal.ZERO : BigDecimal.valueOf(ciphertextMappingCounts.get(ciphertextMapping));
 			unigramCount = unigramCounts.get(currentCharacter) == null ? BigDecimal.ZERO : BigDecimal.valueOf(unigramCounts.get(currentCharacter));
+
 			numerator = betaHyperparameter.multiply(ciphertextProbability, MathConstants.PREC_10_HALF_UP).add(ciphertextMappingCount, MathConstants.PREC_10_HALF_UP);
 			denominator = betaHyperparameter.add(unigramCount, MathConstants.PREC_10_HALF_UP);
+			BigDecimal channelPart = numerator.divide(denominator, MathConstants.PREC_10_HALF_UP);
 
 			// Multiply by the channel model probability
-			productOfProbabilities = productOfProbabilities.multiply(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
-			sumOfProbabilities = sumOfProbabilities.add(bigDecimalFunctions.log(numerator.divide(denominator, MathConstants.PREC_10_HALF_UP)), MathConstants.PREC_10_HALF_UP);
+			productOfProbabilities = productOfProbabilities.multiply(channelPart, MathConstants.PREC_10_HALF_UP);
+			sumOfProbabilities = sumOfProbabilities.add(bigDecimalFunctions.log(channelPart), MathConstants.PREC_10_HALF_UP);
 
 			if (bigramCounts.get(lastCharacter + currentCharacter) == null) {
 				bigramCounts.put(lastCharacter + currentCharacter, 0);
