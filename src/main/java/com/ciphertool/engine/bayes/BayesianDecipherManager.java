@@ -167,7 +167,8 @@ public class BayesianDecipherManager {
 				knownProximity = knownPlaintextEvaluator.evaluate(next);
 				next.setKnownSolutionProximity(BigDecimal.valueOf(knownProximity));
 
-				if (maxKnown == null || maxKnown.getProbability().compareTo(BigDecimal.valueOf(knownProximity)) < 0) {
+				if (maxKnown == null
+						|| maxKnown.getKnownSolutionProximity().compareTo(BigDecimal.valueOf(knownProximity)) < 0) {
 					maxKnown = next;
 					maxKnownIteration = i + 1;
 				}
