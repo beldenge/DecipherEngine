@@ -124,7 +124,6 @@ public class GenerativeMarkovAndNGramFitnessEvaluatorTest extends FitnessEvaluat
 		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
 		letterNGramMarkovImporter.setLetterMarkovModel(letterMarkovModel);
 		letterNGramMarkovImporter.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
-		letterNGramMarkovImporter.setMinCount(1);
 		letterNGramMarkovImporter.setTaskExecutor(taskExecutorSpy);
 		letterNGramMarkovImporter.importCorpus();
 

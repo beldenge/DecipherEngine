@@ -119,7 +119,6 @@ public class TieredMarkovModelFitnessEvaluatorTest extends FitnessEvaluatorTestB
 		importer = new LetterNGramMarkovImporter();
 		importer.setLetterMarkovModel(markovModel);
 		importer.setCorpusDirectory("/Users/george/Desktop/sherlock-transformed");
-		importer.setMinCount(1);
 		importer.setTaskExecutor(taskExecutorSpy);
 		importer.importCorpus();
 
