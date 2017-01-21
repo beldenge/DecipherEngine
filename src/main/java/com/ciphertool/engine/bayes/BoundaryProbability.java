@@ -29,6 +29,11 @@ public class BoundaryProbability implements Probability<Boolean> {
 	}
 
 	@Override
+	public BigDecimal getLogProbability() {
+		throw new UnsupportedOperationException("Method not implemented!");
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

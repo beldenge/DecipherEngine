@@ -179,7 +179,7 @@ public class PlaintextEvaluator {
 
 		List<WordProbability> words = new ArrayList<>();
 		Integer begin = null;
-		boolean add = false;
+		boolean add = (ciphertextKey == null) ? false : !includeCiphertextParameterOnly;
 
 		for (int i = 0; i < currentSolutionString.length(); i++) {
 			if (ciphertextKey == null) {
@@ -187,13 +187,9 @@ public class PlaintextEvaluator {
 			} else if (includeCiphertextParameterOnly) {
 				if (ciphertextKey.equals(solution.getCipher().getCiphertextCharacters().get(i).getValue())) {
 					add = true;
-				} else {
-					add = false;
 				}
 			} else if (ciphertextKey.equals(solution.getCipher().getCiphertextCharacters().get(i).getValue())) {
 				add = false;
-			} else {
-				add = true;
 			}
 
 			if (i < (currentSolutionString.length() - 1) && solution.getWordBoundaries().contains(i)) {
@@ -203,7 +199,7 @@ public class PlaintextEvaluator {
 				}
 
 				begin = i;
-				add = false;
+				add = (ciphertextKey == null) ? false : !includeCiphertextParameterOnly;
 			}
 		}
 

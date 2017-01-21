@@ -31,4 +31,9 @@ public interface Probability<T> {
 	 * @return the probability
 	 */
 	public BigDecimal getProbability();
+
+	/**
+	 * @return the log probability
+	 */
+	public BigDecimal getLogProbability();
 }
