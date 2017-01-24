@@ -21,7 +21,7 @@ package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
 
-public class SolutionProbability implements Probability<CipherSolution> {
+public class SolutionProbability implements Probability<CipherSolution>, Comparable<SolutionProbability> {
 	private CipherSolution	solution;
 	private BigDecimal		probability;
 
@@ -67,6 +67,11 @@ public class SolutionProbability implements Probability<CipherSolution> {
 	}
 
 	@Override
+	public int compareTo(SolutionProbability other) {
+		return this.probability.compareTo(other.probability);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -94,5 +99,10 @@ public class SolutionProbability implements Probability<CipherSolution> {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "SolutionProbability [probability=" + probability + "]";
 	}
 }

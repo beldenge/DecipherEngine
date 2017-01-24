@@ -21,7 +21,7 @@ package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
 
-public class LetterProbability implements Probability<Character> {
+public class LetterProbability implements Probability<Character>, Comparable<LetterProbability> {
 	private Character	letter;
 	private BigDecimal	probability;
 
@@ -57,6 +57,11 @@ public class LetterProbability implements Probability<Character> {
 	@Override
 	public BigDecimal getLogProbability() {
 		throw new UnsupportedOperationException("Method not implemented!");
+	}
+
+	@Override
+	public int compareTo(LetterProbability other) {
+		return this.probability.compareTo(other.probability);
 	}
 
 	@Override

@@ -22,6 +22,7 @@ package com.ciphertool.engine.bayes;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +101,7 @@ public class BayesianDecipherManager {
 		CipherSolution initialSolution = new CipherSolution(cipher, cipherKeySize);
 
 		RouletteSampler<LetterProbability> rouletteSampler = new RouletteSampler<>();
+		Collections.sort(letterUnigramProbabilities);
 		BigDecimal totalProbability = rouletteSampler.reIndex(letterUnigramProbabilities);
 		Double wordBoundaryProbability = (double) 1.0 / (double) LanguageConstants.AVERAGE_WORD_SIZE;
 
@@ -200,6 +202,7 @@ public class BayesianDecipherManager {
 		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
 			List<SolutionProbability> plaintextDistribution = computeDistribution(entry.getKey(), solution);
 
+			Collections.sort(plaintextDistribution);
 			totalProbability = rouletteSampler.reIndex(plaintextDistribution);
 
 			proposal = plaintextDistribution.get(rouletteSampler.getNextIndex(plaintextDistribution, totalProbability)).getValue();
@@ -470,6 +473,7 @@ public class BayesianDecipherManager {
 			boundaryProbabilities.add(new BoundaryProbability(false,
 					removeProposal.getProbability().divide(sumOfProbabilities, MathConstants.PREC_10_HALF_UP)));
 
+			Collections.sort(boundaryProbabilities);
 			totalProbability = rouletteSampler.reIndex(boundaryProbabilities);
 
 			isAddBoundary = boundaryProbabilities.get(rouletteSampler.getNextIndex(boundaryProbabilities, totalProbability)).getValue();

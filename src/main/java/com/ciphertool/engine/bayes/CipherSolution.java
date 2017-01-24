@@ -37,12 +37,12 @@ public class CipherSolution {
 
 	protected Cipher				cipher;
 
-	private BigDecimal				probability						= BigDecimal.ONE;
-	private BigDecimal				logProbability					= BigDecimal.ZERO;
-	private BigDecimal				generativeModelProbability		= BigDecimal.ONE;
-	private BigDecimal				generativeModelLogProbability	= BigDecimal.ZERO;
-	private BigDecimal				languageModelProbability		= BigDecimal.ONE;
-	private BigDecimal				languageModelLogProbability		= BigDecimal.ZERO;
+	private BigDecimal				probability						= null;
+	private BigDecimal				logProbability					= null;
+	private BigDecimal				generativeModelProbability		= null;
+	private BigDecimal				generativeModelLogProbability	= null;
+	private BigDecimal				languageModelProbability		= null;
+	private BigDecimal				languageModelLogProbability		= null;
 	private BigDecimal				knownSolutionProximity			= null;
 
 	private Map<String, Plaintext>	mappings;
@@ -272,6 +272,115 @@ public class CipherSolution {
 		copySolution.setLanguageModelLogProbability(this.languageModelLogProbability);
 
 		return copySolution;
+	}
+
+	/**
+	 * This is currently just used by unit tests.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cipher == null) ? 0 : cipher.hashCode());
+		result = prime * result
+				+ ((generativeModelLogProbability == null) ? 0 : generativeModelLogProbability.hashCode());
+		result = prime * result + ((generativeModelProbability == null) ? 0 : generativeModelProbability.hashCode());
+		result = prime * result + ((knownSolutionProximity == null) ? 0 : knownSolutionProximity.hashCode());
+		result = prime * result + ((languageModelLogProbability == null) ? 0 : languageModelLogProbability.hashCode());
+		result = prime * result + ((languageModelProbability == null) ? 0 : languageModelProbability.hashCode());
+		result = prime * result + ((logProbability == null) ? 0 : logProbability.hashCode());
+		result = prime * result + ((mappings == null) ? 0 : mappings.hashCode());
+		result = prime * result + ((probability == null) ? 0 : probability.hashCode());
+		result = prime * result + ((wordBoundaries == null) ? 0 : wordBoundaries.hashCode());
+		return result;
+	}
+
+	/**
+	 * This is currently just used by unit tests.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof CipherSolution)) {
+			return false;
+		}
+		CipherSolution other = (CipherSolution) obj;
+		if (cipher == null) {
+			if (other.cipher != null) {
+				return false;
+			}
+		} else if (!cipher.equals(other.cipher)) {
+			return false;
+		}
+		if (generativeModelLogProbability == null) {
+			if (other.generativeModelLogProbability != null) {
+				return false;
+			}
+		} else if (!generativeModelLogProbability.equals(other.generativeModelLogProbability)) {
+			return false;
+		}
+		if (generativeModelProbability == null) {
+			if (other.generativeModelProbability != null) {
+				return false;
+			}
+		} else if (!generativeModelProbability.equals(other.generativeModelProbability)) {
+			return false;
+		}
+		if (knownSolutionProximity == null) {
+			if (other.knownSolutionProximity != null) {
+				return false;
+			}
+		} else if (!knownSolutionProximity.equals(other.knownSolutionProximity)) {
+			return false;
+		}
+		if (languageModelLogProbability == null) {
+			if (other.languageModelLogProbability != null) {
+				return false;
+			}
+		} else if (!languageModelLogProbability.equals(other.languageModelLogProbability)) {
+			return false;
+		}
+		if (languageModelProbability == null) {
+			if (other.languageModelProbability != null) {
+				return false;
+			}
+		} else if (!languageModelProbability.equals(other.languageModelProbability)) {
+			return false;
+		}
+		if (logProbability == null) {
+			if (other.logProbability != null) {
+				return false;
+			}
+		} else if (!logProbability.equals(other.logProbability)) {
+			return false;
+		}
+		if (mappings == null) {
+			if (other.mappings != null) {
+				return false;
+			}
+		} else if (!mappings.equals(other.mappings)) {
+			return false;
+		}
+		if (probability == null) {
+			if (other.probability != null) {
+				return false;
+			}
+		} else if (!probability.equals(other.probability)) {
+			return false;
+		}
+		if (wordBoundaries == null) {
+			if (other.wordBoundaries != null) {
+				return false;
+			}
+		} else if (!wordBoundaries.equals(other.wordBoundaries)) {
+			return false;
+		}
+		return true;
 	}
 
 	/*

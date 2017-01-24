@@ -2,7 +2,7 @@ package com.ciphertool.engine.bayes;
 
 import java.math.BigDecimal;
 
-public class BoundaryProbability implements Probability<Boolean> {
+public class BoundaryProbability implements Probability<Boolean>, Comparable<BoundaryProbability> {
 	private Boolean		option;
 	private BigDecimal	probability;
 
@@ -31,6 +31,11 @@ public class BoundaryProbability implements Probability<Boolean> {
 	@Override
 	public BigDecimal getLogProbability() {
 		throw new UnsupportedOperationException("Method not implemented!");
+	}
+
+	@Override
+	public int compareTo(BoundaryProbability other) {
+		return this.probability.compareTo(other.probability);
 	}
 
 	@Override
