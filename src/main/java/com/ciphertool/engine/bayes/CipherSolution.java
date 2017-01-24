@@ -393,13 +393,12 @@ public class CipherSolution {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Solution [probability=" + probability.toString() + ", logProbability=" + logProbability.toString()
+		sb.append("Solution [probability=" + probability + ", logProbability=" + logProbability
 				+ (knownSolutionProximity != null ? ", proximity="
 						+ String.format("%1$,.2f", knownSolutionProximity.doubleValue() * 100.0) + "%" : "")
-				+ ", generativeModelProbability=" + generativeModelProbability.toString()
-				+ ", generativeModelLogProbability=" + generativeModelLogProbability.toString()
-				+ ", languageModelProbability=" + languageModelProbability.toString() + ", languageModelLogProbability="
-				+ languageModelLogProbability.toString() + "]\n");
+				+ ", generativeModelProbability=" + generativeModelProbability + ", generativeModelLogProbability="
+				+ generativeModelLogProbability + ", languageModelProbability=" + languageModelProbability
+				+ ", languageModelLogProbability=" + languageModelLogProbability + "]\n");
 
 		if (this.cipher != null) {
 			String nextPlaintext = null;

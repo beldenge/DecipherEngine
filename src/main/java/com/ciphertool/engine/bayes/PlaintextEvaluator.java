@@ -59,7 +59,7 @@ public class PlaintextEvaluator {
 							+ weightTotal);
 		}
 
-		unknownLetterNGramProbability = BigDecimal.valueOf(letterMarkovModel.getNumWithCountOfOne()).divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()
+		unknownLetterNGramProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()
 				+ 1), MathConstants.PREC_10_HALF_UP);
 
 		unknownWordProbability = BigDecimal.valueOf(wordMarkovModel.getNumWithCountOfOne()).divide(BigDecimal.valueOf(wordMarkovModel.getRootNode().getTerminalInfo().getCount()
@@ -162,7 +162,7 @@ public class PlaintextEvaluator {
 				log.debug("Word Match={}, Probability={}", match.getCumulativeStringValue(), probability);
 			} else {
 				// Penalize long sequences with an exponential weight as a function of the length of the sequence
-				probability = unknownWordProbability.divide(BigDecimal.valueOf(50.0).pow(word.getValue().length()
+				probability = unknownWordProbability.divide(BigDecimal.valueOf(20.0).pow(word.getValue().length()
 						- 2, MathConstants.PREC_10_HALF_UP), MathConstants.PREC_10_HALF_UP);
 
 				log.debug("No Word Match");

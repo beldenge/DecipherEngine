@@ -71,6 +71,7 @@ public class BayesianDecipherManager {
 	private KnownPlaintextEvaluator			knownPlaintextEvaluator;
 	private TaskExecutor					taskExecutor;
 	private MathCache						bigDecimalFunctions;
+	private Double							percentToReallocate;
 
 	@PostConstruct
 	public void setUp() {
@@ -201,6 +202,17 @@ public class BayesianDecipherManager {
 		// For each cipher symbol type, run the gibbs sampling
 		for (Map.Entry<String, Plaintext> entry : solution.getMappings().entrySet()) {
 			List<SolutionProbability> plaintextDistribution = computeDistribution(entry.getKey(), solution);
+
+			BigDecimal massToReallocate = BigDecimal.valueOf(percentToReallocate);
+
+			BigDecimal sumOfProbabilities = plaintextDistribution.stream().map(SolutionProbability::getProbability).reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+
+			// Reallocate some of the total probability mass to smooth out the distribution
+			BigDecimal probabilityMassToReallocate = sumOfProbabilities.multiply(massToReallocate, MathConstants.PREC_10_HALF_UP).divide(BigDecimal.valueOf(plaintextDistribution.size()), MathConstants.PREC_10_HALF_UP);
+
+			for (SolutionProbability solutionProbability : plaintextDistribution) {
+				solutionProbability.setProbability(solutionProbability.getProbability().multiply(BigDecimal.ONE.subtract(massToReallocate), MathConstants.PREC_10_HALF_UP).add(probabilityMassToReallocate));
+			}
 
 			Collections.sort(plaintextDistribution);
 			totalProbability = rouletteSampler.reIndex(plaintextDistribution);
@@ -671,5 +683,14 @@ public class BayesianDecipherManager {
 	 */
 	public void setKnownPlaintextEvaluator(KnownPlaintextEvaluator knownPlaintextEvaluator) {
 		this.knownPlaintextEvaluator = knownPlaintextEvaluator;
+	}
+
+	/**
+	 * @param percentToReallocate
+	 *            the percentToReallocate to set
+	 */
+	@Required
+	public void setPercentToReallocate(Double percentToReallocate) {
+		this.percentToReallocate = percentToReallocate;
 	}
 }

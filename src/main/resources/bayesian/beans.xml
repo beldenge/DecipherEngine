@@ -47,6 +47,7 @@ You should have received a copy of the GNU General Public License along with Dec
 		<property name="knownPlaintextEvaluator" ref="knownPlaintextEvaluator" />
 		<property name="taskExecutor" ref="taskExecutor" />
 		<property name="bigDecimalFunctions" ref="bigDecimalFunctions" />
+		<property name="percentToReallocate" value="${bayes.percent.to.reallocate}" />
 	</bean>
 
 	<bean class="com.ciphertool.engine.bayes.PlaintextEvaluator" id="plaintextEvaluator">

@@ -93,7 +93,8 @@ public class RouletteSampler<T extends Probability<?>> {
 		}
 
 		if (BigDecimal.ONE.subtract(totalProbability).abs().compareTo(BigDecimal.valueOf(0.0001)) > 0) {
-			log.error("Attempted to select from a probability distribution that does not sum to 1.  Unable to continue.");
+			log.error("Attempted to select from a probability distribution that does not sum to 1.  The sum is "
+					+ totalProbability.toPlainString() + ".  Unable to continue.");
 
 			return -1;
 		}
