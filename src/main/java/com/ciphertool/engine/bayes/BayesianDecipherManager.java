@@ -113,11 +113,11 @@ public class BayesianDecipherManager {
 			initialSolution.putMapping(ciphertext, new Plaintext(nextPlaintext));
 		});
 
-		for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
-			if (ThreadLocalRandom.current().nextDouble() < wordBoundaryProbability) {
-				initialSolution.addWordBoundary(i);
-			}
-		}
+		// for (int i = 0; i < cipher.getCiphertextCharacters().size() - 1; i++) {
+		// if (ThreadLocalRandom.current().nextDouble() < wordBoundaryProbability) {
+		// initialSolution.addWordBoundary(i);
+		// }
+		// }
 
 		PartialDerivation initialDerivation = computePartialDerivationProbability(null, 0, cipher.getCiphertextCharacters().size(), initialSolution);
 		EvaluationResults initialPlaintextResults = plaintextEvaluator.evaluate(initialSolution);
@@ -163,7 +163,7 @@ public class BayesianDecipherManager {
 			letterSamplingElapsed = (System.currentTimeMillis() - startLetterSampling);
 
 			startWordSampling = System.currentTimeMillis();
-			next = runGibbsWordBoundarySampler(temperature, next);
+			// next = runGibbsWordBoundarySampler(temperature, next);
 			wordSamplingElapsed = (System.currentTimeMillis() - startWordSampling);
 
 			if (knownPlaintextEvaluator != null) {
@@ -276,7 +276,9 @@ public class BayesianDecipherManager {
 
 			int start = conditionalSolution.getCipher().getCiphertextCharacters().size() - affectedCount;
 			long startDerivation = System.currentTimeMillis();
-			PartialDerivation derivationProbability = computePartialDerivationProbability(partialDerivation, start, conditionalSolution.getCipher().getCiphertextCharacters().size(), conditionalSolution);
+			// PartialDerivation derivationProbability = computePartialDerivationProbability(partialDerivation, start,
+			// conditionalSolution.getCipher().getCiphertextCharacters().size(), conditionalSolution);
+			PartialDerivation derivationProbability = new PartialDerivation(BigDecimal.ONE, BigDecimal.ZERO);
 			log.debug("Partial derivation took {}ms.", (System.currentTimeMillis() - startDerivation));
 
 			/*
@@ -310,7 +312,8 @@ public class BayesianDecipherManager {
 		int affectedCount = moveAffectedWindowsToEnd(ciphertextKey, modified);
 
 		int end = solution.getCipher().getCiphertextCharacters().size() - affectedCount;
-		PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, modified);
+		// PartialDerivation partialDerivation = computePartialDerivationProbability(null, 0, end, modified);
+		PartialDerivation partialDerivation = new PartialDerivation(BigDecimal.ONE, BigDecimal.ZERO);
 
 		List<FutureTask<CipherSolution>> futures = new ArrayList<FutureTask<CipherSolution>>(26);
 		FutureTask<CipherSolution> task;

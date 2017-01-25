@@ -24,8 +24,18 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 	private static PlaintextEvaluator			plaintextEvaluator;
 
 	private static CipherSolution				solution	= new CipherSolution();
+	private static CipherSolution				solution2	= new CipherSolution();
+	private static CipherSolution				solution3	= new CipherSolution();
 
 	static {
+		int lastRowBegin = (zodiac408.getColumns() * (zodiac408.getRows() - 1));
+		int totalCharacters = zodiac408.getCiphertextCharacters().size();
+
+		// Remove the last row altogether
+		for (int i = lastRowBegin; i < totalCharacters; i++) {
+			zodiac408.removeCiphertextCharacter(zodiac408.getCiphertextCharacters().get(lastRowBegin));
+		}
+
 		solution.putMapping("tri", new Plaintext("i"));
 		solution.putMapping("lrbox", new Plaintext("l"));
 		solution.putMapping("p", new Plaintext("i"));
@@ -81,108 +91,121 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		solution.putMapping("backj", new Plaintext("x"));
 		solution.putMapping("box", new Plaintext("y"));
 
-		solution.addWordBoundary(0); // I
-		solution.addWordBoundary(4); // like
-		solution.addWordBoundary(11); // killing
-		solution.addWordBoundary(17); // people
-		solution.addWordBoundary(24); // because
-		solution.addWordBoundary(26); // it
-		solution.addWordBoundary(28); // is
-		solution.addWordBoundary(30); // so
-		solution.addWordBoundary(34); // much
-		solution.addWordBoundary(37); // fun
-		solution.addWordBoundary(39); // it
-		solution.addWordBoundary(41); // is
-		solution.addWordBoundary(45); // more
-		solution.addWordBoundary(48); // fun
-		solution.addWordBoundary(52); // than
-		solution.addWordBoundary(59); // killing
-		solution.addWordBoundary(63); // wild
-		solution.addWordBoundary(67); // game
-		solution.addWordBoundary(69); // in
-		solution.addWordBoundary(72); // the
-		solution.addWordBoundary(79); // forrest
-		solution.addWordBoundary(86); // because
-		solution.addWordBoundary(89); // man
-		solution.addWordBoundary(91); // is
-		solution.addWordBoundary(94); // the
-		solution.addWordBoundary(98); // most
-		solution.addWordBoundary(107); // dangeroue
-		solution.addWordBoundary(113); // anamal
-		solution.addWordBoundary(115); // of
-		solution.addWordBoundary(118); // all
-		solution.addWordBoundary(120); // to
-		solution.addWordBoundary(124); // kill
-		solution.addWordBoundary(133); // something
-		solution.addWordBoundary(138); // gives
-		solution.addWordBoundary(140); // me
-		solution.addWordBoundary(143); // the
-		solution.addWordBoundary(147); // moat
-		solution.addWordBoundary(156); // thrilling
-		solution.addWordBoundary(165); // experence
-		solution.addWordBoundary(167); // it
-		solution.addWordBoundary(169); // is
-		solution.addWordBoundary(173); // even
-		solution.addWordBoundary(179); // better
-		solution.addWordBoundary(183); // than
-		solution.addWordBoundary(190); // getting
-		solution.addWordBoundary(194); // your
-		solution.addWordBoundary(199); // rocks
-		solution.addWordBoundary(202); // off
-		solution.addWordBoundary(206); // with
-		solution.addWordBoundary(207); // a
-		solution.addWordBoundary(211); // girl
-		solution.addWordBoundary(214); // the
-		solution.addWordBoundary(218); // best
-		solution.addWordBoundary(222); // part
-		solution.addWordBoundary(224); // of
-		solution.addWordBoundary(226); // it
-		solution.addWordBoundary(228); // ia
-		solution.addWordBoundary(232); // thae
-		solution.addWordBoundary(236); // when
-		solution.addWordBoundary(237); // i
-		solution.addWordBoundary(240); // die
-		solution.addWordBoundary(241); // i
-		solution.addWordBoundary(245); // will
-		solution.addWordBoundary(247); // be
-		solution.addWordBoundary(253); // reborn
-		solution.addWordBoundary(255); // in
-		solution.addWordBoundary(263); // paradice
-		solution.addWordBoundary(266); // snd
-		solution.addWordBoundary(269); // all
-		solution.addWordBoundary(272); // the
-		solution.addWordBoundary(273); // i
-		solution.addWordBoundary(277); // have
-		solution.addWordBoundary(283); // killed
-		solution.addWordBoundary(287); // will
-		solution.addWordBoundary(293); // become
-		solution.addWordBoundary(295); // my
-		solution.addWordBoundary(301); // slaves
-		solution.addWordBoundary(302); // i
-		solution.addWordBoundary(306); // will
-		solution.addWordBoundary(309); // not
-		solution.addWordBoundary(313); // give
-		solution.addWordBoundary(316); // you
-		solution.addWordBoundary(318); // my
-		solution.addWordBoundary(322); // name
-		solution.addWordBoundary(329); // because
-		solution.addWordBoundary(332); // you
-		solution.addWordBoundary(336); // will
-		solution.addWordBoundary(339); // try
-		solution.addWordBoundary(341); // to
-		solution.addWordBoundary(345); // sloi
-		solution.addWordBoundary(349); // down
-		solution.addWordBoundary(351); // or
-		solution.addWordBoundary(355); // stop
-		solution.addWordBoundary(357); // my
-		solution.addWordBoundary(367); // collecting
-		solution.addWordBoundary(369); // of
-		solution.addWordBoundary(375); // slaves
-		solution.addWordBoundary(378); // for
-		solution.addWordBoundary(380); // my
-		solution.addWordBoundary(389); // afterlife
-
 		solution.setCipher(zodiac408);
+
+		solution2.putMapping("tri", new Plaintext("i"));
+		solution2.putMapping("lrbox", new Plaintext("s"));
+		solution2.putMapping("p", new Plaintext("o"));
+		solution2.putMapping("forslash", new Plaintext("s"));
+		solution2.putMapping("z", new Plaintext("e"));
+		solution2.putMapping("u", new Plaintext("e"));
+		solution2.putMapping("b", new Plaintext("t"));
+		solution2.putMapping("backk", new Plaintext("a"));
+		solution2.putMapping("o", new Plaintext("t"));
+		solution2.putMapping("r", new Plaintext("h"));
+		solution2.putMapping("pi", new Plaintext("r"));
+		solution2.putMapping("backp", new Plaintext("e"));
+		solution2.putMapping("x", new Plaintext("e"));
+		solution2.putMapping("w", new Plaintext("e"));
+		solution2.putMapping("v", new Plaintext("h"));
+		solution2.putMapping("plus", new Plaintext("e"));
+		solution2.putMapping("backe", new Plaintext("r"));
+		solution2.putMapping("g", new Plaintext("e"));
+		solution2.putMapping("y", new Plaintext("a"));
+		solution2.putMapping("f", new Plaintext("s"));
+		solution2.putMapping("circledot", new Plaintext("e"));
+		solution2.putMapping("h", new Plaintext("t"));
+		solution2.putMapping("boxdot", new Plaintext("r"));
+		solution2.putMapping("k", new Plaintext("s"));
+		solution2.putMapping("anchor", new Plaintext("e"));
+		solution2.putMapping("backq", new Plaintext("s"));
+		solution2.putMapping("m", new Plaintext("h"));
+		solution2.putMapping("j", new Plaintext("r"));
+		solution2.putMapping("carrot", new Plaintext("t"));
+		solution2.putMapping("i", new Plaintext("s"));
+		solution2.putMapping("tridot", new Plaintext("s"));
+		solution2.putMapping("t", new Plaintext("o"));
+		solution2.putMapping("flipt", new Plaintext("r"));
+		solution2.putMapping("n", new Plaintext("e"));
+		solution2.putMapping("q", new Plaintext("s"));
+		solution2.putMapping("d", new Plaintext("t"));
+		solution2.putMapping("fullcircle", new Plaintext("t"));
+		solution2.putMapping("horstrike", new Plaintext("h"));
+		solution2.putMapping("s", new Plaintext("a"));
+		solution2.putMapping("vertstrike", new Plaintext("t"));
+		solution2.putMapping("fullbox", new Plaintext("n"));
+		solution2.putMapping("a", new Plaintext("t"));
+		solution2.putMapping("backf", new Plaintext("t"));
+		solution2.putMapping("backl", new Plaintext("e"));
+		solution2.putMapping("e", new Plaintext("e"));
+		solution2.putMapping("l", new Plaintext("t"));
+		solution2.putMapping("backd", new Plaintext("e"));
+		solution2.putMapping("backr", new Plaintext("s"));
+		solution2.putMapping("backslash", new Plaintext("s"));
+		solution2.putMapping("fulltri", new Plaintext("e"));
+		solution2.putMapping("zodiac", new Plaintext("r"));
+		solution2.putMapping("backc", new Plaintext("v"));
+		solution2.putMapping("backj", new Plaintext("p"));
+		solution2.putMapping("box", new Plaintext("t"));
+
+		solution2.setCipher(zodiac408);
+
+		solution3.putMapping("tri", new Plaintext("i"));
+		solution3.putMapping("lrbox", new Plaintext("l"));
+		solution3.putMapping("p", new Plaintext("i"));
+		solution3.putMapping("forslash", new Plaintext("l"));
+		solution3.putMapping("z", new Plaintext("e"));
+		solution3.putMapping("u", new Plaintext("a"));
+		solution3.putMapping("b", new Plaintext("l"));
+		solution3.putMapping("backk", new Plaintext("q"));
+		solution3.putMapping("o", new Plaintext("s"));
+		solution3.putMapping("r", new Plaintext("t"));
+		solution3.putMapping("pi", new Plaintext("p"));
+		solution3.putMapping("backp", new Plaintext("e"));
+		solution3.putMapping("x", new Plaintext("o"));
+		solution3.putMapping("w", new Plaintext("e"));
+		solution3.putMapping("v", new Plaintext("s"));
+		solution3.putMapping("plus", new Plaintext("e"));
+		solution3.putMapping("backe", new Plaintext("t"));
+		solution3.putMapping("g", new Plaintext("e"));
+		solution3.putMapping("y", new Plaintext("s"));
+		solution3.putMapping("f", new Plaintext("l"));
+		solution3.putMapping("circledot", new Plaintext("e"));
+		solution3.putMapping("h", new Plaintext("s"));
+		solution3.putMapping("boxdot", new Plaintext("s"));
+		solution3.putMapping("k", new Plaintext("t"));
+		solution3.putMapping("anchor", new Plaintext("e"));
+		solution3.putMapping("backq", new Plaintext("r"));
+		solution3.putMapping("m", new Plaintext("h"));
+		solution3.putMapping("j", new Plaintext("e"));
+		solution3.putMapping("carrot", new Plaintext("n"));
+		solution3.putMapping("i", new Plaintext("t"));
+		solution3.putMapping("tridot", new Plaintext("a"));
+		solution3.putMapping("t", new Plaintext("e"));
+		solution3.putMapping("flipt", new Plaintext("r"));
+		solution3.putMapping("n", new Plaintext("e"));
+		solution3.putMapping("q", new Plaintext("a"));
+		solution3.putMapping("d", new Plaintext("s"));
+		solution3.putMapping("fullcircle", new Plaintext("t"));
+		solution3.putMapping("horstrike", new Plaintext("h"));
+		solution3.putMapping("s", new Plaintext("m"));
+		solution3.putMapping("vertstrike", new Plaintext("n"));
+		solution3.putMapping("fullbox", new Plaintext("l"));
+		solution3.putMapping("a", new Plaintext("t"));
+		solution3.putMapping("backf", new Plaintext("s"));
+		solution3.putMapping("backl", new Plaintext("e"));
+		solution3.putMapping("e", new Plaintext("e"));
+		solution3.putMapping("l", new Plaintext("t"));
+		solution3.putMapping("backd", new Plaintext("a"));
+		solution3.putMapping("backr", new Plaintext("r"));
+		solution3.putMapping("backslash", new Plaintext("r"));
+		solution3.putMapping("fulltri", new Plaintext("a"));
+		solution3.putMapping("zodiac", new Plaintext("t"));
+		solution3.putMapping("backc", new Plaintext("r"));
+		solution3.putMapping("backj", new Plaintext("m"));
+		solution3.putMapping("box", new Plaintext("l"));
+
+		solution3.setCipher(zodiac408);
 	}
 
 	// @BeforeClass
@@ -196,7 +219,7 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		taskExecutorSpy.initialize();
 
 		letterMarkovModel = new MarkovModel();
-		letterMarkovModel.setOrder(3);
+		letterMarkovModel.setOrder(6);
 		letterMarkovModel.setTaskExecutor(taskExecutorSpy);
 
 		letterNGramMarkovImporter = new LetterNGramMarkovImporter();
@@ -218,16 +241,22 @@ public class PlaintextEvaluatorTest extends FitnessEvaluatorTestBase {
 		plaintextEvaluator = new PlaintextEvaluator();
 		plaintextEvaluator.setLetterMarkovModel(letterMarkovModel);
 		plaintextEvaluator.setWordMarkovModel(wordMarkovModel);
-		plaintextEvaluator.setLetterNGramWeight(0.1);
-		plaintextEvaluator.setWordNGramWeight(0.9);
+		plaintextEvaluator.setLetterNGramWeight(1.0);
+		plaintextEvaluator.setWordNGramWeight(0.0);
 		plaintextEvaluator.setBigDecimalFunctions(new BigDecimalFunctions());
 		plaintextEvaluator.init();
 	}
 
 	// @Test
 	public void testEvaluate() {
-		log.info("fitness: " + plaintextEvaluator.evaluate(solution));
-		log.info("solution: " + solution);
+		log.info("fitness1: " + plaintextEvaluator.evaluate(solution));
+		log.info("solution1: " + solution);
+
+		log.info("fitness2: " + plaintextEvaluator.evaluate(solution2));
+		log.info("solution2: " + solution2);
+
+		log.info("fitness3: " + plaintextEvaluator.evaluate(solution3));
+		log.info("solution3: " + solution3);
 	}
 
 	// @Test
