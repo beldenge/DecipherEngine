@@ -94,7 +94,7 @@ public class ProbabilisticBreeder implements Breeder {
 
 	@Override
 	public void setGeneticStructure(Object obj) {
-		this.cipher = (Cipher) cipher;
+		this.cipher = (Cipher) obj;
 	}
 
 	/**
