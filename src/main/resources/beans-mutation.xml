@@ -11,8 +11,7 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-	profile="genetic">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean class="com.ciphertool.genetics.algorithms.mutation.impl.RandomValueMutationAlgorithm" id="randomValueMutationAlgorithm">
 		<property name="geneDao" ref="cipherKeyGeneDao" />

@@ -11,13 +11,12 @@ DecipherEngine is distributed in the hope that it will be useful, but WITHOUT AN
 You should have received a copy of the GNU General Public License along with DecipherEngine. If not, see <http://www.gnu.org/licenses/>.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-	profile="genetic">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="classpath:genetic/beans-fitness.xml" />
-	<import resource="classpath:genetic/beans-selection.xml" />
-	<import resource="classpath:genetic/beans-mutation.xml" />
-	<import resource="classpath:genetic/beans-crossover.xml" />
+	<import resource="classpath:beans-fitness.xml" />
+	<import resource="classpath:beans-selection.xml" />
+	<import resource="classpath:beans-mutation.xml" />
+	<import resource="classpath:beans-crossover.xml" />
 
 	<bean class="com.ciphertool.engine.CipherKeyBreeder" id="breeder">
 		<property name="geneDao" ref="cipherKeyGeneDao" />

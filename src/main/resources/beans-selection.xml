@@ -13,14 +13,13 @@ You should have received a copy of the GNU General Public License along with Dec
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<import resource="classpath:genetic/beans-fitness-wordNGram.xml" />
-	<import resource="classpath:genetic/beans-fitness-letterNGram.xml" />
-
-	<bean class="com.ciphertool.genetics.fitness.AscendingFitnessComparator" id="ascendingFitnessComparator" />
-
-	<bean class="com.ciphertool.engine.fitness.cipherkey.KnownSolutionCrowdingFitnessEvaluator" id="knownSolutionCrowdingFitnessEvaluator">
-		<property name="minCrowdSize" value="${fitness.sharing.min.crowd.size}" />
-		<property name="penaltyFactor" value="${fitness.sharing.penalty.factor}" />
-		<property name="sigma" value="${fitness.sharing.sigma}" />
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.TournamentSelector" id="tournamentSelector">
+		<property name="selectionAccuracy" value="${genetic.algorithm.tournament.selectionAccuracy}" />
 	</bean>
+
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.AlphaSelector" id="alphaSelector" />
+
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RouletteSelector" id="rouletteSelector" />
+
+	<bean class="com.ciphertool.genetics.algorithms.selection.modes.RandomSelector" id="randomSelector" />
 </beans>
