@@ -19,6 +19,8 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.genetics.entities.Chromosome;
@@ -29,8 +31,8 @@ public class KnownSolutionCrowdingFitnessEvaluator extends KnownSolutionFitnessE
 	private double	sigma;
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
-		double fitness = super.evaluate(chromosome);
+	public BigDecimal evaluate(Chromosome chromosome) {
+		BigDecimal fitness = super.evaluate(chromosome);
 
 		int crowdSize = 1;
 		for (Chromosome other : chromosome.getPopulation().getIndividuals()) {
@@ -40,7 +42,7 @@ public class KnownSolutionCrowdingFitnessEvaluator extends KnownSolutionFitnessE
 		}
 
 		for (int i = crowdSize - minCrowdSize; i > 0; i -= minCrowdSize) {
-			fitness *= penaltyFactor;
+			fitness = fitness.multiply(BigDecimal.valueOf(penaltyFactor));
 		}
 
 		return fitness;

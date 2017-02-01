@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Required;
@@ -40,7 +41,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	private int			sampleStepSize;
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
@@ -59,7 +60,7 @@ public class SamplingMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			matches += 1.0;
 		}
 
-		return (matches / ((lastRowBegin - order) / sampleStepSize));
+		return BigDecimal.valueOf(matches / ((lastRowBegin - order) / sampleStepSize));
 	}
 
 	@Override

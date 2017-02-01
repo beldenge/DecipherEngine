@@ -19,6 +19,8 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -37,7 +39,7 @@ public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	private int			lastRowBegin;
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
@@ -60,7 +62,7 @@ public class HockeyStickMarkovModelFitnessEvaluator implements FitnessEvaluator 
 
 		double weight = (matches / (lastRowBegin - order));
 
-		return weight * weight;
+		return BigDecimal.valueOf(weight * weight);
 	}
 
 	/**

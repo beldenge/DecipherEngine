@@ -16,6 +16,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -277,7 +278,7 @@ public class IndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		Map<Integer, List<Match>> matchMap = new HashMap<Integer, List<Match>>();
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
@@ -337,7 +338,7 @@ public class IndexedCorrelatedCorpusFitnessEvaluator implements FitnessEvaluator
 			betterFitness += Math.pow(2, numCiphertextMatches);
 		}
 
-		return betterFitness;
+		return BigDecimal.valueOf(betterFitness);
 	}
 
 	@Override

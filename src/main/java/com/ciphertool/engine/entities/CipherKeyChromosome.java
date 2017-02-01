@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.entities;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	protected boolean			evaluationNeeded	= true;
 
 	@Transient
-	private Double				fitness				= 0.0;
+	private BigDecimal			fitness				= BigDecimal.ZERO;
 
 	@Transient
 	private int					age					= 0;
@@ -158,13 +159,13 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	}
 
 	@Override
-	public Double getFitness() {
+	public BigDecimal getFitness() {
 		return fitness;
 	}
 
 	@Override
 	@Clean
-	public void setFitness(Double fitness) {
+	public void setFitness(BigDecimal fitness) {
 		this.fitness = fitness;
 	}
 
@@ -289,7 +290,7 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 		}
 
 		// We need to set these values last to maintain whether evaluation is needed on the clone
-		copyChromosome.setFitness(this.fitness.doubleValue());
+		copyChromosome.setFitness(this.fitness);
 		copyChromosome.setEvaluationNeeded(this.evaluationNeeded);
 
 		return copyChromosome;

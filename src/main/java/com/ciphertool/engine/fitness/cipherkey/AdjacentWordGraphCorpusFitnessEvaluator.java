@@ -16,6 +16,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,7 +245,7 @@ public class AdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>(currentSolutionString.length());
@@ -350,7 +351,7 @@ public class AdjacentWordGraphCorpusFitnessEvaluator implements FitnessEvaluator
 			log.debug("Best branch: " + bestBranch);
 		}
 
-		return highestScore;
+		return BigDecimal.valueOf(highestScore);
 	}
 
 	@Override

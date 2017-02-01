@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 	private int			lastRowBegin;
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
@@ -107,7 +108,7 @@ public class UniqueIndexedWordGraphFitnessEvaluator implements FitnessEvaluator 
 
 		double uniquenessPenalty = highestScore * determineUniquenessPenalty(bestBranch.split(", "));
 
-		return highestScore - uniquenessPenalty;
+		return BigDecimal.valueOf(highestScore - uniquenessPenalty);
 	}
 
 	private double determineUniquenessPenalty(String[] words) {

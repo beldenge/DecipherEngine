@@ -53,12 +53,12 @@ public class InterpolatedFitnessEvaluator implements FitnessEvaluator {
 		log.debug("unknownWordProbability: {}", unknownWordProbability);
 	}
 
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		BigDecimal total = BigDecimal.ZERO;
 		total = total.add((letterNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(letterNGramWeight).multiply(evaluateLetterNGrams(chromosome), MathConstants.PREC_10_HALF_UP)));
 		total = total.add((wordNGramWeight == 0.0) ? BigDecimal.ZERO : (BigDecimal.valueOf(wordNGramWeight).multiply(evaluateWords(chromosome), MathConstants.PREC_10_HALF_UP)));
 
-		return total.doubleValue();
+		return total;
 	}
 
 	public BigDecimal evaluateLetterNGrams(Chromosome solution) {

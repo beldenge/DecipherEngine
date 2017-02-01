@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 	private int			lastRowBegin;
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		Map<Integer, Match> matchMap = new HashMap<Integer, Match>();
 
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
@@ -112,7 +113,7 @@ public class CrowdingFitnessEvaluator implements FitnessEvaluator {
 			fitness *= penaltyFactor;
 		}
 
-		return fitness;
+		return BigDecimal.valueOf(fitness);
 	}
 
 	@Override

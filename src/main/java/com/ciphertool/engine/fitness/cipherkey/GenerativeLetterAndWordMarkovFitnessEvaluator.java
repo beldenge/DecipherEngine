@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -310,13 +311,13 @@ public class GenerativeLetterAndWordMarkovFitnessEvaluator implements FitnessEva
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		double total = 0.0;
 		total += (frequencyWeight == 0.0) ? 0.0 : (frequencyWeight * evaluateFrequency(chromosome));
 		total += (letterNGramWeight == 0.0) ? 0.0 : (letterNGramWeight * evaluateLetterNGram(chromosome));
 		total += (wordNGramWeight == 0.0) ? 0.0 : (wordNGramWeight * evaluateWordNGram(chromosome));
 
-		return total;
+		return BigDecimal.valueOf(total);
 	}
 
 	public Double evaluateFrequency(Chromosome chromosome) {

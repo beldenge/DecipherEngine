@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License along with Dec
 	<import resource="classpath:beans-mutation.xml" />
 	<import resource="classpath:beans-crossover.xml" />
 
-	<bean class="com.ciphertool.engine.CipherKeyBreeder" id="breeder">
-		<property name="geneDao" ref="cipherKeyGeneDao" />
+	<bean class="com.ciphertool.engine.breeder.ProbabilisticBreeder" id="breeder">
+		<property name="letterMarkovModel" ref="letterMarkovModel" />
 	</bean>
 
 	<bean class="com.ciphertool.genetics.population.StandardPopulation" id="standardPopulation">

@@ -19,6 +19,7 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		CipherKeyChromosome cipherKeyChromosome = (CipherKeyChromosome) chromosome;
 
 		Map<Character, Integer> actualLetterCounts = new HashMap<Character, Integer>(LOWERCASE_LETTERS.size());
@@ -134,7 +135,7 @@ public class ConstrainedMarkovModelFitnessEvaluator implements FitnessEvaluator 
 			nGramProbability = 0.0;
 		}
 
-		return (nGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight);
+		return BigDecimal.valueOf((nGramProbability * nGramWeight) + (frequencyProbability * frequencyWeight));
 	}
 
 	@Override

@@ -19,6 +19,8 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +98,7 @@ public class KnownSolutionFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		double total = 0.0;
 
 		if (knownSolution.getGenes().size() != ((CipherKeyChromosome) chromosome).getGenes().size()) {
@@ -118,7 +120,7 @@ public class KnownSolutionFitnessEvaluator implements FitnessEvaluator {
 					+ proximityToKnownSolution);
 		}
 
-		return proximityToKnownSolution;
+		return BigDecimal.valueOf(proximityToKnownSolution);
 	}
 
 	@Override

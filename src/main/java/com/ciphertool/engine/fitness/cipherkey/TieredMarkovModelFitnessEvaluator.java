@@ -19,6 +19,8 @@
 
 package com.ciphertool.engine.fitness.cipherkey;
 
+import java.math.BigDecimal;
+
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -58,7 +60,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 	}
 
 	@Override
-	public Double evaluate(Chromosome chromosome) {
+	public BigDecimal evaluate(Chromosome chromosome) {
 		String currentSolutionString = WordGraphUtils.getSolutionAsString((CipherKeyChromosome) chromosome).substring(0, lastRowBegin);
 
 		int order = letterMarkovModel.getOrder();
@@ -92,7 +94,7 @@ public class TieredMarkovModelFitnessEvaluator implements FitnessEvaluator {
 			}
 		}
 
-		return (matches / (lastRowBegin - order));
+		return BigDecimal.valueOf(matches / (lastRowBegin - order));
 	}
 
 	@Override
