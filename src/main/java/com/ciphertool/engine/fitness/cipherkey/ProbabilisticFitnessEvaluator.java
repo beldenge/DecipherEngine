@@ -18,8 +18,6 @@ package com.ciphertool.engine.fitness.cipherkey;
 
 import java.math.BigDecimal;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Required;
 
 import com.ciphertool.engine.common.WordGraphUtils;
@@ -37,13 +35,12 @@ public class ProbabilisticFitnessEvaluator implements FitnessEvaluator {
 	private int			lastRowBegin;
 	private BigDecimal	unknownLetterNGramProbability;
 
-	@PostConstruct
-	public void init() {
-		unknownLetterNGramProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()), MathConstants.PREC_10_HALF_UP);
-	}
-
 	@Override
 	public BigDecimal evaluate(Chromosome chromosome) {
+		if (unknownLetterNGramProbability == null) {
+			unknownLetterNGramProbability = BigDecimal.ONE.divide(BigDecimal.valueOf(letterMarkovModel.getRootNode().getTerminalInfo().getCount()), MathConstants.PREC_10_HALF_UP);
+		}
+
 		CipherKeyChromosome solution = (CipherKeyChromosome) chromosome;
 
 		int order = letterMarkovModel.getOrder();
