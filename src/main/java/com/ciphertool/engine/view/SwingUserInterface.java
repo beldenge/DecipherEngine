@@ -60,7 +60,7 @@ import com.ciphertool.engine.common.StrategyBuilder;
 import com.ciphertool.engine.controller.CipherSolutionController;
 import com.ciphertool.engine.dao.CipherDao;
 import com.ciphertool.engine.entities.Cipher;
-import com.ciphertool.engine.fitness.cipherkey.ConstrainedMarkovModelFitnessEvaluator;
+import com.ciphertool.engine.fitness.cipherkey.ProbabilisticFitnessEvaluator;
 import com.ciphertool.genetics.GeneticAlgorithmStrategy;
 import com.ciphertool.genetics.Selectable;
 import com.ciphertool.genetics.algorithms.crossover.CrossoverAlgorithm;
@@ -413,7 +413,7 @@ public class SwingUserInterface extends JFrame implements ApplicationContextAwar
 
 		fitnessEvaluatorComboBox = new JComboBox<FitnessEvaluator>(model);
 		fitnessEvaluatorComboBox.setRenderer(selectableRenderer);
-		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(ConstrainedMarkovModelFitnessEvaluator.class));
+		fitnessEvaluatorComboBox.setSelectedItem(applicationContext.getBean(ProbabilisticFitnessEvaluator.class));
 		JLabel fitnessEvaluatorNameLabel = new JLabel(fitnessEvaluatorNameText);
 
 		constraints.weightx = LAYOUT_LABEL_WEIGHT;

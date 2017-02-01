@@ -74,7 +74,7 @@ public class ProbabilisticFitnessEvaluator implements FitnessEvaluator {
 
 	@Override
 	public void setGeneticStructure(Object obj) {
-		this.cipher = (Cipher) cipher;
+		this.cipher = (Cipher) obj;
 
 		lastRowBegin = (this.cipher.getColumns() * (this.cipher.getRows() - 1));
 	}
