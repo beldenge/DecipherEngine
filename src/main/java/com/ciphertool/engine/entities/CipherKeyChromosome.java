@@ -32,6 +32,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ciphertool.genetics.MathConstants;
 import com.ciphertool.genetics.annotations.Clean;
 import com.ciphertool.genetics.annotations.Dirty;
 import com.ciphertool.genetics.entities.Ancestry;
@@ -361,8 +362,8 @@ public class CipherKeyChromosome implements KeyedChromosome<String> {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Solution [id=" + id + ", cipherId=" + cipher.getId() + ", fitness="
-				+ String.format("%1$,.2f", fitness) + ", age=" + age + ", numberOfChildren=" + numberOfChildren
-				+ ", evaluationNeeded=" + evaluationNeeded + "]\n");
+				+ fitness.round(MathConstants.PREC_10_HALF_UP) + ", age=" + age + ", numberOfChildren="
+				+ numberOfChildren + ", evaluationNeeded=" + evaluationNeeded + "]\n");
 
 		if (this.cipher != null) {
 			CipherKeyGene nextPlaintext = null;
